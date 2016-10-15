@@ -10,10 +10,9 @@
 struct GameData;
 
 class UI{
-   SDL_Surface *topBar;
-   SDL_Surface *bottomBar;
+   SDL_Surface *topBar, *bottomBar;
    pixels_t barWidth;
-
+   
 public:
    UI(const std::string &topBarPath,
       const std::string &bottomBarPath,
@@ -21,6 +20,8 @@ public:
    ~UI();
    void draw(SDL_Surface *screen, const GameData &game,
       ControlMode controlmode) const;
+   pixels_t bottomBarHeight(const GameData &game, ControlMode controlMode) const;
+   SDL_Rect bottomBarRect(const GameData &game, ControlMode controlmode) const;
 };
 
 

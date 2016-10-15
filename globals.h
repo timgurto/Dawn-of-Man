@@ -33,7 +33,7 @@ const pixels_t SCREEN_WIDTH = 1024;
 const pixels_t SCREEN_HEIGHT = 768;
 const int SCREEN_BPP = 32;
 
-const pixels_t UI_BAR_PADDING = 47;
+const pixels_t UI_BAR_PADDING = 24;
 
 //whether graphics are outline-style
 const bool OUTLINE_MODE(false);

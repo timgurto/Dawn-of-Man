@@ -11,7 +11,7 @@ class UI;
 
 void gameMode();
 void drawEverything(SDL_Surface *screen, SDL_Surface *back,
-                    SDL_Surface *image, SDL_Surface *cursor,
+                    SDL_Surface *cursor,
                     const Point &mousePos, const GameData &game,
                     ControlMode controlMode, const UI &ui);
 void updateState();

@@ -122,3 +122,11 @@ bool dereferenceLessThan(Entity *p1, Entity *p2){
    assert (p2 != 0);
    return *p1 < *p2;
 }
+
+bool pointCollision(const Point &point, const SDL_Rect rect){
+   if (point.x < rect.x) return false;
+   if (point.y < rect.y) return false;
+   if (point.x > rect.x + rect.h) return false;
+   if (point.y > rect.y + rect.w) return false;
+   return true;
+}

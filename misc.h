@@ -35,5 +35,6 @@ template <typename Type> void checkP(Type *pointer){
 }
 
 bool dereferenceLessThan(Entity *p1, Entity *p2);
+bool pointCollision(const Point &point, const SDL_Rect rect);
 
 #endif

@@ -1,3 +1,5 @@
+// (C) 2009 Tim Gurto
+
 #include "UI.h"
 #include "misc.h"
 #include "globals.h"
@@ -23,16 +25,33 @@ void UI::draw(SDL_Surface *screen,
    case NORMAL_MODE:
       //draw interface background
       pixels_t bottomBarHeight = game.buildingTypes.size() * ICON_SIZE + UI_BAR_PADDING;
-      SDL_BlitSurface(bottomBar, 0, screen,
-                      &makeRect(0, SCREEN_HEIGHT - bottomBarHeight, 0, 0));
+      SDL_BlitSurface(bottomBar, 0, screen, &bottomBarRect(game, controlMode));
       //draw building icons
       int i = 0;
       for (buildingTypes_t::const_iterator it = game.buildingTypes.begin();
            it != game.buildingTypes.end(); ++it, ++i){
-              //TODO: gaps around icons
          SDL_BlitSurface(it->portrait, 0, screen,
                          &makeRect(0, SCREEN_HEIGHT - ICON_SIZE * (game.buildingTypes.size() - i), 0, 0));
       }
+      break;
+   }
+}
+
+pixels_t UI::bottomBarHeight(const GameData &game, ControlMode controlMode) const{
+   switch(controlMode){
+   case NORMAL_MODE:
+      return game.buildingTypes.size() * ICON_SIZE + UI_BAR_PADDING;
+      break;
+   }
+        
+}
+
+SDL_Rect UI::bottomBarRect(const GameData &game, ControlMode controlMode) const{
+   switch(controlMode){
+   case NORMAL_MODE:
+      return makeRect(0, SCREEN_HEIGHT - bottomBarHeight(game, controlMode),
+                      ICON_SIZE + UI_BAR_PADDING,
+                      bottomBarHeight(game, controlMode));
       break;
    }
 }

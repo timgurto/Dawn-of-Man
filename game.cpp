@@ -25,7 +25,6 @@ void gameMode(){
    debug.setScreen(screen);
 
    SDL_Surface *back = loadImage(IMAGE_PATH + "back.png");
-   SDL_Surface *image = loadImage(IMAGE_PATH + "c0.png", MAGENTA);
    SDL_Surface *cursor = loadImage(IMAGE_PATH + "cursor.png", GREEN);
 
    Point mousePos(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
@@ -33,17 +32,26 @@ void gameMode(){
 
    //init
    GameData game;
+   //TODO: move controlMode to GameData
    ControlMode controlMode = NORMAL_MODE;
    UI ui(IMAGE_PATH + INTERFACE_IMAGE_PATH + "topbar.PNG",
          IMAGE_PATH + INTERFACE_IMAGE_PATH + "bottombar.PNG",
          GREEN);
+
    typeNum_t toBuild = 0;
 
+   //TODO: load from files
    BuildingType campfire(0, "Campfire",
                          makeRect(-61, -118, 114, 143),
                          makeRect(-61, -15, 111, 40),
                          GREEN);
    game.buildingTypes.push_back(campfire);
+   BuildingType shrine(1, "Shrine",
+                         makeRect(-76, -67, 154, 79),
+                         makeRect(-76, -12, 154, 23),
+                         GREEN);
+   game.buildingTypes.push_back(shrine);
+
 
 
    timer_t ticks = SDL_GetTicks();
@@ -76,7 +84,18 @@ void gameMode(){
             //debug("Mouse down: ", int(event.button.button));
             switch (event.button.button){
             case 1: //left click
-               Entity *newBuilding = new Building(0, mousePos);
+               if (pointCollision(mousePos, ui.bottomBarRect(game, controlMode))){
+                  debug("Clicked the bottom bar");
+                  switch(controlMode){
+                  case NORMAL_MODE:
+                     //Clicking on a building to construct
+                     toBuild = (mousePos.y- 
+                               ui.bottomBarRect(game, controlMode).y - UI_BAR_PADDING) /
+                               ICON_SIZE;
+                     debug("Selected ", game.buildingTypes[toBuild].name_);
+                  }
+               }
+               Entity *newBuilding = new Building(1, mousePos);
                assert(newBuilding != 0);
                addEntity(game, newBuilding);
                break;
@@ -98,7 +117,7 @@ void gameMode(){
       // Redraw if necessary
       if (ticks - lastDrawTick >= DRAW_MS){
          //debug("Tick: redrawing");
-         drawEverything(screen, back, image, cursor, mousePos, game, controlMode, ui);
+         drawEverything(screen, back, cursor, mousePos, game, controlMode, ui);
          lastDrawTick = MIN_WAIT ? ticks : lastDrawTick + DRAW_MS;
       }
 
@@ -108,8 +127,6 @@ void gameMode(){
 
    //debug("Unloading Back");
    freeSurface(back);
-   //debug("Unloading Image");
-   freeSurface(image);
    //debug("Unloading Cursor");
    freeSurface(cursor);
    //debug("Done unloading");
@@ -117,14 +134,13 @@ void gameMode(){
 }
 
 void drawEverything(SDL_Surface *screen, SDL_Surface *back,
-                    SDL_Surface *image, SDL_Surface *cursor,
+                    SDL_Surface *cursor,
                     const Point &mousePos, const GameData &game,
                     ControlMode controlMode, const UI &ui){
 
    //Background
    SDL_FillRect(screen, 0, 0);
    SDL_BlitSurface(back, 0, screen, &makeRect());
-   SDL_BlitSurface(image, 0, screen, &makeRect(50,50));
    
    //Entities
    for (entities_t::const_iterator it = game.entities.begin();

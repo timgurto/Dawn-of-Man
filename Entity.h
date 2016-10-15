@@ -5,6 +5,7 @@
 
 #include "SDL.h"
 #include "Point.h"
+#include "globals.h"
 
 struct GameData;
 class EntityType;
