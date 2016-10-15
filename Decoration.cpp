@@ -18,3 +18,7 @@ int Decoration::getColor() const{
 EntityTypeID Decoration::classID() const{
    return DECORATION;
 }
+
+bool Decoration::collides() const{
+   return false;
+}

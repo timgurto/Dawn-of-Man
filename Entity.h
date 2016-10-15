@@ -78,9 +78,11 @@ public:
    //(See enum EntityColor)
    virtual int getColor() const;
 
-   //TODO make static attribute
    //identitifes which entity subclass this is
    virtual EntityTypeID classID() const = 0;
+
+   //whether these entities can collide with others
+   virtual bool collides() const;
 };
 
 #endif

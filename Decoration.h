@@ -19,6 +19,7 @@ public:
    const virtual EntityType &Decoration::type() const;
    virtual int getColor() const;
    virtual EntityTypeID classID() const;
+   virtual bool collides() const;
 };
 
 

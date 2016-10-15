@@ -83,6 +83,7 @@ void gameMode(){
                   makeRect(-11, -8, 22, 16),
                   makeRect(-11, -8, 22, 16));
    game.decorationTypes.push_back(rock);
+   //TODO randomize
    addEntity(game, new Decoration(0, Point(80, 200)));
    addEntity(game, new Decoration(0, Point(100, 100)));
    addEntity(game, new Decoration(0, Point(150, 175)));

@@ -136,3 +136,7 @@ void Entity::colorBlit(int color, SDL_Surface *surface,
                       &SDL_Rect(dstLoc));
 
 }
+
+bool Entity::collides() const{
+   return true; //default: collides
+}
