@@ -4,6 +4,7 @@
 #include <string>
 #include <sstream>
 #include <cstdlib>
+#include <cmath>
 
 #include "SDL.h"
 #include "SDL_image.h"
@@ -288,6 +289,12 @@ int whatIsArg(std::string arg, int argc, char* argv[]){
 
 pixels_t distance(pixels_t a, pixels_t b){
    return abs(a - b);
+}
+
+pixels_t distance(Point a, Point b){
+   double ssqr = square(a.x - b.x) +
+                 square(a.y - b.y);
+   return pixels_t(sqrt(ssqr));
 }
 
 double modulo(double a, int b){

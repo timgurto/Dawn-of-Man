@@ -110,9 +110,18 @@ int whatIsArg(std::string arg, int argc, char* argv[]);
 //The one-dimensional distance between two points
 pixels_t distance(pixels_t a, pixels_t b);
 
+//The two-dimensional distance between two points
+pixels_t distance(Point a, Point b);
+
 //double % int, preserves fraction
 double modulo(double a, int b);
 
 void centerMap(GameData &game, const Point &center);
+
+template<typename T>
+//param is copied; eval'd once
+T square(T x){
+   return x * x;
+}
 
 #endif

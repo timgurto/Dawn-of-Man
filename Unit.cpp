@@ -27,7 +27,7 @@ progress_(progress),
 finished_(progress >= game_->unitTypes[type].maxProgress_),
 drawPercent_(game_->unitTypes[type].maxProgress_ == 0 ?
                 1.0 :
-                1.0f * progress_ /
+                1.0 * progress_ /
                 game_->unitTypes[type].maxProgress_){}
 
 const EntityType &Unit::type() const{
@@ -174,9 +174,9 @@ void Unit::tick(double delta){
 
       //check whether target has been reached
       if (targetEntity_ != 0){
-         combat_ = atTarget();
+         combat_ = isAtTarget();
          moving_ = !combat_;
-      }else if (atTarget())
+      }else if (isAtTarget())
          moving_ = false;
 
       //progress frame
@@ -266,21 +266,36 @@ void Unit::setTarget(Entity *targetEntity, Point loc){
       target_ = loc;
    else
       updateTarget();
-   moving_ = !atTarget();
+   moving_ = !isAtTarget();
 }
 
-bool Unit::atTarget() const{
-   double multiplier = (targetEntity_ == 0) ? 0.5 : 8;
-   double threshold = game_->unitTypes[typeIndex_].speed_ * multiplier;
+bool Unit::isAtTarget() const{
+   pixels_t margin = game_->unitTypes[typeIndex_].speed_;
+   if (targetEntity_ == 0)
+      //straight distance to a point
+      return (distance(loc_, target_) < margin);
+   else{
+      SDL_Rect baseRect = getBaseRect();
+      SDL_Rect targetRect = targetEntity_->getBaseRect();
+      //check whether diagonal distance is close enough
+      if (collision(targetRect, baseRect +
+                                Point(margin, margin)))
+         return true;
+      if (collision(targetRect, baseRect +
+                                Point(margin, -1 * margin)))
+         return true;
+      if (collision(targetRect, baseRect +
+                                Point(-1 * margin, margin)))
+         return true;
+      if (collision(targetRect, baseRect -
+                                Point(margin, margin)))
+         return true;
 
-   if (loc_.x - target_.x > threshold ||
-       target_.x - loc_.x > threshold)
       return false;
-   if (loc_.y - target_.y > threshold ||
-       target_.y - loc_.y > threshold)
-      return false;
+   }
 
-   return true;
+   assert(false);
+   return false;
 }
 
 void Unit::updateTarget(){
