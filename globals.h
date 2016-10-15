@@ -9,9 +9,9 @@
 
 //const bool DEBUG(true);
 #ifdef NDEBUG
-const bool DEBUG(false);
+const bool DEBUG = false;
 #else
-const bool DEBUG(true);
+const bool DEBUG = true;
 #endif
 
 typedef unsigned short typeNum_t;
@@ -29,9 +29,11 @@ const timer_t CALC_MS = 40; //time between state updates
 //progress points = time to complete something
 const progress_t PROGRESS_PER_CALC = 16;
 
-const pixels_t SCREEN_WIDTH(1024);
-const pixels_t SCREEN_HEIGHT(768);
-const int SCREEN_BPP(32);
+const pixels_t SCREEN_WIDTH = 1024;
+const pixels_t SCREEN_HEIGHT = 768;
+const int SCREEN_BPP = 32;
+
+const pixels_t UI_BAR_PADDING = 47;
 
 //whether graphics are outline-style
 const bool OUTLINE_MODE(false);
@@ -47,13 +49,20 @@ const SDL_Color MAGENTA = {0xff, 0, 0xff};
 const SDL_Color YELLOW  = {0xff, 0xff, 0};
 const SDL_Color WHITE   = {0xff, 0xff, 0xff};
 
-const pixels_t ICON_SIZE(48);
-const std::string IMAGE_SUFFIX (".png");
-const std::string IMAGE_PATH           ("Images/");
-const std::string BUILDINGS_IMAGE_PATH ("Buildings/");
+//TODO rename portraits to icons
+const pixels_t ICON_SIZE = 48;
+const std::string IMAGE_SUFFIX = ".png";
+const std::string IMAGE_PATH           = "Images/";
+const std::string BUILDINGS_IMAGE_PATH = "Buildings/";
+const std::string INTERFACE_IMAGE_PATH = "Interface/";
 
 enum EntityTypeID{
    BUILDING
+};
+
+enum ControlMode{
+   NORMAL_MODE,
+   BUILD_MODE
 };
 
 #endif

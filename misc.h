@@ -1,7 +1,7 @@
 // (C) 2009 Tim Gurto
 
-#ifndef SDL_WRAPPERS_H
-#define SDL_WRAPPERS_H
+#ifndef MISC_H
+#define MISC_H
 
 #include <string>
 
@@ -19,7 +19,6 @@ SDL_Rect makeRect(Sint16 x = 0, Sint16 y = 0, Uint16 w = 0, Uint16 h = 0);
 SDL_Rect makeRect(const Point &point);
 SDL_Color makeColor(Uint8 r, Uint8 g, Uint8 b);
 SDL_Surface *setScreen();
-void blitCursor (SDL_Surface *cursor, SDL_Surface *screen, const Point &coords);
 void freeSurface(SDL_Surface *&p);
 SDL_Surface *copySurface(SDL_Surface* src);
 

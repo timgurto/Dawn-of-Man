@@ -5,9 +5,9 @@
 
 #include "SDL.h"
 #include "Point.h"
-#include "EntityType.h"
-//#include "GameData.h"
+
 struct GameData;
+class EntityType;
 
 class Entity{
    friend class EntityPtr;

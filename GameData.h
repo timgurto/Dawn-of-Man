@@ -7,7 +7,8 @@
 #include <list>
 
 #include "BuildingType.h"
-#include "Building.h"
+
+class Building;
 
 typedef std::vector<BuildingType> buildingTypes_t;
 typedef std::list<Entity *> entities_t;

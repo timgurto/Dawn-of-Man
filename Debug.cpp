@@ -17,6 +17,7 @@ x_(x),
 y_(y),
 count_(count){}
 
+//TODO ensure this is only called once; static bool
 Debug::~Debug(){
    if (font != 0)
       TTF_CloseFont(font);

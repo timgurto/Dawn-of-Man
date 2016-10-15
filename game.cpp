@@ -12,7 +12,11 @@
 #include "GameData.h"
 #include "globals.h"
 #include "game.h"
+#include "EntityType.h"
 #include "Entity.h"
+#include "BuildingType.h"
+#include "Building.h"
+#include "UI.h"
 
 extern Debug debug;
 
@@ -25,11 +29,15 @@ void gameMode(){
    SDL_Surface *cursor = loadImage(IMAGE_PATH + "cursor.png", GREEN);
 
    Point mousePos(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
-
    SDL_ShowCursor(SDL_DISABLE);
 
    //init
    GameData game;
+   ControlMode controlMode = NORMAL_MODE;
+   UI ui(IMAGE_PATH + INTERFACE_IMAGE_PATH + "topbar.PNG",
+         IMAGE_PATH + INTERFACE_IMAGE_PATH + "bottombar.PNG",
+         GREEN);
+   typeNum_t toBuild = 0;
 
    BuildingType campfire(0, "Campfire",
                          makeRect(-61, -118, 114, 143),
@@ -37,11 +45,9 @@ void gameMode(){
                          GREEN);
    game.buildingTypes.push_back(campfire);
 
-   typeNum_t toBuild = 0;
-   
 
-   timer_t ticks(SDL_GetTicks());
-   timer_t lastCalcTick(ticks), lastDrawTick(ticks);
+   timer_t ticks = SDL_GetTicks();
+   timer_t lastCalcTick = ticks, lastDrawTick = ticks;
    debug("Redraw frequency: ", DRAW_MS, "ms");
    debug("State update frequency: ", CALC_MS, "ms");
 
@@ -92,7 +98,7 @@ void gameMode(){
       // Redraw if necessary
       if (ticks - lastDrawTick >= DRAW_MS){
          //debug("Tick: redrawing");
-         drawEverything(screen, back, image, cursor, mousePos, game);
+         drawEverything(screen, back, image, cursor, mousePos, game, controlMode, ui);
          lastDrawTick = MIN_WAIT ? ticks : lastDrawTick + DRAW_MS;
       }
 
@@ -112,20 +118,30 @@ void gameMode(){
 
 void drawEverything(SDL_Surface *screen, SDL_Surface *back,
                     SDL_Surface *image, SDL_Surface *cursor,
-                    const Point &mousePos, const GameData &game){
+                    const Point &mousePos, const GameData &game,
+                    ControlMode controlMode, const UI &ui){
+
+   //Background
    SDL_FillRect(screen, 0, 0);
    SDL_BlitSurface(back, 0, screen, &makeRect());
    SDL_BlitSurface(image, 0, screen, &makeRect(50,50));
    
-
+   //Entities
    for (entities_t::const_iterator it = game.entities.begin();
         it != game.entities.end(); ++it){
       (*it)->draw(screen, game);
    }
 
+   //Interface
+   ui.draw(screen, game, controlMode);
+
+   //Cursor
    blitCursor(cursor, screen, mousePos);
 
+   //Debug text
    debug.display();
+
+   //Finalize
    bool test = SDL_Flip(screen) == 0;
    assert(test);
 }
@@ -142,4 +158,8 @@ void addEntity(GameData &game, Entity *entity){
 
 void removeEntity(){
    //delete() the Entity*
+}
+
+void blitCursor (SDL_Surface *cursor, SDL_Surface *screen, const Point &coords){
+   SDL_BlitSurface(cursor, 0, screen, &makeRect(coords+CURSOR_OFFSET));
 }

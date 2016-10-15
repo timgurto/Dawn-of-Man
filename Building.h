@@ -5,8 +5,9 @@
 
 #include "globals.h"
 #include "Entity.h"
-#include "EntityType.h"
+
 struct GameData;
+class EntityType;
 
 class Building : public Entity{
    progress_t progress_;
