@@ -30,7 +30,7 @@ bool Entity::operator<(const Entity &rhs) const{
 
 void Entity::draw(SDL_Surface *screen) const{
    const EntityType &thisType = type();
-   SDL_Rect drawLoc = loc_ + thisType.drawRect_;
+   SDL_Rect drawLoc = getDrawRect();
    SDL_Rect srcLoc = makeRect(0, 0,
                               thisType.drawRect_.w,
                               thisType.drawRect_.h);
@@ -68,47 +68,48 @@ int Entity::getColor() const{
 void Entity::colorBlit(int color, SDL_Surface *screen,
                        SDL_Rect &srcLoc,
                        SDL_Rect &dstLoc) const{
-      assert(color < ENTITY_MAX);
-      const EntityType &thisType = type();
-      SDL_Surface *&index = game_->surfaceIndex
-                                     [color]
-                                     [type_]
-                                     [classID()];
+   assert(color < ENTITY_MAX);
+   const EntityType &thisType = type();
+   SDL_Surface *&index = game_->surfaceIndex
+                                  [color]
+                                  [type_]
+                                  [classID()];
 
-      //make sure colored sprite is indexed; if not,
-      if (index == 0){
+   //make sure colored sprite is indexed; if not,
+   if (index == 0){
 
-         //1. create it
-         debug("Creating indexed surface");
-         SDL_Rect drawRect = type().drawRect_;
-         index = createSurface(drawRect.w, drawRect.h);
-         SDL_SetColorKey(index, SDL_SRCCOLORKEY,
-                         SDL_MapRGB(index->format,
-                                    ENTITY_BACKGROUND.r,
-                                    ENTITY_BACKGROUND.g,
-                                    ENTITY_BACKGROUND.b));
-         
-         //2. fill with color
-         SDL_FillRect(index, 0,
-                      getEntityColor(*game_, color));
+      //1. create it
+      debug("Creating indexed surface");
+      SDL_Rect drawRect = type().drawRect_;
+      index = createSurface(thisType.surface->w,
+                            thisType.surface->h);
+      SDL_SetColorKey(index, SDL_SRCCOLORKEY,
+                      SDL_MapRGB(index->format,
+                                 ENTITY_BACKGROUND.r,
+                                 ENTITY_BACKGROUND.g,
+                                 ENTITY_BACKGROUND.b));
+      
+      //2. fill with color
+      SDL_FillRect(index, 0,
+                   getEntityColor(*game_, color));
 
-         //3. add sprite
-         SDL_BlitSurface(thisType.surface, 0, index, 0);
-      }
+      //3. add sprite
+      SDL_BlitSurface(thisType.surface, 0, index, 0);
+   }
 
-      SDL_Rect dest = dstLoc + Point(game_->map);
+   SDL_Rect dest = dstLoc + Point(game_->map);
 
-      //blit mask, hiding anything that would otherwise
-      //show through the gaps in the sprite
-      if (ENTITY_MASKS)
-         SDL_BlitSurface(thisType.mask, &srcLoc, screen,
-                         &SDL_Rect(dest));
-      //note: the "SDL_Rect(dest)" above avoids SDL_Blit
-      //messing with the draw location
+   //blit mask, hiding anything that would otherwise
+   //show through the gaps in the sprite
+   if (ENTITY_MASKS)
+      SDL_BlitSurface(thisType.mask, &srcLoc, screen,
+                      &SDL_Rect(dest));
+   //note: the "SDL_Rect(dest)" above avoids SDL_Blit
+   //messing with the draw location
 
-      //blit colored sprite to the screen.
-      //The indexed version definitely exists now.
-      SDL_BlitSurface(index, &srcLoc, screen, &dest);
+   //blit colored sprite to the screen.
+   //The indexed version definitely exists now.
+   SDL_BlitSurface(index, &srcLoc, screen, &dest);
 }
 
 bool Entity::collides() const{

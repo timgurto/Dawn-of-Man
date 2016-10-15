@@ -100,4 +100,6 @@ int whatIsArg(std::string arg, int argc, char* argv[]);
 
 pixels_t distance(pixels_t a, pixels_t b);
 
+double modulo(double a, int b);
+
 #endif

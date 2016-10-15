@@ -281,3 +281,10 @@ int whatIsArg(std::string arg, int argc, char* argv[]){
 pixels_t distance(pixels_t a, pixels_t b){
    return abs(a - b);
 }
+
+double modulo(double a, int b){
+   if (a < b)
+      return a;
+   int aInt = int(a);
+   return aInt % b + a - aInt;
+}

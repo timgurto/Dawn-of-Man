@@ -73,6 +73,7 @@ void gameMode(){
    //TODO load from files
    //=================================================
    game.players.push_back(0xca6500); //0x... = color
+   game.players.push_back(0x882222);
    BuildingType campfire(0, "Campfire",
                          makeRect(-42, -92, 81, 113),
                          makeRect(-42, -23, 81, 42),
@@ -95,12 +96,14 @@ void gameMode(){
    UnitType drone(0, "Drone",
                   makeRect(-22, -127, 105, 133),
                   makeRect(-22,-6, 53, 11),
-                  Point(3, -55), 8);
+                  Point(3, -55),
+                  8, 25, 8);
    game.unitTypes.push_back(drone);
-   for (int i = 0; i != 15; ++i)
+   for (int i = 0; i != 30; ++i)
       addEntity(game, new Unit(0, Point(
                                   rand() % game.map.w,
-                                  rand() % game.map.h), 0));
+                                  rand() % game.map.h),
+                                  rand() % 2));
    //=================================================
 
    UIBars_t bars;
@@ -174,7 +177,7 @@ void updateState(double delta, GameData &game,
       (*it)->tick(delta);
       VerticalMovement v = (*it)->getVerticalMovement();
       if (v != VM_NONE)
-         resort(game.entities, it, v);
+         reSort(game.entities, it, v);
    }
 
    //Particles
@@ -473,33 +476,30 @@ void setSelectedTargets(GameData &game){
    }
 }
 
-void resort(entities_t &entities, entities_t::iterator it,
+void reSort(entities_t &entities, entities_t::iterator it,
             VerticalMovement verticalMovement){
+   entities_t::iterator old = it;
    switch(verticalMovement){
    case UP:
       if (it != entities.begin()){
-         entities_t::iterator original = it;
-         //move up until sorted
-         do
-            --it;
-         while (it != entities.begin() && **original < **it);
-         ++it;
-         if (it != original)
-            iter_swap(it, original);
+         entities_t::iterator next = it;
+         --next;
+         while (it != entities.begin() && **it < **next){
+            std::iter_swap(it, next);
+            it = next;
+            --next;
+         }
       }
-      break;
+
    case DOWN:
-      if (it != entities.begin()){
-         entities_t::iterator original = it;
-         //move down until sorted
-         do
-            ++it;
-         while (it != entities.end() && **it < **original);
-         --it;
-         if (it != original)
-            iter_swap(it, original);
+      entities_t::iterator next = it;
+      ++next;
+      while (next != entities.end() && **next < **it){
+         std::iter_swap(it, next);
+         it = next;
+         ++next;
       }
-      break;
+
    }
 }
 
