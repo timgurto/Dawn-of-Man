@@ -53,7 +53,6 @@ protected: //everything should be a derived class
    void colorBlit(int color, SDL_Surface *screen,
                  SDL_Rect &srcLoc,
                  SDL_Rect &dstLoc,
-                 bool black = false,
                  bool partial = false) const;
 
    //creates particles indicating construction progress
@@ -129,6 +128,11 @@ public:
 
    //empties the trashCan_, deallocating memory
    static void emptyTrash();
+
+   //how the entity determines whether or not it should be
+   //blackened when drawn
+   //default: false
+   virtual bool drawBlack() const;
 
    //get
    typeNum_t getTypeIndex() const;

@@ -53,3 +53,7 @@ SDL_Surface *EntityType::getIcon() const{
 const std::string &EntityType::getName() const{
    return name_;
 }
+
+typeNum_t EntityType::getIndex() const{
+   return index_;
+}

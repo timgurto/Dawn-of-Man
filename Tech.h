@@ -5,9 +5,11 @@
 
 #include <string>
 #include "TechBonuses.h"
+#include "Resources.h"
 
 //TODO comment
 class Tech{
+   typeNum_t index_;
    std::string name_;
    SDL_Surface *icon_;
 
@@ -23,12 +25,15 @@ class Tech{
    //Any prerequisite tech
    typeNum_t prereqTech_;
 
-   Tech(const std::string &name,
-        SDL_Surface *icon,
+public:
+   Tech(typeNum_t index,
+        const std::string &name,
         const TechBonuses &bonuses,
         typeNum_t originBuilding,
         const Resources &cost,
         typeNum_t prereqTech);
+   Tech (const Tech &rhs);
+   ~Tech();
 };
 
 #endif

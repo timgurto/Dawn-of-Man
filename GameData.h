@@ -16,12 +16,14 @@
 #include "Player.h"
 #include "Point.h"
 #include "MouseButton.h"
+#include "Tech.h"
 
 //move to relevant classes
 typedef std::vector<BuildingType> buildingTypes_t;
 typedef std::vector<DecorationType> decorationTypes_t;
 typedef std::vector<UnitType> unitTypes_t;
 typedef std::vector<ResourceNodeType> resourceNodeTypes_t;
+typedef std::vector<Tech> techs_t;
 typedef std::vector<Player> players_t;
 typedef std::list<Particle> particles_t;
 typedef SDL_Surface *surfaceIndex_t
@@ -52,6 +54,7 @@ struct GameData{
    decorationTypes_t decorationTypes;
    unitTypes_t unitTypes;
    resourceNodeTypes_t resourceNodeTypes;
+   techs_t techs;
    
    //Each player in the game.
    //[0] is always the human player.

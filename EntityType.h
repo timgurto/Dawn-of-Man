@@ -15,7 +15,6 @@ class EntityType{
    friend class Building;
    friend class Unit;
 
-protected:
    //for loading graphics, and position in vector
    typeNum_t index_;
 
@@ -49,6 +48,7 @@ public:
    const SDL_Rect &getDrawRect() const;
    SDL_Surface *getIcon() const;
    const std::string &getName() const;
+   typeNum_t getIndex() const;
 };
 
 #endif

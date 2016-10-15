@@ -45,6 +45,7 @@ public:
    virtual EntityTypeID classID() const;
    virtual bool selectable() const;
    virtual bool targetable() const;
+   virtual bool drawBlack() const;
 
    //sets the target entity, and co-ordinates.  If an
    //entity isn't provided, use the specified co-ordinates

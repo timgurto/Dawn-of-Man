@@ -43,6 +43,8 @@ public:
    static Resources empty();
 
    std::string str() const;
+
+   resource_t sum() const;
 };
 
 #endif

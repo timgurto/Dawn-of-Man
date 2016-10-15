@@ -59,7 +59,6 @@ void Building::draw(SDL_Surface *screen) const{
       screen, &altDrawLoc);
    }else
       colorBlit(getColor(), screen, srcLoc, drawLoc,
-         false, //black
          !finished_); //partial
 }
 

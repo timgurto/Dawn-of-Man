@@ -122,6 +122,10 @@ enum EntityTypeID{
    ENT_RESOURCE_NODE,
 
    ENT_MAX, //for array sizes.
+   
+   //not strictly an entity, but used for makePath()
+   ENT_TECH,
+
    ENT_NONE,
 };
 

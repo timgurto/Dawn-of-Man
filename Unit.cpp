@@ -61,9 +61,6 @@ void Unit::draw(SDL_Surface *screen) const{
    }
 
    colorBlit(player_, screen, srcLoc, drawLoc,
-             //blackened, if below the health threshold
-             1.0 * health_ / thisType.maxHealth_ <
-             ENTITY_BLACK_HEALTH,
              //partial, if not finished
              !finished_);
    //debug("health / max = ", 1.0f * health_ / thisType.maxHealth_);
@@ -268,6 +265,13 @@ bool Unit::selectable() const{
 
 bool Unit::targetable() const{
    return true;
+}
+
+bool Unit::drawBlack() const{
+   return
+      1.0 * health_ /
+      game_->unitTypes[typeIndex_].maxHealth_ <
+      ENTITY_BLACK_HEALTH;
 }
 
 typeNum_t Unit::getPlayer() const{

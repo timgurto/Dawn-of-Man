@@ -27,6 +27,7 @@ public:
    virtual const EntityType &ResourceNode::type() const;
    virtual EntityTypeID classID() const;
    virtual bool targetable() const;
+   virtual bool drawBlack() const;
 
    //remove some resources from the node, and return the
    //amount harvested

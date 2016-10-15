@@ -10,8 +10,8 @@
 struct TechBonuses{
    damage_t unitArmor;
 
-   TechBonuses():
-   unitArmor(0){}
+   TechBonuses(damage_t unitArmorArg = 0):
+   unitArmor(unitArmorArg){}
 };
 
 #endif

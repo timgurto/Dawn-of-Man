@@ -3,6 +3,7 @@
 #include <vector>
 #include <sstream>
 #include <string>
+#include <numeric>
 #include "Resources.h"
 
 size_t Resources::resourceCount_ = 0;
@@ -65,4 +66,10 @@ std::string Resources::str() const{
    std::ostringstream os;
    os << *this;
    return os.str();
+}
+
+resource_t Resources::sum() const{
+   return std::accumulate(vals_.begin(),
+                          vals_.end(),
+                          0);
 }

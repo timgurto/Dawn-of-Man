@@ -392,6 +392,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Tech.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\UIBar.cpp"
 				>
 			</File>

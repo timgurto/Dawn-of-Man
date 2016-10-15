@@ -20,6 +20,13 @@ bool ResourceNode::targetable() const{
    return true;
 }
 
+bool ResourceNode::drawBlack() const{
+   return
+      1.0 * resources_.sum() /
+      game_->resourceNodeTypes[typeIndex_].maxResources_.sum() <
+      ENTITY_BLACK_HEALTH;
+}
+
 Resources ResourceNode::harvest(){
    const ResourceNodeType &thisType =
       game_->resourceNodeTypes[typeIndex_];

@@ -27,6 +27,8 @@
 #include "Point.h"
 #include "Resources.h"
 #include "MessageBox.h"
+#include "Tech.h"
+#include "TechBonuses.h"
 
 extern Debug debug;
 extern Debug deltaLog;
@@ -149,6 +151,8 @@ void gameMode(){
       addEntity(game, new Decoration(0, Point(
                                 rand() % game.map.w,
                                 rand() % game.map.h)));
+   for (typeNum_t i = 0; i != game.decorationTypes.size(); ++i)
+      assert (game.decorationTypes[i].getIndex() == i);
 
    //unit types
    resources_t genericCost; genericCost.push_back(50);
@@ -181,6 +185,9 @@ void gameMode(){
                   0, //origin building
                   1000); //progress cost
    game.unitTypes.push_back(grunt);
+   for (typeNum_t i = 0; i != game.unitTypes.size(); ++i)
+      assert (game.unitTypes[i].getIndex() == i);
+
    //human start: one grunt
    Unit *newGrunt = new Unit(1,
                              Point(rand() % game.map.w,
@@ -221,6 +228,13 @@ void gameMode(){
                           Point(x, y)));
       addEntity(game, new ResourceNode(0, Point(x, y)));
    }
+
+   //techs
+   resources_t fireShieldCost;
+   fireShieldCost.push_back(200);
+   TechBonuses fireShieldBonuses(5);
+   Tech fireArmor(0, "Fire Armor", fireShieldBonuses, 0, fireShieldCost, NO_TYPE);
+   game.techs.push_back(fireArmor);
    //=================================================
 
    timer_t oldTicks = SDL_GetTicks();

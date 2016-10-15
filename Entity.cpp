@@ -76,7 +76,6 @@ int Entity::getColor() const{
 void Entity::colorBlit(int color, SDL_Surface *screen,
                        SDL_Rect &srcLoc,
                        SDL_Rect &dstLoc,
-                       bool black,
                        bool partial) const{
 
    assert(color < CLR_MAX);
@@ -168,7 +167,7 @@ void Entity::colorBlit(int color, SDL_Surface *screen,
       SDL_BlitSurface(indexDark, 0, indexShadowed, &makeRect(0, 0));
       SDL_BlitSurface(index, 0, indexShadowed, &makeRect(1, 1));
    }
-   if (black && indexBlack == 0){
+   if (drawBlack() && indexBlack == 0){
       indexBlack = createSurface(thisType.surface_->w,
                                  thisType.surface_->h);
       SDL_SetColorKey(indexBlack, SDL_SRCCOLORKEY,
@@ -211,7 +210,7 @@ void Entity::colorBlit(int color, SDL_Surface *screen,
    else
       SDL_BlitSurface(indexShadowed, &srcLoc,
                       screen, &SDL_Rect(dest - Point(1, 1)));
-   if (black)
+   if (drawBlack())
       SDL_BlitSurface(indexBlack, &srcLoc,
                       screen, &dest);
 }
@@ -392,4 +391,8 @@ typeNum_t Entity::getTypeIndex() const{
 
 const Point &Entity::getLoc() const{
    return loc_;
+}
+
+bool Entity::drawBlack() const{
+   return false;
 }
