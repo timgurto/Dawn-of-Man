@@ -50,6 +50,9 @@ const SDL_Color MAGENTA = {0xff, 0, 0xff};
 const SDL_Color YELLOW  = {0xff, 0xff, 0};
 const SDL_Color WHITE   = {0xff, 0xff, 0xff};
 
+const Uint32 FOOTPRINT_COLOR_GOOD = 0x008800;
+const Uint32 FOOTPRINT_COLOR_BAD  = 0x880000;
+
 //TODO rename portraits to icons
 const pixels_t ICON_SIZE = 48;
 const std::string IMAGE_SUFFIX = ".png";

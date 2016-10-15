@@ -18,7 +18,7 @@ Point Point::operator-(const Point &rhs) const{
 }
 
 SDL_Rect Point::operator-(const SDL_Rect &rhs) const{
-   return makeRect(x-rhs.x, y-rhs.y, rhs.w, rhs.h);
+   return makeRect(x-rhs.x, y-rhs.y, -1 * rhs.w, -1 * rhs.h);
 }
 
 SDL_Rect Point::operator+(const SDL_Rect &rhs) const{

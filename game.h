@@ -11,8 +11,9 @@ struct GameData;
 
 void gameMode();
 void drawEverything(SDL_Surface *screen, SDL_Surface *back,
-                    SDL_Surface *cursor, const Point &mousePos,
-                    const GameData &game, const UIBars_t &bars);
+                    SDL_Surface *cursor, ControlMode mode,
+                    const Point &mousePos, const GameData &game,
+                    const UIBars_t &bars, typeNum_t toBuild);
 void updateState();
 void addEntity(GameData &game, Entity *entity);
 void removeEntity();

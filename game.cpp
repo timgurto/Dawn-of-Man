@@ -71,23 +71,35 @@ void gameMode(){
       SDL_Event event;
       while (SDL_PollEvent(&event) ){
          switch (event.type){
+
          case SDL_QUIT: //If the user has Xed out the window
             loop = false;
             break;
+
          case SDL_MOUSEMOTION:
             mousePos.x = event.motion.x;
             mousePos.y = event.motion.y;
             break;
+
          case SDL_KEYDOWN:
             switch (event.key.keysym.sym){
-            case SDLK_PRINT:
+            case SDLK_PRINT:{
                std::ostringstream os;
                os << "shot" << time(0) << ".bmp";
                SDL_SaveBMP(screen, os.str().c_str());
+               break;}
+            case SDLK_ESCAPE:
+               switch(controlMode){
+               case BUILD_MODE:
+                  controlMode = NORMAL_MODE;
+                  break;
+               }
+               break;
             }
             break;
+
          case SDL_MOUSEBUTTONDOWN:
-            //debug("Mouse down: ", int(event.button.button));
+            debug("Mouse down: ", int(event.button.button));
             switch (event.button.button){
             case 1: //left click
                switch (controlMode){
@@ -95,7 +107,6 @@ void gameMode(){
                   toBuild = buildingsBar.mouseIndex(mousePos);
                   debug("toBuild = ", toBuild);
                   if (toBuild != NO_TYPE){
-                     //TODO: draw footprint
                      controlMode = BUILD_MODE;
                   }
                   break;
@@ -107,6 +118,13 @@ void gameMode(){
                      addEntity(game, new Building(toBuild, mousePos));
                      controlMode = NORMAL_MODE;
                   }
+               }
+               break;
+            case 3: //right click
+               switch(controlMode){
+               case BUILD_MODE:
+                  controlMode = NORMAL_MODE;
+                  break;
                }
             }
             break;
@@ -127,8 +145,8 @@ void gameMode(){
       // Redraw if necessary
       if (ticks - lastDrawTick >= DRAW_MS){
          //debug("Tick: redrawing");
-         drawEverything(screen, back, cursor, mousePos, game,
-                        bars);
+         drawEverything(screen, back, cursor, controlMode,
+                        mousePos, game, bars, toBuild);
          lastDrawTick = MIN_WAIT ? ticks : lastDrawTick + DRAW_MS;
       }
 
@@ -144,9 +162,9 @@ void gameMode(){
 }
 
 void drawEverything(SDL_Surface *screen, SDL_Surface *back,
-                    SDL_Surface *cursor,
+                    SDL_Surface *cursor, ControlMode mode,
                     const Point &mousePos, const GameData &game,
-                    const UIBars_t &bars){
+                    const UIBars_t &bars, typeNum_t toBuild){
 
    //Background
    SDL_FillRect(screen, 0, 0);
@@ -160,6 +178,17 @@ void drawEverything(SDL_Surface *screen, SDL_Surface *back,
    for (entities_t::const_iterator it = game.entities.begin();
         it != game.entities.end(); ++it){
       (*it)->draw(screen, game);
+   }
+
+   //Building footprint
+   if (mode == BUILD_MODE){
+      SDL_Rect baseRect = mousePos + game.buildingTypes[toBuild].baseRect_;
+      Uint32 footprintColor;
+      if (noCollision(game, game.buildingTypes[toBuild], mousePos))
+         footprintColor = FOOTPRINT_COLOR_GOOD;
+      else
+         footprintColor = FOOTPRINT_COLOR_BAD;
+      SDL_FillRect(screen, &baseRect, footprintColor);
    }
 
    //Interface
