@@ -53,10 +53,10 @@ SDL_Surface *loadImage(const std::string fileName, const SDL_Color &background){
 
 SDL_Rect makeRect(Sint16 x, Sint16 y, Uint16 w, Uint16 h){
    SDL_Rect r;
-   r.x=x;
-   r.y=y;
-   r.w=w;
-   r.h=h;
+   r.x = x;
+   r.y = y;
+   r.w = w;
+   r.h = h;
    return r;
 }
 

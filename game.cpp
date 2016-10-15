@@ -65,18 +65,19 @@ void gameMode(){
    typeNum_t toBuild = NO_TYPE;
 
    //TODO load from files
+   //=================================================
    BuildingType campfire(0, "Campfire",
                          makeRect(-42, -92, 81, 113),
-                         //makeRect(-42, -92, 81, 113),
                          makeRect(-42, -22, 81, 42),
                          1250);
    game.buildingTypes.push_back(campfire);
    BuildingType shrine(1, "Shrine",
                          makeRect(-76, -67, 154, 79),
-                         //makeRect(-76, -67, 154, 79),
                          makeRect(-76, -17, 154, 28),
                          1750);
    game.buildingTypes.push_back(shrine);
+   game.players.push_back(makeColor(0x44, 0x44, 0xff));
+   //=================================================
 
    UIBars_t bars;
    UIBar::init(&game, screen, vBar, hBar);

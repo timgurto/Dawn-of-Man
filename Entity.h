@@ -51,7 +51,7 @@ public:
    static void init(GameData *game, SDL_Surface *screen);
 
    //How much of the entity should be drawn.
-   //FULL (1) by default
+   //FULL (1.0) by default
    virtual float getDrawPercent() const;
 };
 

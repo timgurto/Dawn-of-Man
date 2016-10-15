@@ -11,11 +11,11 @@
 #include "DecorationType.h"
 #include "Entity.h"
 #include "Particle.h"
+#include "Player.h"
 
-//type containers need to be contiguous for index access
 typedef std::vector<BuildingType> buildingTypes_t;
 typedef std::vector<DecorationType> decorationTypes_t;
-
+typedef std::vector<Player> players_t;
 typedef std::list<Entity *> entities_t;
 typedef std::list<Particle> particles_t;
 
@@ -25,19 +25,35 @@ typedef std::list<Particle> particles_t;
 struct GameData{
    
    //Entity types
+   //vectors:
+   // - contiguous for index access
    buildingTypes_t buildingTypes;
    decorationTypes_t decorationTypes;
    
+   //Each player in the game.
+   //[0] is always the human player.
+   //vector:
+   // - contiguous for index access
+   players_t players;
+
    //All entities in the game, sorted by y co-ordinate.
    //Entity* used, for polymorphism
+   //list:
+   // - iterated through sequentially
+   // - sorted; random swaps and insertions
+   // - random deletions
    entities_t entities;
+
+   //All particles in the game
+   //list:
+   // - iterated through sequentially
+   // - random deletions
+   particles_t particles;
 
    //The current game mode
    ControlMode mode;
 
-   //All particles in the game
-   particles_t particles;
-
+   //free entities pointed to
    ~GameData(){
       for (entities_t::iterator it = entities.begin();
            it != entities.end(); ++it){

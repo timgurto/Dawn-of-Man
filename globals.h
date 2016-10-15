@@ -23,6 +23,7 @@ typedef Uint16 progress_t;
 // true: X ms since last
 // false: every X ms (catches up if there's a delay)
 const bool MIN_WAIT = true;
+//TODO update state whenever possible
 const timer_t DRAW_MS = 1; //time between redraws
 const timer_t CALC_MS = 40; //time between state updates
 //progress points added per state update
