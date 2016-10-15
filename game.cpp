@@ -73,7 +73,6 @@ void gameMode(){
    //TODO load from files
    //=================================================
    game.players.push_back(0xca6500); //0x... = color
-   //TODO Point center += first rect
    BuildingType campfire(0, "Campfire",
                          makeRect(-42, -92, 81, 113),
                          makeRect(-42, -23, 81, 42),
@@ -123,7 +122,7 @@ void gameMode(){
       oldTicks = newTicks;
       double deltaMod = 1.0 * delta / DELTA_MODIFIER;
       
-      //TODO some means of displaying FPS in Release
+      //TODO some better means of displaying FPS in Release
       deltaLog("    Framerate: ", (delta == 0 ? 0 : 1000 / delta));
       deltaLog("        Delta: ", delta, "ms");
 
@@ -313,7 +312,7 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
 
                      //Shift key: construct multiple buildings
                      Uint8 *keyStates = SDL_GetKeyState(0);
-                     if(!keyStates[SDLK_LSHIFT]){
+                     if(!isKeyPressed(SDLK_LSHIFT)){
                         game.mode = NORMAL_MODE;
                         game.toBuild = NO_TYPE;
                      }
@@ -363,14 +362,13 @@ void scrollMap(GameData &game, double delta){
       game.map.y -= scroll;
 
    //arrow keys
-   Uint8 *keyStates = SDL_GetKeyState(0);
-   if (keyStates[SDLK_UP])
+   if (isKeyPressed(SDLK_UP))
       game.map.y += scroll;
-   if (keyStates[SDLK_DOWN])
+   if (isKeyPressed(SDLK_DOWN))
       game.map.y -= scroll;
-   if (keyStates[SDLK_LEFT])
+   if (isKeyPressed(SDLK_LEFT))
       game.map.x += scroll;
-   if (keyStates[SDLK_RIGHT])
+   if (isKeyPressed(SDLK_RIGHT))
       game.map.x -= scroll;
 
    //Enforce scroll boundaries

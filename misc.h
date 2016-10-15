@@ -56,6 +56,9 @@ SDL_Rect dimRect(const SDL_Rect &original);
 // of zero.
 SDL_Rect locRect(const SDL_Rect &original);
 
+//Whether the specified key is currently down
+bool isKeyPressed(SDLKey key);
+
 
 //===misc===
 

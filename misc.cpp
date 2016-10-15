@@ -123,6 +123,13 @@ SDL_Rect dimRect(const SDL_Rect &original){
 SDL_Rect locRect(const SDL_Rect &original){
    return makeRect(original.x, original.y);
 }
+//TODO Might be slow to repeat
+bool isKeyPressed(SDLKey key){
+   Uint8 *keyStates = SDL_GetKeyState(0);
+   return bool(keyStates[key]);
+}
+
+Uint8 *keyStates = SDL_GetKeyState(0);
 
 
 //========misc=========

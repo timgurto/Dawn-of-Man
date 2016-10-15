@@ -16,7 +16,7 @@ class Unit : public Entity{
 
 public:
    Unit(typeNum_t type, const Point &loc,
-        typeNum_t player = 0);
+        typeNum_t player = HUMAN_PLAYER);
    const virtual EntityType &Unit::type() const;
    virtual int getColor() const;
    virtual EntityTypeID classID() const;

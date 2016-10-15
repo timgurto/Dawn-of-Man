@@ -27,6 +27,7 @@ index_(original.index_),
 name_(original.name_),
 drawRect_(original.drawRect_),
 baseRect_(original.baseRect_),
+selectionCenter_(original.selectionCenter_),
 surface(copySurface(original.surface)),
 icon(copySurface(original.icon)),
 mask(copySurface(original.mask)){}
@@ -37,6 +38,7 @@ EntityType &EntityType::operator=(const EntityType &rhs){
       name_ = rhs.name_;
       drawRect_ = rhs.drawRect_;
       baseRect_ = rhs.baseRect_;
+      selectionCenter_ = rhs.selectionCenter_;
       surface = copySurface(rhs.surface);
       icon = copySurface(rhs.icon);
       mask = copySurface(rhs.mask);

@@ -25,6 +25,7 @@ const typeNum_t MAX_TYPES = 256;
 const typeNum_t MAX_PLAYERS = 2;
 
 //higher = slower game speed.
+//Game is normalized around this delta.
 const int DELTA_MODIFIER = 40;
 
 //progress points added per state update
@@ -42,6 +43,8 @@ const Point CURSOR_OFFSET(0,-9);
 const Point CURSOR_RAISED(-16, 16);
 
 const typeNum_t NO_TYPE = 0xffff;
+
+const typeNum_t HUMAN_PLAYER = 0;
 
 //unfortunately, different SDL functions use different
 //color formats

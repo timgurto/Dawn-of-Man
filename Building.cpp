@@ -147,5 +147,7 @@ EntityTypeID Building::classID() const{
 }
 
 bool Building::selectable() const{
-   return true;
+   return
+      finished &&
+      player_ == HUMAN_PLAYER;
 }

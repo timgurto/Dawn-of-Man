@@ -22,5 +22,6 @@ EntityTypeID Unit::classID() const{
 }
 
 bool Unit::selectable() const{
-   return true;
+   return
+      player_ == HUMAN_PLAYER;
 }
