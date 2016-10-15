@@ -1,4 +1,4 @@
-// (C) 2009 Tim Gurto
+// (C) 2009-2010 Tim Gurto
 
 #ifndef DEBUG_H
 #define DEBUG_H
@@ -28,9 +28,8 @@ class Debug{
    SDL_Surface *screen_; //The surface used to display
    int height; //the height of each line of text
 
-   //whether SDL_TTF has been closed, to ensure it
-   //only happens once
-   static bool ttfClosed;
+   //debug objects that exist
+   static int debugCount;
 
 public:
    Debug(SDL_Color color, pixels_t x, pixels_t y,

@@ -12,6 +12,7 @@
 #ifdef NDEBUG
 const bool DEBUG = false;
 #else
+//TODO make "debug" a macro
 const bool DEBUG = true;
 #endif
 
@@ -26,11 +27,9 @@ const typeNum_t MAX_PLAYERS = 2;
 // true: X ms since last
 // false: every X ms (catches up if there's a delay)
 const bool MIN_WAIT = true;
-//TODO update state whenever possible
-const timer_t DRAW_MS = 1; //time between redraws
-const timer_t CALC_MS = 40; //time between state updates
 //progress points added per state update
 //progress points: proportional to completion time
+//TODO turn into a coefficient for delta
 const progress_t PROGRESS_PER_CALC = 4;
 
 const pixels_t SCREEN_WIDTH = 1024;
@@ -61,9 +60,16 @@ const Uint32 MAGENTA_UINT = 0xff00ff;
 const Uint32 YELLOW_UINT  = 0xffff00;
 const Uint32 WHITE_UINT   = 0xffffff;
 
+const Uint8 MOUSE_BUTTON_LEFT        = 1;
+const Uint8 MOUSE_BUTTON_MIDDLE      = 2;
+const Uint8 MOUSE_BUTTON_RIGHT       = 3;
+const Uint8 MOUSE_BUTTON_SCROLL_UP   = 4;
+const Uint8 MOUSE_BUTTON_SCROLL_DOWN = 5;
+
 const float FULL  = 1;
 const float EMPTY = 0;
 
+//Alpha of shadows (particles, cursor)
 const Uint8 SHADOW_ALPHA = 0x44;
 
 //anything behind each entity is cleared

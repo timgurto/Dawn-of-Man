@@ -14,7 +14,8 @@ struct GameData;
 void gameMode();
 
 //Any processing within the game loop
-void updateState(GameData &game, SDL_Surface *screen, UIBars_t &bars);
+void updateState(timer_t delta, GameData &game, SDL_Surface *screen,
+                 UIBars_t &bars);
 
 //Draws a frame
 void drawEverything(SDL_Surface *screen, SDL_Surface *back,

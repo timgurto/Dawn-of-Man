@@ -79,11 +79,6 @@ struct GameData{
    typeNum_t toBuild;
 
 
-
-
-
-
-
 };
 
 #endif

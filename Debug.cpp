@@ -1,4 +1,4 @@
-// (C) 2009 Tim Gurto
+// (C) 2009-2010 Tim Gurto
 
 #include <queue>
 #include <cassert>
@@ -10,22 +10,23 @@
 #include "globals.h"
 #include "Debug.h"
 
-bool Debug::ttfClosed = false;
+int Debug::debugCount = 0;
 
 Debug::Debug(SDL_Color color, pixels_t x, pixels_t y,
              unsigned short count):
 color_(color),
 x_(x),
 y_(y),
-count_(count){}
+count_(count){
+   ++debugCount;
+}
 
 Debug::~Debug(){
+   --debugCount;
    if (font != 0)
       TTF_CloseFont(font);
-   if (!ttfClosed){
+   if (debugCount == 0)
       TTF_Quit();
-      ttfClosed = true;
-   }
 }
 
 void Debug::initScreen(SDL_Surface *screen){

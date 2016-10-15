@@ -25,12 +25,14 @@
 #include "Particle.h"
 
 extern Debug debug;
+extern Debug deltaLog;
 
 void gameMode(){
    srand(unsigned(time(0)));
 
    SDL_Surface *screen = setScreen();
    debug.initScreen(screen);
+   deltaLog.initScreen(screen);
 
    SDL_Surface
       *back = loadImage(IMAGE_PATH + "back.png"),
@@ -99,10 +101,6 @@ void gameMode(){
    
 
    timer_t oldTicks = SDL_GetTicks();
-   //timer_t lastCalcTick = ticks, lastDrawTick = ticks;
-   debug("Redraw frequency: ", DRAW_MS, "ms");
-   debug("State update frequency: ", CALC_MS, "ms");
-
    game.loop = true;
    while (game.loop){
       
@@ -112,7 +110,7 @@ void gameMode(){
       oldTicks = newTicks;
 
       //update state
-      updateState(game, screen, bars);
+      updateState(delta, game, screen, bars);
 
       //render
       drawEverything(screen,
@@ -124,7 +122,7 @@ void gameMode(){
                      bars);
 
 
-   } //loop while
+   }
 
    SDL_ShowCursor(SDL_ENABLE);
 
@@ -140,9 +138,10 @@ void gameMode(){
 }
 
 //TODO take delta into account when updating
-void updateState(GameData &game, SDL_Surface *screen,
-                 UIBars_t &bars){
-
+void updateState(timer_t delta, GameData &game,
+                 SDL_Surface *screen, UIBars_t &bars){
+   deltaLog("Delta: ", delta);
+   deltaLog("  FPS: ", 1000 / (delta != 0 ? delta : 1));
    handleEvents(game, screen, bars);
 
    //Entities
@@ -216,6 +215,7 @@ void drawEverything(SDL_Surface *screen, SDL_Surface *back,
 
    //Debug text
    debug.display();
+   deltaLog.display();
 
    //Finalize
    bool test = SDL_Flip(screen) == 0;
@@ -232,15 +232,18 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
    while (SDL_PollEvent(&event)){
       switch (event.type){
 
+      //Window is exited
       case SDL_QUIT:
          game.loop = false;
          break;
 
+      //Mouse is moved
       case SDL_MOUSEMOTION:
          game.mousePos.x = event.motion.x;
          game.mousePos.y = event.motion.y;
          break;
 
+      //A key is pressed
       case SDL_KEYDOWN:
          switch (event.key.keysym.sym){
          case SDLK_PRINT:
@@ -264,11 +267,11 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
 
          break;
 
+      //A mouse button is clicked
       case SDL_MOUSEBUTTONDOWN:
          debug("Mouse down: ", int(event.button.button));
          switch (event.button.button){
-            //TODO encode mouse button numbers
-         case 1: //left click
+         case MOUSE_BUTTON_LEFT:
             { //new scope for barClicked
                //check UI bars
                bool barClicked = false;
@@ -292,6 +295,8 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
                                game.mousePos)){
                   addEntity(game, new Building(game.toBuild,
                             game.mousePos));
+
+                  //Shift key: construct multiple buildings
                   Uint8 *keyStates = SDL_GetKeyState(0);
                   if(!keyStates[SDLK_LSHIFT]){
                      game.mode = NORMAL_MODE;
@@ -300,7 +305,7 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
                }
             }
             break;
-         case 3: //right click
+         case MOUSE_BUTTON_RIGHT:
             switch(game.mode){
             case BUILD_MODE:
                game.mode = NORMAL_MODE;

@@ -1,7 +1,6 @@
 // (C) 2009-2010 Tim Gurto
 
 #include <cassert>
-#include <string>
 
 #include "SDL.h"
 #include "SDL_ttf.h"
@@ -11,8 +10,17 @@
 #include "game.h"
 
 //globals
+
+//shows framerate and delta values
+Debug deltaLog(CYAN, 465, 0, 2);
+
+//general debug messages
 Debug debug(YELLOW, 0, 0, 59);
-int surfacesLoaded(0); //for safety
+
+//the number of surfaces loaded
+// - increases with loadImage()
+// - decreases with freeSurface()
+int surfacesLoaded(0);
 
 int main(int argc, char* argv[]){
    int sdlInit(SDL_Init(SDL_INIT_VIDEO));
@@ -22,6 +30,7 @@ int main(int argc, char* argv[]){
    assert (ttfInit >= 0);
 
    debug.initFont("Dina.fon", 0);
+   deltaLog.initFont("Dina.fon", 0);
 
    //new game
 

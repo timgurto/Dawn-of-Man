@@ -39,7 +39,6 @@ void Entity::draw(SDL_Surface *screen) const{
 void Entity::shadowBlit(SDL_Rect *srcLoc,
                         SDL_Rect *dstLoc,
                         SDL_Surface *screen) const{
-   //TODO index surfaces   
    const EntityType &thisType = type();
 
    //blit mask, hiding anything that would otherwise
