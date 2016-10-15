@@ -10,8 +10,10 @@ class EntityPtr{
 
 public:
    EntityPtr(Entity *ptr);
+   EntityPtr operator=(Entity *ptr);
    bool operator<(const EntityPtr &rhs) const;
    Entity *operator->();
+   Entity &operator*();
 };
 
 #endif

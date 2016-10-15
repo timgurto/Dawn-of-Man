@@ -13,6 +13,7 @@
 #include "globals.h"
 #include "game.h"
 #include "Entity.h"
+#include "EntityPtr.h"
 
 extern Debug debug;
 
@@ -73,8 +74,8 @@ void gameMode(){
             //debug("Mouse down: ", int(event.button.button));
             switch (event.button.button){
             case 1: //left click
-               Entity *newBuilding = new Building(0, Point(mouseX, mouseY));
-               game.entities.push_back(EntityPtr(newBuilding));
+               EntityPtr newBuilding(new Building(0, Point(mouseX, mouseY)));
+               game.entities.push_back(newBuilding);
                //TODO fix sort
                //should be individually inserted rather than sorting the whole list
                game.entities.sort();
@@ -124,7 +125,7 @@ void drawEverything(SDL_Surface *screen, SDL_Surface *back,
    SDL_BlitSurface(image, 0, screen, &makeRect(50,50));
    
 
-   for (std::list<Building>::const_iterator it = game.entities.begin();
+   for (std::list<EntityPtr>::const_iterator it = game.entities.begin();
         it != game.entities.end(); ++it){
       it->draw(screen, game);
    }
