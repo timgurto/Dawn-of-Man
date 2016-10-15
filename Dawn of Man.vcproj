@@ -248,6 +248,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\render.h"
+				>
+			</File>
+			<File
 				RelativePath=".\UIBar.h"
 				>
 			</File>
@@ -261,6 +265,10 @@
 			</File>
 			<File
 				RelativePath=".\UnitType.h"
+				>
+			</File>
+			<File
+				RelativePath=".\update.h"
 				>
 			</File>
 		</Filter>
@@ -336,6 +344,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\render.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\UIBar.cpp"
 				>
 			</File>
@@ -349,6 +361,10 @@
 			</File>
 			<File
 				RelativePath=".\UnitType.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\update.cpp"
 				>
 			</File>
 		</Filter>

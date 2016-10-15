@@ -1,7 +1,6 @@
 // (C) 2009-2010 Tim Gurto
 
 //TODO copy comments at declarations to definitions
-//TODO _ naming convention for private members
 
 #include <cassert>
 
@@ -53,7 +52,6 @@ int main(int argc, char* argv[]){
    SDL_Rect** resolutions = SDL_ListModes(0, SDL_FULLSCREEN | SDL_HWSURFACE | SDL_DOUBLEBUF);
    assert (resolutions != 0);
    debug("Available resolutions:");
-   //TODO default wide res
    bool defaultResOkay = false; //whether the default screen size is available
    bool defaultWResOkay = false; //as above, for widescreen
    while (*resolutions){

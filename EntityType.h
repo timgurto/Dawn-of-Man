@@ -22,9 +22,9 @@ class EntityType{
    //where the selection indicator is centered
    Point selectionCenter_;
    SDL_Surface
-      *surface, //main image
-      *icon, //icon, for UIBars
-      *mask; //green and magenta background mask
+      *surface_, //main image
+      *icon_, //icon, for UIBars
+      *mask_; //green and magenta background mask
 
 public:
    EntityType(typeNum_t index, EntityTypeID type,

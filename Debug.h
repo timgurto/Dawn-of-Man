@@ -20,17 +20,17 @@
 class Debug{
    SDL_Color color_; //font color
    std::string name_; //font name
-   TTF_Font *font; //SDL font object
+   TTF_Font *font_; //SDL font object
    pixels_t x_, y_; //co-ordinates of top-left corner
    
    //maximum number of messages to show at once
    unsigned short count_;
    std::queue<std::string> messages; //the messages
    SDL_Surface *screen_; //The surface used to display
-   int height; //the height of each line of text
+   int height_; //the height of each line of text
 
    //debug objects that exist
-   static int debugCount;
+   static int debugCount_;
 
 public:
    Debug(SDL_Color color, pixels_t x, pixels_t y,

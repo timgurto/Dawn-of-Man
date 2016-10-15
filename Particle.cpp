@@ -17,38 +17,38 @@ SDL_Surface
    *Particle::image_ = 0,
    *Particle::shadow_ = 0;
 
-Particle::Particle(const pixels_t xPos, const pixels_t yPos):
-x(xPos),
-y(yPos),
-age(255),
-offset(0){
-   hV = rand() * 2 * VELOCITY_RANGE / RAND_MAX - VELOCITY_RANGE;
-   vV = rand() * 2 * VELOCITY_RANGE / RAND_MAX - VELOCITY_RANGE;
+Particle::Particle(const pixels_t x, const pixels_t y):
+x_(x),
+y_(y),
+age_(255),
+offset_(0){
+   hV_ = rand() * 2 * VELOCITY_RANGE / RAND_MAX - VELOCITY_RANGE;
+   vV_ = rand() * 2 * VELOCITY_RANGE / RAND_MAX - VELOCITY_RANGE;
 }
 //TODO ParticleType class with tick() function pointer
 void Particle::tick(double delta){
-   age -= delta * DECAY;
-   x += delta * hV;
-   offset += (hV >= 0 ? delta * hV : -1 * delta * hV);
-   y -= delta * vV;
-   vV -= delta * GRAVITY;
+   age_ -= delta * DECAY;
+   x_ += delta * hV_;
+   offset_ += (hV_ >= 0 ? delta * hV_ : -1 * delta * hV_);
+   y_ -= delta * vV_;
+   vV_ -= delta * GRAVITY;
 }
 
 void Particle::draw(const GameData &game) const{
-   SDL_Rect dest = makeRect(int(x), int(y)) + game.map;
+   SDL_Rect dest = makeRect(Sint16(x_), Sint16(y_)) + game.map;
 
    //shadow
-   SDL_Rect disp = makeRect(int(dest.x - offset), int(dest.y + offset));
+   SDL_Rect disp = makeRect(int(dest.x - offset_), int(dest.y + offset_));
    SDL_BlitSurface(shadow_, 0, screen_, &disp);
 
    //particle
    if (PARTICLE_FADE)
-      SDL_SetAlpha(image_, SDL_SRCALPHA, Uint8(age));
+      SDL_SetAlpha(image_, SDL_SRCALPHA, Uint8(age_));
    SDL_BlitSurface(image_, 0, screen_, &dest);
 }
 
 bool Particle::expired() const{
-   return (age <= 0);
+   return (age_ <= 0);
 }
 
 void Particle::init(SDL_Surface *screen, SDL_Surface *image,

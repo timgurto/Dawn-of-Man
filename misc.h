@@ -60,6 +60,8 @@ SDL_Rect locRect(const SDL_Rect &original);
 //Whether the specified key is currently down
 bool isKeyPressed(SDLKey key);
 
+SDL_Rect &operator-=(SDL_Rect &lhs, const SDL_Rect &rhs);
+
 
 //===misc===
 

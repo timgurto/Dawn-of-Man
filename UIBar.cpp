@@ -13,17 +13,15 @@ SDL_Surface *UIBar::hBarSurface_ = 0;
 SDL_Surface *UIBar::vBarSurface_ = 0;
 
 UIBar::UIBar(Corner corner, Orientation orientation,
-             SDL_Surface *(*surfaceFun)(typeNum_t index,
-                                        const GameData &game),
-             void (*clickFunction)(typeNum_t index,
-                                   GameData &game),
-             typeNum_t initialIconCount,
+             surfaceFunPtr surfaceFun,
+             clickFunPtr clickFun,
+             typeNum_t iconCount,
              ControlMode requiredMode):
 corner_(corner),
 orientation_(orientation),
 surfaceFun_(surfaceFun),
-clickFun(clickFunction),
-iconCount(initialIconCount),
+clickFun_(clickFun),
+iconCount_(iconCount),
 requiredMode_(requiredMode){
    calculateRect();
 }
@@ -32,45 +30,45 @@ void UIBar::calculateRect(){
    if (orientation_ == VERTICAL){
       switch (corner_){
       case TOP_LEFT:
-         rect.x = 0;
-         rect.y = 0;
+         rect_.x = 0;
+         rect_.y = 0;
          break;
       case TOP_RIGHT:
-         rect.x = SCREEN_WIDTH - ICON_SIZE;
-         rect.y = 0;
+         rect_.x = SCREEN_WIDTH - ICON_SIZE;
+         rect_.y = 0;
          break;
       case BOTTOM_LEFT:
-         rect.x = 0;
-         rect.y = SCREEN_HEIGHT - ICON_SIZE * iconCount;
+         rect_.x = 0;
+         rect_.y = SCREEN_HEIGHT - ICON_SIZE * iconCount_;
          break;
       case BOTTOM_RIGHT:
-         rect.x = SCREEN_WIDTH - ICON_SIZE;
-         rect.y = SCREEN_HEIGHT - ICON_SIZE * iconCount;
+         rect_.x = SCREEN_WIDTH - ICON_SIZE;
+         rect_.y = SCREEN_HEIGHT - ICON_SIZE * iconCount_;
          break;
       }
-      rect.w = ICON_SIZE;
-      rect.h = ICON_SIZE * iconCount;
+      rect_.w = ICON_SIZE;
+      rect_.h = ICON_SIZE * iconCount_;
    }else{
       switch (corner_){
       case TOP_LEFT:
-         rect.x = 0;
-         rect.y = 0;
+         rect_.x = 0;
+         rect_.y = 0;
          break;
       case TOP_RIGHT:
-         rect.x = SCREEN_WIDTH - ICON_SIZE * iconCount;
-         rect.y = 0;
+         rect_.x = SCREEN_WIDTH - ICON_SIZE * iconCount_;
+         rect_.y = 0;
          break;
       case BOTTOM_LEFT:
-         rect.x = 0;
-         rect.y = SCREEN_HEIGHT - ICON_SIZE;
+         rect_.x = 0;
+         rect_.y = SCREEN_HEIGHT - ICON_SIZE;
          break;
       case BOTTOM_RIGHT:
-         rect.x = SCREEN_WIDTH - ICON_SIZE * iconCount;
-         rect.y = SCREEN_HEIGHT - ICON_SIZE;
+         rect_.x = SCREEN_WIDTH - ICON_SIZE * iconCount_;
+         rect_.y = SCREEN_HEIGHT - ICON_SIZE;
          break;
       }
-      rect.w = ICON_SIZE * iconCount;
-      rect.h = ICON_SIZE;
+      rect_.w = ICON_SIZE * iconCount_;
+      rect_.h = ICON_SIZE;
    }
 }
 
@@ -82,12 +80,12 @@ void UIBar::draw() const{
                           hBarSurface_ :
                           vBarSurface_);
 
-      SDL_BlitSurface(src, &makeRect(0, 0, rect.w, rect.h),
-                      screen_, &SDL_Rect(rect));
+      SDL_BlitSurface(src, &makeRect(0, 0, rect_.w, rect_.h),
+                      screen_, &SDL_Rect(rect_));
       
       //blit icons
-      pixels_t x = rect.x, y = rect.y;
-      for (typeNum_t i = 0; i != iconCount; ++i){
+      pixels_t x = rect_.x, y = rect_.y;
+      for (typeNum_t i = 0; i != iconCount_; ++i){
          //draw
          SDL_BlitSurface(surfaceFun_(i, *game_), 0, screen_, &makeRect(x, y));
 
@@ -102,7 +100,7 @@ void UIBar::draw() const{
 
 typeNum_t UIBar::mouseIndex(const Point &point) const{
    //if collision with bar
-   SDL_Rect barRect = rect;
+   SDL_Rect barRect = rect_;
    if (collision(point, barRect))
       switch (orientation_){
       case HORIZONTAL:
@@ -127,4 +125,8 @@ void UIBar::init(GameData *game,
    screen_ = screen;
    vBarSurface_ = vBarSurface;
    hBarSurface_ = hBarSurface;
+}
+
+void UIBar::click(typeNum_t index){
+   clickFun_(index, *game_);
 }

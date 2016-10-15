@@ -10,9 +10,9 @@
 class Player{
 public:
    //the color of this player's entities
-   Uint32 color;
+   Uint32 color_;
 
-   Player(Uint32 playerColor);
+   Player(Uint32 color);
 };
 
 #endif

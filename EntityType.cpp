@@ -14,11 +14,11 @@ name_(name),
 drawRect_(drawRect),
 baseRect_(baseRect),
 selectionCenter_(selectionCenter){
-   surface = loadImage(makePath(type, index_),
+   surface_ = loadImage(makePath(type, index_),
                        ENTITY_MASK);
-   icon = loadImage(makePath(type, index_, ICON),
+   icon_ = loadImage(makePath(type, index_, ICON),
                     ENTITY_BACKGROUND);
-   mask = loadImage(makePath(type, index_, MASK),
+   mask_ = loadImage(makePath(type, index_, MASK),
                     ENTITY_MASK);
 }
 
@@ -28,9 +28,9 @@ name_(original.name_),
 drawRect_(original.drawRect_),
 baseRect_(original.baseRect_),
 selectionCenter_(original.selectionCenter_),
-surface(copySurface(original.surface)),
-icon(copySurface(original.icon)),
-mask(copySurface(original.mask)){}
+surface_(copySurface(original.surface_)),
+icon_(copySurface(original.icon_)),
+mask_(copySurface(original.mask_)){}
 
 EntityType &EntityType::operator=(const EntityType &rhs){
    if (&rhs != this){
@@ -39,17 +39,17 @@ EntityType &EntityType::operator=(const EntityType &rhs){
       drawRect_ = rhs.drawRect_;
       baseRect_ = rhs.baseRect_;
       selectionCenter_ = rhs.selectionCenter_;
-      surface = copySurface(rhs.surface);
-      icon = copySurface(rhs.icon);
-      mask = copySurface(rhs.mask);
+      surface_ = copySurface(rhs.surface_);
+      icon_ = copySurface(rhs.icon_);
+      mask_ = copySurface(rhs.mask_);
    }
    return *this;
 }
 
 EntityType::~EntityType(){
-   freeSurface(surface);
-   freeSurface(icon);
-   freeSurface(mask);
+   freeSurface(surface_);
+   freeSurface(icon_);
+   freeSurface(mask_);
 }
 
 SDL_Rect EntityType::getBaseRect() const{
@@ -61,7 +61,7 @@ SDL_Rect EntityType::getDrawRect() const{
 }
 
 SDL_Surface *EntityType::getIcon() const{
-   return icon;
+   return icon_;
 }
 
 const std::string &EntityType::getName(){

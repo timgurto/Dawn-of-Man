@@ -3,6 +3,7 @@
 #ifndef UI_BAR_H
 #define UI_BAR_H
 
+#include <vector>
 #include "SDL.h"
 #include "globals.h"
 #include "uiBarFunctions.h"
@@ -20,14 +21,16 @@ class UIBar{
    ControlMode requiredMode_;
 
    //How many icons constitute the bar
-   typeNum_t iconCount;
+   typeNum_t iconCount_;
 
    //the function that returns icons to draw
-   SDL_Surface *(*surfaceFun_)(typeNum_t index,
-                               const GameData &game);
+   surfaceFunPtr surfaceFun_;
+
+   //the function that executes when a button is pushed.
+   clickFunPtr clickFun_;
 
    //The rectangle describing the bar's dimensions
-   SDL_Rect rect;
+   SDL_Rect rect_;
    void calculateRect();
 
    //static pointers to access game data and bar backgrounds
@@ -37,11 +40,9 @@ class UIBar{
 
 public:
    UIBar(Corner corner, Orientation orientation,
-         SDL_Surface *(*surfaceFun)(typeNum_t index,
-                                    const GameData &game),
-         void (*clickFunction)(typeNum_t index,
-                               GameData &game),
-         typeNum_t initialIconCount,
+         surfaceFunPtr surfaceFun,
+         clickFunPtr clickFun,
+         typeNum_t iconCount,
          ControlMode requiredMode);
 
    //Initializes static pointers
@@ -57,12 +58,10 @@ public:
    //NO_TYPE if none
    typeNum_t mouseIndex(const Point &point) const;
 
-   //the function that executes when a button is pushed.
-   //TODO make private
-   void (*clickFun)(typeNum_t index, GameData &game);
-
    //Whether this bar is active, given the current game mode
    bool isActive(ControlMode mode);
+
+   void click(typeNum_t index);
 };
 
 //So that all bars can be dealt with at the same time

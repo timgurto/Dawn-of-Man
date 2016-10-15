@@ -20,7 +20,7 @@ SDL_Surface *Entity::screen_ = 0;
 Entity::Entity(typeNum_t type, const Point &loc):
 type_(type),
 loc_(loc),
-direction(Direction(rand() % 4)),
+direction_(Direction(rand() % 4)),
 selected(false),
 verticalMovement_(VM_NONE){}
 
@@ -81,8 +81,8 @@ void Entity::colorBlit(int color, SDL_Surface *screen,
       //1. create it
       debug("Creating indexed surface");
       SDL_Rect drawRect = type().drawRect_;
-      index = createSurface(thisType.surface->w,
-                            thisType.surface->h);
+      index = createSurface(thisType.surface_->w,
+                            thisType.surface_->h);
       SDL_SetColorKey(index, SDL_SRCCOLORKEY,
                       SDL_MapRGB(index->format,
                                  ENTITY_BACKGROUND.r,
@@ -94,7 +94,7 @@ void Entity::colorBlit(int color, SDL_Surface *screen,
                    getEntityColor(*game_, color));
 
       //3. add sprite
-      SDL_BlitSurface(thisType.surface, 0, index, 0);
+      SDL_BlitSurface(thisType.surface_, 0, index, 0);
    }
 
    SDL_Rect dest = dstLoc + Point(game_->map);
@@ -102,7 +102,7 @@ void Entity::colorBlit(int color, SDL_Surface *screen,
    //blit mask, hiding anything that would otherwise
    //show through the gaps in the sprite
    if (ENTITY_MASKS)
-      SDL_BlitSurface(thisType.mask, &srcLoc, screen,
+      SDL_BlitSurface(thisType.mask_, &srcLoc, screen,
                       &SDL_Rect(dest));
    //note: the "SDL_Rect(dest)" above avoids SDL_Blit
    //messing with the draw location

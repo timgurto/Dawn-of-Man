@@ -21,14 +21,13 @@ protected: //everything should be a derived class
    typeNum_t type_;
 
    //direction of clipping for partial drawing
-   Direction direction;
+   Direction direction_;
 
    //any vertical movement that took place during the
    //last tick()
    VerticalMovement verticalMovement_;
 
    Point loc_; //location
-   //TODO use reference instead of ptr
    static GameData *game_; //static pointer to game
    static SDL_Surface *screen_;
 

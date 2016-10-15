@@ -15,8 +15,8 @@ class EntityType;
 class Building : public Entity{
 
    progress_t progress_; //construction progress
-   bool finished; //whether construction is finished
-   double drawPercent; //value for partial drawing
+   bool finished_; //whether construction is finished
+   double drawPercent_; //value for partial drawing
    typeNum_t player_; //the building's controlling player
 
 public:

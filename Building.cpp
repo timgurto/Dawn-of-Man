@@ -16,8 +16,8 @@ Building::Building(typeNum_t type, const Point &loc,
 Entity(type, loc),
 progress_(progress),
 player_(player),
-finished(progress == game_->buildingTypes[type].progress_),
-drawPercent(1.0f *
+finished_(progress == game_->buildingTypes[type].progress_),
+drawPercent_(1.0f *
             progress_ /
             game_->buildingTypes[type_].progress_){}
 
@@ -37,7 +37,7 @@ void Building::draw(SDL_Surface *screen) const{
                           thisType.drawRect_.h);
 
    //clip, based on randomized direction
-   switch(direction){
+   switch(direction_){
    case RIGHT:
       srcLoc = makeRect(0,
                         0,
@@ -71,19 +71,19 @@ void Building::draw(SDL_Surface *screen) const{
 }
 
 void Building::tick(double delta){
-   if (!finished){
+   if (!finished_){
       progress_ += delta * PROGRESS_PER_CALC;
       //debug("progress = ", progress_);
       if (progress_ >= game_->buildingTypes[type_].progress_){
-         finished = true;
-         drawPercent = FULL;
+         finished_ = true;
+         drawPercent_ = FULL;
          //debug("building finished");
       }else
-         drawPercent = 1.0 * progress_ /
+         drawPercent_ = 1.0 * progress_ /
                  game_->buildingTypes[type_].progress_;
    }
 
-   if (!finished){
+   if (!finished_){
       int particlesToDraw = int(1.0 * rand() / RAND_MAX +
                                 0.02 * 
                                 Particle::PARTICLE_COUNT *
@@ -93,14 +93,14 @@ void Building::tick(double delta){
       for (int i = 0; i != particlesToDraw; ++i){
          //calculate initial co-ords
          pixels_t x = 0, y = 0;
-         switch(direction){
+         switch(direction_){
          case UP:
             x = loc_.x + 
                 type().drawRect_.x +
                 rand() % type().drawRect_.w;
             y = loc_.y + 
                 type().drawRect_.y +
-                pixels_t((1.0 - drawPercent) * type().drawRect_.h);
+                pixels_t((1.0 - drawPercent_) * type().drawRect_.h);
             break;
          case DOWN:
             x = loc_.x + 
@@ -108,12 +108,12 @@ void Building::tick(double delta){
                 rand() % type().drawRect_.w;
             y = loc_.y + 
                 type().drawRect_.y +
-                pixels_t(drawPercent * type().drawRect_.h);
+                pixels_t(drawPercent_ * type().drawRect_.h);
             break;
          case LEFT:
             x = loc_.x + 
                 type().drawRect_.x +
-                pixels_t((1.0 - drawPercent) * type().drawRect_.w);
+                pixels_t((1.0 - drawPercent_) * type().drawRect_.w);
             y = loc_.y + 
                 type().drawRect_.y +
                 rand() % type().drawRect_.h;
@@ -121,7 +121,7 @@ void Building::tick(double delta){
          case RIGHT:
             x = loc_.x + 
                 type().drawRect_.x +
-                pixels_t(drawPercent * type().drawRect_.w);
+                pixels_t(drawPercent_ * type().drawRect_.w);
             y = loc_.y + 
                 type().drawRect_.y +
                 rand() % type().drawRect_.h;
@@ -134,7 +134,7 @@ void Building::tick(double delta){
 }
 
 double Building::getDrawPercent() const{
-   return drawPercent;
+   return drawPercent_;
 }
 
 int Building::getColor() const{
@@ -147,6 +147,6 @@ EntityTypeID Building::classID() const{
 
 bool Building::selectable() const{
    return
-      finished &&
+      finished_ &&
       player_ == HUMAN_PLAYER;
 }

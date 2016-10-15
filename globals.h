@@ -3,7 +3,6 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
-//TODO move stuff to related classes
 #include <string>
 #include "SDL.h"
 #include "Point.h"
@@ -42,6 +41,8 @@ const int SCREEN_BPP = 32;
 
 //in case the cursor point isn't at 0,0
 const Point CURSOR_OFFSET(0,-9);
+
+//offset to draw raised cursor/shadow
 const Point CURSOR_RAISED(-16, 16);
 
 const typeNum_t NO_TYPE = 0xffff;

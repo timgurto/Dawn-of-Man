@@ -12,10 +12,10 @@ struct GameData;
 
 class Particle{
 
-   double x, y; //position
-   double age; //how long the particle has existed
-   double hV, vV; //velocity
-   double offset; //lateral displacement, for shadow
+   double x_, y_; //position
+   double age_; //how long the particle has existed
+   double hV_, vV_; //velocity
+   double offset_; //lateral displacement, for shadow
 
    //static pointers to surfaces
    static SDL_Surface
@@ -32,7 +32,7 @@ public:
    const static int DELAY; //in ms
    const static int DECAY;
 
-   Particle(const pixels_t xPos, const pixels_t yPos);
+   Particle(const pixels_t x, const pixels_t y);
 
    //updates to velocity and position
    void tick(double delta);

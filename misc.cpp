@@ -130,7 +130,13 @@ bool isKeyPressed(SDLKey key){
    return keyStates[key] != 0;
 }
 
-Uint8 *keyStates = SDL_GetKeyState(0);
+SDL_Rect &operator-=(SDL_Rect &lhs, const SDL_Rect &rhs){
+   lhs.x -= rhs.x;
+   lhs.y -= rhs.y;
+   lhs.w -= rhs.w;
+   lhs.h -= rhs.h;
+   return lhs;
+}
 
 
 //========misc=========
@@ -187,8 +193,7 @@ bool noCollision(const GameData &game, const EntityType &type,
    if (!inside(rect, game.map))
       return false;
    
-   //TODO operator-=
-   rect = rect - game.map;
+   rect -= game.map;
 
    //check against entities
    for (entities_t::const_iterator it = game.entities.begin();
@@ -226,7 +231,7 @@ bool collision(const SDL_Rect rect, const Point &point){
 Uint32 getEntityColor(const GameData &game, int color){
    //if a player color
    if (color < MAX_PLAYERS)
-      return game.players[color].color;
+      return game.players[color].color_;
    
    //otherwise
    //switch(color){
