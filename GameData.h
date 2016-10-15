@@ -11,7 +11,7 @@
 
 struct GameData{
    std::vector<BuildingType> buildingTypes;
-   std::list<EntityPtr> entities;
+   std::list<Entity *> entities;
 };
 
 #endif

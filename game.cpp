@@ -74,8 +74,7 @@ void gameMode(){
             //debug("Mouse down: ", int(event.button.button));
             switch (event.button.button){
             case 1: //left click
-               EntityPtr newBuilding(new Building(0, Point(mouseX, mouseY)));
-               newBuilding->draw(screen, game);
+               Entity *newBuilding(new Building(0, Point(mouseX, mouseY)));
                game.entities.push_back(newBuilding);
                //TODO fix sort
                //should be individually inserted rather than sorting the whole list
@@ -126,9 +125,9 @@ void drawEverything(SDL_Surface *screen, SDL_Surface *back,
    SDL_BlitSurface(image, 0, screen, &makeRect(50,50));
    
 
-   for (std::list<EntityPtr>::const_iterator it = game.entities.begin();
+   for (std::list<Entity *>::const_iterator it = game.entities.begin();
         it != game.entities.end(); ++it){
-      (* *it).draw(screen, game);
+      (*it)->draw(screen, game);
    }
 
    //TODO use blitCursor
