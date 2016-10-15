@@ -182,10 +182,9 @@ Uint32 getEntityColor(const GameData &game, int color){
    switch(color){
    case ENTITY_DEFAULT:
       return ENTITY_DEFAULT_COLOR;
-   //TODO verify colors
-   case ENTITY_WHITE:
+   case ENTITY_SHADOW_LIGHT:
       return 0xdddddd; //WHITE_UINT;
-   case ENTITY_BLACK:
+   case ENTITY_SHADOW_DARK:
       return 0x222222; //BLACK_UINT;
    case ENTITY_DECORATION:
       return ENTITY_DECORATION_COLOR;

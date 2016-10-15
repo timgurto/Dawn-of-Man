@@ -49,9 +49,9 @@ void Entity::shadowBlit(SDL_Rect *srcLoc,
 
    //shadow - white and black
    if (SHADOWS){
-      colorBlit(ENTITY_WHITE, thisType.surface, screen,
+      colorBlit(ENTITY_SHADOW_LIGHT, thisType.surface, screen,
                 *srcLoc, (*dstLoc + Point(1,1)));
-      colorBlit(ENTITY_BLACK, thisType.surface, screen,
+      colorBlit(ENTITY_SHADOW_DARK, thisType.surface, screen,
                 *srcLoc, (*dstLoc - Point(1,1)));
    }
    

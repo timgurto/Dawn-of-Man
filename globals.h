@@ -31,8 +31,8 @@ const int DELTA_MODIFIER = 40;
 //progress points: proportional to completion time
 const progress_t PROGRESS_PER_CALC = 4;
 
-const pixels_t SCREEN_WIDTH = 1024;
-const pixels_t SCREEN_HEIGHT = 768;
+const pixels_t SCREEN_WIDTH = 1280;
+const pixels_t SCREEN_HEIGHT = 1024;
 const int SCREEN_BPP = 32;
 
 //in case the cursor point isn't at 0,0
@@ -142,8 +142,8 @@ enum Orientation{
 //For the surface index
 enum EntityColor{
    ENTITY_DEFAULT = MAX_PLAYERS,
-   ENTITY_WHITE,
-   ENTITY_BLACK,
+   ENTITY_SHADOW_LIGHT,
+   ENTITY_SHADOW_DARK,
    ENTITY_DECORATION,
    ENTITY_MAX //for array sizes
 };
