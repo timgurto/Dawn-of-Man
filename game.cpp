@@ -22,6 +22,7 @@
 #include "Unit.h"
 #include "UIBar.h"
 #include "Particle.h"
+#include "Point.h"
 
 extern Debug debug;
 extern Debug deltaLog;
@@ -111,12 +112,6 @@ void gameMode(){
                   1, //origin building
                   1000); //progress cost
    game.unitTypes.push_back(generic);
-   for (int i = 0; i != 10; ++i)
-      addEntity(game, new Unit(0,
-                               Point(rand() % game.map.w,
-                                     rand() % game.map.h),
-                               1,
-                               1000));
    UnitType grunt(1, "Grunt",
                   makeRect(-22, -107, 70, 113),
                   makeRect(-22,-6, 53, 11),
@@ -129,11 +124,28 @@ void gameMode(){
                   0, //origin building
                   1000); //progress cost
    game.unitTypes.push_back(grunt);
-   addEntity(game, new Unit(1,
-                            Point(rand() % game.map.w,
-                                  rand() % game.map.h),
-                            HUMAN_PLAYER,
-                            1000));
+
+   //human start: one grunt
+   Unit *newGrunt = new Unit(1,
+                             Point(rand() % game.map.w,
+                                   rand() % game.map.h),
+                             HUMAN_PLAYER,
+                             1000);
+   addEntity(game, newGrunt);
+   //centerMap(game, newGrunt->getLoc);
+   game.map.x = SCREEN_WIDTH / 2 - newGrunt->getLoc().x;
+   game.map.y = SCREEN_HEIGHT / 2 - newGrunt->getLoc().y;
+
+   //computer start: a bunch of generics
+   for (int i = 0; i != 10; ++i){
+      pixels_t x, y;
+      do{
+         x = rand() % game.map.w;
+         y = rand() % game.map.h;
+      }while (noCollision(game, game.buildingTypes[1],
+                          Point(x, y)));
+      addEntity(game, new Unit(0, Point(x, y), 1, 1000));
+   }
    //=================================================
 
    UIBars_t bars;
