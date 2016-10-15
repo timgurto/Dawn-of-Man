@@ -185,7 +185,7 @@ Uint32 getEntityColor(const GameData &game, int color){
    case ENTITY_SHADOW_LIGHT:
       return 0xdddddd; //WHITE_UINT;
    case ENTITY_SHADOW_DARK:
-      return 0x222222; //BLACK_UINT;
+      return 0x444444; //BLACK_UINT;
    case ENTITY_DECORATION:
       return ENTITY_DECORATION_COLOR;
    default:

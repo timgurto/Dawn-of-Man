@@ -86,7 +86,7 @@ void Building::tick(double delta){
 
    if (!finished){
       int particlesToDraw = int(1.0 * rand() / RAND_MAX +
-                                0.03 * 
+                                0.02 * 
                                 Particle::PARTICLE_COUNT *
                                 delta * Particle::DECAY *
                                 delta);

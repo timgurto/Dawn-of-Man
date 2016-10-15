@@ -6,7 +6,7 @@
 #include "Particle.h"
 
 const double Particle::GRAVITY = 1.4;
-const int Particle::PARTICLE_COUNT = 30;
+const int Particle::PARTICLE_COUNT = 15;
 const double Particle::VELOCITY_RANGE = 1.5;
 const int Particle::DELAY = 25; //ms
 const int Particle::DECAY = 4;
