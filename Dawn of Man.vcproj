@@ -258,6 +258,10 @@
 				RelativePath=".\misc.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\Point.cpp"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

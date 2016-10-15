@@ -11,8 +11,7 @@ void addEntity(GameData &game, Entity *entity);
 void gameMode();
 void drawEverything(SDL_Surface *screen, SDL_Surface *back,
                     SDL_Surface *image, SDL_Surface *cursor,
-                    pixels_t mouseX, pixels_t mouseY,
-                    const GameData &game);
+                    const Point &mousePos, const GameData &game);
 void updateState();
 
 #endif

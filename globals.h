@@ -5,6 +5,7 @@
 
 #include <string>
 #include "SDL.h"
+#include "Point.h"
 
 //const bool DEBUG(true);
 #ifdef NDEBUG
@@ -13,13 +14,13 @@ const bool DEBUG(false);
 const bool DEBUG(true);
 #endif
 
+//TODO move typedefs to separate file
 typedef unsigned short typeNum_t;
 typedef Sint32 pixels_t;
 typedef Uint32 timer_t;
 typedef Uint16 progress_t;
 
 
-//Time between redraws/recalcs:
 // true: X ms since last
 // false: every X ms (catches up if there's a delay)
 const bool MIN_WAIT = true;
@@ -36,8 +37,7 @@ const int SCREEN_BPP(32);
 //whether graphics are outline-style
 const bool OUTLINE_MODE(false);
 
-const Sint16 CURSOR_OFFSET_X(-2);
-const Sint16 CURSOR_OFFSET_Y(-1);
+//const Point CURSOR_OFFSET(-2,-1);
 
 const SDL_Color BLACK   = {0, 0, 0};
 const SDL_Color BLUE    = {0, 0, 0xff};

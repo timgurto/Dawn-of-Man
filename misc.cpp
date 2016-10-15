@@ -12,6 +12,7 @@
 #include "Globals.h"
 #include "misc.h"
 #include "Entity.h"
+#include "Point.h"
 
 extern Debug debug;
 extern int surfacesLoaded;
@@ -57,6 +58,10 @@ SDL_Rect makeRect(Sint16 x, Sint16 y, Uint16 w, Uint16 h){
    return r;
 }
 
+SDL_Rect makeRect(const Point &point){
+   return makeRect(point.x, point.y, 0, 0);
+}
+
 SDL_Color makeColor(Uint8 r, Uint8 g, Uint8 b){
    SDL_Color c;
    c.r = r;
@@ -71,8 +76,8 @@ SDL_Surface *setScreen(){
    return screen;
 }
 
-void blitCursor (SDL_Surface *cursor, SDL_Surface *screen, SDL_MouseMotionEvent coords){
-   SDL_BlitSurface(cursor, 0, screen, &makeRect());
+void blitCursor (SDL_Surface *cursor, SDL_Surface *screen, const Point &coords){
+   SDL_BlitSurface(cursor, 0, screen, &makeRect(coords));
 }
 
 void freeSurface(SDL_Surface *&p){
@@ -117,5 +122,8 @@ std::string makePath(EntityTypeID type, typeNum_t imageNumber, bool isPortrait){
 }
 
 bool dereferenceLessThan(Entity *p1, Entity *p2){
+   //assert (p1 != 0); These checks will remove the warning
+   //assert (p2 != 0);
+   assert (p1 != 0 && p2 != 0);
    return *p1 < *p2;
 }

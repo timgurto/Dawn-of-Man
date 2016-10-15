@@ -24,10 +24,7 @@ void gameMode(){
    SDL_Surface *image = loadImage(IMAGE_PATH + "c0.png", MAGENTA);
    SDL_Surface *cursor = loadImage(IMAGE_PATH + "cursor.png", GREEN);
 
-   //TODO make mouse position a Point
-   pixels_t
-      mouseX(SCREEN_WIDTH/2),
-      mouseY(SCREEN_HEIGHT/2);
+   Point mousePos(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
 
    SDL_ShowCursor(SDL_DISABLE);
 
@@ -58,8 +55,8 @@ void gameMode(){
             loop = false;
             break;
          case SDL_MOUSEMOTION:
-            mouseX = event.motion.x;
-            mouseY = event.motion.y;
+            mousePos.x = event.motion.x;
+            mousePos.y = event.motion.y;
             break;
          case SDL_KEYDOWN:
             switch (event.key.keysym.sym){
@@ -73,8 +70,11 @@ void gameMode(){
             //debug("Mouse down: ", int(event.button.button));
             switch (event.button.button){
             case 1: //left click
-               Entity *newBuilding = new Building(0, Point(mouseX, mouseY));
-               addEntity(game, newBuilding);
+               Entity *newBuilding = new Building(0, mousePos);
+               if (newBuilding != 0)
+                  addEntity(game, newBuilding);
+               else
+                  debug("No memory allocated for new building");
                break;
             }
             break;
@@ -94,7 +94,7 @@ void gameMode(){
       // Redraw if necessary
       if (ticks - lastDrawTick >= DRAW_MS){
          //debug("Tick: redrawing");
-         drawEverything(screen, back, image, cursor, mouseX, mouseY, game);
+         drawEverything(screen, back, image, cursor, mousePos, game);
          lastDrawTick = MIN_WAIT ? ticks : lastDrawTick + DRAW_MS;
       }
 
@@ -114,8 +114,7 @@ void gameMode(){
 
 void drawEverything(SDL_Surface *screen, SDL_Surface *back,
                     SDL_Surface *image, SDL_Surface *cursor,
-                    pixels_t mouseX, pixels_t mouseY,
-                    const GameData &game){
+                    const Point &mousePos, const GameData &game){
    SDL_FillRect(screen, 0, 0);
    SDL_BlitSurface(back, 0, screen, &makeRect());
    SDL_BlitSurface(image, 0, screen, &makeRect(50,50));
@@ -126,9 +125,7 @@ void drawEverything(SDL_Surface *screen, SDL_Surface *back,
       (*it)->draw(screen, game);
    }
 
-   //TODO use blitCursor
-   SDL_BlitSurface(cursor, 0, screen, &makeRect(CURSOR_OFFSET_X + mouseX,
-                                                CURSOR_OFFSET_Y + mouseY));
+   blitCursor(cursor, screen, mousePos);
 
    debug.display();
    bool test = SDL_Flip(screen) == 0;
@@ -139,22 +136,10 @@ void updateState(){}
 
 void addEntity(GameData &game, Entity *entity){
 
-   entities_t::iterator it = std::lower_bound(game.entities.begin(),
-                                              game.entities.end(),
-                                              entity,
-                                              dereferenceLessThan);
-   game.entities.insert(it, entity);
-
-   //game.entities.insert(std::lower_bound(game.entities.begin(),
-   //                                      game.entities.end(), entity,
-   //                                      dereferenceLessThan),
-   //                   entity)
-
- /*  entities_t::iterator it = game.entities.begin();
-   while (it != game.entities.end() && *(*it) < *entity ){
-      ++it;
-   }
-   game.entities.insert(it, entity);*/
+   game.entities.insert(std::lower_bound(game.entities.begin(),
+                                         game.entities.end(), entity,
+                                         dereferenceLessThan),
+                        entity);
 }
 
 void removeEntity(){
