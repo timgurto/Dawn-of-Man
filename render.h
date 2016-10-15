@@ -13,7 +13,6 @@ void render(SDL_Surface *screen, SDL_Surface *selection,
             SDL_Surface *diagGreen, SDL_Surface *diagRed,
             SDL_Surface *map, SDL_Surface *darkMap,
             SDL_Surface *cursor, SDL_Surface *cursorShadow,
-            SDL_Surface *entitiesTemp,
             const GameData &game, const UIBars_t &bars);
 
 //Draws the cursor
@@ -39,9 +38,9 @@ void renderEntities(SDL_Surface *screen, const GameData &game);
 void renderSelectionRect(SDL_Surface *screen, const GameData &game);
 
 //Draws all UIBars
-void renderInterface(SDL_Surface *screen, const UIBars_t &bars);
+void renderInterface(const UIBars_t &bars);
 
 //Draws all active particles
-void renderParticles(SDL_Surface *screen, const GameData &game);
+void renderParticles(const GameData &game);
 
 #endif

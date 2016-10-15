@@ -151,7 +151,7 @@ void gameMode(){
 
       //render
       render(screen, glow, diagGreen, diagRed, map, darkMap, cursor,
-             cursorShadow, entitiesTemp, game, bars);
+             cursorShadow, game, bars);
 
    }
 

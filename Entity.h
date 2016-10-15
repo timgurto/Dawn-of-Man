@@ -29,8 +29,8 @@ protected: //everything should be a derived class
    //direction of clipping for partial drawing
    Direction direction_;
 
-   //any vertical movement that took place during the
-   //last tick()
+   //whether the entity has moved vertically.
+   //if so, the entities list may need to be re-sorted
    VerticalMovement verticalMovement_;
 
    Point loc_; //location
@@ -74,7 +74,7 @@ public:
 
    //Returns the EntityType object that this entity
    //is an "instance" of
-   const virtual EntityType &type() const = 0;
+   virtual const EntityType &type() const = 0;
 
    //Draws the entity, as well as a green mask behind
    //it if ENTITY_MASKS is true
@@ -109,10 +109,6 @@ public:
    //calculates where to draw the selection indicator
    SDL_Rect getSelectionDest(SDL_Surface *selection) const;
 
-   //whether the entity has moved vertically.
-   //if so, the entities list may need to be re-sorted
-   VerticalMovement getVerticalMovement() const;
-
    //whether the entity's location is valid
    bool isLocationOK() const;
 
@@ -125,6 +121,7 @@ public:
    //get
    typeNum_t getTypeIndex() const;
    const Point &getLoc() const;
+   VerticalMovement getVerticalMovement() const;
 
    //default: NO_TYPE
    virtual typeNum_t getPlayer() const;

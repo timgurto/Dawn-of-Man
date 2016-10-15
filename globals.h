@@ -54,8 +54,8 @@ const Uint32 MAGENTA_UINT = 0xff00ff;
 const Uint32 YELLOW_UINT  = 0xffff00;
 const Uint32 WHITE_UINT   = 0xffffff;
 
-const float FULL  = 1;
-const float EMPTY = 0;
+const double FULL  = 1;
+const double EMPTY = 0;
 
 //Alpha of shadows (particles, cursor)
 const Uint8 SHADOW_ALPHA = 0x44;

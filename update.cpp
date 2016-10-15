@@ -282,8 +282,11 @@ SDL_Rect getSelectionRect(const GameData &game){
 
 void select(GameData &game, UIBars_t &bars){
    game.buildingSelected = 0;
-   bool entitySelected = false;
-   bool unitSelected = false;
+   bool
+      entitySelected = false,
+      unitSelected = false,
+      builderSelected = false;
+
 
    //loop backwards, so objects in front have priority to be
    //selected
@@ -319,10 +322,15 @@ void select(GameData &game, UIBars_t &bars){
                   (*it)->selected = true; //No ctrl: select
                entitySelected = true;
                if ((*it)->selected)
+                  //if building, set buildingSelected ptr and flag
                   if ((*it)->classID() == ENT_BUILDING)
                      game.buildingSelected = (Building *)(*it);
-                  else if ((*it)->classID() == ENT_UNIT)
+                  //if unit, set flag
+                  else if ((*it)->classID() == ENT_UNIT){
                      unitSelected = true;
+                     const UnitType &uType = (const UnitType &)((*it)->type());
+                     if (uType.getBuilder());
+                  }
             }// if collides
 
          }// if single point etc.

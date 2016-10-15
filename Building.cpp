@@ -17,9 +17,10 @@ Entity(type, loc),
 progress_(progress),
 player_(player),
 finished_(progress >= game_->buildingTypes[type].maxProgress_),
-drawPercent_(1.0f *
-            progress_ /
-            game_->buildingTypes[type].maxProgress_){}
+drawPercent_(game_->buildingTypes[type].maxProgress_ == 0 ?
+                1.0 :
+                1.0f * progress_ /
+                game_->buildingTypes[type].maxProgress_){}
 
 const EntityType &Building::type() const{
    return game_->buildingTypes[typeIndex_];
@@ -30,9 +31,9 @@ void Building::draw(SDL_Surface *screen) const{
    SDL_Rect drawLoc = loc_ + thisType.drawRect_;
 
    pixels_t
-      partialW = pixels_t(getDrawPercent() *
+      partialW = pixels_t(drawPercent_ *
                           thisType.drawRect_.w),
-      partialH = pixels_t(getDrawPercent() *
+      partialH = pixels_t(drawPercent_ *
                           thisType.drawRect_.h);
 
    //clip, based on randomized direction

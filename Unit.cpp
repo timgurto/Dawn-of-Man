@@ -24,9 +24,10 @@ targetEntity_(0),
 health_(game_->unitTypes[type].maxHealth_),
 progress_(progress),
 finished_(progress >= game_->unitTypes[type].maxProgress_),
-drawPercent_(1.0f *
-            progress_ /
-            game_->unitTypes[type].maxProgress_){}
+drawPercent_(game_->unitTypes[type].maxProgress_ == 0 ?
+                1.0 :
+                1.0f * progress_ /
+                game_->unitTypes[type].maxProgress_){}
 
 const EntityType &Unit::type() const{
    return game_->unitTypes[typeIndex_];
@@ -38,9 +39,9 @@ void Unit::draw(SDL_Surface *screen) const{
    SDL_Rect drawLoc = loc_ + thisType.drawRect_;
 
    pixels_t
-      partialW = pixels_t(getDrawPercent() *
+      partialW = pixels_t(drawPercent_ *
                           thisType.drawRect_.w),
-      partialH = pixels_t(getDrawPercent() *
+      partialH = pixels_t(drawPercent_ *
                           thisType.drawRect_.h);
 
    //clip, based on randomized direction
@@ -167,13 +168,14 @@ void Unit::tick(double delta){
              loc_.y + base.y + base.h > game_->map.h)
             loc_.y = game_->map.h - base.y - base.h;
 
-         //check whether target has been reached
-         if (targetEntity_ != 0){
-            combat_ = atTarget();
-            moving_ = !combat_;
-         }else if (atTarget())
-            moving_ = false;
       }
+
+      //check whether target has been reached
+      if (targetEntity_ != 0){
+         combat_ = atTarget();
+         moving_ = !combat_;
+      }else if (atTarget())
+         moving_ = false;
 
       //progress frame
       if (combat_){

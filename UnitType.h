@@ -44,6 +44,9 @@ class UnitType: public EntityType{
    //total progress points necessary for construction
    progress_t maxProgress_;
 
+   //whether this unit can construct buildings
+   bool builder_;
+
 
 public:
 
@@ -61,11 +64,13 @@ public:
             damage_t maxHealth = 1,
             damage_t attack = 0,
             damage_t armor = 0,
+            bool builder = false,
             typeNum_t originBuilding = NO_TYPE,
             progress_t maxProgress = 0);
 
    //get
    typeNum_t getOriginBuilding() const;
+   bool getBuilder() const;
 };
 
 #endif

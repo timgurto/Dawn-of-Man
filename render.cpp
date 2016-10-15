@@ -17,21 +17,20 @@ void render(SDL_Surface *screen, SDL_Surface *selection,
             SDL_Surface *diagGreen, SDL_Surface *diagRed,
             SDL_Surface *map, SDL_Surface *darkMap,
             SDL_Surface *cursor, SDL_Surface *cursorShadow,
-            SDL_Surface *entitiesTemp,
             const GameData &game, const UIBars_t &bars){
 
    assert (screen != 0);
 
    renderMap(screen, game, map, darkMap);
    renderSelection(screen, game, selection);
-   if (game.mode == MODE_CONSTRUCTION && game.rightMouse.dragging)
-       renderFootprint(screen, game, diagRed, diagGreen);
+   if (game.mode == MODE_CONSTRUCTION && !game.rightMouse.dragging)
+       renderFootprint(screen, game, diagGreen, diagRed);
    renderEntities(screen, game);
    if (game.mode != MODE_CONSTRUCTION && game.leftMouse.dragging)
       renderSelectionRect(screen, game);
-   renderInterface(screen, bars);
+   renderInterface(bars);
    renderCursor(screen, game, cursor, cursorShadow);
-   renderParticles(screen, game);
+   renderParticles(game);
 
    //Debug text
    debug.display();
@@ -62,6 +61,7 @@ void renderCursor (SDL_Surface *screen, const GameData &game,
 //Draws the terrain and border tiles
 void renderMap(SDL_Surface *screen, const GameData &game,
                SDL_Surface *map, SDL_Surface *border){
+   assert (screen != 0);
    for (int x = -1; x != game.mapX + 1; ++x)
       for (int y = -1; y != game.mapY + 1; ++y){
          SDL_Rect tileRect = makeRect(game.map.x + x * MAP_TILE_SIZE,
@@ -109,7 +109,7 @@ void renderFootprint(SDL_Surface *screen, const GameData &game,
 
 //Draws all entities
 void renderEntities(SDL_Surface *screen, const GameData &game){
-   SDL_Surface *entitiesTemp;
+   SDL_Surface *entitiesTemp = 0;
    if (ENTITY_MASKS){
       entitiesTemp = createSurface();
       SDL_SetColorKey(entitiesTemp, SDL_SRCCOLORKEY,
@@ -145,7 +145,7 @@ void renderSelectionRect(SDL_Surface *screen, const GameData &game){
 }
 
 //Draws all UIBars
-void renderInterface(SDL_Surface *screen, const UIBars_t &bars){
+void renderInterface(const UIBars_t &bars){
    for (UIBars_t::const_iterator it = bars.begin();
         it != bars.end(); ++it){
       (*it)->draw();
@@ -153,7 +153,7 @@ void renderInterface(SDL_Surface *screen, const UIBars_t &bars){
 }
 
 //Draws all active particles
-void renderParticles(SDL_Surface *screen, const GameData &game){
+void renderParticles(const GameData &game){
    for (particles_t::const_iterator it = game.particles.begin();
         it != game.particles.end(); ++it)
       it->draw(game);

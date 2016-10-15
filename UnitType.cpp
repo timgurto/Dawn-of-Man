@@ -19,6 +19,7 @@ UnitType::UnitType(typeNum_t index,
                    damage_t maxHealth,
                    damage_t attack,
                    damage_t armor,
+                   bool builder,
                    typeNum_t originBuilding,
                    progress_t maxProgress):
 EntityType(index,
@@ -36,9 +37,14 @@ combatWait_(combatWait),
 maxHealth_(maxHealth),
 attack_(attack),
 armor_(armor),
+builder_(builder),
 originBuilding_(originBuilding),
 maxProgress_(maxProgress){}
 
 typeNum_t UnitType::getOriginBuilding() const{
    return originBuilding_;
+}
+
+bool UnitType::getBuilder() const{
+   return builder_;
 }

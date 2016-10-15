@@ -3,7 +3,7 @@
 #ifndef POINT_H
 #define POINT_H
 
-typedef Sint32 pixels_t;
+#include "Types.h"
 
 //Simple x and y, with operations to work with
 //SDL_Rects
