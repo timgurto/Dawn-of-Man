@@ -111,8 +111,9 @@ void gameMode(){
       oldTicks = newTicks;
       double deltaMod = 1.0 * delta / DELTA_MODIFIER;
       
-      deltaLog("    Delta: ", delta, "ms");
-      deltaLog("Framerate: ", 1000 / (delta != 0 ? delta : 1));
+      deltaLog("       Framerate: ", 1000 / (delta != 0 ? delta : 1));
+      deltaLog("           Delta: ", delta, "ms");
+      deltaLog("Delta per entity: ", 1.0f * delta / game.entities.size());
 
       //update state
       updateState(deltaMod, game, screen, bars);
@@ -175,6 +176,15 @@ void drawEverything(SDL_Surface *screen, SDL_Surface *back,
       for (int j = 0; j != SCREEN_HEIGHT / back->h + 1; ++j)
          SDL_BlitSurface(back, 0, screen,
                          &makeRect(i * back->w, j * back->h));
+   
+   //Entities
+   if (ENTITY_MASKS)
+      SDL_FillRect(entitiesTemp, 0, ENTITY_BACKGROUND_UINT);
+   for (entities_t::const_iterator it = game.entities.begin();
+        it != game.entities.end(); ++it)
+      (*it)->draw(ENTITY_MASKS ? entitiesTemp : screen);
+   if (ENTITY_MASKS)
+      SDL_BlitSurface(entitiesTemp, 0, screen, 0);
 
    //Building footprint
    if (game.mode == BUILD_MODE){
@@ -187,15 +197,6 @@ void drawEverything(SDL_Surface *screen, SDL_Surface *back,
          footprintColor = FOOTPRINT_COLOR_BAD;
       SDL_FillRect(screen, &baseRect, footprintColor);
    }
-   
-   //Entities
-   if (ENTITY_MASKS)
-      SDL_FillRect(entitiesTemp, 0, ENTITY_BACKGROUND_UINT);
-   for (entities_t::const_iterator it = game.entities.begin();
-        it != game.entities.end(); ++it)
-      (*it)->draw(ENTITY_MASKS ? entitiesTemp : screen);
-   if (ENTITY_MASKS)
-      SDL_BlitSurface(entitiesTemp, 0, screen, 0);
 
    //Interface
    for (UIBars_t::const_iterator it = bars.begin(); it != bars.end(); ++it){

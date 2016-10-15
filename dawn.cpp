@@ -12,7 +12,7 @@
 //globals
 
 //shows framerate and delta values
-Debug deltaLog(BLUE, 465, 0, 2);
+Debug deltaLog(BLUE, 465, 0, 3);
 
 //general debug messages
 Debug debug(YELLOW, 0, 0, 59);
