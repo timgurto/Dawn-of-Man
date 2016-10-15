@@ -143,7 +143,7 @@ bool noCollision(const GameData &game, const EntityType &type,
    //check against entities
    for (entities_t::const_iterator it = game.entities.begin();
         it != game.entities.end(); ++it){
-      if (collision(rect, (*it)->baseRect(game)))
+      if (collision(rect, (*it)->baseRect()))
          return false;
    }
    return true;

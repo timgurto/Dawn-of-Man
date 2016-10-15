@@ -15,13 +15,17 @@ class Entity{
 protected:
    typeNum_t type_;
    Point loc_;
+   static const GameData *game_;
 
 public:
    Entity(typeNum_t type, const Point &loc);
    bool operator<(const Entity &rhs) const;
-   const virtual EntityType &type(const GameData &game) const = 0;
-   void draw(SDL_Surface *screen, const GameData &game) const;
-   SDL_Rect baseRect(const GameData &game);
+   const virtual EntityType &type() const = 0;
+   void draw(SDL_Surface *screen) const;
+   SDL_Rect baseRect();
+   virtual void tick();
+   static void setGame(GameData *game);
+   virtual Uint8 getAlpha() const;
 };
 
 #endif

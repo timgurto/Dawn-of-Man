@@ -35,6 +35,7 @@ void gameMode(){
    //init
    //TODO: give GameData pointer to classes
    GameData game;
+   Entity::setGame(&game);
    //TODO: move controlMode to GameData
    ControlMode controlMode = NORMAL_MODE;
 
@@ -42,14 +43,14 @@ void gameMode(){
 
    //TODO: load from files
    BuildingType campfire(0, "Campfire",
-                         makeRect(-61, -118, 114, 143),
-                         makeRect(-61, -15, 111, 40),
-                         GREEN);
+                         makeRect(-42, -92, 81, 113),
+                         makeRect(-42, -22, 81, 42),
+                         GREEN, 1250);
    game.buildingTypes.push_back(campfire);
    BuildingType shrine(1, "Shrine",
                          makeRect(-76, -67, 154, 79),
                          makeRect(-76, -12, 154, 23),
-                         GREEN);
+                         GREEN, 1750);
    game.buildingTypes.push_back(shrine);
 
    UIBars_t bars;
@@ -72,7 +73,7 @@ void gameMode(){
       while (SDL_PollEvent(&event) ){
          switch (event.type){
 
-         case SDL_QUIT: //If the user has Xed out the window
+         case SDL_QUIT:
             loop = false;
             break;
 
@@ -83,11 +84,11 @@ void gameMode(){
 
          case SDL_KEYDOWN:
             switch (event.key.keysym.sym){
-            case SDLK_PRINT:{
-               std::ostringstream os;
+            case SDLK_PRINT:
+               {std::ostringstream os;
                os << "shot" << time(0) << ".bmp";
-               SDL_SaveBMP(screen, os.str().c_str());
-               break;}
+               SDL_SaveBMP(screen, os.str().c_str());}
+               break;
             case SDLK_ESCAPE:
                switch(controlMode){
                case BUILD_MODE:
@@ -112,7 +113,6 @@ void gameMode(){
                   break;
                case BUILD_MODE:
                   //if not over any bars
-                  //debug("Attempting to build #", toBuild);
                   assert (toBuild != NO_TYPE);
                   if (noCollision(game, game.buildingTypes[toBuild], mousePos)){
                      addEntity(game, new Building(toBuild, mousePos));
@@ -137,7 +137,7 @@ void gameMode(){
       // Update state if necessary
       if (ticks - lastCalcTick >= CALC_MS){
          //debug("Tick: updating state");
-         updateState();
+         updateState(game);
          lastCalcTick = MIN_WAIT ? ticks : lastCalcTick + CALC_MS;
       }
 
@@ -173,12 +173,6 @@ void drawEverything(SDL_Surface *screen, SDL_Surface *back,
       for (int j = 0; j != SCREEN_HEIGHT / back->h + 1; ++j)
          SDL_BlitSurface(back, 0, screen,
                          &makeRect(i * back->w, j * back->h));
-   
-   //Entities
-   for (entities_t::const_iterator it = game.entities.begin();
-        it != game.entities.end(); ++it){
-      (*it)->draw(screen, game);
-   }
 
    //Building footprint
    if (mode == BUILD_MODE){
@@ -189,6 +183,13 @@ void drawEverything(SDL_Surface *screen, SDL_Surface *back,
       else
          footprintColor = FOOTPRINT_COLOR_BAD;
       SDL_FillRect(screen, &baseRect, footprintColor);
+   }
+   
+   //Entities
+   //TODO: masks behind for outlines
+   for (entities_t::const_iterator it = game.entities.begin();
+        it != game.entities.end(); ++it){
+      (*it)->draw(screen);
    }
 
    //Interface
@@ -207,7 +208,12 @@ void drawEverything(SDL_Surface *screen, SDL_Surface *back,
    assert(test);
 }
 
-void updateState(){}
+void updateState(GameData &game){
+   for (entities_t::iterator it = game.entities.begin();
+        it != game.entities.end(); ++it){
+      (*it)->tick();
+   }
+}
 
 void addEntity(GameData &game, Entity *entity){
 

@@ -14,7 +14,7 @@ void drawEverything(SDL_Surface *screen, SDL_Surface *back,
                     SDL_Surface *cursor, ControlMode mode,
                     const Point &mousePos, const GameData &game,
                     const UIBars_t &bars, typeNum_t toBuild);
-void updateState();
+void updateState(GameData &game);
 void addEntity(GameData &game, Entity *entity);
 void removeEntity();
 void blitCursor (SDL_Surface *cursor, SDL_Surface *screen, const Point &coords);

@@ -6,6 +6,8 @@
 #include "EntityType.h"
 
 class BuildingType: public EntityType{
+   friend class Building;
+
    progress_t progress_;
 
 public:
@@ -15,8 +17,6 @@ public:
                 const SDL_Rect &baseRect,
                 const SDL_Color &background,
                 progress_t progress = 0);
-   //BuildingType(BuildingType &original);
-   //BuildingType &operator=(const BuildingType &rhs);
 
 };
 

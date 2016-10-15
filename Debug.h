@@ -4,6 +4,7 @@
 #define DEBUG_H
 
 #include <queue>
+#include <sstream>
 
 #include "SDL.h"
 #include "SDL_ttf.h"
