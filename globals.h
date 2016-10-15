@@ -20,6 +20,9 @@ typedef Sint32 pixels_t;
 typedef Uint32 timer_t;
 typedef Uint16 progress_t;
 
+const typeNum_t MAX_TYPES = 256;
+const typeNum_t MAX_PLAYERS = 2;
+
 // true: X ms since last
 // false: every X ms (catches up if there's a delay)
 const bool MIN_WAIT = true;
@@ -39,6 +42,7 @@ const Point CURSOR_OFFSET(0,-9);
 
 const typeNum_t NO_TYPE = 0xffff;
 
+//unfortunately, different SDL functions use different color types.
 const SDL_Color BLACK   = {0, 0, 0};
 const SDL_Color BLUE    = {0, 0, 0xff};
 const SDL_Color GREEN   = {0, 0xff, 0};
@@ -47,7 +51,14 @@ const SDL_Color RED     = {0xff, 0, 0};
 const SDL_Color MAGENTA = {0xff, 0, 0xff};
 const SDL_Color YELLOW  = {0xff, 0xff, 0};
 const SDL_Color WHITE   = {0xff, 0xff, 0xff};
-
+const Uint32 BLACK_UINT   = 0x000000;
+const Uint32 BLUE_UINT    = 0x0000ff;
+const Uint32 GREEN_UINT   = 0x00ff00;
+const Uint32 CYAN_UINT    = 0x00ffff;
+const Uint32 RED_UINT     = 0xff0000;
+const Uint32 MAGENTA_UINT = 0xff00ff;
+const Uint32 YELLOW_UINT  = 0xffff00;
+const Uint32 WHITE_UINT   = 0xffffff;
 
 const float FULL  = 1;
 const float EMPTY = 0;
@@ -61,13 +72,14 @@ const bool ENTITY_MASKS = true;
 const bool MASK_BEFORE_CLIP = false;
 
 const SDL_Color ENTITY_BACKGROUND   = GREEN;
-const Uint32 ENTITY_BACKGROUND_UINT = 0x00ff00;
+const Uint32 ENTITY_BACKGROUND_UINT = GREEN_UINT;
 const SDL_Color ENTITY_MASK         = MAGENTA;
-const Uint32 ENTITY_MASK_UINT       = 0xff00ff;
+const Uint32 ENTITY_MASK_UINT       = MAGENTA_UINT;
 
 const Uint32 FOOTPRINT_COLOR_GOOD = 0x008800; //dark green
 const Uint32 FOOTPRINT_COLOR_BAD  = 0x880000; //dark red
-const Uint32 DEFAULT_ENTITY_COLOR = 0xaaaa22;
+
+const Uint32 ENTITY_DEFAULT_COLOR = 0xaaaa22;
 
 const pixels_t ICON_SIZE = 48;
 const std::string IMAGE_SUFFIX = ".png";
@@ -92,13 +104,14 @@ enum ImageModifier{
 //For makePath()
 enum EntityTypeID{
    BUILDING,
-   DECORATION
+   DECORATION,
+   MAX_ENTITY_TYPE //for array sizes
 };
 
 //Interface modes for the game
 enum ControlMode{
    NORMAL_MODE,
-   BUILD_MODE
+   BUILD_MODE,
 };
 
 //Corners of the screen; for UIBar
@@ -113,6 +126,14 @@ enum Corner{
 enum Orientation{
    VERTICAL,
    HORIZONTAL
+};
+
+//For surface indices
+enum EntityColor{
+   ENTITY_DEFAULT = MAX_PLAYERS,
+   ENTITY_WHITE,
+   ENTITY_BLACK,
+   ENTITY_MAX //for array sizes
 };
 
 #endif

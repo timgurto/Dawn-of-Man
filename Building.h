@@ -27,7 +27,7 @@ public:
    virtual void draw(SDL_Surface *screen = screen_) const;
    virtual void tick();
    virtual float getDrawPercent() const;
-   virtual Uint32 getColor() const;
+   virtual int getColor() const;
 };
 
 

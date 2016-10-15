@@ -135,6 +135,6 @@ float Building::getDrawPercent() const{
    return drawPercent;
 }
 
-Uint32 Building::getColor() const{
-   return game_->players[player_].color;
+int Building::getColor() const{
+   return player_;
 }

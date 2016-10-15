@@ -67,7 +67,7 @@ public:
    virtual float getDrawPercent() const;
 
    //The color used to draw the entity
-   virtual Uint32 getColor() const;
+   virtual int getColor() const;
 };
 
 #endif

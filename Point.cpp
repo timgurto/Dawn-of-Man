@@ -24,3 +24,15 @@ SDL_Rect Point::operator-(const SDL_Rect &rhs) const{
 SDL_Rect Point::operator+(const SDL_Rect &rhs) const{
    return makeRect(x+rhs.x, y+rhs.y, rhs.w, rhs.h);
 }
+
+SDL_Rect operator+(SDL_Rect lhs, const Point &rhs){
+   lhs.x += rhs.x;
+   lhs.y += rhs.y;
+   return lhs;
+}
+
+SDL_Rect operator-(SDL_Rect lhs, const Point &rhs){
+   lhs.x -= rhs.x;
+   lhs.y -= rhs.y;
+   return lhs;
+}

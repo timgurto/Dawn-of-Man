@@ -9,7 +9,7 @@
 
 #include "Debug.h"
 
-#include "Globals.h"
+#include "globals.h"
 #include "misc.h"
 #include "Entity.h"
 #include "Point.h"
@@ -167,4 +167,21 @@ bool collision(const SDL_Rect &r1, const SDL_Rect &r2){
    if (r2.y > r1.y + r1.h)
       return false;
    return true;
+}
+
+Uint32 getEntityColor(const GameData &game, int color){
+   //if a player color
+   if (color < MAX_PLAYERS)
+      return game.players[color].color;
+   
+   //else
+   switch(color){
+   case ENTITY_DEFAULT:
+      return ENTITY_DEFAULT_COLOR;
+   case ENTITY_WHITE:
+      return WHITE_UINT;
+   case ENTITY_BLACK:
+      return BLACK_UINT;
+
+   }
 }

@@ -68,4 +68,6 @@ bool noCollision(const GameData &game, const EntityType &type,
 //Checks for a collision between two SDL_Rects
 bool collision(const SDL_Rect &r1, const SDL_Rect &r2);
 
+Uint32 getEntityColor(const GameData &game, int color);
+
 #endif

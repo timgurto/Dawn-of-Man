@@ -35,18 +35,32 @@ void Entity::draw(SDL_Surface *screen) const{
 void Entity::layeredBlit(SDL_Rect *srcLoc,
                          SDL_Rect *dstLoc,
                          SDL_Surface *screen) const{
+   //TODO index surfaces   
    const EntityType &thisType = type();
-   //TODO shadows
-   //color sprite
-   SDL_FillRect(colorTemp, 0, getColor());
-   SDL_BlitSurface(thisType.surface, 0, colorTemp, 0);
 
    //blit mask, hiding anything that would otherwise
    //show through the gaps in the sprite
    if (!MASK_BEFORE_CLIP && ENTITY_MASKS)
-      SDL_BlitSurface(thisType.mask, srcLoc, screen, dstLoc);
+      SDL_BlitSurface(thisType.mask, srcLoc, screen, dstLoc); 
    
-   //blit the sprite
+   //blit to the color mask, then blit the color mask
+   //to the screen
+
+   //shadow - black
+   SDL_FillRect(colorTemp, 0, WHITE_UINT);
+   SDL_BlitSurface(thisType.surface, 0, colorTemp, 0);
+   SDL_BlitSurface(colorTemp, srcLoc, screen,
+                   &(*dstLoc + Point(1, 1)));
+
+   //shadow - white
+   SDL_FillRect(colorTemp, 0, BLACK_UINT);
+   SDL_BlitSurface(thisType.surface, 0, colorTemp, 0);
+   SDL_BlitSurface(colorTemp, srcLoc, screen,
+                   &(*dstLoc - Point(1, 1)));
+
+   //color and blit sprite
+   SDL_FillRect(colorTemp, 0, getEntityColor(*game_, getColor()));
+   SDL_BlitSurface(thisType.surface, 0, colorTemp, 0);
    SDL_BlitSurface(colorTemp, srcLoc, screen, dstLoc);
 }
 
@@ -74,6 +88,6 @@ float Entity::getDrawPercent() const{
    return FULL; //default: full
 }
 
-Uint32 Entity::getColor() const{
-   return DEFAULT_ENTITY_COLOR; //default
+int Entity::getColor() const{
+   return ENTITY_DEFAULT; //default
 }

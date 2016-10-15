@@ -18,6 +18,11 @@ typedef std::vector<DecorationType> decorationTypes_t;
 typedef std::vector<Player> players_t;
 typedef std::list<Entity *> entities_t;
 typedef std::list<Particle> particles_t;
+typedef SDL_Surface *surfaceIndex_t
+                        [ENTITY_MAX] //number of colors
+                        [MAX_TYPES] //number of types
+                        //number of entity subclasses
+                        [MAX_ENTITY_TYPE];
 
 //Contains all data necessary to describe the game's
 //state.  Makes passing this information to classes
@@ -50,10 +55,22 @@ struct GameData{
    // - random deletions
    particles_t particles;
 
+   //An index of already-usedk, colored entity surfaces.
+   //[0] - [MAX_PLAYERS-1] = each player's color
+   //see enum EntityColor and getEntityColor() for the rest
+   surfaceIndex_t surfaceIndex;
+
    //The current game mode
    ControlMode mode;
 
-   //free entities pointed to
+   GameData(){
+      for (typeNum_t i = 0; i != ENTITY_MAX; ++i)
+         for (typeNum_t j = 0; j != MAX_TYPES; ++j)
+            for (typeNum_t k = 0; k != MAX_ENTITY_TYPE; ++k)
+               surfaceIndex[i][j][k] = 0;
+   }
+
+   //free entities and surfaces pointed to
    ~GameData(){
       for (entities_t::iterator it = entities.begin();
            it != entities.end(); ++it){
