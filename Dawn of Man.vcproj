@@ -175,6 +175,10 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\Building.h"
+				>
+			</File>
+			<File
 				RelativePath=".\BuildingType.h"
 				>
 			</File>
@@ -183,7 +187,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Entity.h"
+				>
+			</File>
+			<File
+				RelativePath=".\EntityPtr.h"
+				>
+			</File>
+			<File
+				RelativePath=".\EntityType.h"
+				>
+			</File>
+			<File
 				RelativePath=".\game.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GameData.h"
 				>
 			</File>
 			<File
@@ -192,6 +212,10 @@
 			</File>
 			<File
 				RelativePath=".\misc.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Point.h"
 				>
 			</File>
 		</Filter>
@@ -207,6 +231,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\Building.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\BuildingType.cpp"
 				>
 			</File>
@@ -216,6 +244,18 @@
 			</File>
 			<File
 				RelativePath=".\Debug.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Entity.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\EntityPtr.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\EntityType.cpp"
 				>
 			</File>
 			<File

@@ -1,15 +1,18 @@
+// (C) 2009 Tim Gurto
+
 #include <cassert>
 #include <vector>
 #include <sstream>
 #include <time.h>
+#include <algorithm>
 
 #include "SDL.h"
 #include "misc.h"
-
 #include "Debug.h"
-#include "BuildingType.h"
+#include "GameData.h"
 #include "globals.h"
 #include "game.h"
+#include "Entity.h"
 
 extern Debug debug;
 
@@ -17,31 +20,33 @@ void gameMode(){
    SDL_Surface *screen = setScreen();
    debug.setScreen(screen);
 
-debug("Beginning game mode");
-
-
    SDL_Surface *back = loadImage(IMAGE_PATH + "back.png");
    SDL_Surface *image = loadImage(IMAGE_PATH + "c0.png", MAGENTA);
    SDL_Surface *cursor = loadImage(IMAGE_PATH + "cursor.png", GREEN);
 
-   screenSize_t
+   //TODO make mouse position a Point
+   pixels_t
       mouseX(SCREEN_WIDTH/2),
       mouseY(SCREEN_HEIGHT/2);
 
    SDL_ShowCursor(SDL_DISABLE);
 
    //init
-   std::vector<BuildingType> buildingTypes;
-   buildingTypes.push_back(BuildingType("Campfire", 0,
-                             makeRect(-61, -118, 114, 143),
-                             makeRect(-61, -15, 111, 40),
-                             GREEN));
+   GameData game;
+
+   BuildingType campfire(0, "Campfire",
+                         makeRect(-61, -118, 114, 143),
+                         makeRect(-61, -15, 111, 40),
+                         GREEN);
+   game.buildingTypes.push_back(campfire);
 
    typeNum_t toBuild = 0;
    
 
    timer_t ticks(SDL_GetTicks());
    timer_t lastCalcTick(ticks), lastDrawTick(ticks);
+   debug("Redraw frequency: ", DRAW_MS, "ms");
+   debug("State update frequency: ", CALC_MS, "ms");
 
    bool loop = true;
    while (loop){
@@ -49,6 +54,9 @@ debug("Beginning game mode");
       SDL_Event event;
       while (SDL_PollEvent(&event) ){
          switch (event.type){
+         case SDL_QUIT: //If the user has Xed out the window
+            loop = false;
+            break;
          case SDL_MOUSEMOTION:
             mouseX = event.motion.x;
             mouseY = event.motion.y;
@@ -61,8 +69,17 @@ debug("Beginning game mode");
                SDL_SaveBMP(screen, os.str().c_str());
             }
             break;
-         case SDL_QUIT: //If the user has Xed out the window
-            loop = false;
+         case SDL_MOUSEBUTTONDOWN:
+            //debug("Mouse down: ", int(event.button.button));
+            switch (event.button.button){
+            case 1: //left click
+               Entity *newBuilding = new Building(0, Point(mouseX, mouseY));
+               game.entities.push_back(EntityPtr(newBuilding));
+               //TODO fix sort
+               //should be individually inserted rather than sorting the whole list
+               game.entities.sort();
+               break;
+            }
             break;
          }
       }
@@ -71,7 +88,7 @@ debug("Beginning game mode");
 
       // Update state if necessary
       if (ticks - lastCalcTick >= CALC_MS){
-         debug("Tick: updating state");
+         //debug("Tick: updating state");
          updateState();
          lastCalcTick = MIN_WAIT ? ticks : lastCalcTick + CALC_MS;
       }
@@ -79,38 +96,43 @@ debug("Beginning game mode");
 
       // Redraw if necessary
       if (ticks - lastDrawTick >= DRAW_MS){
-         debug("Tick: redrawing");
-         drawEverything(screen, buildingTypes.front().surface_,
-                        back, image, cursor, mouseX, mouseY);
+         //debug("Tick: redrawing");
+         drawEverything(screen, back, image, cursor, mouseX, mouseY, game);
          lastDrawTick = MIN_WAIT ? ticks : lastDrawTick + DRAW_MS;
       }
 
    }
 
-
    SDL_ShowCursor(SDL_ENABLE);
 
-   debug("Unloading Back");
+   //debug("Unloading Back");
    freeSurface(back);
-   debug("Unloading Image");
+   //debug("Unloading Image");
    freeSurface(image);
-   debug("Unloading Cursor");
+   //debug("Unloading Cursor");
    freeSurface(cursor);
-   debug("Done unloading");
+   //debug("Done unloading");
 
 }
 
-void drawEverything(SDL_Surface *screen,
-                    SDL_Surface *s, SDL_Surface *back,
+void drawEverything(SDL_Surface *screen, SDL_Surface *back,
                     SDL_Surface *image, SDL_Surface *cursor,
-                    screenSize_t mouseX, screenSize_t mouseY){
+                    pixels_t mouseX, pixels_t mouseY,
+                    const GameData &game){
    SDL_FillRect(screen, 0, 0);
    SDL_BlitSurface(back, 0, screen, &makeRect());
    SDL_BlitSurface(image, 0, screen, &makeRect(50,50));
    
-      SDL_BlitSurface(s, 0, screen, &makeRect(200,200));
-   SDL_BlitSurface(cursor, 0, screen, &makeRect(
-      CURSOR_OFFSET_X + mouseX, CURSOR_OFFSET_Y + mouseY));
+
+   for (std::list<Building>::const_iterator it = game.entities.begin();
+        it != game.entities.end(); ++it){
+      it->draw(screen, game);
+   }
+
+   //TODO use blitCursor
+   SDL_BlitSurface(cursor, 0, screen, &makeRect(CURSOR_OFFSET_X + mouseX,
+                                                CURSOR_OFFSET_Y + mouseY));
+
    debug.display();
    bool test = SDL_Flip(screen) == 0;
    assert(test);

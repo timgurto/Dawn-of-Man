@@ -1,3 +1,5 @@
+// (C) 2009 Tim Gurto
+
 #include <cassert>
 #include <string>
 #include <sstream>
@@ -18,13 +20,12 @@ extern int surfacesLoaded;
 
 
 SDL_Surface *loadImage(const char* fileName){
+   debug("Loading surface: ", fileName);
    std::string strFile(fileName);
    SDL_Surface *load, *opt;
    load = IMG_Load(fileName);
-   debug("Checking surface load:         "+strFile);
    checkP(load);
    opt = SDL_DisplayFormat(load);
-   debug("Checking surface optimization: "+strFile);
    checkP(opt);
    SDL_FreeSurface(load);
    ++surfacesLoaded;
@@ -32,7 +33,7 @@ SDL_Surface *loadImage(const char* fileName){
    return opt;
 }
 
-SDL_Surface *loadImage(const char* fileName, SDL_Color background){
+SDL_Surface *loadImage(const char* fileName, const SDL_Color &background){
    SDL_Surface *img = loadImage(fileName);
    SDL_SetColorKey(img, SDL_SRCCOLORKEY, SDL_MapRGB( img->format, background.r, background.g, background.b));
    return img;
@@ -42,7 +43,7 @@ SDL_Surface *loadImage(const std::string fileName){
    return loadImage(fileName.c_str());
 }
 
-SDL_Surface *loadImage(const std::string fileName, SDL_Color background){
+SDL_Surface *loadImage(const std::string fileName, const SDL_Color &background){
    return loadImage(fileName.c_str(), background);
 }
 
@@ -75,22 +76,28 @@ void blitCursor (SDL_Surface *cursor, SDL_Surface *screen, SDL_MouseMotionEvent 
 
 void freeSurface(SDL_Surface *&p){
    if (p != 0){
+      debug("Unloading surface");
       SDL_FreeSurface(p);
       p = 0;
       --surfacesLoaded;
    }
 }
 
+SDL_Surface *copySurface(SDL_Surface* src){
+   assert(src != 0);
+   ++surfacesLoaded;
+   return SDL_ConvertSurface(src, src->format, SDL_SWSURFACE);
+}
 
 
 //========misc=========
 
 
-std::string makePath(EntityType type, typeNum_t imageNumber, bool isPortrait){
+std::string makePath(EntityTypeID type, typeNum_t imageNumber, bool isPortrait){
    std::ostringstream path;
    path << IMAGE_PATH; // Images/
    switch (type){
-   case Building:
+   case BUILDING:
       path << BUILDINGS_IMAGE_PATH; // Units/
       break;
    }
@@ -106,13 +113,4 @@ std::string makePath(EntityType type, typeNum_t imageNumber, bool isPortrait){
    
    path << IMAGE_SUFFIX; // .png
    return path.str();
-}
-
-template <typename Type> void checkP(Type *pointer){
-   if (pointer == 0){
-      SDL_WM_SetCaption(SDL_GetError(), NULL);
-      bool pointerProperlyInitialized(false);
-      assert (pointerProperlyInitialized);
-   }
-   assert (pointer != 0);
 }

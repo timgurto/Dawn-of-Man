@@ -1,32 +1,23 @@
+// (C) 2009 Tim Gurto
+
 #ifndef BUILDING_TYPE_H
 #define BUILDING_TYPE_H
 
-#include <string>
+#include "EntityType.h"
 
-#include "SDL.h"
-#include "globals.h"
-
-class BuildingType{
+class BuildingType: public EntityType{
+   progress_t progress_;
 
 public:
-   BuildingType(std::string name, typeNum_t imageNumber,
-                SDL_Rect drawRect, SDL_Rect baseRect,
-                SDL_Color background);
-   BuildingType(const BuildingType &original);
-   BuildingType &operator=(const BuildingType &rhs);
-   ~BuildingType();
+   BuildingType(typeNum_t index,
+                const std::string &name,
+                const SDL_Rect &drawRect,
+                const SDL_Rect &baseRect,
+                const SDL_Color &background,
+                progress_t progress = 0);
+   //BuildingType(BuildingType &original);
+   //BuildingType &operator=(const BuildingType &rhs);
 
-//private:
-   std::string name_;
-   SDL_Surface *surface_;
-   SDL_Surface *iconSurface_;
-   typeNum_t imageNumber_;
-
-   SDL_Color background_;
-
-   //the x and y values of these are offsets from the building's location
-   SDL_Rect drawRect_;
-   SDL_Rect baseRect_; //for collisions, placement
 };
 
 #endif

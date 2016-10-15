@@ -1,3 +1,5 @@
+// (C) 2009 Tim Gurto
+
 //Standard Library
 #include <cassert>
 
@@ -15,7 +17,7 @@ Debug debug(YELLOW, 0, 0, 59);
 int surfacesLoaded(0);
 
 int main(int argc, char* args[]){
-   int sdlInit(SDL_Init(SDL_INIT_EVERYTHING));
+   int sdlInit(SDL_Init(SDL_INIT_VIDEO));
    assert (sdlInit != -1);
 
    int ttfInit(TTF_Init());
@@ -29,7 +31,7 @@ int main(int argc, char* args[]){
 
    gameMode();
 
-   //TTF_Quit(); Quit now happens with debug dtor
+   //TTF_Quit(); Quit happens at debug dtor
    SDL_Quit();
    assert (surfacesLoaded == 0);
    return 0;

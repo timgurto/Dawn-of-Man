@@ -1,3 +1,5 @@
+// (C) 2009 Tim Gurto
+
 #include <queue>
 #include <cassert>
 
@@ -8,7 +10,7 @@
 #include "globals.h"
 #include "Debug.h"
 
-Debug::Debug(SDL_Color color, screenSize_t x, screenSize_t y,
+Debug::Debug(SDL_Color color, pixels_t x, pixels_t y,
              unsigned short count):
 color_(color),
 x_(x),
@@ -31,11 +33,6 @@ if (DEBUG){
    font = TTF_OpenFont(name.c_str(), size);
    assert (font != 0);
    height = TTF_FontHeight(font);
-}}
-
-void Debug::operator()(std::string message){
-if (DEBUG){
-   add(message);
 }}
 
 void Debug::add(std::string message){
