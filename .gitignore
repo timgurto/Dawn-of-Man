@@ -1,0 +1,18 @@
+*.ncb
+*.psess
+*.suo
+*.user
+*.vsp
+Debug/*
+Release/*
+Test/*
+*.res
+*.manifest
+*.ilk
+*.pdb
+*.obj
+Dawn of Man_solution_goanna.checks
+Dawn of Man_solution_goanna.options
+*.db
+*.ad
+Archive/2009 10 05 Game skeleton/Debug/*
