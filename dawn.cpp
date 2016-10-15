@@ -10,8 +10,6 @@
 
 #include "game.h"
 
-//TODO: comment function headers
-
 //globals
 Debug debug(YELLOW, 0, 0, 59);
 int surfacesLoaded(0); //for safety

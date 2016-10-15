@@ -42,7 +42,6 @@ void gameMode(){
    SDL_ShowCursor(SDL_DISABLE);
 
    //init
-   //TODO: give GameData pointer to classes
    GameData game;
    Entity::setGame(&game);
    game.mode = NORMAL_MODE;

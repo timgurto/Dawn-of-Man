@@ -7,6 +7,8 @@
 #include "SDL.h"
 #include "Point.h"
 
+//DEBUG determines:
+// -The displaying of debug messages
 #ifdef NDEBUG
 const bool DEBUG = false;
 #else
@@ -31,8 +33,6 @@ const pixels_t SCREEN_WIDTH = 1024;
 const pixels_t SCREEN_HEIGHT = 768;
 const int SCREEN_BPP = 32;
 
-const pixels_t UI_BAR_PADDING = 24;
-
 //in case the cursor point isn't at 0,0
 const Point CURSOR_OFFSET(-2,-1);
 
@@ -49,10 +49,13 @@ const SDL_Color WHITE   = {0xff, 0xff, 0xff};
 
 const float FULL  = 1;
 const float EMPTY = 0;
+
 //anything behind each entity is cleared
 const bool ENTITY_MASKS = true;
+
 //whether the entire mask is drawn behind partial sprites
 const bool MASK_BEFORE_CLIP = false;
+
 const SDL_Color ENTITY_BACKGROUND = GREEN;
 const SDL_Color ENTITY_MASK       = MAGENTA;
 const Uint32 FOOTPRINT_COLOR_GOOD = 0x008800;
@@ -64,21 +67,25 @@ const std::string IMAGE_PATH           = "Images/";
 const std::string BUILDINGS_IMAGE_PATH = "Buildings/";
 const std::string INTERFACE_IMAGE_PATH = "Interface/";
 
+//For makePath()
 enum ImageModifier{
    NONE,
    ICON,
    MASK
 };
 
+//For makePath()
 enum EntityTypeID{
    BUILDING
 };
 
+//Interface modes for the game
 enum ControlMode{
    NORMAL_MODE,
    BUILD_MODE
 };
 
+//Corners of the screen; for UIBar
 enum Corner{
    TOP_LEFT,
    TOP_RIGHT,
@@ -86,6 +93,7 @@ enum Corner{
    BOTTOM_RIGHT
 };
 
+//For UIBar
 enum Orientation{
    VERTICAL,
    HORIZONTAL

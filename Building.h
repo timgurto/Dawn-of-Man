@@ -9,11 +9,12 @@
 struct GameData;
 class EntityType;
 
+//Entities which are constructed, and don't move.
 class Building : public Entity{
 
-   progress_t progress_;
-   bool finished;
-   float drawPercent;
+   progress_t progress_; //construction progress
+   bool finished; //whether construction is finished
+   float drawPercent; //value for partial drawing
 
 public:
    Building(typeNum_t type, const Point &loc, progress_t progress = 0);

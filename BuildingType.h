@@ -5,9 +5,11 @@
 
 #include "EntityType.h"
 
+//Entities which are constructed, and don't move
 class BuildingType: public EntityType{
    friend class Building;
 
+   //total progress points necessary for construction
    progress_t progress_;
 
 public:

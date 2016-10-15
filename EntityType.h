@@ -7,13 +7,20 @@
 #include "SDL.h"
 #include "globals.h"
 
+//A category of entities, differing by attributes,
+//regular actions, and in-game behavior
 class EntityType{
    friend class Entity;
 
-   typeNum_t index_;
-   std::string name_;
-   SDL_Rect drawRect_, baseRect_;
-   SDL_Surface *surface, *icon, *mask;
+   typeNum_t index_; //for graphics
+   std::string name_; //the entity's name
+   SDL_Rect
+      drawRect_, //position of sprite graphic
+      baseRect_; //the entity's base, for collisions
+   SDL_Surface
+      *surface, //main image
+      *icon, //icon, for UIBars
+      *mask; //green and magenta background mask
 
 public:
    EntityType(typeNum_t index, EntityTypeID type,

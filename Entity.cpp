@@ -72,7 +72,7 @@ if (MASK_BEFORE_CLIP && ENTITY_MASKS)
    SDL_BlitSurface(thisType.surface, &srcLoc, screen, &drawLoc);
 }
 
-SDL_Rect Entity::baseRect(){
+SDL_Rect Entity::getBaseRect(){
    return loc_ + type().baseRect_;   
 }
 
