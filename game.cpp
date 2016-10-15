@@ -28,11 +28,14 @@ extern Debug debug;
 extern Debug deltaLog;
 
 void gameMode(){
-   srand(unsigned(time(0)));
 
+   //initialize screen and debug objects
    SDL_Surface *screen = setScreen();
    debug.initScreen(screen);
    deltaLog.initScreen(screen);
+
+   //seed random generator
+   srand(unsigned(time(0)));
 
    SDL_Surface
       *back = loadImage(IMAGE_PATH + "back.png"),

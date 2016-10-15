@@ -23,24 +23,41 @@ Debug debug(YELLOW, 0, 0, 59);
 int surfacesLoaded(0);
 
 int main(int argc, char* argv[]){
+
+
+   //SDL initialization
    int sdlInit(SDL_Init(SDL_INIT_VIDEO));
    assert (sdlInit == 0);
-
    int ttfInit(TTF_Init());
    assert (ttfInit >= 0);
 
+
+   //debug objects initialization
    debug.initFont("Dina.fon", 0);
    debug.enabled = DEBUG;
    deltaLog.initFont("Dina.fon", 0);
    deltaLog.enabled = DEBUG;
 
-   //new game
+
+   //Screen resolution stuff
+   const SDL_VideoInfo *current = SDL_GetVideoInfo();
+   debug("Current resolution: ", current->current_w, "x", current->current_h);
+
+   SDL_Rect** resolutions = SDL_ListModes(NULL, SDL_FULLSCREEN|SDL_HWSURFACE);
+   assert (resolutions > 0);
+   debug("Available resolutions:");
+   while (*resolutions){
+      debug((*resolutions)->w, "x", (*resolutions)->h);
+      ++resolutions;
+   }
 
 
-
+   //New game
    gameMode();
 
-   //TTF_Quit(); Quit happens at debug dtor
+
+   //Quit
+   //TTF_Quit() happens at debug dtor
    SDL_Quit();
    assert (surfacesLoaded == 0);
    return 0;

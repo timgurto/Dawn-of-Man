@@ -70,6 +70,12 @@ public:
       ss << a << b << c;
       add(ss.str());
    }
+   template <typename A, typename B, typename C, typename D>
+   void operator()(A a, B b, C c, D d){
+      std::ostringstream ss;
+      ss << a << b << c << d;
+      add(ss.str());
+   }
 };
 
 #endif

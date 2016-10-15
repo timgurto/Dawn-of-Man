@@ -72,7 +72,11 @@ SDL_Color makeColor(Uint8 r, Uint8 g, Uint8 b){
 }
 
 SDL_Surface *setScreen(){
-   SDL_Surface *screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_SWSURFACE);
+   SDL_Surface *screen = SDL_SetVideoMode(SCREEN_WIDTH,
+                                          SCREEN_HEIGHT,
+                                          SCREEN_BPP,
+                                          SDL_HWSURFACE/* |
+                                          SDL_FULLSCREEN*/);
    SDL_WM_SetCaption( "Dawn of Man", NULL );
    return screen;
 }

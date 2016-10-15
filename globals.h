@@ -24,7 +24,7 @@ typedef double progress_t;
 const typeNum_t MAX_TYPES = 256;
 const typeNum_t MAX_PLAYERS = 2;
 
-//HIGHER = slower game speed.
+//higher = slower game speed.
 const int DELTA_MODIFIER = 40;
 
 //progress points added per state update
@@ -78,9 +78,9 @@ const Uint8 SHADOW_ALPHA = 0x44;
 //(~45%, multiplicative) effect on performance
 //===================================================
 //anything behind each entity is cleared
-const bool ENTITY_MASKS = true;
+const bool ENTITY_MASKS = false;
 //entities appear engraved
-const bool SHADOWS = true;
+const bool SHADOWS = false;
 //===================================================
 
 const SDL_Color ENTITY_BACKGROUND   = GREEN;
