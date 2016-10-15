@@ -10,13 +10,19 @@ BuildingType::BuildingType(typeNum_t index,
                            const SDL_Rect &baseRect,
                            const Point &selectionCenter,
                            const Resources &cost,
-                           progress_t maxProgress):
+                           progress_t maxProgress,
+                           const std::string &soundFile,
+                           const std::string &hitSoundFile,
+                           const std::string &deathSoundFile):
 EntityType(index,
            ENT_BUILDING,
            name,
            drawRect,
            baseRect,
-           selectionCenter),
+           selectionCenter,
+           soundFile,
+           hitSoundFile,
+           deathSoundFile),
 maxProgress_(maxProgress),
 cost_(cost){}
 

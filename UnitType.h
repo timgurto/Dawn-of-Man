@@ -78,7 +78,10 @@ public:
             bool gatherer = false,
             typeNum_t originBuilding = NO_TYPE,
             progress_t maxProgress = 0,
-            typeNum_t resourceAtDeath = NO_TYPE);
+            typeNum_t resourceAtDeath = NO_TYPE,
+            const std::string &soundFile = "",
+            const std::string &hitSoundFile = "",
+            const std::string &deathSoundFile = "");
 
    //get
    typeNum_t getOriginBuilding() const;

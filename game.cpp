@@ -5,6 +5,8 @@
 #include <ctime>
 
 #include "SDL.h"
+#include "SDL_mixer.h"
+
 #include "game.h"
 #include "globals.h"
 #include "update.h"
@@ -75,6 +77,10 @@ void gameMode(){
    SDL_SetAlpha(particleShadow, SDL_SRCALPHA, SHADOW_ALPHA);
    SDL_SetAlpha(cursorShadow, SDL_SRCALPHA, SHADOW_ALPHA);
 
+   std::string musicPath = SOUND_PATH + "tristram.mp3";
+   Mix_Music *music = Mix_LoadMUS(musicPath.c_str()); 
+   Mix_PlayMusic(music, -1);
+
    SDL_ShowCursor(SDL_DISABLE);
 
    //init
@@ -141,7 +147,8 @@ void gameMode(){
    BuildingType campfire(0, "Campfire",
                          makeRect(-41, -91, 79, 111),
                          makeRect(-42, -23, 81, 42),
-                         Point(2, -37), campfireCost, 1250);
+                         Point(2, -37), campfireCost, 1250,
+                         "PLACBLDG.wav");
    resources_t shrineCost; shrineCost.push_back(180);
    BuildingType shrine(1, "Shrine",
                        makeRect(-75, -67, 152, 77),
@@ -182,7 +189,11 @@ void gameMode(){
                   false, //builder
                   false, //gatherer
                   1, //origin building
-                  1000); //progress cost
+                  1000, //progress cost
+                  NO_TYPE,
+                  "SKING1.WAV",
+                  "clubman.wav",
+                  "taubr07.wav");
    resources_t gruntCost; gruntCost.push_back(30);
    UnitType grunt(1, "Caveman",
                   makeRect(-22, -107, 70, 113),
@@ -196,7 +207,12 @@ void gameMode(){
                   true, //builder
                   true, //gatherer
                   0, //origin building
-                  1000); //progress cost
+                  1000, //progress cost
+                  NO_TYPE,
+                  "abadacus.wav",
+                  "clubman.wav",
+                  "taubr07.wav");
+
    resources_t deerCost; gruntCost.push_back(5);
    UnitType deer(2, "Deer",
                  makeRect(-132, -155, 235, 165),
@@ -237,7 +253,7 @@ void gameMode(){
       addEntity(game, new Unit(0, Point(x, y), 2, 1000));
    }
    //nature start: some deer
-   for (int i = 0; i != 10; ++i){
+   for (int i = 0; i != 20; ++i){
       pixels_t x, y;
       do{
          x = rand() % game.map.w;
@@ -313,7 +329,8 @@ void gameMode(){
 
       //update state
       updateState(deltaMod, game, screen, bars,
-                  contextHelp, resourcesBox, fpsDisplay);
+                  contextHelp, resourcesBox, fpsDisplay,
+                  music);
 
       //render
       render(screen, glow, diagGreen, diagRed, map, darkMap, cursor,
@@ -337,6 +354,9 @@ void gameMode(){
    freeSurface(diagRed);
    freeSurface(entitiesTemp);
    freeSurface(glow);
+
+   Mix_HaltMusic(); 
+   Mix_FreeMusic(music);
 
 }
 

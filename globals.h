@@ -8,9 +8,10 @@
 #include "Point.h"
 #include "types.h"
 
-//DEBUG determines:
+//DEBUG means:
 // -The displaying of debug messages
-// -The displaying of delta/FPS
+// -The automatic display of delta/FPS
+// -Automatic windowed mode
 #ifdef NDEBUG //VS: Debug vs. Release mode
 #define DEBUG false
 #else
@@ -101,6 +102,7 @@ const std::string TECHS_IMAGE_PATH
    = IMAGE_PATH + "Techs/";
 const std::string INTERFACE_IMAGE_PATH
    = IMAGE_PATH + "Interface/";
+const std::string SOUND_PATH = "Sounds/";
 
 enum Direction{
    DIR_UP,

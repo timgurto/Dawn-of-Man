@@ -8,19 +8,24 @@ EntityType::EntityType(typeNum_t index, EntityTypeID type,
                        const std::string &name,
                        const SDL_Rect &drawRect,
                        const SDL_Rect &baseRect,
-                       const Point &selectionCenter):
+                       const Point &selectionCenter,
+                       const std::string &soundFile,
+                       const std::string &hitSoundFile,
+                       const std::string &deathSoundFile):
 index_(index),
 name_(name),
 drawRect_(drawRect),
 baseRect_(baseRect),
-selectionCenter_(selectionCenter){
-   surface_ = loadImage(makePath(type, index_),
-                       ENTITY_MASK);
-   icon_ = loadImage(makePath(type, index_, IMG_ICON),
-                    ENTITY_BACKGROUND);
-   mask_ = loadImage(makePath(type, index_, IMG_MASK),
-                    ENTITY_MASK);
-}
+selectionCenter_(selectionCenter),
+surface_(loadImage(makePath(type, index_), ENTITY_MASK)),
+icon_(loadImage(makePath(type, index_, IMG_ICON), ENTITY_BACKGROUND)),
+mask_(loadImage(makePath(type, index_, IMG_MASK), ENTITY_MASK)),
+soundFile_(soundFile),
+hitSoundFile_(hitSoundFile),
+deathSoundFile_(deathSoundFile),
+sound_(loadSound(SOUND_PATH + soundFile)),
+hitSound_(loadSound(SOUND_PATH + hitSoundFile)),
+deathSound_(loadSound(SOUND_PATH + deathSoundFile)){}
 
 EntityType::EntityType(const EntityType &original):
 index_(original.index_),
@@ -30,12 +35,21 @@ baseRect_(original.baseRect_),
 selectionCenter_(original.selectionCenter_),
 surface_(copySurface(original.surface_)),
 icon_(copySurface(original.icon_)),
-mask_(copySurface(original.mask_)){}
+mask_(copySurface(original.mask_)),
+sound_(loadSound(SOUND_PATH + soundFile_)),
+hitSound_(loadSound(SOUND_PATH + hitSoundFile_)),
+deathSound_(loadSound(SOUND_PATH + deathSoundFile_)),
+soundFile_(original.soundFile_),
+hitSoundFile_(original.hitSoundFile_),
+deathSoundFile_(original.deathSoundFile_){}
 
 EntityType::~EntityType(){
    freeSurface(surface_);
    freeSurface(icon_);
    freeSurface(mask_);
+   freeSound(sound_);
+   freeSound(hitSound_);
+   freeSound(deathSound_);
 }
 
 const SDL_Rect &EntityType::getBaseRect() const{
@@ -56,4 +70,12 @@ const std::string &EntityType::getName() const{
 
 typeNum_t EntityType::getIndex() const{
    return index_;
+}
+
+SDL_Sound *EntityType::getSound() const{
+   return sound_;
+}
+
+SDL_Sound *EntityType::getHitSound() const{
+   return hitSound_;
 }

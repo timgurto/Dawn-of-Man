@@ -126,13 +126,14 @@ const pixels_t PLACEMENT_MARGIN = 1;
             ++count;
          }
       
+      const UnitType &unitType = game.unitTypes[typeIndex];
+
       //check player's resources
       if (game.players[HUMAN_PLAYER].
-         sufficientResources(game.unitTypes[typeIndex].getCost())){
+         sufficientResources(unitType.getCost())){
 
          //find location
          Point loc;
-         const UnitType &unitType = game.unitTypes[typeIndex];
 
          int tries = 0;
          do{

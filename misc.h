@@ -7,6 +7,8 @@
 #include <queue>
 
 #include "SDL.h"
+#include "SDL_mixer.h"
+#include "types.h"
 #include "globals.h"
 
 class Entity;
@@ -34,6 +36,10 @@ SDL_Surface *loadImage(const std::string fileName,
 
 SDL_Surface *createSurface(int width = SCREEN_WIDTH, int height = SCREEN_HEIGHT);
 
+//Loads a sound, and registers it with soundsLoaded
+SDL_Sound *loadSound(const char* fileName);
+SDL_Sound *loadSound(const std::string &fileName);
+
 //Fake constructor and copy constructor for SDL_Rect
 SDL_Rect makeRect(Sint16 x = 0, Sint16 y = 0, Uint16 w = 0, Uint16 h = 0);
 SDL_Rect makeRect(const Point &point);
@@ -51,6 +57,12 @@ void freeSurface(SDL_Surface *&p);
 //Deep-copies a surface from one pointer to another.
 SDL_Surface *copySurface(SDL_Surface* src);
 
+//Free a sound, and update soundsLoaded
+void freeSound(SDL_Sound *&p);
+
+//Deep-copies a sound from one pointer to another.
+SDL_Sound *copySound(SDL_Sound* src);
+
 //returns a rectangle with equal dimensions, but co-ordinates
 // of zero.
 SDL_Rect dimRect(const SDL_Rect &original);
@@ -65,6 +77,8 @@ bool isKeyPressed(SDLKey key);
 //SDL_Rect -= SDL_Rect
 SDL_Rect &operator-=(SDL_Rect &lhs, const SDL_Rect &rhs);
 
+//plays a sound
+void playSound(SDL_Sound *p);
 
 //===misc===
 

@@ -24,7 +24,10 @@ public:
                 const SDL_Rect &baseRect,
                 const Point &selectionCenter,
                 const Resources &cost,
-                progress_t maxProgress = 0);
+                progress_t maxProgress = 0,
+                const std::string &soundFile = "",
+                const std::string &hitSoundFile = "",
+                const std::string &deathSoundFile = "");
 
    //get
    const Resources &getCost() const;

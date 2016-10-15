@@ -3,6 +3,7 @@
 #include <queue>
 #include <cmath>
 #include <cassert>
+#include "SDL_mixer.h"
 #include "misc.h"
 #include "GameData.h"
 #include "Unit.h"
@@ -67,17 +68,19 @@ void Unit::draw(SDL_Surface *screen) const{
 }
 
 void Unit::tick(double delta){
+   const UnitType &thisType = game_->unitTypes[typeIndex_];
 
    //training
    if (!finished_){
       progress_ += delta * PROGRESS_PER_CALC;
       //debug("progress = ", progress_);
-      if (progress_ >= game_->unitTypes[typeIndex_].maxProgress_){
+      if (progress_ >= thisType.maxProgress_){
          finished_ = true;
          drawPercent_ = FULL;
+         playSound(thisType.sound_);
       }else
          drawPercent_ = 1.0 * progress_ /
-                 game_->unitTypes[typeIndex_].maxProgress_;
+                        thisType.maxProgress_;
 
       int particlesToDraw = int(1.0 * rand() / RAND_MAX +
                                 0.02 * 
@@ -88,7 +91,6 @@ void Unit::tick(double delta){
    }else{
 
       updateTarget();
-      const UnitType &thisType = (const UnitType &)(type());
 
       if (moving_){
 
@@ -169,6 +171,7 @@ void Unit::tick(double delta){
          if (combatFrameCounter_ >= thisType.maxCombatFrameCounter_){
             combatFrameCounter_ -= (thisType.maxCombatFrameCounter_ +
                                     thisType.combatWait_);
+            playSound(thisType.getHitSound());
             //debug("hit");
             switch (targetEntity_->classID()){
             case ENT_BUILDING:

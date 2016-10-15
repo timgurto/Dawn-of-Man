@@ -9,6 +9,7 @@
 
 #include "SDL.h"
 #include "SDL_image.h"
+#include "SDL_mixer.h"
 
 #include "globals.h"
 #include "misc.h"
@@ -18,7 +19,9 @@
 #include "Debug.h"
 
 extern Debug debug;
-extern int surfacesLoaded;
+extern int
+   surfacesLoaded,
+   soundsLoaded;
 extern bool WINDOWED_MODE;
 
 
@@ -27,7 +30,7 @@ extern bool WINDOWED_MODE;
 
 SDL_Surface *loadImage(const char* fileName,bool alpha){
    debug("Loading surface: ", fileName);
-   std::string strFile(fileName);
+   //std::string strFile(fileName);
    SDL_Surface *load, *opt;
    load = IMG_Load(fileName);
    checkP(load);
@@ -68,6 +71,19 @@ SDL_Surface *createSurface(int width, int height){
    ++surfacesLoaded;
    return SDL_CreateRGBSurface(SDL_HWSURFACE, width, height,
                                SCREEN_BPP, 0, 0, 0, 0);
+}
+
+SDL_Sound *loadSound(const char* fileName){
+   if (fileName == "" || fileName == SOUND_PATH)
+      return 0;
+   SDL_Sound *p = Mix_LoadWAV(fileName);
+   checkP(p);
+   ++soundsLoaded;
+   return p;
+}
+
+SDL_Sound *loadSound(const std::string &fileName){
+   return loadSound(fileName.c_str());
 }
 
 SDL_Rect makeRect(Sint16 x, Sint16 y, Uint16 w, Uint16 h){
@@ -120,10 +136,21 @@ void freeSurface(SDL_Surface *&p){
    }
 }
 
+void freeSound(SDL_Sound *&p){
+   if (p != 0){
+      Mix_FreeChunk(p);
+      p = 0;
+      --soundsLoaded;
+   }
+}
+
 SDL_Surface *copySurface(SDL_Surface* src){
-   assert(src != 0);
+   if (src == 0)
+      return 0;
    ++surfacesLoaded;
-   return SDL_ConvertSurface(src, src->format, SDL_SWSURFACE);
+   return SDL_ConvertSurface(src,
+                             src->format,
+                             SDL_SWSURFACE);
 }
 
 SDL_Rect dimRect(const SDL_Rect &original){
@@ -146,6 +173,11 @@ SDL_Rect &operator-=(SDL_Rect &lhs, const SDL_Rect &rhs){
    lhs.w -= rhs.w;
    lhs.h -= rhs.h;
    return lhs;
+}
+
+void playSound(SDL_Sound *p){
+   if (p != 0)
+      Mix_PlayChannel(-1, p, 0);
 }
 
 

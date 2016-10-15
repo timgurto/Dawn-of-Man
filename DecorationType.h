@@ -5,7 +5,6 @@
 
 #include "EntityType.h"
 
-//TODO make collision decoration-specific
 //Entities which are not functional, and
 //do not collide.
 //Minimalist class

@@ -358,11 +358,13 @@ bool Entity::isLocationOK() const{
 
 void Entity::kill(){
    //TODO make death more spectacular
+   const EntityType &thisType = type();
+   playSound(thisType.deathSound_);
 
    typeNum_t resourceType = NO_TYPE;
    if (this->classID() == ENT_UNIT){
       resourceType =
-         game_->unitTypes[this->type().getIndex()].getDeathResource();
+         game_->unitTypes[thisType.getIndex()].getDeathResource();
       if (resourceType != NO_TYPE){
          ResourceNode *node = new ResourceNode(resourceType, loc_);
          addEntity(*game_, node);
@@ -373,7 +375,10 @@ void Entity::kill(){
             if ((*it)->classID() == ENT_UNIT){
                Unit &unit = (Unit &)(**it);
                if (unit.targetEntity_ == this)
-                  unit.setTarget(node);
+                  if (unit.isGatherer())
+                     unit.setTarget(node);
+                  else
+                     unit.setTarget(0);
             }
          }
       }

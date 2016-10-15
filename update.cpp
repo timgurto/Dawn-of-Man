@@ -25,10 +25,12 @@ void updateState(double delta, GameData &game,
                  SDL_Surface *screen, UIBars_t &bars,
                  MessageBox &contextHelp,
                  MessageBox &resourcesBox,
-                 MessageBox &fpsDisplay){
+                 MessageBox &fpsDisplay,
+                 Mix_Music *music){
 
    //Interface stuff
-   handleEvents(game, screen, bars, contextHelp, fpsDisplay);
+   handleEvents(game, screen, bars, contextHelp, fpsDisplay,
+                music);
    scrollMap(game, delta);
 
    //Actual updates
@@ -65,7 +67,7 @@ void updateState(double delta, GameData &game,
 
 void handleEvents(GameData &game, SDL_Surface *screen,
                   UIBars_t &bars, MessageBox &contextHelp,
-                  MessageBox &fpsDisplay){
+                  MessageBox &fpsDisplay, Mix_Music *music){
 
    SDL_Event event;
    while (SDL_PollEvent(&event)){
@@ -134,6 +136,14 @@ void handleEvents(GameData &game, SDL_Surface *screen,
             }
             break;
 
+         case SDLK_KP_PLUS:
+            //HACK remove this cheat
+            {
+               resources_t cheatResources(1, 1337);
+               game.players[HUMAN_PLAYER].addResources(cheatResources);
+            }
+            break;
+
          case SDLK_ESCAPE:
             //HACK remove this exit
             {
@@ -195,6 +205,10 @@ void handleEvents(GameData &game, SDL_Surface *screen,
          case SDLK_PAUSE:
             //toggle pause
             game.paused = !game.paused;
+            if (game.paused)
+               Mix_PauseMusic();
+            else
+               Mix_ResumeMusic();
             break;
          }
          break;
@@ -266,13 +280,16 @@ void handleEvents(GameData &game, SDL_Surface *screen,
                   //place new building
                   if (game.mode == MODE_CONSTRUCTION){
                      assert (game.toBuild != NO_TYPE);
+                     const BuildingType &buildingType = game.buildingTypes[game.toBuild];
                      if (game.players[HUMAN_PLAYER].
-                        sufficientResources(game.buildingTypes[game.toBuild].getCost()) &&
+                        sufficientResources(buildingType.getCost()) &&
                          game.buildLocationOK){
+
+                        playSound(buildingType.getSound());
 
                         //Subtract resource cost
                         game.players[HUMAN_PLAYER].
-                           subtractResources(game.buildingTypes[game.toBuild].getCost());
+                           subtractResources(buildingType.getCost());
 
                         //create new building
                         Building *newBuilding =
@@ -421,6 +438,7 @@ void select(GameData &game, UIBars_t &bars){
                   (*it)->selected = true; //No ctrl: select
                entitySelected = true;
                if ((*it)->selected)
+                  playSound((*it)->type().getSound());
                   //if building, set buildingSelected ptr and flag
                   if ((*it)->classID() == ENT_BUILDING)
                      game.buildingSelected = (Building *)(*it);

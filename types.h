@@ -1,6 +1,7 @@
 // (C) 2010 Tim Gurto
 
 #include "SDL.h"
+#include "SDL_mixer.h"
 
 //indexes for entity types, players, etc.
 typedef unsigned short typeNum_t;
@@ -23,3 +24,6 @@ typedef unsigned short damage_t;
 
 //the amount of a single resource type,
 typedef unsigned resource_t;
+
+//Mix_Chunk is a stupid name
+typedef Mix_Chunk SDL_Sound;

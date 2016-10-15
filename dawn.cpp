@@ -5,6 +5,7 @@
 #include <cassert>
 #include "SDL.h"
 #include "SDL_ttf.h"
+#include "SDL_mixer.h"
 #include "Debug.h"
 #include "game.h"
 
@@ -31,6 +32,11 @@ Debug debug(YELLOW, 0, 0, 59);
 // - decreases with freeSurface()
 int surfacesLoaded = 0;
 
+//the number of sounds loaded
+// - increases with loadSound()
+// - decreases with freeSound()
+int soundsLoaded = 0;
+
 //Set screen resolution, based on command line arguments
 void setScreenResolution(int argc, char **argv);
 
@@ -41,6 +47,8 @@ int main(int argc, char **argv){
    assert (sdlInit == 0);
    int ttfInit(TTF_Init());
    assert (ttfInit >= 0);
+   int mixInit(Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 256));//256));
+   assert (mixInit >= 0);
 
    debug.initFont("Dina.fon", 0);
    deltaLog.initFont("Dina.fon", 0);
@@ -54,8 +62,10 @@ int main(int argc, char **argv){
 
    //Quit
    //TTF_Quit() happens at debug dtor
+   Mix_CloseAudio(); 
    SDL_Quit();
    assert (surfacesLoaded == 0);
+   assert (soundsLoaded == 0);
    return 0;
 }
 
