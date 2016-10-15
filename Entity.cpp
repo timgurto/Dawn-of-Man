@@ -95,10 +95,6 @@ void Entity::colorBlit(int color, SDL_Surface *surface,
                        SDL_Rect &srcLoc,
                        SDL_Rect &dstLoc) const{
 
-   //   SDL_FillRect(colorTemp, 0, getEntityColor(*game_, color));
-   //   SDL_BlitSurface(surface, 0, colorTemp, 0);
-   //   SDL_BlitSurface(colorTemp, &srcLoc, screen, &dstLoc);
-
       assert(color < ENTITY_MAX);
       SDL_Surface *&index = game_->surfaceIndex
                                      [color]

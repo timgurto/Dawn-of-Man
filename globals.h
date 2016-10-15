@@ -42,7 +42,8 @@ const Point CURSOR_OFFSET(0,-9);
 
 const typeNum_t NO_TYPE = 0xffff;
 
-//unfortunately, different SDL functions use different color types.
+//unfortunately, different SDL functions use different
+//color formats
 const SDL_Color BLACK   = {0, 0, 0};
 const SDL_Color BLUE    = {0, 0, 0xff};
 const SDL_Color GREEN   = {0, 0xff, 0};
@@ -81,10 +82,10 @@ const Uint32 FOOTPRINT_COLOR_BAD  = 0x880000; //dark red
 
 const pixels_t ICON_SIZE = 48;
 const std::string IMAGE_SUFFIX = ".png";
-const std::string IMAGE_PATH           = "Images/";
-const std::string BUILDINGS_IMAGE_PATH = "Buildings/";
+const std::string IMAGE_PATH             = "Images/";
+const std::string BUILDINGS_IMAGE_PATH   = "Buildings/";
 const std::string DECORATIONS_IMAGE_PATH = "Decorations/";
-const std::string INTERFACE_IMAGE_PATH = "Interface/";
+const std::string INTERFACE_IMAGE_PATH   = "Interface/";
 
 enum Direction{
    UP,

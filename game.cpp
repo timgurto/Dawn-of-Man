@@ -36,8 +36,10 @@ void gameMode(){
       *cursor = loadImage(IMAGE_PATH + "cursor.png", GREEN),
       *cursorShadow = loadImage(IMAGE_PATH +
                                 "cursorShadow.PNG", GREEN),
-      *vBar = loadImage(IMAGE_PATH + "vBar.PNG"),
-      *hBar = loadImage(IMAGE_PATH + "hBar.PNG"),
+      *vBar = loadImage(IMAGE_PATH +
+                        INTERFACE_IMAGE_PATH + "vBar.PNG"),
+      *hBar = loadImage(IMAGE_PATH +
+                        INTERFACE_IMAGE_PATH + "hBar.PNG"),
       *entitiesTemp = SDL_CreateRGBSurface(SDL_HWSURFACE,
                                            SCREEN_WIDTH,
                                            SCREEN_HEIGHT,
@@ -83,11 +85,10 @@ void gameMode(){
                   makeRect(-11, -8, 22, 16),
                   makeRect(-11, -8, 22, 16));
    game.decorationTypes.push_back(rock);
-   //TODO randomize
-   addEntity(game, new Decoration(0, Point(80, 200)));
-   addEntity(game, new Decoration(0, Point(100, 100)));
-   addEntity(game, new Decoration(0, Point(150, 175)));
-
+   for (int i = 0; i != 15; ++i)
+      addEntity(game, new Decoration(0, Point(
+                                rand() % SCREEN_WIDTH,
+                                rand() % SCREEN_HEIGHT)));
    game.players.push_back(0xca6500);
    //=================================================
 

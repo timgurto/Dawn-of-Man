@@ -11,9 +11,9 @@
 class Particle{
 
    double x, y; //position
-   short age;
+   short age; //how long the particle has existed
    double hV, vV; //velocity
-   double offset;
+   double offset; //lateral displacement, for shadow
 
    static SDL_Surface *screen_, *image_, *shadow_;
 
