@@ -10,8 +10,8 @@ struct Point{
    pixels_t y;
    Point(const SDL_Rect &original);
    Point(pixels_t xCoord, pixels_t yCoord);
-   //Point operator+(Point &rhs);
-   //Point operator-(Point &rhs);
+   Point operator+(const Point &rhs) const;
+   Point operator-(const Point &rhs) const;
    SDL_Rect operator-(const SDL_Rect &rhs) const;
    SDL_Rect operator+(const SDL_Rect &rhs) const;
 

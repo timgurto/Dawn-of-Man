@@ -37,7 +37,7 @@ const int SCREEN_BPP(32);
 //whether graphics are outline-style
 const bool OUTLINE_MODE(false);
 
-//const Point CURSOR_OFFSET(-2,-1);
+const Point CURSOR_OFFSET(-2,-1);
 
 const SDL_Color BLACK   = {0, 0, 0};
 const SDL_Color BLUE    = {0, 0, 0xff};

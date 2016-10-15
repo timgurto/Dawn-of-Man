@@ -77,7 +77,7 @@ SDL_Surface *setScreen(){
 }
 
 void blitCursor (SDL_Surface *cursor, SDL_Surface *screen, const Point &coords){
-   SDL_BlitSurface(cursor, 0, screen, &makeRect(coords));
+   SDL_BlitSurface(cursor, 0, screen, &makeRect(coords+CURSOR_OFFSET));
 }
 
 void freeSurface(SDL_Surface *&p){
