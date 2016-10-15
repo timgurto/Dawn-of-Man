@@ -87,9 +87,15 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
          case SDLK_ESCAPE:
             switch(game.mode){
             case MODE_NORMAL:
+               //TODO remove
                game.loop = false;
-               break;
+               return; //break;
+            case MODE_BUILDING:
+               game.buildingSelected->selected = false;
+               game.buildingSelected = 0;
+               //fall-through
             case MODE_CONSTRUCTION:
+               game.toBuild = NO_TYPE;
                game.mode = MODE_NORMAL;
                break;
             }
@@ -144,8 +150,8 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
 
       //A mouse button is released
       case SDL_MOUSEBUTTONUP:
-
          switch (event.button.button){
+
          case MOUSE_BUTTON_RIGHT:
             if (!game.rightMouse.dragging)
                switch(game.mode){
@@ -159,6 +165,7 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
                }
             game.rightMouse.mouseUp();
             break;
+
          case MOUSE_BUTTON_LEFT:
             bool barClicked = false; //whether a UIBar was clicked
             //check UI bars
@@ -173,7 +180,6 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
                      }
                   }
             }
-
             if (!barClicked){
                //place new building
                if (game.mode == MODE_CONSTRUCTION){
@@ -268,7 +274,9 @@ SDL_Rect getSelectionRect(const GameData &game){
 }
 
 void select(GameData &game){
+   game.buildingSelected = 0;
    bool entitySelected = false;
+
    //loop backwards, so objects in front have priority to be
    //selected
    for (entities_t::reverse_iterator it = game.entities.rbegin();
@@ -277,7 +285,6 @@ void select(GameData &game){
          //unselect everything
          if (!(isKeyPressed(SDLK_LCTRL) || isKeyPressed(SDLK_LSHIFT))){
             (*it)->selected = false;
-            game.buildingSelected = 0;
          }
          
          //if single point click, don't waste time looking for
@@ -303,6 +310,7 @@ void select(GameData &game){
                else
                   (*it)->selected = true; //No ctrl: select
                entitySelected = true;
+               (*it)->selected = true;
                if ((*it)->selected && (*it)->classID() == BUILDING)
                   game.buildingSelected = (Building *)(*it);
             }// if collides

@@ -100,7 +100,9 @@ void gameMode(){
                   8, //speed
                   25, 8, //frames
                   10, 4, 25, //combat frames
-                  50, 10, 2); //combat details
+                  50, 10, 2, //combat details
+                  0, //origin building
+                  1000); //progress cost
    game.unitTypes.push_back(drone);
    for (int i = 0; i != 30; ++i)
       addEntity(game, new Unit(0, Point(
@@ -116,6 +118,11 @@ void gameMode(){
                       &selectBuilding,
                       game.buildingTypes.size(), MODE_NORMAL);
    bars.push_back(&buildingsBar);
+   UIBar unitsBar(BOTTOM_LEFT, HORIZONTAL,
+                  &getUnitTypeIcons,
+                  &selectBuilding,
+                  1, MODE_BUILDING);
+   bars.push_back(&unitsBar);
    
 
    timer_t oldTicks = SDL_GetTicks();

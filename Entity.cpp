@@ -20,7 +20,8 @@ SDL_Surface *Entity::screen_ = 0;
 entities_t Entity::trashCan_;
 
 Entity::Entity(typeNum_t type, const Point &loc):
-type_(type),
+typeIndex_(type),
+typeIndex(typeIndex_),
 loc_(loc),
 direction_(Direction(rand() % 4)),
 selected(false),
@@ -74,7 +75,7 @@ void Entity::colorBlit(int color, SDL_Surface *screen,
    const EntityType &thisType = type();
    SDL_Surface *&index = game_->surfaceIndex
                                   [color]
-                                  [type_]
+                                  [typeIndex]
                                   [classID()];
 
    //make sure colored sprite is indexed; if not,

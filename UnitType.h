@@ -9,6 +9,7 @@
 //TODO comments
 class UnitType: public EntityType{
    friend class Unit;
+
    pixels_t speed_; //movement per tick, in px
    int frameCount_;
    int maxFrameCounter_;
@@ -23,6 +24,7 @@ class UnitType: public EntityType{
 
 
 public:
+
    UnitType(typeNum_t index,
             const std::string &name,
             const SDL_Rect &drawRect,
@@ -39,6 +41,8 @@ public:
             damage_t armor = 0,
             typeNum_t originBuilding = NO_TYPE,
             progress_t maxProgress = 0);
+
+   typeNum_t getOriginBuilding() const;
 };
 
 #endif

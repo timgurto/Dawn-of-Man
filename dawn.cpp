@@ -2,6 +2,7 @@
 
 //TODO copy comments at declarations to definitions
 //TODO make function names a consistent case (verb)
+//TODO replace get functions with const references named after the attr
 
 #include <cassert>
 #include "SDL.h"
@@ -42,6 +43,7 @@ int main(int argc, char* argv[]){
    deltaLog.initFont("Dina.fon", 0);
 
 
+   //TODO put in function
    //Screen resolution stuff
    const SDL_VideoInfo *current = SDL_GetVideoInfo();
    debug("Current resolution: ", current->current_w, "x", current->current_h);

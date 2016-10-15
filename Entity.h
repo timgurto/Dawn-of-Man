@@ -21,7 +21,7 @@ class Entity{
 protected: //everything should be a derived class
 
    //type; index in vector of related EntityTypes
-   typeNum_t type_;
+   typeNum_t typeIndex_;
 
    //direction of clipping for partial drawing
    Direction direction_;
@@ -115,6 +115,8 @@ public:
    void kill();
 
    static void emptyTrash();
+
+   const typeNum_t &typeIndex;
 };
 
 #endif

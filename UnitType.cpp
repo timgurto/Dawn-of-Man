@@ -38,3 +38,7 @@ attack_(attack),
 armor_(armor),
 originBuilding_(originBuilding),
 maxProgress_(maxProgress){}
+
+typeNum_t UnitType::getOriginBuilding() const{
+   return originBuilding_;
+}

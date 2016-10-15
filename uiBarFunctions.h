@@ -11,18 +11,37 @@
 struct SDL_Surface;
 struct GameData;
 
-//surfaceFun_
-typedef SDL_Surface *(*surfaceFunPtr)(typeNum_t i, const GameData &game);
+
+//iconCountFun_
+typedef typeNum_t iconCountFun(const GameData &game);
+typedef iconCountFun *iconCountFunPtr;
    
-   //BuildingType icons
-   SDL_Surface *getBuildingTypeIcons(typeNum_t i,
-                                     const GameData &game);
+   //Buildings bar: number of BuildingType icons
+   iconCountFun getNumBuildingIcons;
+
+   //Units bar: 
+   iconCountFun getNumUnitIcons;
+
+
+//surfaceFun_
+typedef SDL_Surface *surfaceFun(typeNum_t i, const GameData &game);
+typedef surfaceFun *surfaceFunPtr;
+   
+   //Buildings bar: BuildingType icons
+   surfaceFun getBuildingTypeIcons;
+
+   //Units bar: UnitType icons, based on the selected building
+   surfaceFun getUnitTypeIcons;
 
 
 //clickFun_
-typedef void (*clickFunPtr)(typeNum_t index, GameData &game);
+typedef void clickFun(typeNum_t index, GameData &game);
+typedef clickFun *clickFunPtr;
 
-   //Selects a building to construct
-   void selectBuilding(typeNum_t index, GameData &game);
+   //Buildings bar: Selects a building to construct
+   clickFun selectBuilding;
+
+   //Units bar: Trains the chosen unit, at the selected building
+   clickFun trainUnit;
 
 #endif

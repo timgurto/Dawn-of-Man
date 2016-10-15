@@ -28,7 +28,7 @@ drawPercent_(1.0f *
             game_->unitTypes[type].maxProgress_){}
 
 const EntityType &Unit::type() const{
-   return game_->unitTypes[type_];
+   return game_->unitTypes[typeIndex];
 }
 
 
@@ -129,7 +129,7 @@ void Unit::tick(double delta){
          switch (targetEntity_->classID()){
          case UNIT:
             Unit &target = (Unit &)(*targetEntity_);
-            UnitType &targetType = game_->unitTypes[target.type_];
+            UnitType &targetType = game_->unitTypes[target.typeIndex];
             damage_t damage = thisType.attack_ - targetType.armor_;
             if (damage > target.health_)
                target.kill();
@@ -184,7 +184,7 @@ void Unit::setTarget(Entity *targetEntity, Point loc){
 
 bool Unit::atTarget(){
    double multiplier = (targetEntity_ == 0) ? 0.5 : 8;
-   double threshold = game_->unitTypes[type_].speed_ * multiplier;
+   double threshold = game_->unitTypes[typeIndex].speed_ * multiplier;
 
    if (loc_.x - target_.x > threshold ||
        target_.x - loc_.x > threshold)
