@@ -3,6 +3,7 @@
 #include "EntityType.h"
 #include "ResourceNodeType.h"
 #include "Resources.h"
+#include "globals.h"
 
 ResourceNodeType::ResourceNodeType
    (typeNum_t index,
@@ -11,7 +12,8 @@ ResourceNodeType::ResourceNodeType
    const SDL_Rect &baseRect,
    const Point &selectionCenter,
    const Resources &maxResources,
-   const Resources &yield):
+   const Resources &yield,
+   EntityColor color):
 EntityType(index,
            ENT_RESOURCE_NODE,
            name,
@@ -19,4 +21,5 @@ EntityType(index,
            baseRect,
            selectionCenter),
 maxResources_(maxResources),
-yield_(yield){}
+yield_(yield),
+color_(color){}

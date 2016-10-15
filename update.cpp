@@ -134,10 +134,10 @@ void handleEvents(GameData &game, SDL_Surface *screen,
 
          case SDLK_ESCAPE:
             //HACK remove this exit
-            //{
-            //   game.loop = false;
-            //   return;
-            //}
+            {
+               game.loop = false;
+               return;
+            }
 
             switch(game.mode){
             //unselect all

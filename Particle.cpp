@@ -8,7 +8,7 @@
 
 const bool Particle::PARTICLE_FADE = false;
 const double Particle::GRAVITY = 1.6;
-const int Particle::PARTICLE_COUNT = 5;
+const int Particle::PARTICLE_COUNT = 8;
 const double Particle::VELOCITY_RANGE = 2;
 const int Particle::DECAY = 6;
 

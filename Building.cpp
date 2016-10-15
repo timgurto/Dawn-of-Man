@@ -50,7 +50,7 @@ void Building::draw(SDL_Surface *screen) const{
       drawLoc.y += thisType.drawRect_.h - partialH;
    }
 
-   colorBlit(getColor(), screen, srcLoc, drawLoc);
+   colorBlit(getColor(), screen, srcLoc, drawLoc, !finished_);
 }
 
 double Building::getDrawPercent() const{

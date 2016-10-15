@@ -72,13 +72,26 @@ int Entity::getColor() const{
 
 void Entity::colorBlit(int color, SDL_Surface *screen,
                        SDL_Rect &srcLoc,
-                       SDL_Rect &dstLoc) const{
+                       SDL_Rect &dstLoc,
+                       bool partial) const{
    assert(color < CLR_MAX);
    const EntityType &thisType = type();
    SDL_Surface *&index = game_->surfaceIndex
                                   [color]
                                   [typeIndex_]
                                   [classID()];
+   SDL_Surface *&indexDark = game_->surfaceIndex
+                                [CLR_SHADOW_DARK]
+                                [typeIndex_]
+                                [classID()];
+   SDL_Surface *&indexLight = game_->surfaceIndex
+                                 [CLR_SHADOW_LIGHT]
+                                 [typeIndex_]
+                                 [classID()];
+   SDL_Surface *&indexShadowed = game_->surfaceIndexShadowed
+                                    [color]
+                                    [typeIndex_]
+                                    [classID()];
 
    //make sure colored sprite is indexed; if not,
    if (index == 0){
@@ -99,6 +112,47 @@ void Entity::colorBlit(int color, SDL_Surface *screen,
 
       //3. add sprite
       SDL_BlitSurface(thisType.surface_, 0, index, 0);
+
+
+      //make sure shadow-colored sprites are indexed,
+      //as for colored sprite above.
+      if (indexDark == 0){
+         indexDark = createSurface(thisType.surface_->w,
+                                   thisType.surface_->h);
+         SDL_SetColorKey(indexDark, SDL_SRCCOLORKEY,
+                         SDL_MapRGB(indexDark->format,
+                                    ENTITY_BACKGROUND.r,
+                                    ENTITY_BACKGROUND.g,
+                                    ENTITY_BACKGROUND.b));
+         SDL_FillRect(indexDark, 0, ENGRAVE_DARK_UINT);
+         SDL_BlitSurface(thisType.surface_, 0, indexDark, 0);
+      }
+      if (indexLight == 0){
+         indexLight = createSurface(thisType.surface_->w,
+                                   thisType.surface_->h);
+         SDL_SetColorKey(indexLight, SDL_SRCCOLORKEY,
+                         SDL_MapRGB(indexLight->format,
+                                    ENTITY_BACKGROUND.r,
+                                    ENTITY_BACKGROUND.g,
+                                    ENTITY_BACKGROUND.b));
+         SDL_FillRect(indexLight, 0, ENGRAVE_LIGHT_UINT);
+         SDL_BlitSurface(thisType.surface_, 0, indexLight, 0);
+      }
+      if (indexShadowed == 0){
+         //Create colored, shadowed surface, as above
+         indexShadowed = createSurface(thisType.surface_->w + 2,
+                                       thisType.surface_->h + 2);
+         SDL_SetColorKey(indexShadowed, SDL_SRCCOLORKEY,
+                         SDL_MapRGB(indexShadowed->format,
+                                    ENTITY_BACKGROUND.r,
+                                    ENTITY_BACKGROUND.g,
+                                    ENTITY_BACKGROUND.b));
+         SDL_FillRect(indexShadowed, 0, ENTITY_BACKGROUND_UINT);
+         //Draw shadows, and sprite
+         SDL_BlitSurface(indexLight, 0, indexShadowed, &makeRect(2, 2));
+         SDL_BlitSurface(indexDark, 0, indexShadowed, &makeRect(0, 0));
+         SDL_BlitSurface(index, 0, indexShadowed, &makeRect(1, 1));
+      }
    }
 
    SDL_Rect dest = dstLoc + Point(game_->map);
@@ -113,7 +167,18 @@ void Entity::colorBlit(int color, SDL_Surface *screen,
 
    //blit colored sprite to the screen.
    //The indexed version definitely exists now.
-   SDL_BlitSurface(index, &srcLoc, screen, &dest);
+   //If incomplete, blit individual pieces for better shadow
+   if (partial){
+      SDL_BlitSurface(indexLight, &srcLoc,
+                      screen, &SDL_Rect(dest + Point(1, 1)));
+      SDL_BlitSurface(indexDark, &srcLoc,
+                      screen, &SDL_Rect(dest - Point(1, 1)));
+      SDL_BlitSurface(index, &srcLoc,
+                      screen, &dest);
+      }
+   else
+      SDL_BlitSurface(indexShadowed, &srcLoc,
+                      screen, &SDL_Rect(dest - Point(1, 1)));
 }
 
 void Entity::addParticles(int count) const{

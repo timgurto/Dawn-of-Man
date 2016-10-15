@@ -73,11 +73,10 @@ struct GameData{
    // - random deletions
    particles_t particles;
 
-   //An index of already-used, colored entity surfaces.
-   
-   //see enum EntityColor and getEntityColor() for the
-   //rest
+   //An index of already-used, colored entity surfaces,
+   //with and without shadows.
    surfaceIndex_t surfaceIndex;
+   surfaceIndex_t surfaceIndexShadowed;
 
    //The current game mode
    ControlMode mode;

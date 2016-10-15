@@ -47,7 +47,8 @@ protected: //everything should be a derived class
    //and indexing it if necessary
    void colorBlit(int color, SDL_Surface *screen,
                  SDL_Rect &srcLoc,
-                 SDL_Rect &dstLoc) const;
+                 SDL_Rect &dstLoc,
+                 bool partial = false) const;
 
    //creates particles indicating construction progress
    void addParticles(int count) const;

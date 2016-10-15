@@ -18,3 +18,7 @@ EntityTypeID Decoration::classID() const{
 bool Decoration::collides() const{
    return false;
 }
+
+int Decoration::getColor() const{
+   return game_->decorationTypes[typeIndex_].color_;
+}

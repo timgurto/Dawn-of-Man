@@ -243,11 +243,15 @@ Uint32 getEntityColor(const GameData &game, int color){
       return game.players[color].getColor();
    
    //otherwise
-   //switch(color){
-   //default:
+   switch(color){
+   case CLR_RESOURCE_WOOD:
+      return RESOURCE_WOOD_COLOR;
+   case CLR_DECORATION:
+      return DECORATION_COLOR;
+   default:
       return ENTITY_DEFAULT_COLOR;
 
-   //}
+   }
 }
 
 //whether a is inside b

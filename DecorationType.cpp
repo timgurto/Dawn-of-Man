@@ -8,10 +8,12 @@ DecorationType::DecorationType(typeNum_t index,
                                const std::string &name,
                                const SDL_Rect &drawRect,
                                const SDL_Rect &baseRect,
-                               const Point &selectionCenter):
+                               const Point &selectionCenter,
+                               int color):
 EntityType(index,
            ENT_DECORATION,
            name,
            drawRect,
            baseRect,
-           selectionCenter){}
+           selectionCenter),
+color_(color){}

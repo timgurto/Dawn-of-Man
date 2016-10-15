@@ -4,6 +4,7 @@
 #define RESOURCE_NODE_TYPE_H
 
 #include "Resources.h"
+#include "globals.h"
 
 //TODO comment
 class ResourceNodeType: public EntityType{
@@ -15,6 +16,9 @@ class ResourceNodeType: public EntityType{
    //how much is harvested at a time
    Resources yield_;
 
+   //sprite color
+   EntityColor color_;
+
 public:
    ResourceNodeType(typeNum_t index,
                     const std::string &name,
@@ -22,7 +26,8 @@ public:
                     const SDL_Rect &baseRect,
                     const Point &selectionCenter,
                     const Resources &maxResources,
-                    const Resources &yield);
+                    const Resources &yield,
+                    EntityColor color);
 };
 
 #endif

@@ -58,33 +58,33 @@ void Unit::draw(SDL_Surface *screen) const{
       drawLoc.y += thisType.drawRect_.h - partialH;
    }
 
-   colorBlit(player_, screen, srcLoc, drawLoc);
+   colorBlit(player_, screen, srcLoc, drawLoc, !finished_);
 
 
 
-   //TODO better health display
-   if (finished_){
-      SDL_FillRect(screen,
-                   &makeRect(drawLoc.x + game_->map.x - 1,
-                             drawLoc.y + game_->map.y - 1,
-                             thisType.maxHealth_, 5),
-                   ENGRAVE_DARK_UINT);
-      SDL_FillRect(screen,
-                   &makeRect(drawLoc.x + game_->map.x + 1,
-                             drawLoc.y + game_->map.y + 1,
-                             thisType.maxHealth_, 5),
-                   ENGRAVE_LIGHT_UINT);
-      SDL_FillRect(screen,
-                   &makeRect(drawLoc.x + game_->map.x,
-                             drawLoc.y + game_->map.y,
-                             thisType.maxHealth_, 5),
-                   BLACK_UINT);
-      SDL_FillRect(screen,
-                   &makeRect(drawLoc.x + game_->map.x,
-                             drawLoc.y + game_->map.y,
-                             health_, 5),
-                   getEntityColor(*game_, player_));
-   }
+   ////TODO better health display
+   //if (finished_){
+   //   SDL_FillRect(screen,
+   //                &makeRect(drawLoc.x + game_->map.x - 1,
+   //                          drawLoc.y + game_->map.y - 1,
+   //                          thisType.maxHealth_, 5),
+   //                ENGRAVE_DARK_UINT);
+   //   SDL_FillRect(screen,
+   //                &makeRect(drawLoc.x + game_->map.x + 1,
+   //                          drawLoc.y + game_->map.y + 1,
+   //                          thisType.maxHealth_, 5),
+   //                ENGRAVE_LIGHT_UINT);
+   //   SDL_FillRect(screen,
+   //                &makeRect(drawLoc.x + game_->map.x,
+   //                          drawLoc.y + game_->map.y,
+   //                          thisType.maxHealth_, 5),
+   //                BLACK_UINT);
+   //   SDL_FillRect(screen,
+   //                &makeRect(drawLoc.x + game_->map.x,
+   //                          drawLoc.y + game_->map.y,
+   //                          health_, 5),
+   //                getEntityColor(*game_, player_));
+   //}
 }
 
 void Unit::tick(double delta){

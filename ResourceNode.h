@@ -31,6 +31,9 @@ public:
    //remove some resources from the node, and return the
    //amount harvested
    Resources harvest();
+
+   //get
+   virtual int getColor() const;
 };
 
 #endif

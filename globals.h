@@ -75,11 +75,6 @@ const Uint32 ENTITY_MASK_UINT       = MAGENTA_UINT;
 const Uint32 FOOTPRINT_COLOR_GOOD = 0x008800; //dark green
 const Uint32 FOOTPRINT_COLOR_BAD  = 0x880000; //dark red
 
-const SDL_Color ENGRAVE_DARK    = {0x44, 0x44, 0x44};
-const Uint32 ENGRAVE_DARK_UINT  = 0x444444;
-const SDL_Color ENGRAVE_LIGHT   = {0xdd, 0xdd, 0xdd};
-const Uint32 ENGRAVE_LIGHT_UINT = 0xdddddd;
-
 const pixels_t MAP_TILE_SIZE = 512;
 const pixels_t SCROLL_AMOUNT = 40;
 const pixels_t SCROLL_MARGIN = 100;
@@ -122,14 +117,11 @@ enum ImageModifier{
 enum EntityTypeID{
    ENT_BUILDING,
    ENT_UNIT,
+   ENT_DECORATION,
+   ENT_RESOURCE_NODE,
 
-   //Everything above this comment
-   //has multiple colors.
    ENT_MAX, //for array sizes.
    ENT_NONE,
-
-   ENT_DECORATION,
-   ENT_RESOURCE_NODE
 };
 
 //Interface modes for the game
@@ -157,11 +149,23 @@ enum Orientation{
 //For the surface index
 enum EntityColor{
    CLR_DEFAULT = MAX_PLAYERS,
-   CLR_SAMPLE_0,
-   //insert more colors here
+   CLR_SHADOW_DARK,
+   CLR_SHADOW_LIGHT,
+   CLR_DECORATION,
+   CLR_RESOURCE_WOOD,
+
    CLR_MAX //for array sizes
 };
 const Uint32 ENTITY_DEFAULT_COLOR = 0xaaaa22;
+
+const SDL_Color ENGRAVE_DARK      = {0x44, 0x44, 0x44};
+const Uint32 ENGRAVE_DARK_UINT    = 0x444444;
+const SDL_Color ENGRAVE_LIGHT     = {0xdd, 0xdd, 0xdd};
+const Uint32 ENGRAVE_LIGHT_UINT   = 0xdddddd;
+
+const Uint32 RESOURCE_WOOD_COLOR  = 0x406040;
+
+const Uint32 DECORATION_COLOR     = 0x666666;
 
 //For re-sorting after movement
 enum VerticalMovement{

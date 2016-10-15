@@ -40,3 +40,7 @@ Resources ResourceNode::harvest(){
       kill();
    return yield;
 }
+
+int ResourceNode::getColor() const{
+   return game_->resourceNodeTypes[typeIndex_].color_;
+}

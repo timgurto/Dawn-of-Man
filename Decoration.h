@@ -19,6 +19,7 @@ public:
    virtual const EntityType &type() const;
    virtual EntityTypeID classID() const;
    virtual bool collides() const;
+   virtual int getColor() const;
 };
 
 

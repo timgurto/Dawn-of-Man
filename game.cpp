@@ -102,14 +102,14 @@ void gameMode(){
    //Message Boxes
    messageBoxes_t messageBoxes;
    MessageBox contextHelp(WHITE,
-                          1, SCREEN_HEIGHT - ICON_SIZE - 1,
-                          275, 0,
+                          2, SCREEN_HEIGHT - ICON_SIZE - 1,
+                          275, 1,
                           darkMap,
                           "Woodbrush.ttf", 18,
                           true);
    messageBoxes.push_back(&contextHelp);
    MessageBox resourcesBox(WHITE,
-                           1, 1, 150, 1,
+                           2, 2, 150, 1,
                            darkMap,
                            "Woodbrush.ttf", 18);
    messageBoxes.push_back(&resourcesBox);
@@ -126,22 +126,23 @@ void gameMode(){
    //building types
    resources_t campfireCost; campfireCost.push_back(100);
    BuildingType campfire(0, "Campfire",
-                         makeRect(-42, -92, 81, 113),
+                         makeRect(-41, -91, 79, 111),
                          makeRect(-42, -23, 81, 42),
                          Point(2, -37), campfireCost, 1250);
    game.buildingTypes.push_back(campfire);
    resources_t shrineCost; shrineCost.push_back(180);
    BuildingType shrine(1, "Shrine",
-                       makeRect(-76, -68, 154, 79),
+                       makeRect(-75, -67, 152, 77),
                        makeRect(-76, -17, 154, 28),
                        Point(1, -20), shrineCost, 1750);
    game.buildingTypes.push_back(shrine);
 
    //decoration types
    DecorationType rock(0, "Rock",
-                  makeRect(-12, -9, 24, 18),
-                  makeRect(-12, -9, 24, 18),
-                  Point(0, 0));
+                  makeRect(-11, -8, 22, 16),
+                  makeRect(-11, -8, 22, 16),
+                  Point(0, 0),
+                  CLR_DECORATION);
    game.decorationTypes.push_back(rock);
    for (int i = 0; i != 15; ++i)
       addEntity(game, new Decoration(0, Point(
@@ -165,7 +166,7 @@ void gameMode(){
                   1000); //progress cost
    game.unitTypes.push_back(generic);
    resources_t gruntCost; gruntCost.push_back(30);
-   UnitType grunt(1, "Peon",
+   UnitType grunt(1, "Caveman",
                   makeRect(-22, -107, 70, 113),
                   makeRect(-22,-6, 53, 11),
                   Point(3, -55),
@@ -198,16 +199,17 @@ void gameMode(){
       addEntity(game, new Unit(0, Point(x, y), 1, 1000));
    }
 
-   //resource types
+   //resource node types
    resources_t treeMax, treeYield;
-   treeMax.push_back(78);
+   treeMax.push_back(75);
    treeYield.push_back(5);
    ResourceNodeType tree(0, "Tree",
-                     makeRect(-57, -133, 116, 135),
+                     makeRect(-56, -132, 114, 133),
                      makeRect(-17, -5, 34, 12),
                      Point(2, -78),
                      treeMax,
-                     treeYield);
+                     treeYield,
+                     CLR_RESOURCE_WOOD);
    game.resourceNodeTypes.push_back(tree);
    for (int i = 0; i != 10; ++i){
       pixels_t x, y;
