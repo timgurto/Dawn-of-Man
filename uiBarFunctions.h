@@ -12,16 +12,14 @@ struct SDL_Surface;
 struct GameData;
 
 //surfaceFun_
-
-//BuildingType icons
-SDL_Surface *getBuildingTypeIcons(typeNum_t i,
-                                  const GameData &game);
+typedef SDL_Surface *surfaceFunPtr(typeNum_t i, const GameData &game);
+surfaceFunPtr
+   getBuildingTypeIcons;//BuildingType icons
 
 
 //clickFun_
-
-//Selects a building to construct
-void selectBuilding(typeNum_t index, GameData &game);
-
+typedef void clickFunPtr(typeNum_t index, GameData &game);
+clickFunPtr
+   selectBuilding; //Selects a building to construct
 
 #endif

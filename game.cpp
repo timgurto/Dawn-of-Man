@@ -95,7 +95,7 @@ void gameMode(){
    UnitType drone(0, "Drone",
                   makeRect(-22, -127, 105, 133),
                   makeRect(-22,-6, 53, 11),
-                  Point(3, -55));
+                  Point(3, -55), 10);
    game.unitTypes.push_back(drone);
    for (int i = 0; i != 15; ++i)
       addEntity(game, new Unit(0, Point(
@@ -411,7 +411,6 @@ SDL_Rect getSelectionRect(const GameData &game){
 }
 
 void select(GameData &game){
-   Uint8 *keyStates = SDL_GetKeyState(0);
    bool entitySelected = false;
    //loop backwards, so objects in front have priority to be
    //selected
@@ -419,7 +418,7 @@ void select(GameData &game){
         it != game.entities.rend(); ++it){
       if ((*it)->selectable()){
          //unselect everything
-         if (!(keyStates[SDLK_LCTRL] || keyStates[SDLK_LSHIFT]))
+         if (!(isKeyPressed(SDLK_LCTRL) || isKeyPressed(SDLK_LSHIFT)))
             (*it)->selected = false;
          
          //if single point click, don't waste time looking for
@@ -440,7 +439,7 @@ void select(GameData &game){
                                     Point(game.map));
 
             if (collides){
-               if (keyStates[SDLK_LCTRL])
+               if (isKeyPressed(SDLK_LCTRL))
                   (*it)->toggleSelect(); //Ctrl: toggle
                else
                   (*it)->selected = true; //No ctrl: select
@@ -454,7 +453,7 @@ void select(GameData &game){
       //exit loop if possible
       if (entitySelected && 
           !game.leftMouse.dragging &&
-          (keyStates[SDLK_LCTRL] || keyStates[SDLK_LSHIFT]))
+          (isKeyPressed(SDLK_LCTRL) || isKeyPressed(SDLK_LSHIFT)))
          break;
 
    }// for entities

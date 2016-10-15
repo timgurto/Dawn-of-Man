@@ -58,6 +58,7 @@ public:
    typeNum_t mouseIndex(const Point &point) const;
 
    //the function that executes when a button is pushed.
+   //TODO make private
    void (*clickFun)(typeNum_t index, GameData &game);
 
    //Whether this bar is active, given the current game mode

@@ -10,11 +10,11 @@ UnitType::UnitType(typeNum_t index,
                          const SDL_Rect &drawRect,
                          const SDL_Rect &baseRect,
                          const Point &selectionCenter,
-                         double moveDistance):
+                         double speed):
 EntityType(index,
            UNIT,
            name,
            drawRect,
            baseRect,
            selectionCenter),
-moveDistance_(moveDistance){}
+speed_(speed){}

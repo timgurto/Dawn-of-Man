@@ -8,7 +8,7 @@
 
 class UnitType: public EntityType{
    friend class Unit;
-   pixels_t speed; //movement per tick, in px
+   pixels_t speed_; //movement per tick, in px
 
 public:
    UnitType(typeNum_t index,
@@ -16,7 +16,7 @@ public:
             const SDL_Rect &drawRect,
             const SDL_Rect &baseRect,
             const Point &selectionCenter,
-            double moveDistance = 0);
+            double speed = 0);
 };
 
 #endif

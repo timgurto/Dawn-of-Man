@@ -21,6 +21,8 @@ typedef Sint32 pixels_t;
 typedef Uint32 timer_t;
 typedef double progress_t;
 
+const double PI = 3.14159265358979323846;
+
 const typeNum_t MAX_TYPES = 256;
 const typeNum_t MAX_PLAYERS = 2;
 
