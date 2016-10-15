@@ -15,7 +15,7 @@ struct Point{
    Point operator+(const Point &rhs) const;
    Point operator-(const Point &rhs) const;
 
-   //width and height valyes of rhs are retained
+   //width and height values of rhs are retained
    SDL_Rect operator-(const SDL_Rect &rhs) const;
    SDL_Rect operator+(const SDL_Rect &rhs) const;
 };

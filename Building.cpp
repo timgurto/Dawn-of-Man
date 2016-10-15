@@ -16,8 +16,10 @@ Building::Building(typeNum_t type, const Point &loc,
 Entity(type, loc),
 progress_(progress),
 player_(player),
-finished(false),
-drawPercent(EMPTY){}
+finished(progress == game_->buildingTypes[type].progress_),
+drawPercent(1.0f *
+            progress_ /
+            game_->buildingTypes[type_].progress_){}
 
 const EntityType &Building::type() const{
    return game_->buildingTypes[type_];

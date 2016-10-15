@@ -10,6 +10,7 @@
 class DecorationType: public EntityType{
    friend class Decoration;
 
+
 public:
    DecorationType(typeNum_t index,
                   const std::string &name,

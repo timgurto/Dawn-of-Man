@@ -31,7 +31,7 @@ const timer_t DRAW_MS = 1; //time between redraws
 const timer_t CALC_MS = 40; //time between state updates
 //progress points added per state update
 //progress points: proportional to completion time
-const progress_t PROGRESS_PER_CALC = 10;
+const progress_t PROGRESS_PER_CALC = 4;
 
 const pixels_t SCREEN_WIDTH = 1024;
 const pixels_t SCREEN_HEIGHT = 768;
@@ -79,12 +79,11 @@ const Uint32 ENTITY_MASK_UINT       = MAGENTA_UINT;
 const Uint32 FOOTPRINT_COLOR_GOOD = 0x008800; //dark green
 const Uint32 FOOTPRINT_COLOR_BAD  = 0x880000; //dark red
 
-const Uint32 ENTITY_DEFAULT_COLOR = 0xaaaa22;
-
 const pixels_t ICON_SIZE = 48;
 const std::string IMAGE_SUFFIX = ".png";
 const std::string IMAGE_PATH           = "Images/";
 const std::string BUILDINGS_IMAGE_PATH = "Buildings/";
+const std::string DECORATIONS_IMAGE_PATH = "Decorations/";
 const std::string INTERFACE_IMAGE_PATH = "Interface/";
 
 enum Direction{
@@ -133,7 +132,10 @@ enum EntityColor{
    ENTITY_DEFAULT = MAX_PLAYERS,
    ENTITY_WHITE,
    ENTITY_BLACK,
+   ENTITY_DECORATION,
    ENTITY_MAX //for array sizes
 };
+const Uint32 ENTITY_DEFAULT_COLOR = 0xaaaa22;
+const Uint32 ENTITY_DECORATION_COLOR = 0x888888;
 
 #endif

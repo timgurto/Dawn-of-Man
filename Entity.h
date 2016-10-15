@@ -32,6 +32,19 @@ protected: //everything should be a derived class
    static GameData *game_; //static pointer to game
    static SDL_Surface *screen_;
 
+   //Actually draws the sprite, after draw() figures out
+   //the two rectangle parameters
+   void shadowBlit(SDL_Rect *srcLoc,
+                   SDL_Rect *dstLoc,
+                   SDL_Surface *screen) const;
+
+   //blit to the color mask, then blit the color mask
+   //to the screen, to create a colored sprite
+   void colorBlit(int color, SDL_Surface *surface,
+                  SDL_Surface *screen,
+                  SDL_Rect &srcLoc,
+                  SDL_Rect &dstLoc) const;
+
 public:
    Entity(typeNum_t type, const Point &loc);
 
@@ -49,12 +62,6 @@ public:
    //Draws the entity, as well as a green mask behind
    //it if ENTITY_MASKS is true
    virtual void draw(SDL_Surface *screen = screen_) const;
-
-   //Actually draws the sprite, after draw() figures out
-   //the two rectangle parameters
-   void shadowBlit(SDL_Rect *srcLoc,
-                   SDL_Rect *dstLoc,
-                   SDL_Surface *screen) const;
    
    //Any changes that need to be made to the entity
    //by the game loop
@@ -71,13 +78,7 @@ public:
    //(See enum EntityColor)
    virtual int getColor() const;
 
-   //blit to the color mask, then blit the color mask
-   //to the screen, to create a colored sprite
-   void colorBlit(int color, SDL_Surface *surface,
-                  SDL_Surface *screen,
-                  SDL_Rect &srcLoc,
-                  SDL_Rect &dstLoc) const;
-
+   //TODO make static attribute
    //identitifes which entity subclass this is
    virtual EntityTypeID classID() const = 0;
 };

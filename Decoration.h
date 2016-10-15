@@ -1,7 +1,7 @@
 // (C) 2009 Tim Gurto
 
-#ifndef BUILDING_H
-#define BUILDING_H
+#ifndef DECORATION_H
+#define DECORATION_H
 
 #include "SDL.h"
 #include "globals.h"
@@ -10,13 +10,15 @@
 struct GameData;
 class EntityType;
 
-//Entities which are constructed, and don't move.
+//Entities which initially exist and are purely
+//aesthetic
 class Decoration : public Entity{
 
 public:
    Decoration(typeNum_t type, const Point &loc);
    const virtual EntityType &Decoration::type() const;
-   virtual EntityTypeID classID() = 0;
+   virtual int getColor() const;
+   virtual EntityTypeID classID() const;
 };
 
 

@@ -31,5 +31,4 @@ public:
    virtual EntityTypeID classID() const;
 };
 
-
 #endif

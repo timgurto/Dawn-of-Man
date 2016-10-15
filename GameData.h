@@ -55,7 +55,7 @@ struct GameData{
    // - random deletions
    particles_t particles;
 
-   //An index of already-usedk, colored entity surfaces.
+   //An index of already-used, colored entity surfaces.
    //[0] - [MAX_PLAYERS-1] = each player's color
    //see enum EntityColor and getEntityColor() for the rest
    surfaceIndex_t surfaceIndex;

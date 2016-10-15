@@ -45,7 +45,8 @@ void Entity::shadowBlit(SDL_Rect *srcLoc,
    //blit mask, hiding anything that would otherwise
    //show through the gaps in the sprite
    if (!MASK_BEFORE_CLIP && ENTITY_MASKS)
-      SDL_BlitSurface(thisType.mask, srcLoc, screen, dstLoc); 
+      SDL_BlitSurface(thisType.mask, srcLoc, screen,
+                      &SDL_Rect(*dstLoc)); 
 
    //shadow - white and black
    colorBlit(ENTITY_WHITE, thisType.surface, screen,
@@ -131,6 +132,7 @@ void Entity::colorBlit(int color, SDL_Surface *surface,
 
       //blit colored sprite to the screen.
       //The indexed version definitely exists now.
-      SDL_BlitSurface(index, &srcLoc, screen, &dstLoc);
+      SDL_BlitSurface(index, &srcLoc, screen,
+                      &SDL_Rect(dstLoc));
 
 }

@@ -14,7 +14,6 @@
 #include "Entity.h"
 #include "Point.h"
 #include "GameData.h"
-#include "BuildingType.h"
 
 extern Debug debug;
 extern int surfacesLoaded;
@@ -105,6 +104,9 @@ std::string makePath(EntityTypeID type, typeNum_t imageNumber,
    case BUILDING:
       path << BUILDINGS_IMAGE_PATH; // Units/
       break;
+   case DECORATION:
+      path << DECORATIONS_IMAGE_PATH;
+      break;
    }
 
    switch (modifier){
@@ -182,6 +184,8 @@ Uint32 getEntityColor(const GameData &game, int color){
       return WHITE_UINT;
    case ENTITY_BLACK:
       return BLACK_UINT;
+   case ENTITY_DECORATION:
+      return ENTITY_DECORATION_COLOR;
    default:
       return ENTITY_DEFAULT_COLOR;
 

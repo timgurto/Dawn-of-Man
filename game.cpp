@@ -3,6 +3,7 @@
 #include <cassert>
 #include <cstdlib>
 #include <vector>
+#include <list>
 #include <sstream>
 #include <time.h>
 #include <algorithm>
@@ -17,6 +18,8 @@
 #include "Entity.h"
 #include "BuildingType.h"
 #include "Building.h"
+#include "DecorationType.h"
+#include "Decoration.h"
 #include "UIBar.h"
 #include "Particle.h"
 
@@ -72,10 +75,18 @@ void gameMode(){
                          1250);
    game.buildingTypes.push_back(campfire);
    BuildingType shrine(1, "Shrine",
-                         makeRect(-75, -67, 152, 77),
-                         makeRect(-75, -16, 152, 26),
-                         1750);
+                       makeRect(-75, -67, 152, 77),
+                       makeRect(-75, -16, 152, 26),
+                       1750);
    game.buildingTypes.push_back(shrine);
+   DecorationType rock(0, "Rock",
+                  makeRect(-11, -8, 22, 16),
+                  makeRect(-11, -8, 22, 16));
+   game.decorationTypes.push_back(rock);
+   addEntity(game, new Decoration(0, Point(80, 200)));
+   addEntity(game, new Decoration(0, Point(100, 100)));
+   addEntity(game, new Decoration(0, Point(150, 175)));
+
    game.players.push_back(0xca6500);
    //=================================================
 
@@ -96,7 +107,7 @@ void gameMode(){
    while (loop){
       // Handle events
       SDL_Event event;
-      while (SDL_PollEvent(&event) ){
+      while (SDL_PollEvent(&event)){
          switch (event.type){
 
          case SDL_QUIT:
