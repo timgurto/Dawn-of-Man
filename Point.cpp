@@ -24,6 +24,11 @@ Point Point::operator-(const Point &rhs) const{
    return Point(x - rhs.x, y - rhs.y);
 }
 
+Point Point::operator*(double rhs) const{
+   return Point(pixels_t(x * rhs),
+                pixels_t(y * rhs));
+}
+
 SDL_Rect Point::operator-(const SDL_Rect &rhs) const{
    return makeRect(x-rhs.x, y-rhs.y, -1 * rhs.w, -1 * rhs.h);
 }

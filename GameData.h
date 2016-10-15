@@ -88,6 +88,13 @@ struct GameData{
    //w, h = map size
    SDL_Rect map;
 
+   //Keeps track of the original position of the cursor when
+   //the right mouse button is pressed, so that a relative
+   //vector can be used for map displacement.
+   Point rightMouseBegin;
+   bool rightMouseDown; //whether the RMB is down
+   bool rightMouseMoved; //whether the RMB has moved sufficiently
+
 };
 
 #endif

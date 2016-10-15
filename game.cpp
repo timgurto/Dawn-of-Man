@@ -66,7 +66,7 @@ void gameMode(){
    SDL_ShowCursor(SDL_DISABLE);
 
    //init
-   GameData game(1, 1);
+   GameData game(3, 2);
    Entity::init(&game, screen);
    game.mode = NORMAL_MODE;
 
@@ -145,17 +145,31 @@ void updateState(double delta, GameData &game,
    handleEvents(game, screen, bars);
 
    //Map scrolling
-   //TODO limit displacement
-   Uint8 *keyStates = SDL_GetKeyState(0);
-   if (keyStates[SDLK_UP])
-      game.map.y += SCROLL_AMOUNT;
-   if (keyStates[SDLK_DOWN])
-      game.map.y -= SCROLL_AMOUNT;
-   if (keyStates[SDLK_LEFT])
-      game.map.x += SCROLL_AMOUNT;
-   if (keyStates[SDLK_RIGHT])
-      game.map.x -= SCROLL_AMOUNT;
+   if (game.rightMouseMoved){
+      Point rmbDisplacement = game.mousePos - game.rightMouseBegin;
+      game.map = game.map - rmbDisplacement * (delta *
+                                               RMB_SCROLL_MULTIPLIER);
+   }
 
+   Uint8 *keyStates = SDL_GetKeyState(0);
+   pixels_t scroll = pixels_t(delta * SCROLL_AMOUNT);
+   if (keyStates[SDLK_UP])
+      game.map.y += scroll;
+   if (keyStates[SDLK_DOWN])
+      game.map.y -= scroll;
+   if (keyStates[SDLK_LEFT])
+      game.map.x += scroll;
+   if (keyStates[SDLK_RIGHT])
+      game.map.x -= scroll;
+
+   if (game.map.x > SCROLL_MARGIN)
+      game.map.x = SCROLL_MARGIN;
+   if (game.map.x + game.map.w < SCREEN_WIDTH - SCROLL_MARGIN)
+      game.map.x = SCREEN_WIDTH - SCROLL_MARGIN - game.map.w;
+   if (game.map.y > SCROLL_MARGIN)
+      game.map.y = SCROLL_MARGIN;
+   if (game.map.y + game.map.h < SCREEN_HEIGHT - SCROLL_MARGIN)
+      game.map.y = SCREEN_HEIGHT - SCROLL_MARGIN - game.map.h;
 
    //Entities
    for (entities_t::iterator it = game.entities.begin();
@@ -271,6 +285,19 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
       case SDL_MOUSEMOTION:
          game.mousePos.x = event.motion.x;
          game.mousePos.y = event.motion.y;
+         //check right mouse movement
+         if (game.rightMouseDown && !game.rightMouseMoved)
+            if ((game.mousePos.x - game.rightMouseBegin.x >=
+                 RMB_MOVEMENT_THRESHOLD) ||
+                (game.rightMouseBegin.x - game.mousePos.x >=
+                 RMB_MOVEMENT_THRESHOLD) ||
+                (game.mousePos.y - game.rightMouseBegin.y >=
+                 RMB_MOVEMENT_THRESHOLD) ||
+                (game.rightMouseBegin.y - game.mousePos.y >=
+                 RMB_MOVEMENT_THRESHOLD)){
+               game.rightMouseMoved = true;
+               debug("RMB moved");
+            }
          break;
 
       //A key is pressed
@@ -305,8 +332,8 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
          //debug("Mouse down: ", int(event.button.button));
          switch (event.button.button){
          case MOUSE_BUTTON_LEFT:
+            //check UI bars
             { //new scope for barClicked
-               //check UI bars
                bool barClicked = false;
                for (UIBars_t::iterator it = bars.begin();
                     !barClicked && it != bars.end(); ++it)
@@ -320,7 +347,6 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
                if (barClicked)
                   break;
             }
-
             switch (game.mode){
             case BUILD_MODE:
                assert (game.toBuild != NO_TYPE);
@@ -339,13 +365,29 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
             }
             break;
          case MOUSE_BUTTON_RIGHT:
-            switch(game.mode){
-            case BUILD_MODE:
-               game.mode = NORMAL_MODE;
-               break;
-            }
+            game.rightMouseDown = true;
+            game.rightMouseMoved = false;
+            game.rightMouseBegin = game.mousePos;
          }
          break;
+
+      //A mouse button is unclicked
+      case SDL_MOUSEBUTTONUP:
+         switch (event.button.button){
+         case MOUSE_BUTTON_RIGHT:
+            if (!game.rightMouseMoved)
+               switch(game.mode){
+               case BUILD_MODE:
+                  //cancel build mode
+                  game.mode = NORMAL_MODE;
+                  break;
+               }
+            game.rightMouseDown = false;
+            game.rightMouseMoved = false;
+            break;
+         }
+         break;
+
       } //event switch
    } //event while
 }
@@ -362,6 +404,7 @@ void removeEntity(){
    //delete() the Entity*
 }
 
+//TODO if RMB down and moved then show anchor
 void blitCursor (SDL_Surface *cursor, SDL_Surface *shadow,
                  SDL_Surface *screen, const Point &coords){
    if (SHADOWS)
