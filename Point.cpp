@@ -1,3 +1,5 @@
+// (C) 2009-2010 Tim Gurto
+
 #include "SDL.h"
 #include "misc.h"
 
@@ -8,6 +10,11 @@ y(original.y){}
 Point::Point(pixels_t xCoord, pixels_t yCoord):
 x(xCoord),
 y(yCoord){}
+
+Point Point::operator=(const SDL_Rect &rhs){
+   Point p(rhs.x, rhs.y);
+   return p;
+}
 
 Point Point::operator+(const Point &rhs) const{
    return Point(x + rhs.x, y + rhs.y);

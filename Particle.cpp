@@ -4,8 +4,9 @@
 #include <cassert>
 #include <list>
 #include "Particle.h"
+#include "GameData.h"
 
-const double Particle::GRAVITY = 1.4;
+const double Particle::GRAVITY = 1.6;
 const int Particle::PARTICLE_COUNT = 15;
 const double Particle::VELOCITY_RANGE = 1.5;
 const int Particle::DELAY = 25; //ms
@@ -35,13 +36,15 @@ void Particle::tick(double delta){
    vV -= delta * GRAVITY;
 }
 
-void Particle::draw() const{
-   if (SHADOWS)
-      SDL_BlitSurface(shadow_, 0, screen_, &makeRect(int(x - offset),
-                                                     int(y + offset)));
+void Particle::draw(const GameData &game) const{
+   SDL_Rect dest = makeRect(int(x), int(y)) + game.map;
+   if (SHADOWS){
+      SDL_Rect disp = makeRect(int(dest.x - offset), int(dest.y + offset));
+      SDL_BlitSurface(shadow_, 0, screen_, &disp);
+   }
    if (PARTICLE_FADE)
       SDL_SetAlpha(image_, SDL_SRCALPHA, Uint8(age));
-   SDL_BlitSurface(image_, 0, screen_, &makeRect(int(x), int(y)));
+   SDL_BlitSurface(image_, 0, screen_, &dest);
 }
 
 bool Particle::expired() const{

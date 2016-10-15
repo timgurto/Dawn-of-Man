@@ -38,7 +38,8 @@ void gameMode(){
    srand(unsigned(time(0)));
 
    SDL_Surface
-      *back = loadImage(MISC_IMAGE_PATH + "back.png"),
+      *map = loadImage(MISC_IMAGE_PATH + "back.png"),
+      *darkMap = loadImage(MISC_IMAGE_PATH + "dark.png"),
       *cursor = loadImage(MISC_IMAGE_PATH + "cursor.png", GREEN),
       *cursorShadow = loadImage(MISC_IMAGE_PATH +
                                 "cursorShadow.PNG", GREEN),
@@ -65,7 +66,7 @@ void gameMode(){
    SDL_ShowCursor(SDL_DISABLE);
 
    //init
-   GameData game;
+   GameData game(1, 1);
    Entity::init(&game, screen);
    game.mode = NORMAL_MODE;
 
@@ -87,8 +88,8 @@ void gameMode(){
    game.decorationTypes.push_back(rock);
    for (int i = 0; i != 15; ++i)
       addEntity(game, new Decoration(0, Point(
-                                rand() % SCREEN_WIDTH,
-                                rand() % SCREEN_HEIGHT)));
+                                rand() % game.map.w,
+                                rand() % game.map.h)));
    game.players.push_back(0xca6500);
    //=================================================
 
@@ -111,22 +112,23 @@ void gameMode(){
       oldTicks = newTicks;
       double deltaMod = 1.0 * delta / DELTA_MODIFIER;
       
-      deltaLog("       Framerate: ", 1000 / (delta != 0 ? delta : 1));
+      deltaLog("       Framerate: ", (delta == 0 ? 0 : 1000 / delta));
       deltaLog("           Delta: ", delta, "ms");
-      deltaLog("Delta per entity: ", 1.0f * delta / game.entities.size());
+      deltaLog("Delta per entity: ", 0.01 * (100 * delta / game.entities.size()));
 
       //update state
       updateState(deltaMod, game, screen, bars);
 
       //render
-      drawEverything(screen, back, cursor, cursorShadow,
+      drawEverything(screen, map, darkMap, cursor, cursorShadow,
                      entitiesTemp, game, bars);
 
    }
 
    SDL_ShowCursor(SDL_ENABLE);
 
-   freeSurface(back);
+   freeSurface(map);
+   freeSurface(darkMap);
    freeSurface(cursor);
    freeSurface(cursorShadow);
    freeSurface(vBar);
@@ -141,6 +143,19 @@ void updateState(double delta, GameData &game,
                  SDL_Surface *screen, UIBars_t &bars){
    
    handleEvents(game, screen, bars);
+
+   //Map scrolling
+   //TODO limit displacement
+   Uint8 *keyStates = SDL_GetKeyState(0);
+   if (keyStates[SDLK_UP])
+      game.map.y += SCROLL_AMOUNT;
+   if (keyStates[SDLK_DOWN])
+      game.map.y -= SCROLL_AMOUNT;
+   if (keyStates[SDLK_LEFT])
+      game.map.x += SCROLL_AMOUNT;
+   if (keyStates[SDLK_RIGHT])
+      game.map.x -= SCROLL_AMOUNT;
+
 
    //Entities
    for (entities_t::iterator it = game.entities.begin();
@@ -161,7 +176,8 @@ void updateState(double delta, GameData &game,
 
 }
 
-void drawEverything(SDL_Surface *screen, SDL_Surface *back,
+void drawEverything(SDL_Surface *screen,
+                    SDL_Surface *map, SDL_Surface *darkMap,
                     SDL_Surface *cursor, SDL_Surface *cursorShadow,
                     SDL_Surface *entitiesTemp,
                     const GameData &game, const UIBars_t &bars){
@@ -169,13 +185,29 @@ void drawEverything(SDL_Surface *screen, SDL_Surface *back,
    //const Point &mousePos = game.mousePos;
    //const typeNum_t &toBuild = game.toBuild;
 
-   //Background
+   //Map
    SDL_FillRect(screen, 0, 0);
-   assert (back != 0);
-   for (int i = 0; i != SCREEN_WIDTH / back->w + 1; ++i)
-      for (int j = 0; j != SCREEN_HEIGHT / back->h + 1; ++j)
-         SDL_BlitSurface(back, 0, screen,
-                         &makeRect(i * back->w, j * back->h));
+
+   for (int x = -1; x != game.mapX + 1; ++x)
+      for (int y = -1; y != game.mapY + 1; ++y){
+         SDL_Rect tileRect = makeRect(game.map.x + x * MAP_TILE_SIZE,
+                                      game.map.y + y * MAP_TILE_SIZE,
+                                      MAP_TILE_SIZE,
+                                      MAP_TILE_SIZE);
+         //if tile is inside the screen
+         if (collision(tileRect, screen->clip_rect)){
+
+            //which image to blit
+            SDL_Surface *tile = map;
+            if (x == -1 || x == game.mapX ||
+                y == -1 || y == game.mapY)
+               //outside the map
+               tile = darkMap;
+
+            SDL_BlitSurface(tile, 0, screen, &tileRect);
+         }
+      }
+
    
    //Entities
    if (ENTITY_MASKS)
@@ -209,7 +241,7 @@ void drawEverything(SDL_Surface *screen, SDL_Surface *back,
    //Particles
    for (particles_t::const_iterator it = game.particles.begin();
         it != game.particles.end(); ++it)
-      it->draw();
+      it->draw(game);
 
    //Debug text
    debug.display();
@@ -266,7 +298,6 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
             deltaLog.enabled = ! deltaLog.enabled;
             break;
          }
-
          break;
 
       //A mouse button is clicked
@@ -296,7 +327,7 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
                if (noCollision(game, game.buildingTypes[game.toBuild],
                                game.mousePos)){
                   addEntity(game, new Building(game.toBuild,
-                            game.mousePos));
+                            game.mousePos - game.map));
 
                   //Shift key: construct multiple buildings
                   Uint8 *keyStates = SDL_GetKeyState(0);

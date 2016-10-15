@@ -152,6 +152,12 @@ bool noCollision(const GameData &game, const EntityType &type,
                const Point &mousePos){
    SDL_Rect rect = mousePos + type.getBaseRect();
 
+   //check that it's inside map
+   if (!inside(rect, game.map))
+      return false;
+   
+   rect = rect - game.map;
+
    //check against entities
    for (entities_t::const_iterator it = game.entities.begin();
         it != game.entities.end(); ++it){
@@ -192,4 +198,18 @@ Uint32 getEntityColor(const GameData &game, int color){
       return ENTITY_DEFAULT_COLOR;
 
    }
+}
+
+//whether a is inside b
+bool inside(const SDL_Rect &a, const SDL_Rect &b){
+   if (a.x < b.x)
+      return false;
+   if (a.y < b.y)
+      return false;
+   if (a.x + a.w > b.x + b.w)
+      return false;
+   if (a.y + a.h > b.y + b.h)
+      return false;
+
+   return true;
 }

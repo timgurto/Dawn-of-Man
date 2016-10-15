@@ -1,4 +1,4 @@
-// (C) 2009 Tim Gurto
+// (C) 2009-2010 Tim Gurto
 
 #ifndef POINT_H
 #define POINT_H
@@ -12,6 +12,7 @@ struct Point{
    pixels_t y;
    Point(const SDL_Rect &original);
    Point(pixels_t xCoord, pixels_t yCoord);
+   Point operator=(const SDL_Rect &rhs);
    Point operator+(const Point &rhs) const;
    Point operator-(const Point &rhs) const;
 

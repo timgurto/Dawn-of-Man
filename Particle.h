@@ -8,6 +8,8 @@
 #include "globals.h"
 #include "misc.h"
 
+struct GameData;
+
 class Particle{
 
    double x, y; //position
@@ -35,7 +37,7 @@ public:
    //updates to velocity and position
    void tick(double delta);
 
-   void draw() const;
+   void draw(const GameData &game) const;
 
    bool expired() const;
 

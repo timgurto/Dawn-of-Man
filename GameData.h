@@ -30,7 +30,8 @@ typedef SDL_Surface *surfaceIndex_t
 //and functions much simpler.
 struct GameData{
 
-   GameData();
+   GameData(int mapSizeX, int mapSizeY);
+
    //free entities and surfaces pointed to
    ~GameData();
 
@@ -78,6 +79,14 @@ struct GameData{
    //if in build mode, the selected building type
    typeNum_t toBuild;
 
+   //dimensions of the map, in # of tiles
+   int mapX, mapY;
+
+   //the size and displacement of the map, on which
+   //everything happens.
+   //x, y = scroll displacement
+   //w, h = map size
+   SDL_Rect map;
 
 };
 

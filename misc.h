@@ -1,4 +1,4 @@
-// (C) 2009 Tim Gurto
+// (C) 2009-2010 Tim Gurto
 
 #ifndef MISC_H
 #define MISC_H
@@ -64,6 +64,10 @@ bool noCollision(const GameData &game, const EntityType &type,
 //Checks for a collision between two SDL_Rects
 bool collision(const SDL_Rect &r1, const SDL_Rect &r2);
 
+//looks up the relevant color based on index input
 Uint32 getEntityColor(const GameData &game, int color);
+
+//whether rect A is completely inside rect B
+bool inside(const SDL_Rect &a, const SDL_Rect &b);
 
 #endif
