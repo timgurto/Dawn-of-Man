@@ -18,6 +18,7 @@ const pixels_t PLACEMENT_MARGIN = 2;
 
 
 //UIBar::iconCountFun_
+//Returns the number of icons in the bar
    
    //Buildings bar: number of BuildingType icons
    typeNum_t getNumBuildingIcons(const GameData &game){
@@ -40,6 +41,7 @@ const pixels_t PLACEMENT_MARGIN = 2;
 
 
 //UIBar::surfaceFun_
+//Returns the icon surface for the specified index
 
    SDL_Surface *getBuildingTypeIcons(typeNum_t i,
                                      typeNum_t size,
@@ -70,6 +72,7 @@ const pixels_t PLACEMENT_MARGIN = 2;
 
 
 //UIBar::clickFun_
+//Executes the click on the specified button
 
    void selectBuilding(typeNum_t index, GameData &game){
       game.toBuild = index;
@@ -103,6 +106,7 @@ const pixels_t PLACEMENT_MARGIN = 2;
             buildingBaseRect = building.getBaseRect(),
             unitTypeBaseRect = unitType.getBaseRect();
 
+         //TODO fix; right and down are too close
          switch(dir){
          case DIR_UP:
             loc.y = buildingBaseRect.y -

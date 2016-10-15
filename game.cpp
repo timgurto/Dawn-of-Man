@@ -97,7 +97,7 @@ void gameMode(){
       addEntity(game, new Decoration(0, Point(
                                 rand() % game.map.w,
                                 rand() % game.map.h)));
-   UnitType drone(0, "Drone",
+   UnitType generic(0, "Generic",
                   makeRect(-22, -127, 70, 113),
                   makeRect(-22,-6, 53, 11),
                   Point(3, -55),
@@ -105,15 +105,33 @@ void gameMode(){
                   25, 8, //frames
                   10, 4, 25, //combat frames
                   50, 10, 2, //combat details
-                  0, //origin building
+                  false, //builder
+                  1, //origin building
                   1000); //progress cost
-   game.unitTypes.push_back(drone);
-   for (int i = 0; i != 30; ++i)
+   game.unitTypes.push_back(generic);
+   for (int i = 0; i != 10; ++i)
       addEntity(game, new Unit(0,
                                Point(rand() % game.map.w,
                                      rand() % game.map.h),
-                               rand() % 2,
+                               1,
                                1000));
+   UnitType grunt(1, "Grunt",
+                  makeRect(-22, -127, 70, 113),
+                  makeRect(-22,-6, 53, 11),
+                  Point(3, -55),
+                  8, //speed
+                  25, 8, //frames
+                  10, 4, 25, //combat frames
+                  25, 5, 0, //combat details
+                  true, //builder
+                  0, //origin building
+                  1000); //progress cost
+   game.unitTypes.push_back(grunt);
+   addEntity(game, new Unit(1,
+                            Point(rand() % game.map.w,
+                                  rand() % game.map.h),
+                            HUMAN_PLAYER,
+                            1000));
    //=================================================
 
    UIBars_t bars;
@@ -122,7 +140,7 @@ void gameMode(){
                       &getNumBuildingIcons,
                       &getBuildingTypeIcons,
                       &selectBuilding,
-                      MODE_NORMAL);
+                      MODE_BUILDER);
    bars.push_back(&buildingsBar);
    UIBar unitsBar(BOTTOM_LEFT, HORIZONTAL,
                   &getNumUnitIcons,

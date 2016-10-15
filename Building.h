@@ -15,6 +15,10 @@ class EntityType;
 //They train units.
 class Building : public Entity{
 
+   //How much progress is made to a building's construction
+   //with each builder's hit.
+   static const progress_t PROGRESS_PER_BUILDER_HIT;
+
    progress_t progress_; //construction progress
    bool finished_; //whether construction is finished
    double drawPercent_; //value for partial drawing
@@ -28,12 +32,18 @@ public:
    //Inherited from Entity
    virtual const EntityType &Building::type() const;
    virtual void draw(SDL_Surface *screen = screen_) const;
-   virtual void tick(double delta);
    virtual EntityTypeID classID() const;
    virtual bool selectable() const;
    virtual int getColor() const;
    virtual typeNum_t getPlayer() const;
    virtual double getDrawPercent() const;
+
+   //progresses the building's construction when a builder
+   //hits it
+   void progressConstruction();
+
+   //get
+   bool isFinished() const;
 };
 
 #endif

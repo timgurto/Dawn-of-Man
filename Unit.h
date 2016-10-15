@@ -55,10 +55,14 @@ public:
                               Point(game_->map));
 
    //Whether the unit has reached its target
-   bool atTarget();
+   bool atTarget() const;
 
    //sets target co-ordinates if targetting an entity
    void updateTarget();
+
+   //get
+   bool isBuilder() const;
+   Entity *getTargetEntity() const;
 };
 
 #endif

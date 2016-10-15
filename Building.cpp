@@ -8,8 +8,11 @@
 #include "Debug.h"
 #include "Particle.h"
 #include "BuildingType.h"
+#include "Unit.h"
 
 extern Debug debug;
+
+const progress_t Building::PROGRESS_PER_BUILDER_HIT = 100;
 
 Building::Building(typeNum_t type, const Point &loc,
                    typeNum_t player, progress_t progress):
@@ -50,28 +53,6 @@ void Building::draw(SDL_Surface *screen) const{
    colorBlit(getColor(), screen, srcLoc, drawLoc);
 }
 
-void Building::tick(double delta){
-   if (!finished_){
-      progress_ += delta * PROGRESS_PER_CALC;
-      //debug("progress = ", progress_);
-      if (progress_ >= game_->buildingTypes[typeIndex_].maxProgress_){
-         finished_ = true;
-         drawPercent_ = FULL;
-         //debug("building finished");
-      }else
-         drawPercent_ = 1.0 * progress_ /
-                 game_->buildingTypes[typeIndex_].maxProgress_;
-
-      int particlesToDraw = int(1.0 * rand() / RAND_MAX +
-                                0.02 * 
-                                Particle::PARTICLE_COUNT *
-                                delta * Particle::DECAY *
-                                1);//delta);
-
-      addParticles(particlesToDraw);
-   }
-}
-
 double Building::getDrawPercent() const{
    return drawPercent_;
 }
@@ -92,4 +73,39 @@ bool Building::selectable() const{
 
 typeNum_t Building::getPlayer() const{
    return player_;
+}
+
+void Building::progressConstruction(){
+   const BuildingType &thisType =
+      (const BuildingType &) type();
+   progress_ += PROGRESS_PER_BUILDER_HIT;
+   if (progress_ >= thisType.maxProgress_){
+      finished_ = true;
+      drawPercent_ = FULL;
+   }else
+      drawPercent_ = 1.0 * progress_ /
+                     thisType.maxProgress_;
+
+   //add particles
+   int particlesToDraw = int(1.0 * rand() / RAND_MAX +
+                             0.1 *
+                             Particle::PARTICLE_COUNT *
+                             Particle::DECAY);
+   addParticles(particlesToDraw);
+
+
+   //remove builders' targets
+   if (finished_)
+      for (entities_t::iterator it = game_->entities.begin();
+           it != game_->entities.end(); ++it)
+         if ((*it)->classID() == ENT_UNIT){
+            Unit &unit = (Unit &)(**it);
+            if (unit.getTargetEntity() == this &&
+                unit.isBuilder())
+               unit.setTarget(0, (*it)->getLoc());
+         }
+}
+
+bool Building::isFinished() const{
+   return finished_;
 }

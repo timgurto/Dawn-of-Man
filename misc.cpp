@@ -124,7 +124,8 @@ SDL_Rect dimRect(const SDL_Rect &original){
 SDL_Rect locRect(const SDL_Rect &original){
    return makeRect(original.x, original.y);
 }
-//TODO Might be slow to repeat
+
+//TODO might be slow to repeat
 bool isKeyPressed(SDLKey key){
    Uint8 *keyStates = SDL_GetKeyState(0);
    return keyStates[key] != 0;
@@ -254,12 +255,12 @@ bool isArg(std::string arg, int argc, char* argv[]){
    assert (argv != 0);
    for (int i = 1; i != argc; ++i){
       std::string s(argv[i]);
-      if (s.substr(0, s.find('=')) == arg){
-         debug("Argument exists: ", s.substr(0, s.find('=')));
+      size_t len = s.find('=');
+      if (s.substr(0, len) == arg){
+         debug("Argument exists: ", s.substr(0, len));
          return true;
       }
    }
-
    return false;
 }
 
@@ -268,8 +269,9 @@ int whatIsArg(std::string arg, int argc, char* argv[]){
    assert(isArg(arg, argc, argv));
    for (int i = 1; i != argc; ++i){
       std::string s(argv[i]);
-      if (s.substr(0, s.find('=')) == arg){
-         std::stringstream ss(s.substr(s.find('=') + 1));
+      size_t len = s.find('=');
+      if (s.substr(0, len) == arg){
+         std::stringstream ss(s.substr(len + 1));
          int result;
          ss >> result;
          debug(result);

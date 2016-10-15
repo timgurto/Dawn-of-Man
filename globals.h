@@ -126,6 +126,7 @@ enum EntityTypeID{
 //Interface modes for the game
 enum ControlMode{
    MODE_NORMAL,
+   MODE_BUILDER,
    MODE_CONSTRUCTION, //a building is being placed
    MODE_BUILDING //a building is selected
 };
@@ -147,6 +148,7 @@ enum Orientation{
 //For the surface index
 enum EntityColor{
    CLR_DEFAULT = MAX_PLAYERS,
+   CLR_SAMPLE_0,
    //insert more colors here
    CLR_MAX //for array sizes
 };

@@ -161,10 +161,9 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
 
          case MOUSE_BUTTON_RIGHT:
             if (!game.rightMouse.dragging)
+               if (!game.leftMouse.dragging)
+                  setSelectedTargets(game);
                switch(game.mode){
-               case MODE_NORMAL:
-                  if (!game.leftMouse.dragging)
-                     setSelectedTargets(game);
                case MODE_CONSTRUCTION:
                   //cancel build mode
                   game.mode = MODE_NORMAL;
@@ -192,8 +191,23 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
                if (game.mode == MODE_CONSTRUCTION){
                   assert (game.toBuild != NO_TYPE);
                   if (game.buildLocationOK){
-                     addEntity(game, new Building(game.toBuild,
-                               game.mousePos - game.map));
+
+                     //create new building
+                     Building *newBuilding =
+                        new Building(game.toBuild, game.mousePos -
+                                                   game.map);
+                     addEntity(game, newBuilding);
+
+                     //assign selected builders to the construction
+                     for (entities_t::iterator it = game.entities.begin();
+                          it != game.entities.end(); ++it)
+                        if ((*it)->classID() == ENT_UNIT){
+                           Unit *unitP = (Unit *)(*it);
+                           const UnitType &thisType =
+                              (const UnitType &)(unitP->type());
+                           if (thisType.isBuilder())
+                              unitP->setTarget(newBuilding);
+                        }
 
                      //Shift key: construct multiple buildings
                      if(!isKeyPressed(SDLK_LSHIFT)){
@@ -284,9 +298,7 @@ void select(GameData &game, UIBars_t &bars){
    game.buildingSelected = 0;
    bool
       entitySelected = false,
-      unitSelected = false,
       builderSelected = false;
-
 
    //loop backwards, so objects in front have priority to be
    //selected
@@ -327,9 +339,9 @@ void select(GameData &game, UIBars_t &bars){
                      game.buildingSelected = (Building *)(*it);
                   //if unit, set flag
                   else if ((*it)->classID() == ENT_UNIT){
-                     unitSelected = true;
                      const UnitType &uType = (const UnitType &)((*it)->type());
-                     if (uType.getBuilder());
+                     if (uType.isBuilder())
+                        builderSelected = true;
                   }
             }// if collides
 
@@ -345,8 +357,11 @@ void select(GameData &game, UIBars_t &bars){
 
    }// for entities
 
-   //if a building is selected, and no units are
-   if (game.buildingSelected != 0 && !unitSelected)
+   //if a builder is selected
+   if (builderSelected)
+      game.mode = MODE_BUILDER;
+   //if a building is selected
+   else if (game.buildingSelected != 0)
       game.mode = MODE_BUILDING;
    else
       game.mode = MODE_NORMAL;
@@ -361,7 +376,7 @@ void setSelectedTargets(GameData &game){
         it != game.entities.end(); ++it){
       if ((*it)->classID() == ENT_UNIT &&
           (*it)->selected){
-         Unit *unitP = (Unit *)(*it); //change to Unit*
+         Unit *unitP = (Unit *)(*it);
          unitP->setTarget(targetEntity);
       }
    }

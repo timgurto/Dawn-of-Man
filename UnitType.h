@@ -70,7 +70,7 @@ public:
 
    //get
    typeNum_t getOriginBuilding() const;
-   bool getBuilder() const;
+   bool isBuilder() const;
 };
 
 #endif

@@ -8,6 +8,7 @@
 #include "Unit.h"
 #include "UnitType.h"
 #include "Debug.h"
+#include "Building.h"
 
 extern Debug debug;
 
@@ -85,6 +86,8 @@ void Unit::draw(SDL_Surface *screen) const{
 }
 
 void Unit::tick(double delta){
+
+   //training
    if (!finished_){
       progress_ += delta * PROGRESS_PER_CALC;
       //debug("progress = ", progress_);
@@ -98,8 +101,7 @@ void Unit::tick(double delta){
       int particlesToDraw = int(1.0 * rand() / RAND_MAX +
                                 0.02 * 
                                 Particle::PARTICLE_COUNT *
-                                delta * Particle::DECAY *
-                                1);//delta);
+                                delta * Particle::DECAY);
       addParticles(particlesToDraw);
 
    }else{
@@ -159,13 +161,13 @@ void Unit::tick(double delta){
              loc_.x + base.x < 0)
             loc_.x = -1 * base.x;
          else if (xMod > 0 &&
-             loc_.x + base.x + base.w > game_->map.w)
+                  loc_.x + base.x + base.w > game_->map.w)
             loc_.x = game_->map.w - base.x - base.w;
          if (yMod < 0 &&
              loc_.y + base.y < 0)
             loc_.y = -1 * base.y;
          else if (yMod > 0 &&
-             loc_.y + base.y + base.h > game_->map.h)
+                  loc_.y + base.y + base.h > game_->map.h)
             loc_.y = game_->map.h - base.y - base.h;
 
       }
@@ -181,20 +183,36 @@ void Unit::tick(double delta){
       if (combat_){
          //debug("in combat");
          combatFrameCounter_ += delta;
+
+         //Combat/construction
          if (combatFrameCounter_ >= thisType.maxCombatFrameCounter_){
             combatFrameCounter_ -= (thisType.maxCombatFrameCounter_ +
                                     thisType.combatWait_);
-            debug("hit");
+            //debug("hit");
             switch (targetEntity_->classID()){
-            case ENT_UNIT:
-               Unit &target = (Unit &)(*targetEntity_);
-               UnitType &targetType = game_->unitTypes[target.typeIndex_];
-               damage_t damage = thisType.attack_ - targetType.armor_;
-               if (damage > target.health_)
-                  target.kill();
-               else
-                  target.health_ -= damage;
+            case ENT_BUILDING:
+               {//local scope for target
+                  Building &target = (Building &)(*targetEntity_);
+                  //friendly building: construction
+                  if (thisType.builder_ &&
+                      target.getPlayer() == player_){
+                     target.progressConstruction();
+                  }
+               }
                break;
+
+            case ENT_UNIT:
+               {
+                  Unit &target = (Unit &)(*targetEntity_);
+                  const UnitType &targetType =
+                     game_->unitTypes[target.typeIndex_];
+                  damage_t damage = thisType.attack_ - targetType.armor_;
+                  if (damage > target.health_)
+                     target.kill();
+                  else
+                     target.health_ -= damage;
+                  break;
+               }
             }
          }
          if (combatFrameCounter_ < 0)
@@ -247,7 +265,7 @@ void Unit::setTarget(Entity *targetEntity, Point loc){
    moving_ = !atTarget();
 }
 
-bool Unit::atTarget(){
+bool Unit::atTarget() const{
    double multiplier = (targetEntity_ == 0) ? 0.5 : 8;
    double threshold = game_->unitTypes[typeIndex_].speed_ * multiplier;
 
@@ -266,4 +284,12 @@ void Unit::updateTarget(){
       target_ = targetEntity_->getLoc();
    else
       combat_ = false;
+}
+
+bool Unit::isBuilder() const{
+   return game_->unitTypes[typeIndex_].builder_;
+}
+
+Entity *Unit::getTargetEntity() const{
+   return targetEntity_;
 }

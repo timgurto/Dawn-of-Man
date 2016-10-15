@@ -45,6 +45,6 @@ typeNum_t UnitType::getOriginBuilding() const{
    return originBuilding_;
 }
 
-bool UnitType::getBuilder() const{
+bool UnitType::isBuilder() const{
    return builder_;
 }
