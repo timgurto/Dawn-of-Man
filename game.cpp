@@ -26,6 +26,8 @@ void gameMode(){
 
    SDL_Surface *back = loadImage(IMAGE_PATH + "back.png");
    SDL_Surface *cursor = loadImage(IMAGE_PATH + "cursor.png", GREEN);
+   SDL_Surface *vBar = loadImage(IMAGE_PATH + "vBar.PNG");
+   SDL_Surface *hBar = loadImage(IMAGE_PATH + "hBar.PNG");
 
    Point mousePos(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
    SDL_ShowCursor(SDL_DISABLE);
@@ -51,7 +53,7 @@ void gameMode(){
    game.buildingTypes.push_back(shrine);
 
    UIBars_t bars;
-   UIBar::set(&game, &controlMode);
+   UIBar::set(&game, &controlMode, vBar, hBar);
    UIBar buildingsBar(BOTTOM_LEFT, VERTICAL,
                       &getBuildingTypeIcons,
                       game.buildingTypes.size(), NORMAL_MODE);
@@ -91,9 +93,9 @@ void gameMode(){
                switch (controlMode){
                case NORMAL_MODE:
                   toBuild = buildingsBar.mouseIndex(mousePos);
-                  debug("toBuild = ", game.buildingTypes[toBuild].name_);
+                  debug("toBuild = ", toBuild);
                   if (toBuild != NO_TYPE){
-                     //draw footprint
+                     //TODO: draw footprint
                      controlMode = BUILD_MODE;
                   }
                   break;
@@ -134,11 +136,10 @@ void gameMode(){
 
    SDL_ShowCursor(SDL_ENABLE);
 
-   //debug("Unloading Back");
    freeSurface(back);
-   //debug("Unloading Cursor");
    freeSurface(cursor);
-   //debug("Done unloading");
+   freeSurface(vBar);
+   freeSurface(hBar);
 
 }
 
@@ -149,7 +150,11 @@ void drawEverything(SDL_Surface *screen, SDL_Surface *back,
 
    //Background
    SDL_FillRect(screen, 0, 0);
-   SDL_BlitSurface(back, 0, screen, &makeRect());
+   assert (back != 0);
+   for (int i = 0; i != SCREEN_WIDTH / back->w + 1; ++i)
+      for (int j = 0; j != SCREEN_HEIGHT / back->h + 1; ++j)
+         SDL_BlitSurface(back, 0, screen,
+                         &makeRect(i * back->w, j * back->h));
    
    //Entities
    for (entities_t::const_iterator it = game.entities.begin();

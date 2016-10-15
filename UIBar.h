@@ -20,6 +20,7 @@ class UIBar{
 
    static const GameData *game_;
    static const ControlMode *mode_;
+   static SDL_Surface *hBarSurface, vBarSurface;
 
 public:
    UIBar(Corner corner, Orientation orientation,
@@ -27,7 +28,9 @@ public:
                                     const GameData &game),
          typeNum_t initialIconCount,
          ControlMode requiredMode);
-   static void set(const GameData *game, const ControlMode *mode);
+   static void set(const GameData *game, const ControlMode *mode,
+                   SDL_Surface *vBarSurface,
+                   SDL_Surface *hBarSurface);
    typeNum_t iconCount;
    void draw(SDL_Surface *screen) const;
    //which button the point is pointing at
