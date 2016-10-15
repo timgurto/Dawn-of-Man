@@ -85,7 +85,8 @@ enum ImageModifier{
 
 //For makePath()
 enum EntityTypeID{
-   BUILDING
+   BUILDING,
+   DECORATION
 };
 
 //Interface modes for the game

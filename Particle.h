@@ -10,8 +10,6 @@
 
 class Particle{
 
-   friend class Building;
-
    double x, y; //position
    short age;
    double hV, vV; //velocity
@@ -19,13 +17,15 @@ class Particle{
 
    static SDL_Surface *screen_, *image_, *shadow_;
 
+public:
+
+   //constants
    const static double GRAVITY;
    const static int PARTICLE_COUNT;
    const static double VELOCITY_RANGE;
    const static int DELAY; //ms
    const static int DECAY;
 
-public:
    Particle(const pixels_t xPos, const pixels_t yPos);
 
    void progress();

@@ -19,7 +19,8 @@ class Building : public Entity{
    float drawPercent; //value for partial drawing
 
 public:
-   Building(typeNum_t type, const Point &loc, progress_t progress = 0);
+   Building(typeNum_t type, const Point &loc,
+            progress_t progress = 0);
    const virtual EntityType &Building::type() const;
    virtual void draw(SDL_Surface *screen = screen_) const;
    virtual void tick();

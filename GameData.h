@@ -7,12 +7,16 @@
 #include <list>
 
 #include "globals.h"
+#include "BuildingType.h"
+#include "DecorationType.h"
 
-class BuildingType;
 class Entity;
 class Particle;
 
+//type containers need to be contiguous for index access
 typedef std::vector<BuildingType> buildingTypes_t;
+typedef std::vector<DecorationType> decorationTypes_t;
+
 typedef std::list<Entity *> entities_t;
 typedef std::list<Particle> particles_t;
 
@@ -21,8 +25,9 @@ typedef std::list<Particle> particles_t;
 //and functions much simpler.
 struct GameData{
    
-   //Types of Buildings
+   //Entity types
    buildingTypes_t buildingTypes;
+   decorationTypes_t decorationTypes;
    
    //All entities in the game, sorted by y co-ordinate.
    //Entity* used, for polymorphism
