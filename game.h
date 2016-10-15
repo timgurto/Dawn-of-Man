@@ -19,6 +19,7 @@ void updateState(double delta, GameData &game, SDL_Surface *screen,
 
 //Draws a frame
 void render(SDL_Surface *screen,
+            SDL_Surface *diagGreen, SDL_Surface *diagRed,
             SDL_Surface *map, SDL_Surface *darkMap,
             SDL_Surface *cursor, SDL_Surface *cursorShadow,
             SDL_Surface *entitiesTemp,

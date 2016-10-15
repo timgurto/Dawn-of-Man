@@ -31,8 +31,8 @@ const int DELTA_MODIFIER = 40;
 //progress points: proportional to completion time
 const progress_t PROGRESS_PER_CALC = 4;
 
-const pixels_t SCREEN_WIDTH = 1920;
-const pixels_t SCREEN_HEIGHT = 1200;
+const pixels_t SCREEN_WIDTH = 1024;
+const pixels_t SCREEN_HEIGHT = 768;
 const int SCREEN_BPP = 32;
 
 //in case the cursor point isn't at 0,0
@@ -74,6 +74,9 @@ const bool PARTICLE_FADE = false;
 
 //Alpha of shadows (particles, cursor)
 const Uint8 SHADOW_ALPHA = 0x44;
+
+//Alpha of the selection rectangle
+const Uint8 SELECTION_RECT_ALPHA = 0x44;
 
 //This has a substantial effect on performance
 //===================================================

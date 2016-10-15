@@ -55,11 +55,18 @@ if (enabled){
       while (copy.size() != 0){
          std::string message = copy.front();
          copy.pop();
+         SDL_Surface *blackSurface = TTF_RenderText_Solid(font,
+                                                          message.c_str(),
+                                                          BLACK);
+         SDL_BlitSurface(blackSurface, 0, screen_, &makeRect(x_+1, y_+1 + lat));
+         
          SDL_Surface *surface = TTF_RenderText_Solid(font,
                                                      message.c_str(),
                                                      color_);
          SDL_BlitSurface(surface, 0, screen_, &makeRect(x_, y_ + lat));
+         
          SDL_FreeSurface(surface);
+         SDL_FreeSurface(blackSurface);
          lat += height;
       }
    }

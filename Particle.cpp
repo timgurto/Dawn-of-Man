@@ -8,7 +8,7 @@
 
 const double Particle::GRAVITY = 1.6;
 const int Particle::PARTICLE_COUNT = 15;
-const double Particle::VELOCITY_RANGE = 1.5;
+const double Particle::VELOCITY_RANGE = 0.5;
 const int Particle::DELAY = 25; //ms
 const int Particle::DECAY = 6;
 

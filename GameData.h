@@ -65,7 +65,8 @@ struct GameData{
 
    //An index of already-used, colored entity surfaces.
    //[0] - [MAX_PLAYERS-1] = each player's color
-   //see enum EntityColor and getEntityColor() for the rest
+   //see enum EntityColor and getEntityColor() for the
+   //rest
    surfaceIndex_t surfaceIndex;
 
    //The current game mode
@@ -93,6 +94,9 @@ struct GameData{
    // - right-mouse scrolling
    MouseButton leftMouse, rightMouse;
 
+   //Whether the location being hovered over can be built
+   //on
+   bool buildLocationOK;
 };
 
 #endif

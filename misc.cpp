@@ -98,6 +98,10 @@ SDL_Surface *copySurface(SDL_Surface* src){
    return SDL_ConvertSurface(src, src->format, SDL_SWSURFACE);
 }
 
+SDL_Rect dimRect(const SDL_Rect &original){
+   return makeRect(0, 0, original.w, original.h);
+}
+
 
 //========misc=========
 

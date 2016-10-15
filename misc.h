@@ -38,6 +38,10 @@ void freeSurface(SDL_Surface *&p);
 //Deep-copies a surface from one pointer to another.
 SDL_Surface *copySurface(SDL_Surface* src);
 
+//returns a rectangle with equal dimensions, but co-ordinates
+// of zero.
+SDL_Rect dimRect(const SDL_Rect &original);
+
 
 //===misc===
 

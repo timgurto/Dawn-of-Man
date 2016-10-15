@@ -45,6 +45,11 @@ void gameMode(){
                                 "cursorShadow.PNG", GREEN),
       *vBar = loadImage(INTERFACE_IMAGE_PATH + "vBar.PNG"),
       *hBar = loadImage(INTERFACE_IMAGE_PATH + "hBar.PNG"),
+      *diagGreen = loadImage(MISC_IMAGE_PATH + "diagGreen.PNG", GREEN),
+      *diagRed = loadImage(MISC_IMAGE_PATH + "diagRed.PNG", GREEN),
+      *particle = loadImage(MISC_IMAGE_PATH + "particle.PNG", GREEN),
+      *particleShadow = loadImage(MISC_IMAGE_PATH +
+                                  "particleShadow.PNG", GREEN),
       *entitiesTemp = SDL_CreateRGBSurface(SDL_HWSURFACE,
                                            SCREEN_WIDTH,
                                            SCREEN_HEIGHT,
@@ -55,19 +60,15 @@ void gameMode(){
                               ENTITY_BACKGROUND.r,
                               ENTITY_BACKGROUND.g,
                               ENTITY_BACKGROUND.b));
-   SDL_Surface
-      *particle = loadImage(MISC_IMAGE_PATH + "particle.PNG", GREEN),
-      *particleShadow = loadImage(MISC_IMAGE_PATH +
-                                  "particleShadow.PNG", GREEN);
    SDL_SetAlpha(particleShadow, SDL_SRCALPHA, SHADOW_ALPHA);
    SDL_SetAlpha(cursorShadow, SDL_SRCALPHA, SHADOW_ALPHA);
-   Particle::init(screen, particle, particleShadow);
 
    SDL_ShowCursor(SDL_DISABLE);
 
    //init
    GameData game(3, 2);
    Entity::init(&game, screen);
+   Particle::init(screen, particle, particleShadow);
    game.mode = NORMAL_MODE;
 
    //TODO load from files
@@ -121,11 +122,12 @@ void gameMode(){
       updateState(deltaMod, game, screen, bars);
 
       //render
-      render(screen, map, darkMap, cursor, cursorShadow,
-             entitiesTemp, game, bars);
+      render(screen, diagGreen, diagRed, map, darkMap, cursor,
+             cursorShadow, entitiesTemp, game, bars);
 
    }
 
+   //Clean up
    SDL_ShowCursor(SDL_ENABLE);
 
    freeSurface(map);
@@ -136,6 +138,8 @@ void gameMode(){
    freeSurface(hBar);
    freeSurface(particle);
    freeSurface(particleShadow);
+   freeSurface(diagGreen);
+   freeSurface(diagRed);
    SDL_FreeSurface(entitiesTemp);
 
 }
@@ -160,7 +164,7 @@ void updateState(double delta, GameData &game,
         it != game.particles.end(); ++it){
       it->tick(delta);
       if (it->expired()){
-         debug("particle expired");
+         //debug("particle expired");
          it = game.particles.erase(it);
          if (it == game.particles.end())
             break;
@@ -170,17 +174,13 @@ void updateState(double delta, GameData &game,
 }
 
 void render(SDL_Surface *screen,
+            SDL_Surface *diagGreen, SDL_Surface *diagRed,
             SDL_Surface *map, SDL_Surface *darkMap,
             SDL_Surface *cursor, SDL_Surface *cursorShadow,
             SDL_Surface *entitiesTemp,
             const GameData &game, const UIBars_t &bars){
 
-   //const Point &mousePos = game.mousePos;
-   //const typeNum_t &toBuild = game.toBuild;
-
    //Map
-   SDL_FillRect(screen, 0, 0);
-
    for (int x = -1; x != game.mapX + 1; ++x)
       for (int y = -1; y != game.mapY + 1; ++y){
          SDL_Rect tileRect = makeRect(game.map.x + x * MAP_TILE_SIZE,
@@ -201,6 +201,18 @@ void render(SDL_Surface *screen,
          }
       }
 
+   //TODO red if bad. Change file to magenta.
+   //Building footprint
+   if (game.mode == BUILD_MODE &&
+       !game.rightMouse.dragging){
+      SDL_Rect baseRect = game.mousePos +
+                          game.buildingTypes[game.toBuild].getBaseRect();
+      if (game.buildLocationOK)
+         SDL_BlitSurface(diagGreen, &dimRect(baseRect), screen, &SDL_Rect(baseRect));
+      else
+         SDL_BlitSurface(diagRed, &dimRect(baseRect), screen, &SDL_Rect(baseRect));
+   }
+
    //TODO check inside screen
    //Entities
    if (ENTITY_MASKS)
@@ -211,29 +223,47 @@ void render(SDL_Surface *screen,
    if (ENTITY_MASKS)
       SDL_BlitSurface(entitiesTemp, 0, screen, 0);
 
-   //TODO theme this better
-   //Building footprint
-   if (game.mode == BUILD_MODE){
-      SDL_Rect baseRect = game.mousePos +
-                          game.buildingTypes[game.toBuild].getBaseRect();
-      Uint32 footprintColor;
-      if (noCollision(game, game.buildingTypes[game.toBuild], game.mousePos))
-         footprintColor = FOOTPRINT_COLOR_GOOD;
-      else
-         footprintColor = FOOTPRINT_COLOR_BAD;
-      SDL_FillRect(screen, &baseRect, footprintColor);
-   }
-
-   //TODO implement
+   //TODO better rectangle
    //Selection rectangle
-   //if (game.leftMouse.dragging)
-      
+   if (game.mode != BUILD_MODE &&
+       game.leftMouse.dragging){
+      //set up rectangle for blitting
+      //TODO modify dragBegin, not mousePos
+      Point modMouse = game.mousePos - game.map;
+      SDL_Rect selRect;
+      if (game.leftMouse.dragBegin.x < modMouse.x)
+         selRect.x = game.leftMouse.dragBegin.x,
+         selRect.w = modMouse.x - game.leftMouse.dragBegin.x;
+      else
+         selRect.x = modMouse.x,
+         selRect.w = game.leftMouse.dragBegin.x - modMouse.x;
+      if (game.leftMouse.dragBegin.y < modMouse.y)
+         selRect.y = game.leftMouse.dragBegin.y,
+         selRect.h = modMouse.y - game.leftMouse.dragBegin.y;
+      else
+         selRect.y = modMouse.y,
+         selRect.h = game.leftMouse.dragBegin.y - modMouse.y;
+      selRect = selRect + game.map;
+
+      //TODO wrapper for CreateRGB.., and keep track of # of surfaces
+      SDL_Surface *temp = SDL_CreateRGBSurface(SDL_HWSURFACE,
+                                               selRect.w,
+                                               selRect.h,
+                                               SCREEN_BPP,
+                                               0, 0, 0, 0);
+      SDL_SetAlpha(temp, SDL_SRCALPHA, SELECTION_RECT_ALPHA);
+      SDL_FillRect(temp, &dimRect(selRect), WHITE_UINT);
+      SDL_BlitSurface(temp, 0, screen,
+                      &makeRect(selRect));
+      SDL_FreeSurface(temp);
+   }
 
    //Interface
    for (UIBars_t::const_iterator it = bars.begin(); it != bars.end(); ++it){
       (*it)->draw();
    }
 
+   //TODO maybe blit cursor above particles if raised
    //Cursor
    blitCursor(cursor, cursorShadow, screen, game);
 
@@ -253,10 +283,6 @@ void render(SDL_Surface *screen,
 
 void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
 
-   //bool &loop = game.loop;
-   //Point &mousePos = game.mousePos;
-   //typeNum_t &toBuild = game.toBuild;
-
    SDL_Event event;
    while (SDL_PollEvent(&event)){
       switch (event.type){
@@ -273,6 +299,12 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
          //check right mouse movement
          game.rightMouse.checkDrag(game.mousePos);
          game.leftMouse.checkDrag(game.mousePos - game.map);
+         switch(game.mode)
+         case BUILD_MODE:
+            game.buildLocationOK =
+               noCollision(game, game.buildingTypes[game.toBuild],
+                           game.mousePos);
+            break;
          break;
 
       //A key is pressed
@@ -326,8 +358,7 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
             switch (game.mode){
             case BUILD_MODE:
                assert (game.toBuild != NO_TYPE);
-               if (noCollision(game, game.buildingTypes[game.toBuild],
-                               game.mousePos)){
+               if (game.buildLocationOK){
                   addEntity(game, new Building(game.toBuild,
                             game.mousePos - game.map));
 
@@ -359,6 +390,8 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
                }
             game.rightMouse.mouseUp();
             break;
+         case MOUSE_BUTTON_LEFT:
+            game.leftMouse.mouseUp();
          }
          break;
 
@@ -380,7 +413,8 @@ void removeEntity(){
 void blitCursor (SDL_Surface *cursor, SDL_Surface *shadow,
                  SDL_Surface *screen, const GameData &game){
    //cursor might appear 'raised' from the wall
-   bool raised = (game.rightMouse.dragging);
+   bool raised = game.rightMouse.dragging/* ||
+                 (game.mode == BUILD_MODE && !game.buildLocationOK)*/;
 
    Point
       cursorPos = game.mousePos + CURSOR_OFFSET,
