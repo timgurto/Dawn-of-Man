@@ -67,3 +67,7 @@ SDL_Surface *EntityType::getIcon() const{
 const std::string &EntityType::getName(){
    return name_;
 }
+
+const SDL_Rect &EntityType::getBaseRect(){
+   return baseRect_;
+}

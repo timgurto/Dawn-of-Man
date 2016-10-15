@@ -67,7 +67,7 @@ void Building::draw(SDL_Surface *screen) const{
    default:
       assert(false);
    }
-   colorBlit(player_, screen, srcLoc, drawLoc);
+   colorBlit(getColor(), screen, srcLoc, drawLoc);
 }
 
 void Building::tick(double delta){
@@ -81,9 +81,7 @@ void Building::tick(double delta){
       }else
          drawPercent_ = 1.0 * progress_ /
                  game_->buildingTypes[typeIndex_].maxProgress_;
-   }
 
-   if (!finished_){
       int particlesToDraw = int(1.0 * rand() / RAND_MAX +
                                 0.02 * 
                                 Particle::PARTICLE_COUNT *

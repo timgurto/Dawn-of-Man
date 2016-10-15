@@ -117,6 +117,8 @@ public:
    static void emptyTrash();
 
    typeNum_t getTypeIndex() const;
+
+   const Point &getLoc() const;
 };
 
 #endif

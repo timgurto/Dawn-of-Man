@@ -22,6 +22,7 @@ combatFrameCounter_(0),
 frame_(0),
 targetEntity_(0),
 health_(game_->unitTypes[type].maxHealth_),
+progress_(progress),
 finished_(progress >= game_->unitTypes[type].maxProgress_),
 drawPercent_(1.0f *
             progress_ /
@@ -34,126 +35,239 @@ const EntityType &Unit::type() const{
 
 void Unit::draw(SDL_Surface *screen) const{
    const UnitType &thisType = dynamic_cast<const UnitType &>(type());
-   SDL_Rect dstLoc = getDrawRect();
-   int srcX = frame_ * thisType.drawRect_.w;
-   SDL_Rect srcLoc = makeRect(srcX, 0,
-                              thisType.drawRect_.w,
-                              thisType.drawRect_.h);
-   colorBlit(getColor(), screen, srcLoc, dstLoc);
+
+   //HACK duplicate code; see Building.cpp
+   //const EntityType &thisType = type();
+   SDL_Rect drawLoc = loc_ + thisType.drawRect_;
+
+   SDL_Rect srcLoc;
+   pixels_t
+      partialW = pixels_t(getDrawPercent() *
+                          thisType.drawRect_.w),
+      partialH = pixels_t(getDrawPercent() *
+                          thisType.drawRect_.h);
+
+   //clip, based on randomized direction
+   switch(direction_){
+   case RIGHT:
+      srcLoc = makeRect(frame_ * thisType.drawRect_.w,
+                        0,
+                        partialW,
+                        thisType.drawRect_.h);
+      break;
+   case DOWN:
+      srcLoc = makeRect(frame_ * thisType.drawRect_.w,
+                        0,
+                        thisType.drawRect_.w,
+                        partialH);
+      break;
+   case LEFT:
+      srcLoc = makeRect((frame_ + 1) *
+                        thisType.drawRect_.w -
+                        partialW,
+                        0,
+                        partialW,
+                        thisType.drawRect_.h);
+      drawLoc.x += thisType.drawRect_.w - partialW;
+      break;
+   case UP:
+      srcLoc = makeRect(frame_ * thisType.drawRect_.w,
+                        thisType.drawRect_.h - partialH,
+                        thisType.drawRect_.w,
+                        partialH);
+      drawLoc.y += thisType.drawRect_.h - partialH;
+      break;
+   default:
+      assert(false);
+   }
+   colorBlit(player_, screen, srcLoc, drawLoc);
+
+
+
    //TODO better health display
-   SDL_FillRect(screen, &makeRect(dstLoc.x + game_->map.x, dstLoc.y + game_->map.y, thisType.maxHealth_, 5), BLACK_UINT);
-   SDL_FillRect(screen, &makeRect(dstLoc.x + game_->map.x, dstLoc.y + game_->map.y, health_, 5), 0x00fe00);
+   if (finished_){
+      SDL_FillRect(screen, &makeRect(drawLoc.x + game_->map.x, drawLoc.y + game_->map.y, thisType.maxHealth_, 5), BLACK_UINT);
+      SDL_FillRect(screen, &makeRect(drawLoc.x + game_->map.x, drawLoc.y + game_->map.y, health_, 5), 0x00fe00);
+   }
 }
 
 void Unit::tick(double delta){
-   updateTarget();
-   const UnitType &thisType = (const UnitType &)(type());
 
-   if (moving_){
+   //HACK duplicate code, see Building.cpp
+   if (!finished_){
+      progress_ += delta * PROGRESS_PER_CALC;
+      debug("progress = ", progress_);
+      if (progress_ >= game_->unitTypes[typeIndex_].maxProgress_){
+         finished_ = true;
+         drawPercent_ = FULL;
+      }else
+         drawPercent_ = 1.0 * progress_ /
+                 game_->unitTypes[typeIndex_].maxProgress_;
 
-      double angle;
-      if (target_.x == loc_.x)
-         angle =
-            (target_.y < loc_.y ?
-            1.5 * PI :
-            0.5 * PI);
-      else{
-         double gradient = 1.0 *
-            (target_.y - loc_.y) /
-            (target_.x - loc_.x);
-         angle = atan(gradient);
-         if (target_.x < loc_.x){
-            if (target_.y > loc_.y)
-               angle += PI;
-            else
-               angle -= PI;
-         }
-      }
-      double xMod = cos(angle);
-      double yMod = sin(angle);
+      int particlesToDraw = int(1.0 * rand() / RAND_MAX +
+                                0.02 * 
+                                Particle::PARTICLE_COUNT *
+                                delta * Particle::DECAY *
+                                1);//delta);
 
-      double speed = delta * thisType.speed_;
-      pixels_t
-         xDelta = pixels_t(xMod * speed),
-         yDelta = pixels_t(yMod * speed);
-
-      loc_.x += xDelta;
-      loc_.y += yDelta;
-
-      // if collision, undo
-      if (!isLocationOK()){
-         loc_.x -= xDelta;
-         loc_.y -= yDelta;
-         return;
-      }
-
-      if (yMod > 0)
-         verticalMovement_ = VM_DOWN;
-      else if (yMod < 0)
-         verticalMovement_ = VM_UP;
-      else
-         verticalMovement_ = VM_NONE;
-
-      const SDL_Rect &base = thisType.baseRect_;
-
-      //check in bounds
-      if (xMod < 0 &&
-          loc_.x + base.x < 0)
-         loc_.x = -1 * base.x;
-      else if (xMod > 0 &&
-          loc_.x + base.x + base.w > game_->map.w)
-         loc_.x = game_->map.w - base.x - base.w;
-      if (yMod < 0 &&
-          loc_.y + base.y < 0)
-         loc_.y = -1 * base.y;
-      else if (yMod > 0 &&
-          loc_.y + base.y + base.h > game_->map.h)
-         loc_.y = game_->map.h - base.y - base.h;
-
-      //check whether target has been reached
-      if (targetEntity_ != 0){
-         combat_ = atTarget();
-         moving_ = !combat_;
-      }else if (atTarget())
-         moving_ = false;
-   }
-
-   //progress frame
-   if (combat_){
-      //debug("in combat");
-      combatFrameCounter_ += delta;
-      if (combatFrameCounter_ >= thisType.maxCombatFrameCounter_){
-         combatFrameCounter_ -= (thisType.maxCombatFrameCounter_ +
-                                 thisType.combatWait_);
-         debug("hit");
-         switch (targetEntity_->classID()){
-         case UNIT:
-            Unit &target = (Unit &)(*targetEntity_);
-            UnitType &targetType = game_->unitTypes[target.typeIndex_];
-            damage_t damage = thisType.attack_ - targetType.armor_;
-            if (damage > target.health_)
-               target.kill();
-            else
-               target.health_ -= damage;
+      for (int i = 0; i != particlesToDraw; ++i){
+         //calculate initial co-ords
+         pixels_t x = 0, y = 0;
+         switch(direction_){
+         case UP:
+            x = loc_.x + 
+                type().drawRect_.x +
+                rand() % type().drawRect_.w;
+            y = loc_.y + 
+                type().drawRect_.y +
+                pixels_t((1.0 - drawPercent_) * type().drawRect_.h);
             break;
+         case DOWN:
+            x = loc_.x + 
+                type().drawRect_.x +
+                rand() % type().drawRect_.w;
+            y = loc_.y + 
+                type().drawRect_.y +
+                pixels_t(drawPercent_ * type().drawRect_.h);
+            break;
+         case LEFT:
+            x = loc_.x + 
+                type().drawRect_.x +
+                pixels_t((1.0 - drawPercent_) * type().drawRect_.w);
+            y = loc_.y + 
+                type().drawRect_.y +
+                rand() % type().drawRect_.h;
+            break;
+         case RIGHT:
+            x = loc_.x + 
+                type().drawRect_.x +
+                pixels_t(drawPercent_ * type().drawRect_.w);
+            y = loc_.y + 
+                type().drawRect_.y +
+                rand() % type().drawRect_.h;
          }
+
+         //add
+         game_->particles.push_back(Particle(x, y));
       }
-      if (combatFrameCounter_ < 0)
-         frame_ = thisType.frameCount_;
-      else
-         frame_ = int(combatFrameCounter_ /
-                      thisType.maxCombatFrameCounter_ *
-                      thisType.combatFrameCount_ +
-                      thisType.frameCount_);
+
+
+
    }else{
-         frameCounter_ = modulo(frameCounter_ + delta,
-                                thisType.maxFrameCounter_);
-      frame_ = moving_ ?
-                  int(frameCounter_ /
-                      thisType.maxFrameCounter_ *
-                      thisType.frameCount_) :
-                  0;
+
+      updateTarget();
+      const UnitType &thisType = (const UnitType &)(type());
+
+      if (moving_){
+
+         double angle;
+         if (target_.x == loc_.x)
+            angle =
+               (target_.y < loc_.y ?
+               1.5 * PI :
+               0.5 * PI);
+         else{
+            double gradient = 1.0 *
+               (target_.y - loc_.y) /
+               (target_.x - loc_.x);
+            angle = atan(gradient);
+            if (target_.x < loc_.x){
+               if (target_.y > loc_.y)
+                  angle += PI;
+               else
+                  angle -= PI;
+            }
+         }
+         double xMod = cos(angle);
+         double yMod = sin(angle);
+
+         double speed = delta * thisType.speed_;
+         pixels_t
+            xDelta = pixels_t(xMod * speed),
+            yDelta = pixels_t(yMod * speed);
+
+         loc_.x += xDelta;
+         loc_.y += yDelta;
+
+         // if collision, undo
+         if (!isLocationOK()){
+            loc_.x -= xDelta;
+            loc_.y -= yDelta;
+            return;
+         }
+
+         if (yMod > 0)
+            verticalMovement_ = VM_DOWN;
+         else if (yMod < 0)
+            verticalMovement_ = VM_UP;
+         else
+            verticalMovement_ = VM_NONE;
+
+         const SDL_Rect &base = thisType.baseRect_;
+
+         //check in bounds
+         if (xMod < 0 &&
+             loc_.x + base.x < 0)
+            loc_.x = -1 * base.x;
+         else if (xMod > 0 &&
+             loc_.x + base.x + base.w > game_->map.w)
+            loc_.x = game_->map.w - base.x - base.w;
+         if (yMod < 0 &&
+             loc_.y + base.y < 0)
+            loc_.y = -1 * base.y;
+         else if (yMod > 0 &&
+             loc_.y + base.y + base.h > game_->map.h)
+            loc_.y = game_->map.h - base.y - base.h;
+
+         //check whether target has been reached
+         if (targetEntity_ != 0){
+            combat_ = atTarget();
+            moving_ = !combat_;
+         }else if (atTarget())
+            moving_ = false;
+      }
+
+      //progress frame
+      if (combat_){
+         //debug("in combat");
+         combatFrameCounter_ += delta;
+         if (combatFrameCounter_ >= thisType.maxCombatFrameCounter_){
+            combatFrameCounter_ -= (thisType.maxCombatFrameCounter_ +
+                                    thisType.combatWait_);
+            debug("hit");
+            switch (targetEntity_->classID()){
+            case UNIT:
+               Unit &target = (Unit &)(*targetEntity_);
+               UnitType &targetType = game_->unitTypes[target.typeIndex_];
+               damage_t damage = thisType.attack_ - targetType.armor_;
+               if (damage > target.health_)
+                  target.kill();
+               else
+                  target.health_ -= damage;
+               break;
+            }
+         }
+         if (combatFrameCounter_ < 0)
+            frame_ = thisType.frameCount_;
+         else
+            frame_ = int(combatFrameCounter_ /
+                         thisType.maxCombatFrameCounter_ *
+                         thisType.combatFrameCount_ +
+                         thisType.frameCount_);
+      }else{
+            frameCounter_ = modulo(frameCounter_ + delta,
+                                   thisType.maxFrameCounter_);
+         frame_ = moving_ ?
+                     int(frameCounter_ /
+                         thisType.maxFrameCounter_ *
+                         thisType.frameCount_) :
+                     0;
+      }
    }
+}
+
+double Unit::getDrawPercent() const{
+   return drawPercent_;
 }
 
 int Unit::getColor() const{
@@ -166,6 +280,7 @@ EntityTypeID Unit::classID() const{
 
 bool Unit::selectable() const{
    return
+      finished_ &&
       player_ == HUMAN_PLAYER;
 }
 

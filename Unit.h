@@ -39,6 +39,7 @@ public:
    virtual const EntityType &Unit::type() const;
    virtual void draw(SDL_Surface *screen) const;
    virtual void tick(double delta);
+   virtual double getDrawPercent() const;
    virtual int getColor() const;
    virtual EntityTypeID classID() const;
    virtual bool selectable() const;

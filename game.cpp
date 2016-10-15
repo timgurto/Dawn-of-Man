@@ -94,7 +94,7 @@ void gameMode(){
                                 rand() % game.map.w,
                                 rand() % game.map.h)));
    UnitType drone(0, "Drone",
-                  makeRect(-22, -127, 105, 133),
+                  makeRect(-22, -127, 70, 113),
                   makeRect(-22,-6, 53, 11),
                   Point(3, -55),
                   8, //speed
@@ -105,10 +105,11 @@ void gameMode(){
                   1000); //progress cost
    game.unitTypes.push_back(drone);
    for (int i = 0; i != 30; ++i)
-      addEntity(game, new Unit(0, Point(
-                                  rand() % game.map.w,
-                                  rand() % game.map.h),
-                                  rand() % 2));
+      addEntity(game, new Unit(0,
+                               Point(rand() % game.map.w,
+                                     rand() % game.map.h),
+                               rand() % 2,
+                               1000));
    //=================================================
 
    UIBars_t bars;
@@ -122,7 +123,7 @@ void gameMode(){
    UIBar unitsBar(BOTTOM_LEFT, HORIZONTAL,
                   &getNumUnitIcons,
                   &getUnitTypeIcons,
-                  &selectBuilding,
+                  &trainUnit,
                   MODE_BUILDING);
    bars.push_back(&unitsBar);
    

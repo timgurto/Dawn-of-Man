@@ -10,9 +10,11 @@
 #include "Debug.h"
 #include "game.h"
 
-//globals
+const pixels_t DEFAULT_W_SCREEN_WIDTH = 1280;
+const pixels_t DEFAULT_W_SCREEN_HEIGHT = 800;
+const pixels_t DEFAULT_SCREEN_WIDTH = 1024;
+const pixels_t DEFAULT_SCREEN_HEIGHT = 768;
 
-//arg stuff
 pixels_t
    SCREEN_WIDTH = DEFAULT_SCREEN_WIDTH,
    SCREEN_HEIGHT = DEFAULT_SCREEN_HEIGHT;

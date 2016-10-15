@@ -22,7 +22,7 @@ entities_t Entity::trashCan_;
 Entity::Entity(typeNum_t typeIndex, const Point &loc):
 typeIndex_(typeIndex),
 loc_(loc),
-direction_(Direction(rand() % 4)),
+direction_(Direction(rand() % MAX_DIR)),
 selected(false),
 verticalMovement_(VM_NONE){}
 
@@ -170,6 +170,11 @@ bool Entity::isLocationOK() const{
 void Entity::kill(){
    //TODO make death more spectacular
    trashCan_.push_back(this);
+   if ((Entity *)(game_->buildingSelected) == this){
+      game_->buildingSelected = 0;
+      game_->mode = MODE_NORMAL;
+   }
+
    entities_t::iterator itToErase;
    for (entities_t::iterator it = game_->entities.begin();
         it != game_->entities.end(); ++it){
@@ -193,4 +198,8 @@ void Entity::emptyTrash(){
 
 typeNum_t Entity::getTypeIndex() const{
    return typeIndex_;
+}
+
+const Point &Entity::getLoc() const{
+   return loc_;
 }

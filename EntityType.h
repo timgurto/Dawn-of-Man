@@ -40,6 +40,8 @@ public:
    SDL_Rect getDrawRect() const;
    SDL_Surface *getIcon() const;
    const std::string &getName();
+   const SDL_Rect &getBaseRect();
+
    virtual void f(){}
 };
 

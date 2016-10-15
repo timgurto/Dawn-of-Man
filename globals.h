@@ -23,23 +23,20 @@ const typeNum_t MAX_PLAYERS = 2;
 
 //higher = slower game speed.
 //Game is normalized around this delta.
-const int DELTA_MODIFIER = 10; //40;
+const int DELTA_MODIFIER = 40; //40;
 
 //progress points added per state update
 //progress points: proportional to completion time
 const progress_t PROGRESS_PER_CALC = 4;
-
-const pixels_t DEFAULT_W_SCREEN_WIDTH = 1280;
-const pixels_t DEFAULT_W_SCREEN_HEIGHT = 800;
-const pixels_t DEFAULT_SCREEN_WIDTH = 1024;
-const pixels_t DEFAULT_SCREEN_HEIGHT = 768;
-const int SCREEN_BPP = 32;
 
 //in case the cursor point isn't at 0,0
 const Point CURSOR_OFFSET(0,-9);
 
 //offset to draw raised cursor/shadow
 const Point CURSOR_RAISED(-16, 16);
+
+//bits per pixel
+const int SCREEN_BPP = 32;
 
 const typeNum_t NO_TYPE = 0xffff;
 
@@ -63,12 +60,6 @@ const Uint32 RED_UINT     = 0xff0000;
 const Uint32 MAGENTA_UINT = 0xff00ff;
 const Uint32 YELLOW_UINT  = 0xffff00;
 const Uint32 WHITE_UINT   = 0xffffff;
-
-const Uint8 MOUSE_BUTTON_LEFT        = 1;
-const Uint8 MOUSE_BUTTON_MIDDLE      = 2;
-const Uint8 MOUSE_BUTTON_RIGHT       = 3;
-const Uint8 MOUSE_BUTTON_SCROLL_UP   = 4;
-const Uint8 MOUSE_BUTTON_SCROLL_DOWN = 5;
 
 const float FULL  = 1;
 const float EMPTY = 0;
@@ -122,7 +113,8 @@ enum Direction{
    UP,
    DOWN,
    LEFT,
-   RIGHT
+   RIGHT,
+   MAX_DIR
 };
 
 //For makePath()

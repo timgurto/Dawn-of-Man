@@ -131,5 +131,5 @@ void UIBar::init(GameData *game,
 }
 
 void UIBar::click(typeNum_t index){
-   clickFun_(index, iconCount_, *game_);
+   clickFun_(index, *game_);
 }

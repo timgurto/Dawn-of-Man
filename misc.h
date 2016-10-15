@@ -80,7 +80,7 @@ bool dereferenceLessThan(Entity *p1, Entity *p2);
 
 //Checks for collisions against every entity in the game.
 bool noCollision(const GameData &game, const EntityType &type,
-                const Point &mousePos);
+                const Point &loc);
 bool noCollision(const Entity &entity, const Point displacement);
 
 //Checks for a collision between two SDL_Rects

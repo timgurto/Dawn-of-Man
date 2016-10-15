@@ -183,14 +183,12 @@ bool dereferenceLessThan(Entity *p1, Entity *p2){
 }
 
 bool noCollision(const GameData &game, const EntityType &type,
-               const Point &mousePos){
-   SDL_Rect rect = mousePos + type.getBaseRect();
+               const Point &loc){
+   SDL_Rect rect = loc + type.getBaseRect();
 
    //check that it's inside map
-   if (!inside(rect, game.map))
+   if (!inside(rect, dimRect(game.map)))
       return false;
-   
-   rect -= locRect(game.map);
 
    //check against entities
    for (entities_t::const_iterator it = game.entities.begin();

@@ -3,11 +3,18 @@
 #include <cassert>
 #include <sstream>
 #include <ctime>
+#include "SDL.h"
 #include "update.h"
 #include "game.h"
 #include "UIBar.h"
 #include "Building.h"
 #include "Unit.h"
+
+const Uint8 MOUSE_BUTTON_LEFT        = 1;
+const Uint8 MOUSE_BUTTON_MIDDLE      = 2;
+const Uint8 MOUSE_BUTTON_RIGHT       = 3;
+const Uint8 MOUSE_BUTTON_SCROLL_UP   = 4;
+const Uint8 MOUSE_BUTTON_SCROLL_DOWN = 5;
 
 void updateState(double delta, GameData &game,
                  SDL_Surface *screen, UIBars_t &bars){
@@ -68,7 +75,7 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
          case MODE_CONSTRUCTION:
             game.buildLocationOK =
                noCollision(game, game.buildingTypes[game.toBuild],
-                           game.mousePos);
+                           game.mousePos - locRect(game.map));
             break;
          break;
 
@@ -197,7 +204,7 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
                }else
                   select(game, bars);
                game.leftMouse.mouseUp();
-            }// if barClicked
+            }// if !barClicked
 
          }
          break;
@@ -276,6 +283,7 @@ SDL_Rect getSelectionRect(const GameData &game){
 void select(GameData &game, UIBars_t &bars){
    game.buildingSelected = 0;
    bool entitySelected = false;
+   bool unitSelected = false;
 
    //loop backwards, so objects in front have priority to be
    //selected
@@ -310,10 +318,11 @@ void select(GameData &game, UIBars_t &bars){
                else
                   (*it)->selected = true; //No ctrl: select
                entitySelected = true;
-               (*it)->selected = true;
-               if ((*it)->selected && (*it)->classID() == BUILDING){
-                  game.buildingSelected = (Building *)(*it);
-               }
+               if ((*it)->selected)
+                  if ((*it)->classID() == BUILDING)
+                     game.buildingSelected = (Building *)(*it);
+                  else if ((*it)->classID() == UNIT)
+                     unitSelected = true;
             }// if collides
 
          }// if single point etc.
@@ -328,8 +337,8 @@ void select(GameData &game, UIBars_t &bars){
 
    }// for entities
 
-   //if a building is selected
-   if (game.buildingSelected != 0)
+   //if a building is selected, and no units are
+   if (game.buildingSelected != 0 && !unitSelected)
       game.mode = MODE_BUILDING;
    else
       game.mode = MODE_NORMAL;

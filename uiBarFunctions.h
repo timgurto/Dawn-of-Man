@@ -12,6 +12,7 @@ struct SDL_Surface;
 struct GameData;
 
 
+
 //iconCountFun_
 typedef typeNum_t iconCountFun(const GameData &game);
 typedef iconCountFun *iconCountFunPtr;
@@ -21,6 +22,7 @@ typedef iconCountFun *iconCountFunPtr;
 
    //Units bar: 
    iconCountFun getNumUnitIcons;
+
 
 
 //surfaceFun_
@@ -36,9 +38,9 @@ typedef surfaceFun *surfaceFunPtr;
    surfaceFun getUnitTypeIcons;
 
 
+
 //clickFun_
 typedef void clickFun(typeNum_t index,
-                      typeNum_t size,
                       GameData &game);
 typedef clickFun *clickFunPtr;
 
