@@ -20,7 +20,8 @@ combat_(false),
 frameCounter_(rand() % game_->unitTypes[type].maxFrameCounter_),
 combatFrameCounter_(0),
 frame_(0),
-targetEntity_(0){}
+targetEntity_(0),
+health_(game_->unitTypes[type].maxHealth_){}
 
 const EntityType &Unit::type() const{
    return game_->unitTypes[type_];
@@ -35,6 +36,9 @@ void Unit::draw(SDL_Surface *screen) const{
                               thisType.drawRect_.w,
                               thisType.drawRect_.h);
    colorBlit(getColor(), screen, srcLoc, dstLoc);
+   //TODO better health display
+   SDL_FillRect(screen, &makeRect(dstLoc.x + game_->map.x, dstLoc.y + game_->map.y, thisType.maxHealth_, 5), BLACK_UINT);
+   SDL_FillRect(screen, &makeRect(dstLoc.x + game_->map.x, dstLoc.y + game_->map.y, health_, 5), 0x00fe00);
 }
 
 void Unit::tick(double delta){
@@ -108,10 +112,9 @@ void Unit::tick(double delta){
          moving_ = !combat_;
       }else if (atTarget())
          moving_ = false;
-         
    }
 
-   //set frame
+   //progress frame
    if (combat_){
       //debug("in combat");
       combatFrameCounter_ += delta;
@@ -119,7 +122,17 @@ void Unit::tick(double delta){
          combatFrameCounter_ -= (thisType.maxCombatFrameCounter_ +
                                  thisType.combatWait_);
          debug("hit");
-         ; //attack
+         switch (targetEntity_->classID()){
+         case UNIT:
+            Unit &target = (Unit &)(*targetEntity_);
+            UnitType &targetType = game_->unitTypes[target.type_];
+            damage_t damage = thisType.attack_ - targetType.armor_;
+            if (damage > target.health_)
+               target.kill();
+            else
+               target.health_ -= damage;
+            break;
+         }
       }
       if (combatFrameCounter_ < 0)
          frame_ = thisType.frameCount_;
@@ -157,12 +170,12 @@ typeNum_t Unit::getPlayer() const{
 }
 
 void Unit::setTarget(Entity *targetEntity, Point loc){
-   moving_ = true;
    targetEntity_ = targetEntity;
    if (targetEntity == 0)
       target_ = loc;
    else
       updateTarget();
+   moving_ = !atTarget();
 }
 
 bool Unit::atTarget(){

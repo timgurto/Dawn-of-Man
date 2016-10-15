@@ -15,7 +15,10 @@ UnitType::UnitType(typeNum_t index,
                    int frameCount,
                    int maxCombatFrameCounter,
                    int combatFrameCount,
-                   int combatWait):
+                   int combatWait,
+                   damage_t maxHealth,
+                   damage_t attack,
+                   damage_t armor):
 EntityType(index,
            UNIT,
            name,
@@ -27,4 +30,7 @@ maxFrameCounter_(maxFrameCounter),
 frameCount_(frameCount),
 maxCombatFrameCounter_(maxCombatFrameCounter),
 combatFrameCount_(combatFrameCount),
-combatWait_(combatWait){}
+combatWait_(combatWait),
+maxHealth_(maxHealth),
+attack_(attack),
+armor_(armor){}

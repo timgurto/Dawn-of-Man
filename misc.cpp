@@ -154,9 +154,6 @@ std::string makePath(EntityTypeID type, typeNum_t imageNumber,
       break;
    case UNIT:
       path << UNITS_IMAGE_PATH;
-   default:
-      type = type;
-      break;
    }
 
    switch (modifier){
@@ -256,6 +253,7 @@ bool inside(const SDL_Rect &a, const SDL_Rect &b){
 }
 
 bool isArg(std::string arg, int argc, char* argv[]){
+   assert (argv != 0);
    for (int i = 1; i != argc; ++i){
       std::string s(argv[i]);
       if (s.substr(0, s.find('=')) == arg){
@@ -268,6 +266,7 @@ bool isArg(std::string arg, int argc, char* argv[]){
 }
 
 int whatIsArg(std::string arg, int argc, char* argv[]){
+   assert (argv != 0);
    assert(isArg(arg, argc, argv));
    for (int i = 1; i != argc; ++i){
       std::string s(argv[i]);

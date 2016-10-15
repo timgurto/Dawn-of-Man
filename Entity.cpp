@@ -11,11 +11,13 @@
 #include "EntityType.h"
 #include "Point.h"
 #include "GameData.h"
+#include "Unit.h"
 
 extern Debug debug;
 
 GameData *Entity::game_ = 0;
 SDL_Surface *Entity::screen_ = 0;
+entities_t Entity::trashCan_;
 
 Entity::Entity(typeNum_t type, const Point &loc):
 type_(type),
@@ -45,7 +47,7 @@ SDL_Rect Entity::getDrawRect() const{
    return loc_ + type().drawRect_;   
 }
 
-void Entity::tick(double delta){} //default: do nothing
+void Entity::tick(double){} //default: do nothing
 
 bool Entity::onScreen(){
    return collision(loc_ + type().drawRect_ + locRect(game_->map),
@@ -80,7 +82,6 @@ void Entity::colorBlit(int color, SDL_Surface *screen,
 
       //1. create it
       debug("Creating indexed surface");
-      SDL_Rect drawRect = type().drawRect_;
       index = createSurface(thisType.surface_->w,
                             thisType.surface_->h);
       SDL_SetColorKey(index, SDL_SRCCOLORKEY,
@@ -125,6 +126,7 @@ typeNum_t Entity::getPlayer() const{
 }
 
 SDL_Rect Entity::getSelectionDest(SDL_Surface *selection) const{
+   assert (selection != 0);
    const EntityType &t = type();
    SDL_Rect r;
    r.x = loc_.x +
@@ -163,4 +165,27 @@ bool Entity::isLocationOK() const{
    }
 
    return true;
+}
+
+void Entity::kill(){
+   trashCan_.push_back(this);
+   entities_t::iterator itToErase;
+   for (entities_t::iterator it = game_->entities.begin();
+        it != game_->entities.end(); ++it){
+      if (*it == this)
+         itToErase = it;
+      else if ((*it)->classID() == UNIT){
+         Unit &unit = (Unit &)(**it);
+         if (unit.targetEntity_ == this)
+            unit.setTarget(0, (*it)->loc_);
+      }
+   }
+   game_->entities.erase(itToErase);
+}
+
+void Entity::emptyTrash(){
+   for (entities_t::iterator it = trashCan_.begin();
+        it != trashCan_.end(); ++it)
+      delete (*it);
+   trashCan_.clear();
 }

@@ -14,7 +14,10 @@ void gameMode();
 //removal
 void addEntity(GameData &game, Entity *entity);
 
-//Removes an entity from the list, and deallocates it
-void removeEntity(entities_t::iterator it);
+////Registers the kill, and removes the entity
+//void killEntity(GameData &game, Entity *p);
+//
+////Removes an entity from the list, and deallocates it
+//void removeEntity(GameData &game, Entity *p);
 
 #endif

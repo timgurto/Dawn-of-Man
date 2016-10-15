@@ -1,7 +1,7 @@
 // (C) 2009-2010 Tim Gurto
 
 //TODO copy comments at declarations to definitions
-//TODO make function comments a consistent case (verb)
+//TODO make function names a consistent case (verb)
 
 #include <cassert>
 #include "SDL.h"
@@ -30,7 +30,6 @@ Debug debug(YELLOW, 0, 0, 59);
 int surfacesLoaded(0);
 
 int main(int argc, char* argv[]){
-   argc; argv; //suppress warnings
 
    //SDL initialization
    int sdlInit(SDL_Init(SDL_INIT_VIDEO));
@@ -41,7 +40,6 @@ int main(int argc, char* argv[]){
    //debug objects initialization
    debug.initFont("Dina.fon", 0);
    deltaLog.initFont("Dina.fon", 0);
-
 
 
    //Screen resolution stuff

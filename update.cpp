@@ -26,6 +26,7 @@ void updateState(double delta, GameData &game,
       if (v != VM_NONE)
          reSort(game.entities, it, v);
    }
+   Entity::emptyTrash();
 
    //Particles
    for (particles_t::iterator it = game.particles.begin();
@@ -93,6 +94,12 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
                break;
             }
             break;
+         case SDLK_DELETE:
+            for (entities_t::iterator it = game.entities.begin();
+                 it != game.entities.end(); ++it)
+               if ((*it)->selected)
+                  (*it)->kill();
+            Entity::emptyTrash();
          }
          break;
 
@@ -167,7 +174,6 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
                                game.mousePos - game.map));
 
                      //Shift key: construct multiple buildings
-                     Uint8 *keyStates = SDL_GetKeyState(0);
                      if(!isKeyPressed(SDLK_LSHIFT)){
                         game.mode = NORMAL_MODE;
                         game.toBuild = NO_TYPE;

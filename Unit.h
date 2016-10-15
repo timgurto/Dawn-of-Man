@@ -14,11 +14,14 @@ class EntityType;
 
 //Mobile, controllable entities capable of combat
 class Unit : public Entity{
+   friend class Entity;
+
    typeNum_t player_; //the unit's controlling player
    Point target_; //where the unit is trying to go
    Entity *targetEntity_; //the unit this unit is targetting
    bool moving_; //whether or not the unit is moving
    bool combat_; //whether or not the unit is attacking another
+   damage_t health_; //the unit's remaining health
    
    //the current point in the unit's animation cycle
    double frameCounter_;

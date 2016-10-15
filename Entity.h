@@ -11,6 +11,9 @@
 struct GameData;
 class EntityType;
 
+class Entity;
+typedef std::list<Entity *> entities_t;
+
 //An "instance" of an EntityType.  Basically, each entity
 //is an on-screen, in-game element.
 class Entity{
@@ -30,6 +33,8 @@ protected: //everything should be a derived class
    Point loc_; //location
    static GameData *game_; //static pointer to game
    static SDL_Surface *screen_;
+
+   static entities_t trashCan_;
 
    //Actually draws the sprite, after draw() figures out
    //the two rectangle parameters
@@ -107,6 +112,10 @@ public:
    VerticalMovement getVerticalMovement() const;
 
    bool isLocationOK() const;
+
+   void kill();
+
+   static void emptyTrash();
 };
 
 #endif

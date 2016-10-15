@@ -28,6 +28,8 @@ extern Debug deltaLog;
 
 void gameMode(){
 
+   //TODO init functions
+
    //initialize screen and debug objects
    SDL_Surface *screen = setScreen();
    debug.initScreen(screen);
@@ -97,7 +99,8 @@ void gameMode(){
                   Point(3, -55),
                   8, //speed
                   25, 8, //frames
-                  10, 4, 25); //combat frames
+                  10, 4, 25, //combat frames
+                  50, 10, 2); //combat details
    game.unitTypes.push_back(drone);
    for (int i = 0; i != 30; ++i)
       addEntity(game, new Unit(0, Point(
@@ -163,6 +166,24 @@ void addEntity(GameData &game, Entity *entity){
                         entity);
 }
 
-void removeEntity(entities_t::iterator it){
-   //delete the Entity*
-}
+//void killEntity(GameData &game, Entity *p){
+//   assert (p != 0);
+//   //update game stats/score?
+//   //play horrifying sound
+//   //create corpse
+//   //etc.
+//
+//   removeEntity(game, p);
+//}
+//
+//void removeEntity(GameData &game, Entity *p){
+//   assert (p != 0);
+//   for (entities_t::iterator it = game.entities.begin();
+//        it != game.entities.end(); ++it){
+//      if (*it == p){
+//         delete p;
+//         game.entities.erase(it);
+//         break;
+//      }
+//   }
+//}

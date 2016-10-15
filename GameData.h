@@ -16,11 +16,11 @@
 #include "Point.h"
 #include "MouseButton.h"
 
+//move to relevant classes
 typedef std::vector<BuildingType> buildingTypes_t;
 typedef std::vector<DecorationType> decorationTypes_t;
 typedef std::vector<UnitType> unitTypes_t;
 typedef std::vector<Player> players_t;
-typedef std::list<Entity *> entities_t;
 typedef std::list<Particle> particles_t;
 typedef SDL_Surface *surfaceIndex_t
                         [ENTITY_MAX] //number of colors

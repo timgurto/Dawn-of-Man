@@ -17,6 +17,7 @@ void render(SDL_Surface *screen, SDL_Surface *glow,
             SDL_Surface *cursor, SDL_Surface *cursorShadow,
             SDL_Surface *entitiesTemp,
             const GameData &game, const UIBars_t &bars){
+   assert (screen != 0);
 
    //renderMap(screen, game);
 

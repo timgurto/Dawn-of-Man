@@ -6,6 +6,7 @@
 #include "EntityType.h"
 #include "types.h"
 
+//TODO comments
 class UnitType: public EntityType{
    friend class Unit;
    pixels_t speed_; //movement per tick, in px
@@ -14,6 +15,9 @@ class UnitType: public EntityType{
    int combatFrameCount_;
    int maxCombatFrameCounter_;
    int combatWait_;
+   int maxHealth_;
+   int attack_;
+   int armor_;
 
 public:
    UnitType(typeNum_t index,
@@ -26,7 +30,10 @@ public:
             int frameCount = 1,
             int maxCombatFrameCounter = 0,
             int combatFrameCount = 1,
-            int combatWait = 1);
+            int combatWait = 1,
+            damage_t maxHealth = 1,
+            damage_t attack = 0,
+            damage_t armor = 0);
 };
 
 #endif

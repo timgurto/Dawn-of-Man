@@ -117,6 +117,7 @@ const std::string UNITS_IMAGE_PATH
 const std::string INTERFACE_IMAGE_PATH
    = IMAGE_PATH + "Interface/";
 
+//TODO give names prefixes
 enum Direction{
    UP,
    DOWN,
