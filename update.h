@@ -25,7 +25,7 @@ void scrollMap(GameData &game, double Delta);
 SDL_Rect getSelectionRect(const GameData &game);
 
 //Selects entities chosen by the user
-void select(GameData &game);
+void select(GameData &game, UIBars_t &bars);
 
 //Set the 'selected' attribute of appropriate units
 void setSelectedTargets(GameData &game);

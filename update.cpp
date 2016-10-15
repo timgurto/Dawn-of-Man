@@ -195,7 +195,7 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
                      }
                   }
                }else
-                  select(game);
+                  select(game, bars);
                game.leftMouse.mouseUp();
             }// if barClicked
 
@@ -273,7 +273,7 @@ SDL_Rect getSelectionRect(const GameData &game){
    return selRect + map;
 }
 
-void select(GameData &game){
+void select(GameData &game, UIBars_t &bars){
    game.buildingSelected = 0;
    bool entitySelected = false;
 
@@ -311,8 +311,9 @@ void select(GameData &game){
                   (*it)->selected = true; //No ctrl: select
                entitySelected = true;
                (*it)->selected = true;
-               if ((*it)->selected && (*it)->classID() == BUILDING)
+               if ((*it)->selected && (*it)->classID() == BUILDING){
                   game.buildingSelected = (Building *)(*it);
+               }
             }// if collides
 
          }// if single point etc.
@@ -332,6 +333,9 @@ void select(GameData &game){
       game.mode = MODE_BUILDING;
    else
       game.mode = MODE_NORMAL;
+
+   for (UIBars_t::iterator it = bars.begin(); it != bars.end(); ++it)
+      (*it)->calculateRect();
 }
 
 void setSelectedTargets(GameData &game){

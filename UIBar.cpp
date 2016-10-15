@@ -13,20 +13,22 @@ SDL_Surface *UIBar::hBarSurface_ = 0;
 SDL_Surface *UIBar::vBarSurface_ = 0;
 
 UIBar::UIBar(Corner corner, Orientation orientation,
+             iconCountFunPtr iconCountFun,
              surfaceFunPtr surfaceFun,
              clickFunPtr clickFun,
-             typeNum_t iconCount,
              ControlMode requiredMode):
 corner_(corner),
+clickFun_(clickFun),
 orientation_(orientation),
 surfaceFun_(surfaceFun),
-clickFun_(clickFun),
-iconCount_(iconCount),
+iconCountFun_(iconCountFun),
 requiredMode_(requiredMode){
    calculateRect();
 }
 
+//TODO fix, so that the edge inside the screen has a border
 void UIBar::calculateRect(){
+   iconCount_ = iconCountFun_(*game_);
    if (orientation_ == VERTICAL){
       switch (corner_){
       case TOP_LEFT:
@@ -87,7 +89,8 @@ void UIBar::draw() const{
       pixels_t x = rect_.x, y = rect_.y;
       for (typeNum_t i = 0; i != iconCount_; ++i){
          //draw
-         SDL_BlitSurface(surfaceFun_(i, *game_), 0, screen_, &makeRect(x, y));
+         SDL_BlitSurface(surfaceFun_(i, iconCount_, *game_), 0,
+                         screen_, &makeRect(x, y));
 
          //iterate
          if (orientation_ == HORIZONTAL)
@@ -128,5 +131,5 @@ void UIBar::init(GameData *game,
 }
 
 void UIBar::click(typeNum_t index){
-   clickFun_(index, *game_);
+   clickFun_(index, iconCount_, *game_);
 }

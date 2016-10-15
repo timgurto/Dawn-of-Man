@@ -19,9 +19,8 @@ GameData *Entity::game_ = 0;
 SDL_Surface *Entity::screen_ = 0;
 entities_t Entity::trashCan_;
 
-Entity::Entity(typeNum_t type, const Point &loc):
-typeIndex_(type),
-typeIndex(typeIndex_),
+Entity::Entity(typeNum_t typeIndex, const Point &loc):
+typeIndex_(typeIndex),
 loc_(loc),
 direction_(Direction(rand() % 4)),
 selected(false),
@@ -75,7 +74,7 @@ void Entity::colorBlit(int color, SDL_Surface *screen,
    const EntityType &thisType = type();
    SDL_Surface *&index = game_->surfaceIndex
                                   [color]
-                                  [typeIndex]
+                                  [typeIndex_]
                                   [classID()];
 
    //make sure colored sprite is indexed; if not,
@@ -190,4 +189,8 @@ void Entity::emptyTrash(){
         it != trashCan_.end(); ++it)
       delete (*it);
    trashCan_.clear();
+}
+
+typeNum_t Entity::getTypeIndex() const{
+   return typeIndex_;
 }

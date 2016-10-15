@@ -23,6 +23,8 @@ class UIBar{
    //How many icons constitute the bar
    typeNum_t iconCount_;
 
+   iconCountFunPtr iconCountFun_;
+
    //the function that returns icons to draw
    surfaceFunPtr surfaceFun_;
 
@@ -31,7 +33,6 @@ class UIBar{
 
    //The rectangle describing the bar's dimensions
    SDL_Rect rect_;
-   void calculateRect();
 
    //static pointers to access game data and bar backgrounds
    static GameData *game_;
@@ -40,9 +41,9 @@ class UIBar{
 
 public:
    UIBar(Corner corner, Orientation orientation,
+         iconCountFunPtr iconCountFun,
          surfaceFunPtr surfaceFun,
          clickFunPtr clickFun,
-         typeNum_t iconCount,
          ControlMode requiredMode);
 
    //Initializes static pointers
@@ -50,6 +51,8 @@ public:
                     SDL_Surface *screen,
                     SDL_Surface *vBarSurface,
                     SDL_Surface *hBarSurface);
+   
+   void calculateRect(); //TODO: call whenever tech levels change
 
    //Draws the bar
    void draw() const;

@@ -8,7 +8,7 @@ Decoration::Decoration(typeNum_t type, const Point &loc):
 Entity(type, loc){}
 
 const EntityType &Decoration::type() const{
-   return game_->decorationTypes[typeIndex];
+   return game_->decorationTypes[typeIndex_];
 }
 
 EntityTypeID Decoration::classID() const{

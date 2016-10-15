@@ -23,7 +23,7 @@ const typeNum_t MAX_PLAYERS = 2;
 
 //higher = slower game speed.
 //Game is normalized around this delta.
-const int DELTA_MODIFIER = 20;
+const int DELTA_MODIFIER = 10; //40;
 
 //progress points added per state update
 //progress points: proportional to completion time

@@ -24,7 +24,9 @@ typedef iconCountFun *iconCountFunPtr;
 
 
 //surfaceFun_
-typedef SDL_Surface *surfaceFun(typeNum_t i, const GameData &game);
+typedef SDL_Surface *surfaceFun(typeNum_t index,
+                                typeNum_t size,
+                                const GameData &game);
 typedef surfaceFun *surfaceFunPtr;
    
    //Buildings bar: BuildingType icons
@@ -35,7 +37,9 @@ typedef surfaceFun *surfaceFunPtr;
 
 
 //clickFun_
-typedef void clickFun(typeNum_t index, GameData &game);
+typedef void clickFun(typeNum_t index,
+                      typeNum_t size,
+                      GameData &game);
 typedef clickFun *clickFunPtr;
 
    //Buildings bar: Selects a building to construct

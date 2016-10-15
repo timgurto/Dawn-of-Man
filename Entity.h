@@ -50,7 +50,7 @@ protected: //everything should be a derived class
 
 public:
 
-   Entity(typeNum_t type, const Point &loc);
+   Entity(typeNum_t typeIndex, const Point &loc);
    virtual ~Entity(){}
 
    //whether or not the entity is selected by the user
@@ -116,7 +116,7 @@ public:
 
    static void emptyTrash();
 
-   const typeNum_t &typeIndex;
+   typeNum_t getTypeIndex() const;
 };
 
 #endif

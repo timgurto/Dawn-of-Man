@@ -22,7 +22,7 @@ drawPercent_(1.0f *
             game_->buildingTypes[type].maxProgress_){}
 
 const EntityType &Building::type() const{
-   return game_->buildingTypes[typeIndex];
+   return game_->buildingTypes[typeIndex_];
 }
 
 void Building::draw(SDL_Surface *screen) const{
@@ -74,13 +74,13 @@ void Building::tick(double delta){
    if (!finished_){
       progress_ += delta * PROGRESS_PER_CALC;
       //debug("progress = ", progress_);
-      if (progress_ >= game_->buildingTypes[typeIndex].maxProgress_){
+      if (progress_ >= game_->buildingTypes[typeIndex_].maxProgress_){
          finished_ = true;
          drawPercent_ = FULL;
          //debug("building finished");
       }else
          drawPercent_ = 1.0 * progress_ /
-                 game_->buildingTypes[typeIndex].maxProgress_;
+                 game_->buildingTypes[typeIndex_].maxProgress_;
    }
 
    if (!finished_){

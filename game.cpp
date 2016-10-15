@@ -114,14 +114,16 @@ void gameMode(){
    UIBars_t bars;
    UIBar::init(&game, screen, vBar, hBar);
    UIBar buildingsBar(BOTTOM_LEFT, VERTICAL,
+                      &getNumBuildingIcons,
                       &getBuildingTypeIcons,
                       &selectBuilding,
-                      game.buildingTypes.size(), MODE_NORMAL);
+                      MODE_NORMAL);
    bars.push_back(&buildingsBar);
    UIBar unitsBar(BOTTOM_LEFT, HORIZONTAL,
+                  &getNumUnitIcons,
                   &getUnitTypeIcons,
                   &selectBuilding,
-                  1, MODE_BUILDING);
+                  MODE_BUILDING);
    bars.push_back(&unitsBar);
    
 
