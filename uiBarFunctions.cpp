@@ -57,14 +57,12 @@ const pixels_t PLACEMENT_MARGIN = 2;
       Building &building = *game.buildingSelected;
       int count = 0;
       //find units that come from this building
-      for (typeNum_t loop = 0;
-           loop != game.unitTypes.size(); ++loop){
+      for (typeNum_t loop = 0; loop != game.unitTypes.size(); ++loop)
          if (game.unitTypes[loop].getOriginBuilding() == building.getTypeIndex()){
             if (count == i)
                return game.unitTypes[loop].getIcon();
             ++count;
          }
-      }
       assert (false);
       return 0;
    }
@@ -85,14 +83,13 @@ const pixels_t PLACEMENT_MARGIN = 2;
       Building &building = *game.buildingSelected;
 
       //get type
-      typeNum_t typeIndex, loop;
-      for (typeIndex = 0, loop = 0;
-           typeIndex != game.unitTypes.size() && loop != index;
-           ++typeIndex){
-         if (game.unitTypes[typeIndex].getOriginBuilding() == building.getTypeIndex())
-            ++loop;
-      }
-      //debug("Unit to train: ", game.unitTypes[typeIndex].getName());
+      typeNum_t count = 0, typeIndex = 0;
+      for (typeIndex = 0; typeIndex != game.unitTypes.size(); ++typeIndex)
+         if (game.unitTypes[typeIndex].getOriginBuilding() == building.getTypeIndex()){
+            if (count == index)
+               break;
+            ++count;
+         }
       
       //find location
       Point loc;

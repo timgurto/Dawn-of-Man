@@ -252,6 +252,10 @@ bool Unit::selectable() const{
       player_ == HUMAN_PLAYER;
 }
 
+bool Unit::targetable() const{
+   return true;
+}
+
 typeNum_t Unit::getPlayer() const{
    return player_;
 }

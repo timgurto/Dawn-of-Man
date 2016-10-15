@@ -76,8 +76,8 @@ public:
    //is an "instance" of
    virtual const EntityType &type() const = 0;
 
-   //Draws the entity, as well as a green mask behind
-   //it if ENTITY_MASKS is true
+   //Draws the entity.  Should draw with colorBlit(), to
+   //take advantage of surface indexing and entity masks
    virtual void draw(SDL_Surface *screen = screen_) const;
    
    //Any changes that need to be made to the entity
@@ -93,13 +93,17 @@ public:
    //identitifes which entity subclass this is
    virtual EntityTypeID classID() const = 0;
 
-   //whether these entities can collide with others
+   //whether the entity can collide with others
    //default: true
    virtual bool collides() const;
 
-   //whether these entities can be selected
+   //whether the entity can be selected
    //default: false
    virtual bool selectable() const;
+
+   //whether the entity can be targeted
+   //default: false
+   virtual bool targetable() const;
 
    //toggles the entity's selection status
    inline void toggleSelect(){

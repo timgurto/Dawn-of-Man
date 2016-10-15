@@ -109,26 +109,37 @@ void renderFootprint(SDL_Surface *screen, const GameData &game,
 
 //Draws all entities
 void renderEntities(SDL_Surface *screen, const GameData &game){
-   SDL_Surface *entitiesTemp = 0;
+   
+   //Masks on: draws entities onto an intermediate surface, along
+   //with filled key-color backgrounds, to create cleaner looking
+   //entities when overlapping
+   //Actual drawing of the masks occurs in Entity::colorBlit(),
+   //along with the regular sprite drawing
    if (ENTITY_MASKS){
-      entitiesTemp = createSurface();
+      //intermediate surface
+      SDL_Surface *entitiesTemp = createSurface();
       SDL_SetColorKey(entitiesTemp, SDL_SRCCOLORKEY,
                       SDL_MapRGB(entitiesTemp->format,
                                  ENTITY_BACKGROUND.r,
                                  ENTITY_BACKGROUND.g,
                                  ENTITY_BACKGROUND.b));
       SDL_FillRect(entitiesTemp, 0, ENTITY_BACKGROUND_UINT);
-   }
-   for (entities_t::const_iterator it = game.entities.begin();
-        it != game.entities.end(); ++it)
-      //only draw entities that are on-screen
-      if ((*it)->onScreen()){
-         (*it)->draw(ENTITY_MASKS ? entitiesTemp : screen);
-      }
-   if (ENTITY_MASKS){
+      for (entities_t::const_iterator it = game.entities.begin();
+           it != game.entities.end(); ++it)
+         //only draw entities that are on-screen
+         if ((*it)->onScreen())
+            (*it)->draw(entitiesTemp);
       SDL_BlitSurface(entitiesTemp, 0, screen, 0);
       freeSurface(entitiesTemp);
-   }
+
+   //Masks off: draws entities straight to the screen.
+   //Considerably faster.
+   }else
+      //some duplicate code, but cleaner this way
+      for (entities_t::const_iterator it = game.entities.begin();
+           it != game.entities.end(); ++it)
+         if ((*it)->onScreen())
+            (*it)->draw(screen);
 }
 
 //Draws the selection rectangle

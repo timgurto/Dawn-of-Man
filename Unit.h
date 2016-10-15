@@ -44,13 +44,11 @@ public:
    virtual void tick(double delta);
    virtual EntityTypeID classID() const;
    virtual bool selectable() const;
+   virtual bool targetable() const;
 
-   virtual int getColor() const;
-   virtual typeNum_t getPlayer() const;
-   virtual double getDrawPercent() const;
-
-   //sets the target co-ordinates
-   void setTarget(Entity *targetEntity,
+   //sets the target entity, and co-ordinates.  If an
+   //entity isn't provided, use the specified co-ordinates
+   void setTarget(Entity *targetEntity = 0,
                   Point loc = game_->mousePos -
                               Point(game_->map));
 
@@ -63,6 +61,9 @@ public:
    //get
    bool isBuilder() const;
    Entity *getTargetEntity() const;
+   virtual int getColor() const;
+   virtual typeNum_t getPlayer() const;
+   virtual double getDrawPercent() const;
 };
 
 #endif

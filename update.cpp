@@ -203,17 +203,20 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
                           it != game.entities.end(); ++it)
                         if ((*it)->classID() == ENT_UNIT){
                            Unit *unitP = (Unit *)(*it);
-                           const UnitType &thisType =
-                              (const UnitType &)(unitP->type());
-                           if (thisType.isBuilder())
-                              unitP->setTarget(newBuilding);
+                           if (unitP->selected){
+                              const UnitType &thisType =
+                                 (const UnitType &)(unitP->type());
+                              if (thisType.isBuilder())
+                                 unitP->setTarget(newBuilding);
+                           }
                         }
 
+                     //TODO decide on shift functionality
                      //Shift key: construct multiple buildings
-                     if(!isKeyPressed(SDLK_LSHIFT)){
-                        game.mode = MODE_NORMAL;
+                     //if(!isKeyPressed(SDLK_LSHIFT)){
+                        game.mode = MODE_BUILDER;
                         game.toBuild = NO_TYPE;
-                     }
+                     //}
                   }
                }else
                   select(game, bars);
@@ -374,10 +377,32 @@ void setSelectedTargets(GameData &game){
    Entity *targetEntity = findEntity(game);
    for (entities_t::iterator it = game.entities.begin();
         it != game.entities.end(); ++it){
+      //only selected units have their targets set
       if ((*it)->classID() == ENT_UNIT &&
           (*it)->selected){
          Unit *unitP = (Unit *)(*it);
-         unitP->setTarget(targetEntity);
+
+         //no entity
+         if (targetEntity == 0){
+            unitP->setTarget();
+            continue;
+         }
+
+         //enemy unit
+         if (targetEntity->classID() == ENT_UNIT &&
+             targetEntity->getPlayer() != unitP->getPlayer()){
+            unitP->setTarget(targetEntity);
+            continue;
+         }
+
+         //friendly, unfinished building
+         if (targetEntity->classID() == ENT_BUILDING &&
+             targetEntity->getPlayer() == unitP->getPlayer() &&
+             unitP->isBuilder() &&
+             !((Building *)(targetEntity))->isFinished()){
+            unitP->setTarget(targetEntity);
+            continue;
+         }
       }
    }
 }
@@ -416,9 +441,8 @@ Entity *findEntity(GameData &game){
         it != game.entities.rend(); ++it){
 
       //filtering
-      //only enemy entities can be targetted
-      if ((*it)->getPlayer() == HUMAN_PLAYER ||
-          (*it)->getPlayer() == NO_TYPE)
+      //only targetable entities
+      if (!(*it)->targetable())
          continue;
 
       if (collision((*it)->getDrawRect(),

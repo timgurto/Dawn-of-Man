@@ -204,6 +204,10 @@ bool Entity::selectable() const{
    return false;
 }
 
+bool Entity::targetable() const{
+   return false;
+}
+
 typeNum_t Entity::getPlayer() const{
    return NO_TYPE;
 }

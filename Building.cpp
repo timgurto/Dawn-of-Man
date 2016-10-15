@@ -71,6 +71,10 @@ bool Building::selectable() const{
       player_ == HUMAN_PLAYER;
 }
 
+bool Building::targetable() const{
+   return true;
+}
+
 typeNum_t Building::getPlayer() const{
    return player_;
 }

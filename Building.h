@@ -34,9 +34,7 @@ public:
    virtual void draw(SDL_Surface *screen = screen_) const;
    virtual EntityTypeID classID() const;
    virtual bool selectable() const;
-   virtual int getColor() const;
-   virtual typeNum_t getPlayer() const;
-   virtual double getDrawPercent() const;
+   virtual bool targetable() const;
 
    //progresses the building's construction when a builder
    //hits it
@@ -44,6 +42,9 @@ public:
 
    //get
    bool isFinished() const;
+   virtual int getColor() const;
+   virtual typeNum_t getPlayer() const;
+   virtual double getDrawPercent() const;
 };
 
 #endif
