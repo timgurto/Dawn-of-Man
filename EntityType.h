@@ -8,6 +8,7 @@
 #include "globals.h"
 
 class EntityType{
+//TODO: make private
 public:
    typeNum_t index_;
    std::string name_;

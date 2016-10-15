@@ -7,7 +7,6 @@
 #include "SDL.h"
 #include "Point.h"
 
-//const bool DEBUG(true);
 #ifdef NDEBUG
 const bool DEBUG = false;
 #else
@@ -18,7 +17,6 @@ typedef unsigned short typeNum_t;
 typedef Sint32 pixels_t;
 typedef Uint32 timer_t;
 typedef Uint16 progress_t;
-
 
 // true: X ms since last
 // false: every X ms (catches up if there's a delay)
@@ -36,9 +34,12 @@ const int SCREEN_BPP = 32;
 const pixels_t UI_BAR_PADDING = 24;
 
 //whether graphics are outline-style
-const bool OUTLINE_MODE(false);
+const bool OUTLINE_MODE = true;
 
+//in case the cursor point isn't at 0,0
 const Point CURSOR_OFFSET(-2,-1);
+
+const typeNum_t NO_TYPE = 0xffff;
 
 const SDL_Color BLACK   = {0, 0, 0};
 const SDL_Color BLUE    = {0, 0, 0xff};
@@ -63,6 +64,18 @@ enum EntityTypeID{
 enum ControlMode{
    NORMAL_MODE,
    BUILD_MODE
+};
+
+enum Corner{
+   TOP_LEFT,
+   TOP_RIGHT,
+   BOTTOM_LEFT,
+   BOTTOM_RIGHT
+};
+
+enum Orientation{
+   VERTICAL,
+   HORIZONTAL
 };
 
 #endif

@@ -13,6 +13,7 @@ class Building;
 typedef std::vector<BuildingType> buildingTypes_t;
 typedef std::list<Entity *> entities_t;
 
+//TODO: make singleton
 struct GameData{
    buildingTypes_t buildingTypes;
    entities_t entities;

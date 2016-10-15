@@ -16,7 +16,7 @@
 #include "Entity.h"
 #include "BuildingType.h"
 #include "Building.h"
-#include "UI.h"
+#include "UIBar.h"
 
 extern Debug debug;
 
@@ -31,14 +31,12 @@ void gameMode(){
    SDL_ShowCursor(SDL_DISABLE);
 
    //init
+   //TODO: give GameData pointer to classes
    GameData game;
    //TODO: move controlMode to GameData
    ControlMode controlMode = NORMAL_MODE;
-   UI ui(IMAGE_PATH + INTERFACE_IMAGE_PATH + "topbar.PNG",
-         IMAGE_PATH + INTERFACE_IMAGE_PATH + "bottombar.PNG",
-         GREEN);
 
-   typeNum_t toBuild = 0;
+   typeNum_t toBuild = NO_TYPE;
 
    //TODO: load from files
    BuildingType campfire(0, "Campfire",
@@ -52,7 +50,13 @@ void gameMode(){
                          GREEN);
    game.buildingTypes.push_back(shrine);
 
-
+   UIBars_t bars;
+   UIBar::set(&game, &controlMode);
+   UIBar buildingsBar(BOTTOM_LEFT, VERTICAL,
+                      &getBuildingTypeIcons,
+                      game.buildingTypes.size(), NORMAL_MODE);
+   bars.push_back(&buildingsBar);
+   
 
    timer_t ticks = SDL_GetTicks();
    timer_t lastCalcTick = ticks, lastDrawTick = ticks;
@@ -84,24 +88,28 @@ void gameMode(){
             //debug("Mouse down: ", int(event.button.button));
             switch (event.button.button){
             case 1: //left click
-               if (pointCollision(mousePos, ui.bottomBarRect(game, controlMode))){
-                  debug("Clicked the bottom bar");
-                  switch(controlMode){
-                  case NORMAL_MODE:
-                     //Clicking on a building to construct
-                     toBuild = (mousePos.y- 
-                               ui.bottomBarRect(game, controlMode).y - UI_BAR_PADDING) /
-                               ICON_SIZE;
-                     debug("Selected ", game.buildingTypes[toBuild].name_);
+               switch (controlMode){
+               case NORMAL_MODE:
+                  toBuild = buildingsBar.mouseIndex(mousePos);
+                  debug("toBuild = ", game.buildingTypes[toBuild].name_);
+                  if (toBuild != NO_TYPE){
+                     //draw footprint
+                     controlMode = BUILD_MODE;
+                  }
+                  break;
+               case BUILD_MODE:
+                  //if not over any bars
+                  //debug("Attempting to build #", toBuild);
+                  assert (toBuild != NO_TYPE);
+                  if (noCollision(game, game.buildingTypes[toBuild], mousePos)){
+                     addEntity(game, new Building(toBuild, mousePos));
+                     controlMode = NORMAL_MODE;
                   }
                }
-               Entity *newBuilding = new Building(1, mousePos);
-               assert(newBuilding != 0);
-               addEntity(game, newBuilding);
-               break;
             }
             break;
          }
+
       }
       
       ticks = SDL_GetTicks();
@@ -117,7 +125,8 @@ void gameMode(){
       // Redraw if necessary
       if (ticks - lastDrawTick >= DRAW_MS){
          //debug("Tick: redrawing");
-         drawEverything(screen, back, cursor, mousePos, game, controlMode, ui);
+         drawEverything(screen, back, cursor, mousePos, game,
+                        bars);
          lastDrawTick = MIN_WAIT ? ticks : lastDrawTick + DRAW_MS;
       }
 
@@ -136,7 +145,7 @@ void gameMode(){
 void drawEverything(SDL_Surface *screen, SDL_Surface *back,
                     SDL_Surface *cursor,
                     const Point &mousePos, const GameData &game,
-                    ControlMode controlMode, const UI &ui){
+                    const UIBars_t &bars){
 
    //Background
    SDL_FillRect(screen, 0, 0);
@@ -149,7 +158,9 @@ void drawEverything(SDL_Surface *screen, SDL_Surface *back,
    }
 
    //Interface
-   ui.draw(screen, game, controlMode);
+   for (UIBars_t::const_iterator it = bars.begin(); it != bars.end(); ++it){
+      (*it)->draw(screen);
+   }
 
    //Cursor
    blitCursor(cursor, screen, mousePos);

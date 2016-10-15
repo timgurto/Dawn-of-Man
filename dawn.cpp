@@ -1,21 +1,20 @@
 // (C) 2009 Tim Gurto
 
-//Standard Library
 #include <cassert>
 #include <string>
 
-//SDL
 #include "SDL.h"
 #include "SDL_ttf.h"
 
 #include "Debug.h"
 
-//Functions
 #include "game.h"
+
+//TODO: comment function headers
 
 //globals
 Debug debug(YELLOW, 0, 0, 59);
-int surfacesLoaded(0);
+int surfacesLoaded(0); //for safety
 
 int main(int argc, char* argv[]){
    argc; argv; //suppress Goanna warnings

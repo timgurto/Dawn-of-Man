@@ -19,3 +19,6 @@ void Entity::draw(SDL_Surface *screen, const GameData &game) const{
    SDL_BlitSurface(thisType.surface, 0, screen, &drawLoc);
 }
 
+SDL_Rect Entity::baseRect(const GameData &game){
+   return loc_ + type(game).baseRect_;   
+}

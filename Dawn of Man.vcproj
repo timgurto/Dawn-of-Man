@@ -215,7 +215,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\UI.h"
+				RelativePath=".\UIBar.h"
 				>
 			</File>
 		</Filter>
@@ -267,7 +267,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\UI.cpp"
+				RelativePath=".\UIBar.cpp"
 				>
 			</File>
 		</Filter>

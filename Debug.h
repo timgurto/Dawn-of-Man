@@ -11,6 +11,7 @@
 #include "misc.h"
 #include "globals.h"
 
+//TODO: make singleton
 class Debug{
    SDL_Color color_;
    std::string name_;

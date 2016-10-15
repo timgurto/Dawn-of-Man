@@ -5,15 +5,14 @@
 
 #include "SDL.h"
 #include "globals.h"
+#include "UIBar.h"
 class Debug;
 struct GameData;
-class UI;
 
 void gameMode();
 void drawEverything(SDL_Surface *screen, SDL_Surface *back,
-                    SDL_Surface *cursor,
-                    const Point &mousePos, const GameData &game,
-                    ControlMode controlMode, const UI &ui);
+                    SDL_Surface *cursor, const Point &mousePos,
+                    const GameData &game, const UIBars_t &bars);
 void updateState();
 void addEntity(GameData &game, Entity *entity);
 void removeEntity();

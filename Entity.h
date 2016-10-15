@@ -21,6 +21,7 @@ public:
    bool operator<(const Entity &rhs) const;
    const virtual EntityType &type(const GameData &game) const = 0;
    void draw(SDL_Surface *screen, const GameData &game) const;
+   SDL_Rect baseRect(const GameData &game);
 };
 
 #endif

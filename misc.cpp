@@ -13,6 +13,7 @@
 #include "misc.h"
 #include "Entity.h"
 #include "Point.h"
+#include "GameData.h"
 
 extern Debug debug;
 extern int surfacesLoaded;
@@ -73,6 +74,7 @@ SDL_Color makeColor(Uint8 r, Uint8 g, Uint8 b){
 SDL_Surface *setScreen(){
    SDL_Surface *screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_SWSURFACE);
    SDL_WM_SetCaption( "Dawn of Man", NULL );
+   SDL_WM_ToggleFullScreen(screen);
    return screen;
 }
 
@@ -126,7 +128,36 @@ bool dereferenceLessThan(Entity *p1, Entity *p2){
 bool pointCollision(const Point &point, const SDL_Rect rect){
    if (point.x < rect.x) return false;
    if (point.y < rect.y) return false;
-   if (point.x > rect.x + rect.h) return false;
-   if (point.y > rect.y + rect.w) return false;
+   if (point.x > rect.x + rect.w) return false;
+   if (point.y > rect.y + rect.h) return false;
+   return true;
+}
+
+SDL_Surface *getBuildingTypeIcons(typeNum_t i, const GameData &game){
+   return game.buildingTypes[i].portrait;
+}
+
+bool noCollision(const GameData &game, const EntityType &type,
+               const Point &mousePos){
+   SDL_Rect rect = mousePos + type.baseRect_;
+
+   //check against entities
+   for (entities_t::const_iterator it = game.entities.begin();
+        it != game.entities.end(); ++it){
+      if (collision(rect, (*it)->baseRect(game)))
+         return false;
+   }
+   return true;
+}
+
+bool collision(const SDL_Rect &r1, const SDL_Rect &r2){
+   if (r1.x > r2.x + r2.w)
+      return false;
+   if (r2.x > r1.x + r1.w)
+      return false;
+   if (r1.y > r2.y + r2.h)
+      return false;
+   if (r2.y > r1.y + r1.h)
+      return false;
    return true;
 }

@@ -9,6 +9,9 @@
 #include "globals.h"
 
 class Entity;
+class EntityType;
+struct Point;
+struct GameData;
 
 //SDL
 SDL_Surface *loadImage(const char* fileName);
@@ -36,5 +39,9 @@ template <typename Type> void checkP(Type *pointer){
 
 bool dereferenceLessThan(Entity *p1, Entity *p2);
 bool pointCollision(const Point &point, const SDL_Rect rect);
+SDL_Surface *getBuildingTypeIcons(typeNum_t i, const GameData &game);
+bool noCollision(const GameData &game, const EntityType &type,
+               const Point &mousePos);
+bool collision(const SDL_Rect &r1, const SDL_Rect &r2);
 
 #endif
