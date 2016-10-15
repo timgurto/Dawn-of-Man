@@ -1,4 +1,4 @@
-// (C) 2009 Tim Gurto
+// (C) 2009-2010 Tim Gurto
 
 #include <list>
 #include <cassert>
@@ -71,24 +71,25 @@ void Building::draw(SDL_Surface *screen) const{
    shadowBlit(&srcLoc, &drawLoc, screen);
 }
 
-void Building::tick(){
+void Building::tick(double delta){
    if (!finished){
-      progress_ += PROGRESS_PER_CALC;
+      progress_ += delta * PROGRESS_PER_CALC;
       //debug("progress = ", progress_);
       if (progress_ >= game_->buildingTypes[type_].progress_){
          finished = true;
          drawPercent = FULL;
          debug("building finished");
       }else
-         drawPercent = 1.0f * progress_ /
+         drawPercent = 1.0 * progress_ /
                  game_->buildingTypes[type_].progress_;
    }
 
    if (!finished){
-      int particlesToDraw = int(0.5 + 0.05 * 
-                                Particle::DECAY *
-                                Particle::PARTICLE_COUNT);
-                              /*PROGRESS_PER_CALC;*/
+      int particlesToDraw = int(1.0 * rand() / RAND_MAX +
+                                0.03 * 
+                                Particle::PARTICLE_COUNT *
+                                delta * Particle::DECAY *
+                                delta);
 
       for (int i = 0; i != particlesToDraw; ++i){
          //calculate initial co-ords
@@ -133,7 +134,7 @@ void Building::tick(){
    }
 }
 
-float Building::getDrawPercent() const{
+double Building::getDrawPercent() const{
    return drawPercent;
 }
 

@@ -32,6 +32,8 @@ class Debug{
    static int debugCount;
 
 public:
+   bool enabled;
+
    Debug(SDL_Color color, pixels_t x, pixels_t y,
          unsigned short count);
    ~Debug();

@@ -1,4 +1,4 @@
-// (C) 2009 Tim Gurto
+// (C) 2009-2010 Tim Gurto
 
 #ifndef ENTITY_H
 #define ENTITY_H
@@ -65,14 +65,14 @@ public:
    
    //Any changes that need to be made to the entity
    //by the game loop
-   virtual void tick();
+   virtual void tick(double delta);
 
    //Initializes the class' static pointer
    static void init(GameData *game, SDL_Surface *screen);
 
    //How much of the entity should be drawn.
    //FULL (1.0) by default
-   virtual float getDrawPercent() const;
+   virtual double getDrawPercent() const;
 
    //The color used to draw the entity
    //(See enum EntityColor)

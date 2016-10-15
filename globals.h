@@ -19,17 +19,16 @@ const bool DEBUG = true;
 typedef unsigned short typeNum_t;
 typedef Sint32 pixels_t;
 typedef Uint32 timer_t;
-typedef Uint16 progress_t;
+typedef double progress_t;
 
 const typeNum_t MAX_TYPES = 256;
 const typeNum_t MAX_PLAYERS = 2;
 
-// true: X ms since last
-// false: every X ms (catches up if there's a delay)
-const bool MIN_WAIT = true;
+//HIGHER = slower game speed.
+const int DELTA_MODIFIER = 40;
+
 //progress points added per state update
 //progress points: proportional to completion time
-//TODO turn into a coefficient for delta
 const progress_t PROGRESS_PER_CALC = 4;
 
 const pixels_t SCREEN_WIDTH = 1024;
@@ -69,14 +68,20 @@ const Uint8 MOUSE_BUTTON_SCROLL_DOWN = 5;
 const float FULL  = 1;
 const float EMPTY = 0;
 
+//whether particles fade over time
+const bool PARTICLE_FADE = false;
+
 //Alpha of shadows (particles, cursor)
 const Uint8 SHADOW_ALPHA = 0x44;
 
+//Graphics settings: each of these has a substantial
+//(~45%, multiplicative) effect on performance
+//===================================================
 //anything behind each entity is cleared
 const bool ENTITY_MASKS = true;
-
-//whether the entire mask is drawn behind partial sprites
-const bool MASK_BEFORE_CLIP = false;
+//entities appear engraved
+const bool SHADOWS = true;
+//===================================================
 
 const SDL_Color ENTITY_BACKGROUND   = GREEN;
 const Uint32 ENTITY_BACKGROUND_UINT = GREEN_UINT;

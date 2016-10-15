@@ -30,26 +30,25 @@ Debug::~Debug(){
 }
 
 void Debug::initScreen(SDL_Surface *screen){
-if (DEBUG){
    screen_ = screen;
-}}
+}
 
 void Debug::initFont(std::string name, int size){
-if (DEBUG){
    font = TTF_OpenFont(name.c_str(), size);
    assert (font != 0);
    height = TTF_FontHeight(font);
-}}
+}
 
 void Debug::add(std::string message){
-if (DEBUG){
+if (enabled){
    messages.push(message);
    if (messages.size() > count_)
       messages.pop();
-}}
+   }
+}
 
 void Debug::display(){
-if (DEBUG){
+if (enabled){
    if (screen_ != 0){
       std::queue<std::string> copy(messages);
       int lat = 0;

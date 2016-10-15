@@ -103,24 +103,22 @@ void gameMode(){
    timer_t oldTicks = SDL_GetTicks();
    game.loop = true;
    while (game.loop){
-      
+
       //time stuff
       timer_t newTicks = SDL_GetTicks();
       timer_t delta = newTicks - oldTicks;
       oldTicks = newTicks;
+      double deltaMod = 1.0 * delta / DELTA_MODIFIER;
+      
+      deltaLog("    Delta: ", delta, "ms");
+      deltaLog("Framerate: ", 1000 / (delta != 0 ? delta : 1));
 
       //update state
-      updateState(delta, game, screen, bars);
+      updateState(deltaMod, game, screen, bars);
 
       //render
-      drawEverything(screen,
-                     back,
-                     cursor,
-                     cursorShadow,
-                     entitiesTemp,
-                     game,
-                     bars);
-
+      drawEverything(screen, back, cursor, cursorShadow,
+                     entitiesTemp, game, bars);
 
    }
 
@@ -137,23 +135,21 @@ void gameMode(){
 
 }
 
-//TODO take delta into account when updating
-void updateState(timer_t delta, GameData &game,
+void updateState(double delta, GameData &game,
                  SDL_Surface *screen, UIBars_t &bars){
-   deltaLog("Delta: ", delta);
-   deltaLog("  FPS: ", 1000 / (delta != 0 ? delta : 1));
+   
    handleEvents(game, screen, bars);
 
    //Entities
    for (entities_t::iterator it = game.entities.begin();
         it != game.entities.end(); ++it){
-      (*it)->tick();
+      (*it)->tick(delta);
    }
 
    //Particles
    for (particles_t::iterator it = game.particles.begin();
         it != game.particles.end(); ++it){
-      it->tick();
+      it->tick(delta);
       if (it->expired()){
          it = game.particles.erase(it);
          if (it == game.particles.end())
@@ -263,6 +259,10 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
                break;
             }
             break;
+         case SDLK_F11:
+            //F11: toggle FPS display
+            deltaLog.enabled = ! deltaLog.enabled;
+            break;
          }
 
          break;
@@ -331,6 +331,7 @@ void removeEntity(){
 
 void blitCursor (SDL_Surface *cursor, SDL_Surface *shadow,
                  SDL_Surface *screen, const Point &coords){
-   SDL_BlitSurface(shadow, 0, screen, &makeRect(coords+CURSOR_OFFSET));
+   if (SHADOWS)
+      SDL_BlitSurface(shadow, 0, screen, &makeRect(coords+CURSOR_OFFSET));
    SDL_BlitSurface(cursor, 0, screen, &makeRect(coords+CURSOR_OFFSET));
 }

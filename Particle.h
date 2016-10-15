@@ -11,7 +11,7 @@
 class Particle{
 
    double x, y; //position
-   short age; //how long the particle has existed
+   double age; //how long the particle has existed
    double hV, vV; //velocity
    double offset; //lateral displacement, for shadow
 
@@ -33,7 +33,7 @@ public:
    Particle(const pixels_t xPos, const pixels_t yPos);
 
    //updates to velocity and position
-   void tick();
+   void tick(double delta);
 
    void draw() const;
 

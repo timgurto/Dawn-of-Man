@@ -1,4 +1,4 @@
-// (C) 2009 Tim Gurto
+// (C) 2009-2010 Tim Gurto
 
 #include <cstdlib> //rand
 #include <cassert>
@@ -43,21 +43,21 @@ void Entity::shadowBlit(SDL_Rect *srcLoc,
 
    //blit mask, hiding anything that would otherwise
    //show through the gaps in the sprite
-   if (!MASK_BEFORE_CLIP && ENTITY_MASKS)
+   if (ENTITY_MASKS)
       SDL_BlitSurface(thisType.mask, srcLoc, screen,
                       &SDL_Rect(*dstLoc)); 
 
    //shadow - white and black
-   colorBlit(ENTITY_WHITE, thisType.surface, screen,
-             *srcLoc, (*dstLoc + Point(1,1)));
-   colorBlit(ENTITY_BLACK, thisType.surface, screen,
-             *srcLoc, (*dstLoc - Point(1,1)));
+   if (SHADOWS){
+      colorBlit(ENTITY_WHITE, thisType.surface, screen,
+                *srcLoc, (*dstLoc + Point(1,1)));
+      colorBlit(ENTITY_BLACK, thisType.surface, screen,
+                *srcLoc, (*dstLoc - Point(1,1)));
+   }
    
    //colored sprite
    colorBlit(getColor(), thisType.surface, screen,
              *srcLoc, *dstLoc);
-
-
 
 }
 
@@ -65,7 +65,7 @@ SDL_Rect Entity::getBaseRect(){
    return loc_ + type().baseRect_;   
 }
 
-void Entity::tick(){} //default: do nothing
+void Entity::tick(double delta){} //default: do nothing
 
 void Entity::init(GameData *game, SDL_Surface *screen){
    game_ = game;
@@ -81,7 +81,7 @@ void Entity::init(GameData *game, SDL_Surface *screen){
                               ENTITY_BACKGROUND.b));
 }
 
-float Entity::getDrawPercent() const{
+double Entity::getDrawPercent() const{
    return FULL; //default: full
 }
 

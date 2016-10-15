@@ -12,7 +12,7 @@
 //globals
 
 //shows framerate and delta values
-Debug deltaLog(CYAN, 465, 0, 2);
+Debug deltaLog(BLUE, 465, 0, 2);
 
 //general debug messages
 Debug debug(YELLOW, 0, 0, 59);
@@ -30,7 +30,9 @@ int main(int argc, char* argv[]){
    assert (ttfInit >= 0);
 
    debug.initFont("Dina.fon", 0);
+   debug.enabled = DEBUG;
    deltaLog.initFont("Dina.fon", 0);
+   deltaLog.enabled = DEBUG;
 
    //new game
 

@@ -5,11 +5,11 @@
 #include <list>
 #include "Particle.h"
 
-const double Particle::GRAVITY = 1;
-const int Particle::PARTICLE_COUNT = 8;
-const double Particle::VELOCITY_RANGE = 4;
+const double Particle::GRAVITY = 1.4;
+const int Particle::PARTICLE_COUNT = 30;
+const double Particle::VELOCITY_RANGE = 1.5;
 const int Particle::DELAY = 25; //ms
-const int Particle::DECAY = 3;
+const int Particle::DECAY = 4;
 
 SDL_Surface
    *Particle::screen_ = 0,
@@ -25,19 +25,22 @@ offset(0){
    vV = rand() * 2 * VELOCITY_RANGE / RAND_MAX - VELOCITY_RANGE;
 }
 
-void Particle::tick(){
-   age -= DECAY;
+void Particle::tick(double delta){
+   age -= delta * DECAY;
    x += hV;
-   offset += (hV >= 0 ? hV : -1 * hV);
-   y -= vV;
-   vV -= GRAVITY;
+   offset += (hV >= 0 ? delta * hV : -1 * delta * hV);
+   y -= delta * vV;
+   if (y > SCREEN_HEIGHT)
+      age = 0;
+   vV -= delta * GRAVITY;
 }
 
 void Particle::draw() const{
-   //SDL_SetAlpha(shadow_, SDL_SRCALPHA, Uint8(age));
-   SDL_BlitSurface(shadow_, 0, screen_, &makeRect(int(x - offset),
-                                                  int(y + offset)));
-   //SDL_SetAlpha(image_, SDL_SRCALPHA, Uint8(age));
+   if (SHADOWS)
+      SDL_BlitSurface(shadow_, 0, screen_, &makeRect(int(x - offset),
+                                                     int(y + offset)));
+   if (PARTICLE_FADE)
+      SDL_SetAlpha(image_, SDL_SRCALPHA, Uint8(age));
    SDL_BlitSurface(image_, 0, screen_, &makeRect(int(x), int(y)));
 }
 
