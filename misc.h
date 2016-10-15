@@ -4,6 +4,7 @@
 #define MISC_H
 
 #include <string>
+#include <queue>
 
 #include "SDL.h"
 #include "globals.h"
@@ -95,5 +96,7 @@ bool inside(const SDL_Rect &a, const SDL_Rect &b);
 //For interpretting arguments
 bool isArg(std::string arg, int argc, char* argv[]);
 int whatIsArg(std::string arg, int argc, char* argv[]);
+
+pixels_t distance(pixels_t a, pixels_t b);
 
 #endif

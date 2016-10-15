@@ -3,6 +3,7 @@
 #include <cassert>
 #include <string>
 #include <sstream>
+#include <cstdlib>
 
 #include "SDL.h"
 #include "SDL_image.h"
@@ -126,7 +127,7 @@ SDL_Rect locRect(const SDL_Rect &original){
 //TODO Might be slow to repeat
 bool isKeyPressed(SDLKey key){
    Uint8 *keyStates = SDL_GetKeyState(0);
-   return keyStates[key] == 0;
+   return keyStates[key] != 0;
 }
 
 Uint8 *keyStates = SDL_GetKeyState(0);
@@ -275,4 +276,8 @@ int whatIsArg(std::string arg, int argc, char* argv[]){
    }
    assert(false);
    return -1;
+}
+
+pixels_t distance(pixels_t a, pixels_t b){
+   return abs(a - b);
 }

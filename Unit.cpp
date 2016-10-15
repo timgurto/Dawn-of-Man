@@ -1,5 +1,7 @@
 // (C) 2010 Tim Gurto
 
+#include <queue>
+#include "misc.h"
 #include "GameData.h"
 #include "Unit.h"
 #include "UnitType.h"
@@ -14,7 +16,10 @@ const EntityType &Unit::type() const{
 }
 
 void Unit::tick(double delta){
-   
+   if (moving_){
+      loc_.x = rand() % game_->map.w;
+      loc_.y = rand() % game_->map.h;
+   }
 }
 
 int Unit::getColor() const{
@@ -28,4 +33,8 @@ EntityTypeID Unit::classID() const{
 bool Unit::selectable() const{
    return
       player_ == HUMAN_PLAYER;
+}
+
+void Unit::setTarget(Point target){
+   target_ = target;
 }

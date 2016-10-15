@@ -1,6 +1,7 @@
 // (C) 2009-2010 Tim Gurto
 
 //TODO copy comments at declarations to definitions
+//TODO _ naming convention for private members
 
 #include <cassert>
 
@@ -27,7 +28,7 @@ Debug debug(YELLOW, 0, 0, 59);
 
 //the number of surfaces loaded
 // - increases with loadImage()
-// - increases with createUsrface()
+// - increases with createSurface()
 // - decreases with freeSurface()
 int surfacesLoaded(0);
 

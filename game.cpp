@@ -364,6 +364,8 @@ void scrollMap(GameData &game, double delta){
    else if (game.mousePos.y > SCREEN_HEIGHT - EDGE_SCROLL_MARGIN)
       game.map.y -= scroll;
 
+   //four SDL calls every tick... might be better to calculate once,
+   //or maybe keep a static pointer around.
    //arrow keys
    if (isKeyPressed(SDLK_UP))
       game.map.y += scroll;
@@ -459,13 +461,12 @@ void select(GameData &game){
 }
 
 void setSelectedTargets(GameData &game){
-   Point target = game.mousePos - Point(game.map);
    for (entities_t::iterator it = game.entities.begin();
         it != game.entities.end(); ++it){
       if ((*it)->classID() == UNIT &&
           (*it)->selected){
-         Unit *unitP = (Unit *)(*it);
-         unitP->target = target;
+         Unit *unitP = (Unit *)(*it); //change to Unit*
+         unitP->setTarget();
       }
    }
 }
