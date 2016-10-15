@@ -189,26 +189,29 @@ void gameMode(){
 
    UIBars_t bars;
    UIBar::init(&game, screen, vBar, hBar);
-   UIBar buildingsBar(BOTTOM_LEFT, VERTICAL,
+   UIBar buildingsBar(BOTTOM_LEFT, HORIZONTAL,
                       &getNumBuildingIcons,
                       &getBuildingTypeIcons,
                       &selectBuilding,
+                      &buildingHelp,
                       MODE_BUILDER);
    bars.push_back(&buildingsBar);
    UIBar unitsBar(BOTTOM_LEFT, HORIZONTAL,
                   &getNumUnitIcons,
                   &getUnitTypeIcons,
                   &trainUnit,
+                  &unitHelp,
                   MODE_BUILDING);
    bars.push_back(&unitsBar);
 
    messageBoxes_t messageBoxes;
    MessageBox contextHelp(WHITE,
-                          ICON_SIZE, SCREEN_HEIGHT - 15,
-                          "Dina.fon", 0);
+                          1, SCREEN_HEIGHT - ICON_SIZE - 1,
+                          400, 0,
+                          darkMap,
+                          "Woodbrush.ttf", 21,
+                          true);
    messageBoxes.push_back(&contextHelp);
-
-   contextHelp("test");
 
    timer_t oldTicks = SDL_GetTicks();
    game.loop = true;
@@ -221,11 +224,11 @@ void gameMode(){
       double deltaMod = 1.0 * delta / DELTA_MODIFIER;
       
       //TODO some better means of displaying FPS in Release
-      deltaLog("    Framerate: ", (delta == 0 ? 0 : 1000 / delta));
-      deltaLog("        Delta: ", delta, "ms");
+      deltaLog("Framerate: ", (delta == 0 ? 0 : 1000 / delta));
+      deltaLog("    Delta: ", delta, "ms");
 
       //update state
-      updateState(deltaMod, game, screen, bars, messageBoxes);
+      updateState(deltaMod, game, screen, bars, contextHelp);
 
       //render
       render(screen, glow, diagGreen, diagRed, map, darkMap, cursor,

@@ -41,6 +41,8 @@ public:
 
    //equivalent to no resources
    static Resources empty();
+
+   std::string str() const;
 };
 
 #endif

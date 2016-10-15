@@ -1,6 +1,7 @@
 // (C) 2010 Tim Gurto
 
 #include <vector>
+#include <sstream>
 #include <string>
 #include "Resources.h"
 
@@ -8,7 +9,7 @@ size_t Resources::resourceCount_ = 0;
 std::vector<std::string> Resources::names_;   
 
 Resources::Resources():
-vals_(resources_t(resourceCount_, 0)){}
+vals_(resources_t(resourceCount_, 1000)){}
 
 Resources::Resources(const resources_t &v):
 vals_(v){}
@@ -58,4 +59,10 @@ std::ostream &operator<<(std::ostream &os,
 
 bool Resources::isEmpty() const{
    return (vals_ == empty().vals_);
+}
+
+std::string Resources::str() const{
+   std::ostringstream os;
+   os << *this;
+   return os.str();
 }

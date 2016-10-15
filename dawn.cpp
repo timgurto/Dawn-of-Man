@@ -61,11 +61,15 @@ int main(int argc, char **argv){
 
 void setScreenResolution(int argc, char **argv){
    const SDL_VideoInfo *current = SDL_GetVideoInfo();
-   debug("Current resolution: ", current->current_w, "x", current->current_h);
-   SDL_Rect** resolutions = SDL_ListModes(0, SDL_FULLSCREEN | SDL_HWSURFACE | SDL_DOUBLEBUF);
+   debug("Current resolution: ", current->current_w, "x",
+         current->current_h);
+   SDL_Rect** resolutions = SDL_ListModes(0, SDL_FULLSCREEN |
+                                             SDL_HWSURFACE |
+                                             SDL_DOUBLEBUF);
    assert (resolutions != 0);
    debug("Available resolutions:");
-   bool defaultResOkay = false; //whether the default screen size is available
+   //whether the default screen size is available
+   bool defaultResOkay = false;
    bool defaultWResOkay = false; //as above, for widescreen
    while (*resolutions){
       debug((*resolutions)->w, "x", (*resolutions)->h);

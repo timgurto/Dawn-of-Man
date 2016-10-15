@@ -31,6 +31,9 @@ class UIBar{
    //the function that executes when a button is pushed.
    clickFunPtr clickFun_;
 
+   //The context help that appears when the bar is mouse-overed
+   helpFunPtr helpFun_;
+
    //The rectangle describing the bar's dimensions
    SDL_Rect rect_;
 
@@ -44,6 +47,7 @@ public:
          iconCountFunPtr iconCountFun,
          surfaceFunPtr surfaceFun,
          clickFunPtr clickFun,
+         helpFunPtr helpFun,
          ControlMode requiredMode);
 
    //Initializes static pointers
@@ -65,11 +69,14 @@ public:
    typeNum_t mouseIndex() const;
 
    //Whether this bar is active, given the current game mode
-   bool isActive(ControlMode mode);
+   bool isActive();
 
    //executes the relevant action when the user clicks on
    //the bar; calls clickFun_
    void click();
+
+   //returns the relevant context help text for the button
+   std::string helpText(typeNum_t index);
 };
 
 //So that all bars can be dealt with at the same time

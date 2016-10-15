@@ -91,6 +91,14 @@ SDL_Color makeColor(Uint8 r, Uint8 g, Uint8 b){
    return c;
 }
 
+SDL_Color makeColor(Uint32 c){
+   SDL_Color col;
+   col.r = c >> 16 & 0xff;
+   col.g = c >>  8 & 0xff;
+   col.b = c       & 0xff;
+   return col;
+}
+
 SDL_Surface *setScreen(){
    SDL_Surface *screen = SDL_SetVideoMode(SCREEN_WIDTH,
                                           SCREEN_HEIGHT,
@@ -128,7 +136,7 @@ SDL_Rect locRect(const SDL_Rect &original){
 
 //TODO might be slow to repeat
 bool isKeyPressed(SDLKey key){
-   Uint8 *keyStates = SDL_GetKeyState(0);
+   static Uint8 *keyStates = SDL_GetKeyState(0);
    return keyStates[key] != 0;
 }
 

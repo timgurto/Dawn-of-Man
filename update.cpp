@@ -9,6 +9,10 @@
 #include "UIBar.h"
 #include "Building.h"
 #include "Unit.h"
+#include "Debug.h"
+#include "MessageBox.h"
+
+extern Debug debug;
 
 const Uint8 MOUSE_BUTTON_LEFT        = 1;
 const Uint8 MOUSE_BUTTON_MIDDLE      = 2;
@@ -18,10 +22,10 @@ const Uint8 MOUSE_BUTTON_SCROLL_DOWN = 5;
 
 void updateState(double delta, GameData &game,
                  SDL_Surface *screen, UIBars_t &bars,
-                 messageBoxes_t &messageBoxes){
+                 MessageBox &contextHelp){
 
    //Interface stuff
-   handleEvents(game, screen, bars);
+   handleEvents(game, screen, bars, contextHelp);
    scrollMap(game, delta);
 
    //Actual updates
@@ -53,7 +57,8 @@ void updateState(double delta, GameData &game,
 
 }
 
-void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
+void handleEvents(GameData &game, SDL_Surface *screen,
+                  UIBars_t &bars, MessageBox &contextHelp){
 
    SDL_Event event;
    while (SDL_PollEvent(&event)){
@@ -70,11 +75,31 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
 
       //Mouse is moved
       case SDL_MOUSEMOTION:
+         contextHelp("");
          game.mousePos.x = event.motion.x;
          game.mousePos.y = event.motion.y;
          //check right mouse movement
          game.rightMouse.checkDrag(game.mousePos);
          game.leftMouse.checkDrag(game.mousePos - game.map);
+
+         //if over a UI bar
+         {//new scope for overBar, index
+            typeNum_t index;
+            for (UIBars_t::iterator it = bars.begin();
+                 it != bars.end(); ++it)
+               if ((*it)->isActive()){
+                  index = (*it)->mouseIndex();
+                  if (index != NO_TYPE){
+                     //mousing over this bar
+                     contextHelp((*it)->helpText(index));
+                     break;
+                  }
+               }
+         }
+
+         //initialize selection box stuff
+         //game.leftMouse.mouseDown(game.mousePos - game.map);
+
          switch(game.mode)
          case MODE_CONSTRUCTION:
             game.buildLocationOK =
@@ -162,12 +187,13 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
          //debug("Mouse down: ", int(event.button.button));
          switch (event.button.button){
          case MOUSE_BUTTON_LEFT:
+            game.leftMouse.mouseDown(game.mousePos - game.map);
             {//new scope for barClicked
                //if not clicking a button
                bool barClicked = false;
                for (UIBars_t::iterator it = bars.begin();
                     !barClicked && it != bars.end(); ++it)
-                  if ((*it)->isActive(game.mode))
+                  if ((*it)->isActive())
                      if ((*it)->mouseIndex() != NO_TYPE)
                         barClicked = true;
                if (!barClicked)
@@ -192,71 +218,75 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
          case MOUSE_BUTTON_RIGHT:
             if (!game.rightMouse.dragging)
                if (!game.leftMouse.dragging)
-                  setSelectedTargets(game);
-               switch(game.mode){
-               case MODE_CONSTRUCTION:
-                  //cancel build mode
-                  game.mode = MODE_NORMAL;
-                  break;
-               }
+                  switch(game.mode){
+                  case MODE_CONSTRUCTION:
+                     //cancel build mode
+                     game.mode = MODE_NORMAL;
+                     break;
+                  default:
+                     setSelectedTargets(game);
+                  }
             game.rightMouse.mouseUp();
             break;
 
          case MOUSE_BUTTON_LEFT:
-            bool barClicked = false; //whether a UIBar was clicked
             //check UI bars
             if (!game.leftMouse.dragging){
+               bool barClicked = false; //whether a UIBar was clicked
                for (UIBars_t::iterator it = bars.begin();
                     !barClicked && it != bars.end(); ++it)
-                  if ((*it)->isActive(game.mode)){
+                  if ((*it)->isActive()){
                      typeNum_t index = (*it)->mouseIndex();
                      if (index != NO_TYPE){
                         (*it)->click();
                         barClicked = true;
                      }
                   }
-            }
-            if (!barClicked){
-               //place new building
-               if (game.mode == MODE_CONSTRUCTION){
-                  assert (game.toBuild != NO_TYPE);
-                  if (game.players[HUMAN_PLAYER].sufficientResources(
-                      game.buildingTypes[game.toBuild].getCost()))
-                     if (game.buildLocationOK){
+               if (!barClicked){
+                  //place new building
+                  if (game.mode == MODE_CONSTRUCTION){
+                     assert (game.toBuild != NO_TYPE);
+                     if (game.players[HUMAN_PLAYER].sufficientResources(
+                        game.buildingTypes[game.toBuild].getCost())){
+                        if (game.buildLocationOK){
 
-                        //create new building
-                        Building *newBuilding =
-                           new Building(game.toBuild, game.mousePos -
-                                                      game.map);
-                        addEntity(game, newBuilding);
+                           //create new building
+                           Building *newBuilding =
+                              new Building(game.toBuild, game.mousePos -
+                                                         game.map);
+                           addEntity(game, newBuilding);
 
-                        //assign selected builders to the construction
-                        for (entities_t::iterator it = game.entities.begin();
-                             it != game.entities.end(); ++it)
-                           if ((*it)->classID() == ENT_UNIT){
-                              Unit *unitP = (Unit *)(*it);
-                              if (unitP->selected)
-                                 if (unitP->isBuilder())
-                                    unitP->setTarget(newBuilding);
-                           }
+                           //assign selected builders to the construction
+                           for (entities_t::iterator it = game.entities.begin();
+                                it != game.entities.end(); ++it)
+                              if ((*it)->classID() == ENT_UNIT){
+                                 Unit *unitP = (Unit *)(*it);
+                                 if (unitP->selected)
+                                    if (unitP->isBuilder())
+                                       unitP->setTarget(newBuilding);
+                              }
 
-                        //Shift key doesn't allow multiple constructions, as
-                        //placed buildings are initially invisible and thus
-                        //would be impossible to see if builders moved to another
-                        //target
-                        //TODO make newly placed buildings visible somehow
-                        //if(!isKeyPressed(SDLK_LSHIFT)){
-                        game.mode = MODE_BUILDER;
-                        game.toBuild = NO_TYPE;
+                           //Shift key doesn't allow multiple constructions, as
+                           //placed buildings are initially invisible and thus
+                           //would be impossible to see if builders moved to another
+                           //target
+                           //TODO make newly placed buildings visible somehow
+                           //if(!isKeyPressed(SDLK_LSHIFT)){
+                           game.mode = MODE_BUILDER;
+                           game.toBuild = NO_TYPE;
+                        }
+                     }else{ //not enough resources
+                        debug("Not enough resources");
                      }
-               }else
-                  select(game, bars);
-               game.leftMouse.mouseUp();
-            }// if !barClicked
-
+                  }else //not construction mode
+                     select(game, bars);
+               }// if !barClicked
+            }else //if dragging
+               select(game, bars);
+            break;
          }
+         game.leftMouse.mouseUp();
          break;
-
       } //event switch
    } //event while
 }

@@ -16,12 +16,14 @@ UIBar::UIBar(Corner corner, Orientation orientation,
              iconCountFunPtr iconCountFun,
              surfaceFunPtr surfaceFun,
              clickFunPtr clickFun,
+             helpFunPtr helpFun,
              ControlMode requiredMode):
 corner_(corner),
-clickFun_(clickFun),
 orientation_(orientation),
-surfaceFun_(surfaceFun),
 iconCountFun_(iconCountFun),
+surfaceFun_(surfaceFun),
+clickFun_(clickFun),
+helpFun_(helpFun),
 requiredMode_(requiredMode){
    calculateRect();
 }
@@ -108,17 +110,17 @@ typeNum_t UIBar::mouseIndex() const{
    if (collision(point, barRect))
       switch (orientation_){
       case HORIZONTAL:
-         return (point.x - barRect.x) / ICON_SIZE;
+         return (point.x - barRect.x - 1) / ICON_SIZE;
          break;
       case VERTICAL:
-         return (point.y - barRect.y) / ICON_SIZE;
+         return (point.y - barRect.y - 1) / ICON_SIZE;
          break;
       }
    return NO_TYPE;
 }
 
-bool UIBar::isActive(ControlMode mode){
-   return (mode == requiredMode_);
+bool UIBar::isActive(){
+   return (game_->mode == requiredMode_);
 }
 
 void UIBar::init(GameData *game,
@@ -133,4 +135,8 @@ void UIBar::init(GameData *game,
 
 void UIBar::click(){
    clickFun_(mouseIndex(), *game_);
+}
+
+std::string UIBar::helpText(typeNum_t index){
+   return helpFun_(index, *game_);
 }

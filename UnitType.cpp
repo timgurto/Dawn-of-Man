@@ -49,3 +49,7 @@ cost_(cost){}
 typeNum_t UnitType::getOriginBuilding() const{
    return originBuilding_;
 }
+
+std::string UnitType::getCostString() const{
+   return cost_.str();
+}

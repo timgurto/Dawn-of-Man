@@ -1,4 +1,4 @@
-// (C) 2009 Tim Gurto
+// (C) 2009-2010 Tim Gurto
 
 #include "EntityType.h"
 #include "BuildingType.h"
@@ -22,4 +22,8 @@ cost_(cost){}
 
 const Resources &BuildingType::getCost(){
    return cost_;
+}
+
+std::string BuildingType::getCostString() const{
+   return cost_.str();
 }

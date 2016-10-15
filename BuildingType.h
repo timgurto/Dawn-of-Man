@@ -26,7 +26,9 @@ public:
                 const Resources &cost,
                 progress_t maxProgress = 0);
 
+   //get
    const Resources &getCost();
+   std::string getCostString() const;
 };
 
 #endif

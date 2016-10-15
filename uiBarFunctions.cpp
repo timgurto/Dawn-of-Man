@@ -33,7 +33,8 @@ const pixels_t PLACEMENT_MARGIN = 1;
       if (game.buildingSelected != 0)
          for (unitTypes_t::const_iterator it = game.unitTypes.begin();
               it != game.unitTypes.end(); ++it)
-            if (it->getOriginBuilding() == game.buildingSelected->getTypeIndex())
+            if (it->getOriginBuilding() ==
+                game.buildingSelected->getTypeIndex())
                ++count;
       return count;
    }
@@ -58,7 +59,8 @@ const pixels_t PLACEMENT_MARGIN = 1;
       int count = 0;
       //find units that come from this building
       for (typeNum_t loop = 0; loop != game.unitTypes.size(); ++loop)
-         if (game.unitTypes[loop].getOriginBuilding() == building.getTypeIndex()){
+         if (game.unitTypes[loop].getOriginBuilding() ==
+             building.getTypeIndex()){
             if (count == i)
                return game.unitTypes[loop].getIcon();
             ++count;
@@ -75,7 +77,7 @@ const pixels_t PLACEMENT_MARGIN = 1;
    void selectBuilding(typeNum_t index, GameData &game){
       game.toBuild = index;
       debug("Building to construct: ",
-            game.buildingTypes[game.toBuild].getName());
+            game.buildingTypes[index].getName());
       game.mode = MODE_CONSTRUCTION;
    }
 
@@ -85,7 +87,8 @@ const pixels_t PLACEMENT_MARGIN = 1;
       //get type
       typeNum_t count = 0, typeIndex = 0;
       for (typeIndex = 0; typeIndex != game.unitTypes.size(); ++typeIndex)
-         if (game.unitTypes[typeIndex].getOriginBuilding() == building.getTypeIndex()){
+         if (game.unitTypes[typeIndex].getOriginBuilding() ==
+             building.getTypeIndex()){
             if (count == index)
                break;
             ++count;
@@ -130,12 +133,14 @@ const pixels_t PLACEMENT_MARGIN = 1;
          }
 
          if (dir == DIR_UP || dir == DIR_DOWN)
-            loc.x = rand() % (buildingBaseRect.w + unitTypeBaseRect.w) +
+            loc.x = rand() % (buildingBaseRect.w +
+                              unitTypeBaseRect.w) +
                     buildingBaseRect.x -
                     unitTypeBaseRect.w -
                     unitTypeBaseRect.x;
          else
-            loc.y = rand() % (buildingBaseRect.h + unitTypeBaseRect.h) +
+            loc.y = rand() % (buildingBaseRect.h +
+                              unitTypeBaseRect.h) +
                     buildingBaseRect.y -
                     unitTypeBaseRect.h -
                     unitTypeBaseRect.y;
@@ -148,4 +153,36 @@ const pixels_t PLACEMENT_MARGIN = 1;
          addEntity(game, unit);
       }else
          debug("Unable to place unit");
+   }
+
+//UIBar::helpFun_
+//Returns relevant context help text for the specified button
+
+   std::string buildingHelp(typeNum_t index,
+                            GameData &game){
+      return
+         "Build " +
+         game.buildingTypes[index].getName() +
+         ": " +
+         game.buildingTypes[index].getCostString();
+   }
+
+   std::string unitHelp(typeNum_t index,
+                        GameData &game){
+      const Building &building = *game.buildingSelected;
+      int count = 0;
+      //find units that come from this building
+      for (typeNum_t loop = 0; loop != game.unitTypes.size(); ++loop)
+         if (game.unitTypes[loop].getOriginBuilding() ==
+             building.getTypeIndex()){
+            if (count == index)
+               return
+                  "Train " +
+                  game.unitTypes[loop].getName() +
+                  ": " +
+                  game.unitTypes[loop].getCostString();
+            ++count;
+         }
+      assert(false);
+      return "";
    }

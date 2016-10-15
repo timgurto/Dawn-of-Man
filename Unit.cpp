@@ -68,12 +68,12 @@ void Unit::draw(SDL_Surface *screen) const{
                    &makeRect(drawLoc.x + game_->map.x - 1,
                              drawLoc.y + game_->map.y - 1,
                              thisType.maxHealth_, 5),
-                   0x444444);
+                   ENGRAVE_DARK_UINT);
       SDL_FillRect(screen,
                    &makeRect(drawLoc.x + game_->map.x + 1,
                              drawLoc.y + game_->map.y + 1,
                              thisType.maxHealth_, 5),
-                   0xdddddd);
+                   ENGRAVE_LIGHT_UINT);
       SDL_FillRect(screen,
                    &makeRect(drawLoc.x + game_->map.x,
                              drawLoc.y + game_->map.y,

@@ -45,6 +45,7 @@ const SDL_Color RED     = {0xff, 0, 0};
 const SDL_Color MAGENTA = {0xff, 0, 0xff};
 const SDL_Color YELLOW  = {0xff, 0xff, 0};
 const SDL_Color WHITE   = {0xff, 0xff, 0xff};
+const SDL_Color GRAY    = {0x7f, 0x7f, 0x7f};
 const Uint32 BLACK_UINT   = 0x000000;
 const Uint32 BLUE_UINT    = 0x0000ff;
 const Uint32 GREEN_UINT   = 0x00ff00;
@@ -73,6 +74,11 @@ const Uint32 ENTITY_MASK_UINT       = MAGENTA_UINT;
 
 const Uint32 FOOTPRINT_COLOR_GOOD = 0x008800; //dark green
 const Uint32 FOOTPRINT_COLOR_BAD  = 0x880000; //dark red
+
+const SDL_Color ENGRAVE_DARK    = {0x44, 0x44, 0x44};
+const Uint32 ENGRAVE_DARK_UINT  = 0x444444;
+const SDL_Color ENGRAVE_LIGHT   = {0xdd, 0xdd, 0xdd};
+const Uint32 ENGRAVE_LIGHT_UINT = 0xdddddd;
 
 const pixels_t MAP_TILE_SIZE = 512;
 const pixels_t SCROLL_AMOUNT = 40;

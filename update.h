@@ -11,10 +11,11 @@ struct SDL_Surface;
 
 //Any processing within the game loop
 void updateState(double delta, GameData &game, SDL_Surface *screen,
-                 UIBars_t &bars, messageBoxes_t &messageBoxes);
+                 UIBars_t &bars, MessageBox &contextHelp);
 
 //Handles events and changes game data accordingly
-void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars);
+void handleEvents(GameData &game, SDL_Surface *screen,
+                  UIBars_t &bars, MessageBox &contextHelp);
 
 //Scrolls the map, based on keyboard/mouse states
 void scrollMap(GameData &game, double Delta);

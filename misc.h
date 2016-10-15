@@ -39,6 +39,7 @@ SDL_Rect makeRect(const Point &point);
 
 //Fake constructor for SDL_Color
 SDL_Color makeColor(Uint8 r, Uint8 g, Uint8 b);
+SDL_Color makeColor(Uint32 c);
 
 //Initializes a surface with screen settings
 SDL_Surface *setScreen();

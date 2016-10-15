@@ -6,6 +6,7 @@
 //contains the functions used by the UIBar class to fetch icons
 //surfaces, and execute actions when clicked.
 
+#include <string>
 #include "types.h"
 
 struct SDL_Surface;
@@ -20,14 +21,13 @@ typedef iconCountFun *iconCountFunPtr;
    //Buildings bar: number of BuildingType icons
    iconCountFun getNumBuildingIcons;
 
-   //Units bar: 
+   //Units bar:
    iconCountFun getNumUnitIcons;
 
 
 
 //surfaceFun_
-typedef SDL_Surface *surfaceFun(typeNum_t index,
-                                typeNum_t size,
+typedef SDL_Surface *surfaceFun(typeNum_t index, typeNum_t size,
                                 const GameData &game);
 typedef surfaceFun *surfaceFunPtr;
    
@@ -40,8 +40,7 @@ typedef surfaceFun *surfaceFunPtr;
 
 
 //clickFun_
-typedef void clickFun(typeNum_t index,
-                      GameData &game);
+typedef void clickFun(typeNum_t index, GameData &game);
 typedef clickFun *clickFunPtr;
 
    //Buildings bar: Selects a building to construct
@@ -49,5 +48,18 @@ typedef clickFun *clickFunPtr;
 
    //Units bar: Trains the chosen unit, at the selected building
    clickFun trainUnit;
+
+
+
+//helpFun_
+   typedef std::string helpFun(typeNum_t index,
+                               GameData &game);
+   typedef helpFun *helpFunPtr;
+
+   //Buildings bar: returns the name of the building
+   helpFun buildingHelp;
+
+   //Units bar: returns the name of the unit
+   helpFun unitHelp;
 
 #endif
