@@ -250,7 +250,7 @@ void drawEverything(SDL_Surface *screen,
    }
 
    //Cursor
-   blitCursor(cursor, cursorShadow, screen, game.mousePos);
+   blitCursor(cursor, cursorShadow, screen, game);
 
    //Particles
    for (particles_t::const_iterator it = game.particles.begin();
@@ -406,8 +406,17 @@ void removeEntity(){
 
 //TODO if RMB down and moved then show anchor
 void blitCursor (SDL_Surface *cursor, SDL_Surface *shadow,
-                 SDL_Surface *screen, const Point &coords){
-   if (SHADOWS)
-      SDL_BlitSurface(shadow, 0, screen, &makeRect(coords+CURSOR_OFFSET));
-   SDL_BlitSurface(cursor, 0, screen, &makeRect(coords+CURSOR_OFFSET));
+                 SDL_Surface *screen, const GameData &game){
+   //cursor might appear 'raised' from the wall
+   bool raised = (game.rightMouseMoved);
+
+   Point
+      cursorPos = game.mousePos + CURSOR_OFFSET,
+      shadowPos = cursorPos;
+   if (raised){
+      cursorPos -= CURSOR_RAISED;
+      shadowPos += CURSOR_RAISED;
+   }
+   SDL_BlitSurface(shadow, 0, screen, &makeRect(shadowPos));
+   SDL_BlitSurface(cursor, 0, screen, &makeRect(cursorPos));
 }

@@ -36,6 +36,6 @@ void removeEntity();
 
 //Draws the cursor to the screen
 void blitCursor (SDL_Surface *cursor, SDL_Surface *shadow,
-                 SDL_Surface *screen, const Point &coords);
+                 SDL_Surface *screen, const GameData &game);
 
 #endif
