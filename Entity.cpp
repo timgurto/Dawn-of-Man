@@ -16,7 +16,6 @@ bool Entity::operator<(const Entity &rhs) const{
 void Entity::draw(SDL_Surface *screen, const GameData &game) const{
    const EntityType &thisType = type(game);
    SDL_Rect drawLoc = loc_ + thisType.drawRect_;
-   //SDL_FillRect(screen, &drawLoc, 0); //outlineMode
    SDL_BlitSurface(thisType.surface, 0, screen, &drawLoc);
 }
 

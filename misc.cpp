@@ -122,8 +122,7 @@ std::string makePath(EntityTypeID type, typeNum_t imageNumber, bool isPortrait){
 }
 
 bool dereferenceLessThan(Entity *p1, Entity *p2){
-   //assert (p1 != 0); These checks will remove the warning
-   //assert (p2 != 0);
-   assert (p1 != 0 && p2 != 0);
+   assert (p1 != 0);
+   assert (p2 != 0);
    return *p1 < *p2;
 }

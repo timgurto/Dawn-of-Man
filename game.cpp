@@ -71,10 +71,8 @@ void gameMode(){
             switch (event.button.button){
             case 1: //left click
                Entity *newBuilding = new Building(0, mousePos);
-               if (newBuilding != 0)
-                  addEntity(game, newBuilding);
-               else
-                  debug("No memory allocated for new building");
+               assert(newBuilding != 0);
+               addEntity(game, newBuilding);
                break;
             }
             break;

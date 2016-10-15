@@ -2,6 +2,7 @@
 
 //Standard Library
 #include <cassert>
+#include <string>
 
 //SDL
 #include "SDL.h"
@@ -16,7 +17,8 @@
 Debug debug(YELLOW, 0, 0, 59);
 int surfacesLoaded(0);
 
-int main(int argc, char* args[]){
+int main(int argc, char* argv[]){
+   argc; argv; //suppress Goanna warnings
    int sdlInit(SDL_Init(SDL_INIT_VIDEO));
    assert (sdlInit != -1);
 

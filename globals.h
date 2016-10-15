@@ -14,7 +14,6 @@ const bool DEBUG(false);
 const bool DEBUG(true);
 #endif
 
-//TODO move typedefs to separate file
 typedef unsigned short typeNum_t;
 typedef Sint32 pixels_t;
 typedef Uint32 timer_t;
