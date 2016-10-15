@@ -66,7 +66,7 @@ void Building::draw(SDL_Surface *screen) const{
       assert(false);
    }
    
-   layeredBlit(&srcLoc, &drawLoc, screen);
+   shadowBlit(&srcLoc, &drawLoc, screen);
 }
 
 void Building::tick(){
@@ -137,4 +137,8 @@ float Building::getDrawPercent() const{
 
 int Building::getColor() const{
    return player_;
+}
+
+EntityTypeID Building::classID() const{
+   return BUILDING;
 }

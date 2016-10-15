@@ -28,6 +28,7 @@ public:
    virtual void tick();
    virtual float getDrawPercent() const;
    virtual int getColor() const;
+   virtual EntityTypeID classID() const;
 };
 
 

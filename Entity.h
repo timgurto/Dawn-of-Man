@@ -52,8 +52,9 @@ public:
 
    //Actually draws the sprite, after draw() figures out
    //the two rectangle parameters
-   void layeredBlit(SDL_Rect *srcLoc, SDL_Rect *dstLoc,
-                    SDL_Surface *screen) const;
+   void shadowBlit(SDL_Rect *srcLoc,
+                   SDL_Rect *dstLoc,
+                   SDL_Surface *screen) const;
    
    //Any changes that need to be made to the entity
    //by the game loop
@@ -67,7 +68,18 @@ public:
    virtual float getDrawPercent() const;
 
    //The color used to draw the entity
+   //(See enum EntityColor)
    virtual int getColor() const;
+
+   //blit to the color mask, then blit the color mask
+   //to the screen, to create a colored sprite
+   void colorBlit(int color, SDL_Surface *surface,
+                  SDL_Surface *screen,
+                  SDL_Rect &srcLoc,
+                  SDL_Rect &dstLoc) const;
+
+   //identitifes which entity subclass this is
+   virtual EntityTypeID classID() const = 0;
 };
 
 #endif

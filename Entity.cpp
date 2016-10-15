@@ -3,12 +3,16 @@
 #include <cstdlib> //rand
 #include <cassert>
 
-#include "Entity.h"
-#include "EntityType.h"
-#include "SDL.h"
-#include "Point.h"
 #include "misc.h"
 #include "globals.h"
+#include "SDL.h"
+#include "Debug.h"
+#include "Entity.h"
+#include "EntityType.h"
+#include "Point.h"
+#include "GameData.h"
+
+extern Debug debug;
 
 GameData *Entity::game_ = 0;
 SDL_Surface *Entity::screen_ = 0;
@@ -29,12 +33,12 @@ void Entity::draw(SDL_Surface *screen) const{
    SDL_Rect srcLoc = makeRect(0, 0,
                               thisType.drawRect_.w,
                               thisType.drawRect_.h);
-   layeredBlit(&srcLoc, &drawLoc, screen);
+   shadowBlit(&srcLoc, &drawLoc, screen);
 }
 
-void Entity::layeredBlit(SDL_Rect *srcLoc,
-                         SDL_Rect *dstLoc,
-                         SDL_Surface *screen) const{
+void Entity::shadowBlit(SDL_Rect *srcLoc,
+                        SDL_Rect *dstLoc,
+                        SDL_Surface *screen) const{
    //TODO index surfaces   
    const EntityType &thisType = type();
 
@@ -42,26 +46,19 @@ void Entity::layeredBlit(SDL_Rect *srcLoc,
    //show through the gaps in the sprite
    if (!MASK_BEFORE_CLIP && ENTITY_MASKS)
       SDL_BlitSurface(thisType.mask, srcLoc, screen, dstLoc); 
+
+   //shadow - white and black
+   colorBlit(ENTITY_WHITE, thisType.surface, screen,
+             *srcLoc, (*dstLoc + Point(1,1)));
+   colorBlit(ENTITY_BLACK, thisType.surface, screen,
+             *srcLoc, (*dstLoc - Point(1,1)));
    
-   //blit to the color mask, then blit the color mask
-   //to the screen
+   //colored sprite
+   colorBlit(getColor(), thisType.surface, screen,
+             *srcLoc, *dstLoc);
 
-   //shadow - black
-   SDL_FillRect(colorTemp, 0, WHITE_UINT);
-   SDL_BlitSurface(thisType.surface, 0, colorTemp, 0);
-   SDL_BlitSurface(colorTemp, srcLoc, screen,
-                   &(*dstLoc + Point(1, 1)));
 
-   //shadow - white
-   SDL_FillRect(colorTemp, 0, BLACK_UINT);
-   SDL_BlitSurface(thisType.surface, 0, colorTemp, 0);
-   SDL_BlitSurface(colorTemp, srcLoc, screen,
-                   &(*dstLoc - Point(1, 1)));
 
-   //color and blit sprite
-   SDL_FillRect(colorTemp, 0, getEntityColor(*game_, getColor()));
-   SDL_BlitSurface(thisType.surface, 0, colorTemp, 0);
-   SDL_BlitSurface(colorTemp, srcLoc, screen, dstLoc);
 }
 
 SDL_Rect Entity::getBaseRect(){
@@ -73,10 +70,10 @@ void Entity::tick(){} //default: do nothing
 void Entity::init(GameData *game, SDL_Surface *screen){
    game_ = game;
    screen_ = screen;
-   colorTemp =SDL_CreateRGBSurface(SDL_HWSURFACE,
-                                   SCREEN_WIDTH,
-                                   SCREEN_HEIGHT, SCREEN_BPP,
-                                   0, 0, 0, 0);
+   colorTemp = SDL_CreateRGBSurface(SDL_HWSURFACE,
+                                    SCREEN_WIDTH,
+                                    SCREEN_HEIGHT, SCREEN_BPP,
+                                    0, 0, 0, 0);
    SDL_SetColorKey(colorTemp, SDL_SRCCOLORKEY,
                    SDL_MapRGB(colorTemp->format,
                               ENTITY_BACKGROUND.r,
@@ -90,4 +87,50 @@ float Entity::getDrawPercent() const{
 
 int Entity::getColor() const{
    return ENTITY_DEFAULT; //default
+}
+
+void Entity::colorBlit(int color, SDL_Surface *surface,
+                       SDL_Surface *screen,
+                       SDL_Rect &srcLoc,
+                       SDL_Rect &dstLoc) const{
+
+   //   SDL_FillRect(colorTemp, 0, getEntityColor(*game_, color));
+   //   SDL_BlitSurface(surface, 0, colorTemp, 0);
+   //   SDL_BlitSurface(colorTemp, &srcLoc, screen, &dstLoc);
+
+      assert(color < ENTITY_MAX);
+      SDL_Surface *&index = game_->surfaceIndex
+                                     [color]
+                                     [type_]
+                                     [classID()];
+
+      //make sure colored sprite is indexed; if not,
+      if (index == 0){
+
+         //1. create it
+         debug("Creating indexed surface");
+         SDL_Rect drawRect = type().drawRect_;
+         index = SDL_CreateRGBSurface(SDL_HWSURFACE,
+                                      drawRect.w,
+                                      drawRect.h,
+                                      SCREEN_BPP,
+                                      0, 0, 0, 0);
+         SDL_SetColorKey(index, SDL_SRCCOLORKEY,
+                         SDL_MapRGB(index->format,
+                                    ENTITY_BACKGROUND.r,
+                                    ENTITY_BACKGROUND.g,
+                                    ENTITY_BACKGROUND.b));
+         
+         //2. fill with color
+         SDL_FillRect(index, 0,
+                      getEntityColor(*game_, color));
+
+         //3. add sprite
+         SDL_BlitSurface(surface, 0, index, 0);
+      }
+
+      //blit colored sprite to the screen.
+      //The indexed version definitely exists now.
+      SDL_BlitSurface(index, &srcLoc, screen, &dstLoc);
+
 }

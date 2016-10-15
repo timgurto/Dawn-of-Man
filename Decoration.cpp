@@ -10,3 +10,7 @@ Entity(type, loc){}
 const EntityType &Decoration::type() const{
    return game_->decorationTypes[type_];
 }
+
+EntityTypeID Decoration::classID(){
+   return DECORATION;
+}

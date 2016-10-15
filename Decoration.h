@@ -16,6 +16,7 @@ class Decoration : public Entity{
 public:
    Decoration(typeNum_t type, const Point &loc);
    const virtual EntityType &Decoration::type() const;
+   virtual EntityTypeID classID() = 0;
 };
 
 

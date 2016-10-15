@@ -128,7 +128,7 @@ enum Orientation{
    HORIZONTAL
 };
 
-//For surface indices
+//For the surface index
 enum EntityColor{
    ENTITY_DEFAULT = MAX_PLAYERS,
    ENTITY_WHITE,
