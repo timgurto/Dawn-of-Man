@@ -32,8 +32,6 @@ void Entity::draw(SDL_Surface *screen) const{
    SDL_BlitSurface(thisType.surface, 0, screen, &drawLoc);
 }
 
-void Entity::drawLater() const{};
-
 SDL_Rect Entity::getBaseRect(){
    return loc_ + type().baseRect_;   
 }

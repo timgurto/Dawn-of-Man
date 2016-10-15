@@ -14,6 +14,7 @@
 #include "Entity.h"
 #include "Point.h"
 #include "GameData.h"
+#include "BuildingType.h"
 
 extern Debug debug;
 extern int surfacesLoaded;

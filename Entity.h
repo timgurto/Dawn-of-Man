@@ -37,11 +37,6 @@ public:
    //Draws the entity, as well as a green mask behind
    //it if ENTITY_MASKS is true
    virtual void draw(SDL_Surface *screen = screen_) const;
-
-   //Anything extra that should be drawn after all
-   //entities' standard draw()s are called
-   //Example: construction particles
-   virtual void drawLater() const;
    
    //Any changes that need to be made to the entity
    //by the game loop

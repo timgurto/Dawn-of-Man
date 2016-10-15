@@ -232,11 +232,6 @@ void drawEverything(SDL_Surface *screen, SDL_Surface *back,
    if (ENTITY_MASKS)
       SDL_BlitSurface(entitiesTemp, 0, screen, 0);
 
-   //Entity extras
-   for (entities_t::const_iterator it = game.entities.begin();
-        it != game.entities.end(); ++it)
-      (*it)->drawLater();
-
    //Interface
    for (UIBars_t::const_iterator it = bars.begin(); it != bars.end(); ++it){
       (*it)->draw();
@@ -244,6 +239,11 @@ void drawEverything(SDL_Surface *screen, SDL_Surface *back,
 
    //Cursor
    blitCursor(cursor, cursorShadow, screen, mousePos);
+
+   //Particles
+   for (particles_t::const_iterator it = game.particles.begin();
+        it != game.particles.end(); ++it)
+      it->draw();
 
    //Debug text
    debug.display();
@@ -254,10 +254,24 @@ void drawEverything(SDL_Surface *screen, SDL_Surface *back,
 }
 
 void updateState(GameData &game){
+
+   //Entities
    for (entities_t::iterator it = game.entities.begin();
         it != game.entities.end(); ++it){
       (*it)->tick();
    }
+
+   //Particles
+   for (particles_t::iterator it = game.particles.begin();
+        it != game.particles.end(); ++it){
+      it->progress();
+      if (it->expired()){
+         it = game.particles.erase(it);
+         if (it == game.particles.end())
+            break;
+      }
+   }
+
 }
 
 void addEntity(GameData &game, Entity *entity){

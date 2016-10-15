@@ -7,7 +7,7 @@
 #include "SDL.h"
 #include "globals.h"
 #include "misc.h"
-//TODO Maybe just have one container of all particles
+
 class Particle{
 
    friend class Building;

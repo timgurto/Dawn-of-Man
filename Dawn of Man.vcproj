@@ -97,6 +97,7 @@
 			OutputDirectory="Release"
 			IntermediateDirectory="Release"
 			ConfigurationType="1"
+			EnableManagedIncrementalBuild="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"

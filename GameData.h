@@ -7,12 +7,14 @@
 #include <list>
 
 #include "globals.h"
-#include "BuildingType.h"
 
+class BuildingType;
 class Entity;
+class Particle;
 
 typedef std::vector<BuildingType> buildingTypes_t;
 typedef std::list<Entity *> entities_t;
+typedef std::list<Particle> particles_t;
 
 //Contains all data necessary to describe the game's
 //state.  Makes passing this information to classes
@@ -29,6 +31,8 @@ struct GameData{
    //The current game mode
    ControlMode mode;
 
+   //All particles in the game
+   particles_t particles;
 };
 
 #endif
