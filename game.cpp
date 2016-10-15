@@ -278,7 +278,7 @@ void updateState(GameData &game){
    //Particles
    for (particles_t::iterator it = game.particles.begin();
         it != game.particles.end(); ++it){
-      it->progress();
+      it->tick();
       if (it->expired()){
          it = game.particles.erase(it);
          if (it == game.particles.end())

@@ -25,7 +25,7 @@ offset(0){
    vV = rand() * 2 * VELOCITY_RANGE / RAND_MAX - VELOCITY_RANGE;
 }
 
-void Particle::progress(){
+void Particle::tick(){
    age -= DECAY;
    x += hV;
    offset += (hV >= 0 ? hV : -1 * hV);

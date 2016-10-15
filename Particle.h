@@ -15,20 +15,25 @@ class Particle{
    double hV, vV; //velocity
    double offset; //lateral displacement, for shadow
 
-   static SDL_Surface *screen_, *image_, *shadow_;
+   //static pointers to surfaces
+   static SDL_Surface
+      *screen_,
+      *image_, //the particle image
+      *shadow_; //the particle shadow image
 
 public:
 
    //constants
    const static double GRAVITY;
    const static int PARTICLE_COUNT;
-   const static double VELOCITY_RANGE;
-   const static int DELAY; //ms
+   const static double VELOCITY_RANGE; //in pixels/tick
+   const static int DELAY; //in ms
    const static int DECAY;
 
    Particle(const pixels_t xPos, const pixels_t yPos);
 
-   void progress();
+   //updates to velocity and position
+   void tick();
 
    void draw() const;
 
