@@ -1,4 +1,4 @@
-// (C) 2009 Tim Gurto
+// (C) 2009-2010 Tim Gurto
 
 #ifndef GAME_H
 #define GAME_H
@@ -13,15 +13,17 @@ struct GameData;
 //Main game functionality
 void gameMode();
 
+//Any processing within the game loop
+void updateState(GameData &game, SDL_Surface *screen, UIBars_t &bars);
+
 //Draws a frame
 void drawEverything(SDL_Surface *screen, SDL_Surface *back,
                     SDL_Surface *cursor, SDL_Surface *cursorShadow,
                     SDL_Surface *entitiesTemp,
-                    const Point &mousePos, const GameData &game,
-                    const UIBars_t &bars, typeNum_t toBuild);
+                    const GameData &game, const UIBars_t &bars);
 
-//Any processing within the game loop
-void updateState(GameData &game);
+//Handles events and changes game data accordingly
+void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars);
 
 //Adds an entity to the list, signing it up for garbage collection upon
 //removal

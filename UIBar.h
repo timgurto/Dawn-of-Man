@@ -1,10 +1,11 @@
-// (C) 2009 Tim Gurto
+// (C) 2009-2010 Tim Gurto
 
 #ifndef UI_BAR_H
 #define UI_BAR_H
 
 #include "SDL.h"
 #include "globals.h"
+#include "uiBarFunctions.h"
 
 struct Point;
 struct GameData;
@@ -38,6 +39,8 @@ public:
    UIBar(Corner corner, Orientation orientation,
          SDL_Surface *(*surfaceFun)(typeNum_t index,
                                     const GameData &game),
+         void (*clickFunction)(typeNum_t index,
+                               GameData &game),
          typeNum_t initialIconCount,
          ControlMode requiredMode);
 
@@ -53,6 +56,12 @@ public:
    //Which button the Point is pointing at;
    //NO_TYPE if none
    typeNum_t mouseIndex(const Point &point) const;
+
+   //the function that executes when a button is pushed.
+   void (*clickFun)(typeNum_t index, GameData &game);
+
+   //Whether this bar is active, given the current game mode
+   bool isActive(ControlMode mode);
 };
 
 //So that all bars can be dealt with at the same time

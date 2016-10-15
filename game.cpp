@@ -1,4 +1,4 @@
-// (C) 2009 Tim Gurto
+// (C) 2009-2010 Tim Gurto
 
 #include <cassert>
 #include <cstdlib>
@@ -12,6 +12,7 @@
 #include "globals.h"
 #include "game.h"
 #include "misc.h"
+#include "uiBarFunctions.h"
 #include "Debug.h"
 #include "GameData.h"
 #include "EntityType.h"
@@ -58,16 +59,12 @@ void gameMode(){
    SDL_SetAlpha(cursorShadow, SDL_SRCALPHA, SHADOW_ALPHA);
    Particle::init(screen, particle, particleShadow);
 
-   Point mousePos(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
-
    SDL_ShowCursor(SDL_DISABLE);
 
    //init
    GameData game;
    Entity::init(&game, screen);
    game.mode = NORMAL_MODE;
-
-   typeNum_t toBuild = NO_TYPE;
 
    //TODO load from files
    //=================================================
@@ -96,108 +93,38 @@ void gameMode(){
    UIBar::init(&game, screen, vBar, hBar);
    UIBar buildingsBar(BOTTOM_LEFT, VERTICAL,
                       &getBuildingTypeIcons,
+                      &selectBuilding,
                       game.buildingTypes.size(), NORMAL_MODE);
    bars.push_back(&buildingsBar);
    
 
-   timer_t ticks = SDL_GetTicks();
-   timer_t lastCalcTick = ticks, lastDrawTick = ticks;
+   timer_t oldTicks = SDL_GetTicks();
+   //timer_t lastCalcTick = ticks, lastDrawTick = ticks;
    debug("Redraw frequency: ", DRAW_MS, "ms");
    debug("State update frequency: ", CALC_MS, "ms");
 
-   bool loop = true;
-   while (loop){
-      // Handle events
-      SDL_Event event;
-      while (SDL_PollEvent(&event)){
-         switch (event.type){
-
-         case SDL_QUIT:
-            loop = false;
-            break;
-
-         case SDL_MOUSEMOTION:
-            mousePos.x = event.motion.x;
-            mousePos.y = event.motion.y;
-            break;
-
-         case SDL_KEYDOWN:
-            switch (event.key.keysym.sym){
-            case SDLK_PRINT:
-               {std::ostringstream os;
-               os << "shot" << time(0) << ".bmp";
-               SDL_SaveBMP(screen, os.str().c_str());}
-               break;
-            case SDLK_ESCAPE:
-               switch(game.mode){
-               case NORMAL_MODE:
-                  loop = false;
-                  break;
-               case BUILD_MODE:
-                  game.mode = NORMAL_MODE;
-                  break;
-               }
-               break;
-            }
-
-            break;
-
-         case SDL_MOUSEBUTTONDOWN:
-            debug("Mouse down: ", int(event.button.button));
-            switch (event.button.button){
-            case 1: //left click
-               switch (game.mode){
-               case NORMAL_MODE:
-                  toBuild = buildingsBar.mouseIndex(mousePos);
-                  debug("toBuild = ", toBuild);
-                  if (toBuild != NO_TYPE){
-                     game.mode = BUILD_MODE;
-                  }
-                  break;
-               case BUILD_MODE:
-                  //if not over any bars
-                  assert (toBuild != NO_TYPE);
-                  if (noCollision(game, game.buildingTypes[toBuild], mousePos)){
-                     addEntity(game, new Building(toBuild, mousePos));
-                     Uint8 *keyStates = SDL_GetKeyState(0);
-                     if(!keyStates[SDLK_LSHIFT]){
-                        game.mode = NORMAL_MODE;
-                        toBuild = NO_TYPE;
-                     }
-                  }
-               }
-               break;
-            case 3: //right click
-               switch(game.mode){
-               case BUILD_MODE:
-                  game.mode = NORMAL_MODE;
-                  break;
-               }
-            }
-            break;
-         }
-
-      }
+   game.loop = true;
+   while (game.loop){
       
-      ticks = SDL_GetTicks();
+      //time stuff
+      timer_t newTicks = SDL_GetTicks();
+      timer_t delta = newTicks - oldTicks;
+      oldTicks = newTicks;
 
-      // Update state if necessary
-      if (ticks - lastCalcTick >= CALC_MS){
-         //debug("Tick: updating state");
-         updateState(game);
-         lastCalcTick = MIN_WAIT ? ticks : lastCalcTick + CALC_MS;
-      }
+      //update state
+      updateState(game, screen, bars);
+
+      //render
+      drawEverything(screen,
+                     back,
+                     cursor,
+                     cursorShadow,
+                     entitiesTemp,
+                     game,
+                     bars);
 
 
-      // Redraw if necessary
-      if (ticks - lastDrawTick >= DRAW_MS){
-         //debug("Tick: redrawing");
-         drawEverything(screen, back, cursor, cursorShadow,
-                        entitiesTemp, mousePos, game, bars, toBuild);
-         lastDrawTick = MIN_WAIT ? ticks : lastDrawTick + DRAW_MS;
-      }
-
-   }
+   } //loop while
 
    SDL_ShowCursor(SDL_ENABLE);
 
@@ -212,11 +139,38 @@ void gameMode(){
 
 }
 
+//TODO take delta into account when updating
+void updateState(GameData &game, SDL_Surface *screen,
+                 UIBars_t &bars){
+
+   handleEvents(game, screen, bars);
+
+   //Entities
+   for (entities_t::iterator it = game.entities.begin();
+        it != game.entities.end(); ++it){
+      (*it)->tick();
+   }
+
+   //Particles
+   for (particles_t::iterator it = game.particles.begin();
+        it != game.particles.end(); ++it){
+      it->tick();
+      if (it->expired()){
+         it = game.particles.erase(it);
+         if (it == game.particles.end())
+            break;
+      }
+   }
+
+}
+
 void drawEverything(SDL_Surface *screen, SDL_Surface *back,
                     SDL_Surface *cursor, SDL_Surface *cursorShadow,
                     SDL_Surface *entitiesTemp,
-                    const Point &mousePos, const GameData &game,
-                    const UIBars_t &bars, typeNum_t toBuild){
+                    const GameData &game, const UIBars_t &bars){
+
+   //const Point &mousePos = game.mousePos;
+   //const typeNum_t &toBuild = game.toBuild;
 
    //Background
    SDL_FillRect(screen, 0, 0);
@@ -228,9 +182,10 @@ void drawEverything(SDL_Surface *screen, SDL_Surface *back,
 
    //Building footprint
    if (game.mode == BUILD_MODE){
-      SDL_Rect baseRect = mousePos + game.buildingTypes[toBuild].getBaseRect();
+      SDL_Rect baseRect = game.mousePos +
+                          game.buildingTypes[game.toBuild].getBaseRect();
       Uint32 footprintColor;
-      if (noCollision(game, game.buildingTypes[toBuild], mousePos))
+      if (noCollision(game, game.buildingTypes[game.toBuild], game.mousePos))
          footprintColor = FOOTPRINT_COLOR_GOOD;
       else
          footprintColor = FOOTPRINT_COLOR_BAD;
@@ -252,7 +207,7 @@ void drawEverything(SDL_Surface *screen, SDL_Surface *back,
    }
 
    //Cursor
-   blitCursor(cursor, cursorShadow, screen, mousePos);
+   blitCursor(cursor, cursorShadow, screen, game.mousePos);
 
    //Particles
    for (particles_t::const_iterator it = game.particles.begin();
@@ -267,25 +222,94 @@ void drawEverything(SDL_Surface *screen, SDL_Surface *back,
    assert(test);
 }
 
-void updateState(GameData &game){
+void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
 
-   //Entities
-   for (entities_t::iterator it = game.entities.begin();
-        it != game.entities.end(); ++it){
-      (*it)->tick();
-   }
+   //bool &loop = game.loop;
+   //Point &mousePos = game.mousePos;
+   //typeNum_t &toBuild = game.toBuild;
 
-   //Particles
-   for (particles_t::iterator it = game.particles.begin();
-        it != game.particles.end(); ++it){
-      it->tick();
-      if (it->expired()){
-         it = game.particles.erase(it);
-         if (it == game.particles.end())
+   SDL_Event event;
+   while (SDL_PollEvent(&event)){
+      switch (event.type){
+
+      case SDL_QUIT:
+         game.loop = false;
+         break;
+
+      case SDL_MOUSEMOTION:
+         game.mousePos.x = event.motion.x;
+         game.mousePos.y = event.motion.y;
+         break;
+
+      case SDL_KEYDOWN:
+         switch (event.key.keysym.sym){
+         case SDLK_PRINT:
+            { //new scope for os
+               std::ostringstream os;
+               os << "shot" << time(0) << ".bmp";
+               SDL_SaveBMP(screen, os.str().c_str());
+            }
             break;
-      }
-   }
+         case SDLK_ESCAPE:
+            switch(game.mode){
+            case NORMAL_MODE:
+               game.loop = false;
+               break;
+            case BUILD_MODE:
+               game.mode = NORMAL_MODE;
+               break;
+            }
+            break;
+         }
 
+         break;
+
+      case SDL_MOUSEBUTTONDOWN:
+         debug("Mouse down: ", int(event.button.button));
+         switch (event.button.button){
+            //TODO encode mouse button numbers
+         case 1: //left click
+            { //new scope for barClicked
+               //check UI bars
+               bool barClicked = false;
+               for (UIBars_t::iterator it = bars.begin();
+                    !barClicked && it != bars.end(); ++it)
+                  if ((*it)->isActive(game.mode)){
+                     typeNum_t index = (*it)->mouseIndex(game.mousePos);
+                     if (index != NO_TYPE){
+                        (*it)->clickFun(index, game);
+                        barClicked = true;
+                     }
+                  }
+               if (barClicked)
+                  break;
+            }
+
+            switch (game.mode){
+            case BUILD_MODE:
+               assert (game.toBuild != NO_TYPE);
+               if (noCollision(game, game.buildingTypes[game.toBuild],
+                               game.mousePos)){
+                  addEntity(game, new Building(game.toBuild,
+                            game.mousePos));
+                  Uint8 *keyStates = SDL_GetKeyState(0);
+                  if(!keyStates[SDLK_LSHIFT]){
+                     game.mode = NORMAL_MODE;
+                     game.toBuild = NO_TYPE;
+                  }
+               }
+            }
+            break;
+         case 3: //right click
+            switch(game.mode){
+            case BUILD_MODE:
+               game.mode = NORMAL_MODE;
+               break;
+            }
+         }
+         break;
+      } //event switch
+   } //event while
 }
 
 void addEntity(GameData &game, Entity *entity){

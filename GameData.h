@@ -1,4 +1,4 @@
-// (C) 2009 Tim Gurto
+// (C) 2009-2010 Tim Gurto
 
 #ifndef GAME_DATA_H
 #define GAME_DATA_H
@@ -12,6 +12,7 @@
 #include "Entity.h"
 #include "Particle.h"
 #include "Player.h"
+#include "Point.h"
 
 typedef std::vector<BuildingType> buildingTypes_t;
 typedef std::vector<DecorationType> decorationTypes_t;
@@ -28,7 +29,12 @@ typedef SDL_Surface *surfaceIndex_t
 //state.  Makes passing this information to classes
 //and functions much simpler.
 struct GameData{
-   
+
+   GameData();
+   //free entities and surfaces pointed to
+   ~GameData();
+
+
    //Entity types
    //vectors:
    // - contiguous for index access
@@ -63,28 +69,21 @@ struct GameData{
    //The current game mode
    ControlMode mode;
 
-   GameData(){
-      for (typeNum_t i = 0; i != ENTITY_MAX; ++i)
-         for (typeNum_t j = 0; j != MAX_TYPES; ++j)
-            for (typeNum_t k = 0; k != MAX_ENTITY_TYPE; ++k)
-               surfaceIndex[i][j][k] = 0;
-   }
+   //Whether the game loop is continuing
+   bool loop;
 
-   //free entities and surfaces pointed to
-   ~GameData(){
+   //The position of the mouse pointer
+   Point mousePos;
 
-      //entities (delete)
-      for (entities_t::iterator it = entities.begin();
-           it != entities.end(); ++it){
-         delete(*it);
-      }
+   //if in build mode, the selected building type
+   typeNum_t toBuild;
 
-      //surface index (SDL_FreeSurface)
-      for (typeNum_t i = 0; i != ENTITY_MAX; ++i)
-         for (typeNum_t j = 0; j != MAX_TYPES; ++j)
-            for (typeNum_t k = 0; k != MAX_ENTITY_TYPE; ++k)
-               SDL_FreeSurface(surfaceIndex[i][j][k]);
-   }
+
+
+
+
+
+
 };
 
 #endif

@@ -1,4 +1,4 @@
-// (C) 2009 Tim Gurto
+// (C) 2009-2010 Tim Gurto
 
 #include "SDL.h"
 #include "globals.h"
@@ -15,11 +15,14 @@ SDL_Surface *UIBar::vBarSurface_ = 0;
 UIBar::UIBar(Corner corner, Orientation orientation,
              SDL_Surface *(*surfaceFun)(typeNum_t index,
                                         const GameData &game),
+             void (*clickFunction)(typeNum_t index,
+                                   GameData &game),
              typeNum_t initialIconCount,
              ControlMode requiredMode):
 corner_(corner),
 orientation_(orientation),
 surfaceFun_(surfaceFun),
+clickFun(clickFunction),
 iconCount(initialIconCount),
 requiredMode_(requiredMode){
    calculateRect();
@@ -110,6 +113,10 @@ typeNum_t UIBar::mouseIndex(const Point &point) const{
          break;
       }
    return NO_TYPE;
+}
+
+bool UIBar::isActive(ControlMode mode){
+   return (mode == requiredMode_);
 }
 
 void UIBar::init(GameData *game,

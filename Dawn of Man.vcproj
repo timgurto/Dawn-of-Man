@@ -235,6 +235,10 @@
 				RelativePath=".\UIBar.h"
 				>
 			</File>
+			<File
+				RelativePath=".\uiBarFunctions.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
@@ -284,6 +288,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GameData.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\misc.cpp"
 				>
 			</File>
@@ -301,6 +309,10 @@
 			</File>
 			<File
 				RelativePath=".\UIBar.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\uiBarFunctions.cpp"
 				>
 			</File>
 		</Filter>

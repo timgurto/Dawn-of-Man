@@ -57,10 +57,6 @@ bool dereferenceLessThan(Entity *p1, Entity *p2);
 //Whether the Point lies on the SDL_Rect
 bool pointCollision(const Point &point, const SDL_Rect rect);
 
-//Given an index, fetches the corresponding BuildingType icon.
-//used as the icon function for the Buildings UIBar
-SDL_Surface *getBuildingTypeIcons(typeNum_t i, const GameData &game);
-
 //Checks for collisions against every entity in the game.
 bool noCollision(const GameData &game, const EntityType &type,
                 const Point &mousePos);

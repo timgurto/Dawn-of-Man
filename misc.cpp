@@ -1,4 +1,4 @@
-// (C) 2009 Tim Gurto
+// (C) 2009-2010 Tim Gurto
 
 #include <cassert>
 #include <string>
@@ -142,10 +142,6 @@ bool pointCollision(const Point &point, const SDL_Rect rect){
    return true;
 }
 
-SDL_Surface *getBuildingTypeIcons(typeNum_t i, const GameData &game){
-   return game.buildingTypes[i].getIcon();
-}
-
 bool noCollision(const GameData &game, const EntityType &type,
                const Point &mousePos){
    SDL_Rect rect = mousePos + type.getBaseRect();
@@ -180,10 +176,11 @@ Uint32 getEntityColor(const GameData &game, int color){
    switch(color){
    case ENTITY_DEFAULT:
       return ENTITY_DEFAULT_COLOR;
+   //TODO verify colors
    case ENTITY_WHITE:
-      return WHITE_UINT;
+      return 0xdddddd; //WHITE_UINT;
    case ENTITY_BLACK:
-      return BLACK_UINT;
+      return 0x222222; //BLACK_UINT;
    case ENTITY_DECORATION:
       return ENTITY_DECORATION_COLOR;
    default:
