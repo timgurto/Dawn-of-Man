@@ -12,7 +12,7 @@
 //globals
 
 //shows framerate and delta values
-Debug deltaLog(CYAN, 465, 0, 3);
+Debug deltaLog(CYAN, 465, 0, 2);
 
 //general debug messages
 Debug debug(YELLOW, 0, 0, 59);
@@ -23,7 +23,7 @@ Debug debug(YELLOW, 0, 0, 59);
 int surfacesLoaded(0);
 
 int main(int argc, char* argv[]){
-
+   argc; argv; //suppress warnings
 
    //SDL initialization
    int sdlInit(SDL_Init(SDL_INIT_VIDEO));
@@ -34,9 +34,7 @@ int main(int argc, char* argv[]){
 
    //debug objects initialization
    debug.initFont("Dina.fon", 0);
-   debug.enabled = DEBUG;
    deltaLog.initFont("Dina.fon", 0);
-   deltaLog.enabled = DEBUG;
 
 
    //Screen resolution stuff
@@ -44,7 +42,7 @@ int main(int argc, char* argv[]){
    debug("Current resolution: ", current->current_w, "x", current->current_h);
 
    SDL_Rect** resolutions = SDL_ListModes(NULL, SDL_FULLSCREEN|SDL_HWSURFACE);
-   assert (resolutions > 0);
+   assert (resolutions != 0);
    debug("Available resolutions:");
    while (*resolutions){
       debug((*resolutions)->w, "x", (*resolutions)->h);

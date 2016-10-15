@@ -36,5 +36,5 @@ GameData::~GameData(){
    for (typeNum_t i = 0; i != ENTITY_MAX; ++i)
       for (typeNum_t j = 0; j != MAX_TYPES; ++j)
          for (typeNum_t k = 0; k != MAX_ENTITY_TYPE; ++k)
-            SDL_FreeSurface(surfaceIndex[i][j][k]);
+            freeSurface(surfaceIndex[i][j][k]);
 }

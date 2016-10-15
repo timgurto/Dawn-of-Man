@@ -22,6 +22,8 @@ SDL_Surface *loadImage(const char* fileName, const SDL_Color &background);
 SDL_Surface *loadImage(const std::string fileName);
 SDL_Surface *loadImage(const std::string fileName, const SDL_Color &background);
 
+SDL_Surface *createSurface(int width = SCREEN_WIDTH, int height = SCREEN_HEIGHT);
+
 //Fake constructor and copy constructor for SDL_Rect
 SDL_Rect makeRect(Sint16 x = 0, Sint16 y = 0, Uint16 w = 0, Uint16 h = 0);
 SDL_Rect makeRect(const Point &point);
@@ -42,6 +44,10 @@ SDL_Surface *copySurface(SDL_Surface* src);
 // of zero.
 SDL_Rect dimRect(const SDL_Rect &original);
 
+//returns a rectangle with equal co-ordinates, but dimensions
+// of zero.
+SDL_Rect locRect(const SDL_Rect &original);
+
 
 //===misc===
 
@@ -58,15 +64,16 @@ template <typename Type> void checkP(Type *pointer){
 //(used in sorting the Entities list)
 bool dereferenceLessThan(Entity *p1, Entity *p2);
 
-//Whether the Point lies on the SDL_Rect
-bool pointCollision(const Point &point, const SDL_Rect rect);
-
 //Checks for collisions against every entity in the game.
 bool noCollision(const GameData &game, const EntityType &type,
                 const Point &mousePos);
 
 //Checks for a collision between two SDL_Rects
 bool collision(const SDL_Rect &r1, const SDL_Rect &r2);
+
+//Whether the Point lies on the SDL_Rect
+bool collision(const Point &point, const SDL_Rect rect);
+bool collision(const SDL_Rect rect, const Point &point);
 
 //looks up the relevant color based on index input
 Uint32 getEntityColor(const GameData &game, int color);

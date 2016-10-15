@@ -50,6 +50,11 @@ SDL_Surface *loadImage(const std::string fileName, const SDL_Color &background){
    return loadImage(fileName.c_str(), background);
 }
 
+SDL_Surface *createSurface(int width, int height){
+   ++surfacesLoaded;
+   return SDL_CreateRGBSurface(SDL_HWSURFACE, width, height, SCREEN_BPP, 0, 0, 0, 0);
+}
+
 SDL_Rect makeRect(Sint16 x, Sint16 y, Uint16 w, Uint16 h){
    SDL_Rect r;
    r.x = x;
@@ -85,7 +90,7 @@ SDL_Surface *setScreen(){
 
 void freeSurface(SDL_Surface *&p){
    if (p != 0){
-      debug("Unloading surface");
+      //debug("Unloading surface");
       SDL_FreeSurface(p);
       p = 0;
       --surfacesLoaded;
@@ -102,6 +107,10 @@ SDL_Rect dimRect(const SDL_Rect &original){
    return makeRect(0, 0, original.w, original.h);
 }
 
+SDL_Rect locRect(const SDL_Rect &original){
+   return makeRect(original.x, original.y);
+}
+
 
 //========misc=========
 
@@ -115,6 +124,9 @@ std::string makePath(EntityTypeID type, typeNum_t imageNumber,
       break;
    case DECORATION:
       path << DECORATIONS_IMAGE_PATH;
+      break;
+   default:
+      type = type;
       break;
    }
 
@@ -144,14 +156,6 @@ bool dereferenceLessThan(Entity *p1, Entity *p2){
    return *p1 < *p2;
 }
 
-bool pointCollision(const Point &point, const SDL_Rect rect){
-   if (point.x < rect.x) return false;
-   if (point.y < rect.y) return false;
-   if (point.x > rect.x + rect.w) return false;
-   if (point.y > rect.y + rect.h) return false;
-   return true;
-}
-
 bool noCollision(const GameData &game, const EntityType &type,
                const Point &mousePos){
    SDL_Rect rect = mousePos + type.getBaseRect();
@@ -160,6 +164,7 @@ bool noCollision(const GameData &game, const EntityType &type,
    if (!inside(rect, game.map))
       return false;
    
+   //TODO operator-=
    rect = rect - game.map;
 
    //check against entities
@@ -181,6 +186,18 @@ bool collision(const SDL_Rect &r1, const SDL_Rect &r2){
    if (r2.y > r1.y + r1.h)
       return false;
    return true;
+}
+
+bool collision(const Point &point, const SDL_Rect rect){
+   if (point.x < rect.x) return false;
+   if (point.y < rect.y) return false;
+   if (point.x > rect.x + rect.w) return false;
+   if (point.y > rect.y + rect.h) return false;
+   return true;
+}
+
+bool collision(const SDL_Rect rect, const Point &point){
+   return collision(point, rect);
 }
 
 Uint32 getEntityColor(const GameData &game, int color){

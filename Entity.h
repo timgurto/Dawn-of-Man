@@ -24,11 +24,7 @@ protected: //everything should be a derived class
    Direction direction;
 
    Point loc_; //location
-
-   //used in drawing; static to avoid having to
-   //recreate it constantly
-   static SDL_Surface *colorTemp;
-
+   //TODO use reference instead of ptr
    static GameData *game_; //static pointer to game
    static SDL_Surface *screen_;
 
@@ -54,7 +50,9 @@ public:
    //less than; compares y co-ordinates
    bool operator<(const Entity &rhs) const;
    
+   //type() rectangles + entity's location
    SDL_Rect getBaseRect();
+   SDL_Rect getDrawRect();
 
    virtual ~Entity(){}
 
@@ -69,6 +67,9 @@ public:
    //Any changes that need to be made to the entity
    //by the game loop
    virtual void tick(double delta);
+
+   //Whether the entity is within the screen frame
+   bool onScreen();
 
    //Initializes the class' static pointer
    static void init(GameData *game, SDL_Surface *screen);

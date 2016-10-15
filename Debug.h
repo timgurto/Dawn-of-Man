@@ -12,6 +12,7 @@
 #include "misc.h"
 #include "globals.h"
 
+#ifndef NDEBUG
 //A box of scrolling messages sent from various parts
 //of the program
 //Not singleton, since I might use this class for actual
@@ -32,8 +33,6 @@ class Debug{
    static int debugCount;
 
 public:
-   bool enabled;
-
    Debug(SDL_Color color, pixels_t x, pixels_t y,
          unsigned short count);
    ~Debug();
@@ -78,10 +77,27 @@ public:
    }
 };
 
-#endif
+#else
 
+//empty functions
+class Debug{
+public:
+   Debug(SDL_Color color, pixels_t x, pixels_t y,
+      unsigned short count){}
+   void initScreen(SDL_Surface *screen){}
+   void initFont(std::string name, int size){}
+   void display(){}
 
+   template <typename A>
+   void operator()(A a){}
+   template <typename A, typename B>
+   void operator()(A a, B b){}
+   template <typename A, typename B, typename C>
+   void operator()(A a, B b, C c){}
+   template <typename A, typename B, typename C, typename D>
+   void operator()(A a, B b, C c, D d){}
+};
 
+#endif //class
 
-
-
+#endif //header guard

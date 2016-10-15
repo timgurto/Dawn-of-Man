@@ -1,5 +1,7 @@
 // (C) 2009-2010 Tim Gurto
 
+#ifndef NDEBUG
+
 #include <queue>
 #include <cassert>
 
@@ -40,15 +42,12 @@ void Debug::initFont(std::string name, int size){
 }
 
 void Debug::add(std::string message){
-if (enabled){
    messages.push(message);
    if (messages.size() > count_)
       messages.pop();
-   }
 }
 
 void Debug::display(){
-if (enabled){
    if (screen_ != 0){
       std::queue<std::string> copy(messages);
       int lat = 0;
@@ -70,4 +69,6 @@ if (enabled){
          lat += height;
       }
    }
-}}
+}
+
+#endif

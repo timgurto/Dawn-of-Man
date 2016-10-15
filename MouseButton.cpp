@@ -7,7 +7,7 @@
 
 extern Debug debug;
 
-const pixels_t MouseButton::MOVEMENT_THRESHOLD = 10;
+const pixels_t MouseButton::MOVEMENT_THRESHOLD = 15;
 
 MouseButton::MouseButton():
 dragBegin(),
@@ -31,7 +31,7 @@ void MouseButton::checkDrag(const Point &mousePos){
           dragBegin.x - mousePos.x >= MOVEMENT_THRESHOLD ||
           mousePos.y - dragBegin.y >= MOVEMENT_THRESHOLD ||
           dragBegin.y - mousePos.y >= MOVEMENT_THRESHOLD){
-         debug("Dragging");
+         //debug("Dragging");
          dragging = true;
       }
 }

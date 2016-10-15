@@ -103,7 +103,7 @@ void UIBar::draw() const{
 typeNum_t UIBar::mouseIndex(const Point &point) const{
    //if collision with bar
    SDL_Rect barRect = rect;
-   if (pointCollision(point, barRect))
+   if (collision(point, barRect))
       switch (orientation_){
       case HORIZONTAL:
          return (point.x - barRect.x) / ICON_SIZE;

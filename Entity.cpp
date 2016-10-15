@@ -16,12 +16,12 @@ extern Debug debug;
 
 GameData *Entity::game_ = 0;
 SDL_Surface *Entity::screen_ = 0;
-SDL_Surface *Entity::colorTemp = 0;
 
 Entity::Entity(typeNum_t type, const Point &loc):
 type_(type),
 loc_(loc),
-direction(Direction(rand() % 4)){}
+direction(Direction(rand() % 4)),
+selected(false){}
 
 bool Entity::operator<(const Entity &rhs) const{
    return (loc_.y < rhs.loc_.y);
@@ -40,20 +40,20 @@ SDL_Rect Entity::getBaseRect(){
    return loc_ + type().baseRect_;   
 }
 
+SDL_Rect Entity::getDrawRect(){
+   return loc_ + type().drawRect_;   
+}
+
 void Entity::tick(double delta){} //default: do nothing
+
+bool Entity::onScreen(){
+   return collision(loc_ + type().drawRect_ + locRect(game_->map),
+                    screen_->clip_rect);
+}
 
 void Entity::init(GameData *game, SDL_Surface *screen){
    game_ = game;
    screen_ = screen;
-   colorTemp = SDL_CreateRGBSurface(SDL_HWSURFACE,
-                                    SCREEN_WIDTH,
-                                    SCREEN_HEIGHT, SCREEN_BPP,
-                                    0, 0, 0, 0);
-   SDL_SetColorKey(colorTemp, SDL_SRCCOLORKEY,
-                   SDL_MapRGB(colorTemp->format,
-                              ENTITY_BACKGROUND.r,
-                              ENTITY_BACKGROUND.g,
-                              ENTITY_BACKGROUND.b));
 }
 
 double Entity::getDrawPercent() const{
@@ -80,11 +80,7 @@ void Entity::colorBlit(int color, SDL_Surface *screen,
          //1. create it
          debug("Creating indexed surface");
          SDL_Rect drawRect = type().drawRect_;
-         index = SDL_CreateRGBSurface(SDL_HWSURFACE,
-                                      drawRect.w,
-                                      drawRect.h,
-                                      SCREEN_BPP,
-                                      0, 0, 0, 0);
+         index = createSurface(drawRect.w, drawRect.h);
          SDL_SetColorKey(index, SDL_SRCCOLORKEY,
                          SDL_MapRGB(index->format,
                                     ENTITY_BACKGROUND.r,

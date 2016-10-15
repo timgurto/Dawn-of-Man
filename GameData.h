@@ -20,7 +20,6 @@ typedef std::vector<DecorationType> decorationTypes_t;
 typedef std::vector<Player> players_t;
 typedef std::list<Entity *> entities_t;
 typedef std::list<Particle> particles_t;
-//TODO only entity types that have changing colors
 typedef SDL_Surface *surfaceIndex_t
                         [ENTITY_MAX] //number of colors
                         [MAX_TYPES] //number of types

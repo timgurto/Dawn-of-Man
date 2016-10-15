@@ -9,11 +9,10 @@
 
 //DEBUG determines:
 // -The displaying of debug messages
-#ifdef NDEBUG
-const bool DEBUG = false;
+#ifdef NDEBUG //VS: Debug vs. Release mode
+#define DEBUG false
 #else
-//TODO make "debug" a macro
-const bool DEBUG = true;
+#define DEBUG true
 #endif
 
 typedef unsigned short typeNum_t;
@@ -76,7 +75,7 @@ const bool PARTICLE_FADE = false;
 const Uint8 SHADOW_ALPHA = 0x44;
 
 //Alpha of the selection rectangle
-const Uint8 SELECTION_RECT_ALPHA = 0x44;
+const Uint8 SELECTION_RECT_ALPHA = 0x66;
 
 //This has a substantial effect on performance
 //===================================================
@@ -94,9 +93,10 @@ const Uint32 FOOTPRINT_COLOR_BAD  = 0x880000; //dark red
 
 const pixels_t MAP_TILE_SIZE = 512;
 const pixels_t SCROLL_AMOUNT = 40;
-const pixels_t SCROLL_MARGIN = 50;
+const pixels_t SCROLL_MARGIN = 100;
+const pixels_t EDGE_SCROLL_MARGIN = 4;
 
-const double RMB_SCROLL_MULTIPLIER = 0.5;
+const double RMB_SCROLL_MULTIPLIER = 0.3;
 
 const pixels_t ICON_SIZE = 48;
 const std::string IMAGE_SUFFIX = ".png";
@@ -127,8 +127,10 @@ enum ImageModifier{
 //For makePath()
 enum EntityTypeID{
    BUILDING,
-   DECORATION,
-   MAX_ENTITY_TYPE //for array sizes
+   //Everything above this comment
+   //has multiple colors.
+   MAX_ENTITY_TYPE, //for array sizes.
+   DECORATION
 };
 
 //Interface modes for the game
@@ -154,6 +156,7 @@ enum Orientation{
 //For the surface index
 enum EntityColor{
    ENTITY_DEFAULT = MAX_PLAYERS,
+   //insert more colors here
    ENTITY_MAX //for array sizes
 };
 const Uint32 ENTITY_DEFAULT_COLOR = 0xaaaa22;

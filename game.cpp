@@ -43,6 +43,7 @@ void gameMode(){
       *cursor = loadImage(MISC_IMAGE_PATH + "cursor.png", GREEN),
       *cursorShadow = loadImage(MISC_IMAGE_PATH +
                                 "cursorShadow.PNG", GREEN),
+      //TODO engrave bar images
       *vBar = loadImage(INTERFACE_IMAGE_PATH + "vBar.PNG"),
       *hBar = loadImage(INTERFACE_IMAGE_PATH + "hBar.PNG"),
       *diagGreen = loadImage(MISC_IMAGE_PATH + "diagGreen.PNG", GREEN),
@@ -50,11 +51,8 @@ void gameMode(){
       *particle = loadImage(MISC_IMAGE_PATH + "particle.PNG", GREEN),
       *particleShadow = loadImage(MISC_IMAGE_PATH +
                                   "particleShadow.PNG", GREEN),
-      *entitiesTemp = SDL_CreateRGBSurface(SDL_HWSURFACE,
-                                           SCREEN_WIDTH,
-                                           SCREEN_HEIGHT,
-                                           SCREEN_BPP,
-                                           0, 0, 0, 0);
+      *entitiesTemp = createSurface(),
+      *selection = loadImage(MISC_IMAGE_PATH + "selection.PNG");
    SDL_SetColorKey(entitiesTemp, SDL_SRCCOLORKEY,
                    SDL_MapRGB(entitiesTemp->format,
                               ENTITY_BACKGROUND.r,
@@ -66,7 +64,7 @@ void gameMode(){
    SDL_ShowCursor(SDL_DISABLE);
 
    //init
-   GameData game(3, 2);
+   GameData game(4, 3);
    Entity::init(&game, screen);
    Particle::init(screen, particle, particleShadow);
    game.mode = NORMAL_MODE;
@@ -113,10 +111,9 @@ void gameMode(){
       oldTicks = newTicks;
       double deltaMod = 1.0 * delta / DELTA_MODIFIER;
       
+      //TODO some means of displaying FPS in Release
       deltaLog("    Framerate: ", (delta == 0 ? 0 : 1000 / delta));
       deltaLog("        Delta: ", delta, "ms");
-      deltaLog("ms per entity: ", 0.01 * (100 * delta /
-                                          game.entities.size()));
 
       //update state
       updateState(deltaMod, game, screen, bars);
@@ -140,7 +137,8 @@ void gameMode(){
    freeSurface(particleShadow);
    freeSurface(diagGreen);
    freeSurface(diagRed);
-   SDL_FreeSurface(entitiesTemp);
+   freeSurface(entitiesTemp);
+   freeSurface(selection);
 
 }
 
@@ -201,7 +199,6 @@ void render(SDL_Surface *screen,
          }
       }
 
-   //TODO red if bad. Change file to magenta.
    //Building footprint
    if (game.mode == BUILD_MODE &&
        !game.rightMouse.dragging){
@@ -213,49 +210,31 @@ void render(SDL_Surface *screen,
          SDL_BlitSurface(diagRed, &dimRect(baseRect), screen, &SDL_Rect(baseRect));
    }
 
-   //TODO check inside screen
    //Entities
    if (ENTITY_MASKS)
       SDL_FillRect(entitiesTemp, 0, ENTITY_BACKGROUND_UINT);
    for (entities_t::const_iterator it = game.entities.begin();
         it != game.entities.end(); ++it)
-      (*it)->draw(ENTITY_MASKS ? entitiesTemp : screen);
+      //only draw entities that are on-screen
+      if ((*it)->onScreen()){
+         if (!(*it)->selected) (*it)->draw(ENTITY_MASKS ? entitiesTemp : screen);
+      }
    if (ENTITY_MASKS)
       SDL_BlitSurface(entitiesTemp, 0, screen, 0);
 
-   //TODO better rectangle
    //Selection rectangle
    if (game.mode != BUILD_MODE &&
        game.leftMouse.dragging){
-      //set up rectangle for blitting
-      //TODO modify dragBegin, not mousePos
-      Point modMouse = game.mousePos - game.map;
-      SDL_Rect selRect;
-      if (game.leftMouse.dragBegin.x < modMouse.x)
-         selRect.x = game.leftMouse.dragBegin.x,
-         selRect.w = modMouse.x - game.leftMouse.dragBegin.x;
-      else
-         selRect.x = modMouse.x,
-         selRect.w = game.leftMouse.dragBegin.x - modMouse.x;
-      if (game.leftMouse.dragBegin.y < modMouse.y)
-         selRect.y = game.leftMouse.dragBegin.y,
-         selRect.h = modMouse.y - game.leftMouse.dragBegin.y;
-      else
-         selRect.y = modMouse.y,
-         selRect.h = game.leftMouse.dragBegin.y - modMouse.y;
-      selRect = selRect + game.map;
-
-      //TODO wrapper for CreateRGB.., and keep track of # of surfaces
-      SDL_Surface *temp = SDL_CreateRGBSurface(SDL_HWSURFACE,
-                                               selRect.w,
-                                               selRect.h,
-                                               SCREEN_BPP,
-                                               0, 0, 0, 0);
+      
+      //Get rectangle
+      SDL_Rect selRect = getSelectionRect(game);
+      
+      //Draw rectangle
+      SDL_Surface *temp = createSurface(selRect.w, selRect.h);
       SDL_SetAlpha(temp, SDL_SRCALPHA, SELECTION_RECT_ALPHA);
       SDL_FillRect(temp, &dimRect(selRect), WHITE_UINT);
-      SDL_BlitSurface(temp, 0, screen,
-                      &makeRect(selRect));
-      SDL_FreeSurface(temp);
+      SDL_BlitSurface(temp, 0, screen, &selRect);
+      freeSurface(temp);
    }
 
    //Interface
@@ -263,7 +242,6 @@ void render(SDL_Surface *screen,
       (*it)->draw();
    }
 
-   //TODO maybe blit cursor above particles if raised
    //Cursor
    blitCursor(cursor, cursorShadow, screen, game);
 
@@ -287,10 +265,14 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
    while (SDL_PollEvent(&event)){
       switch (event.type){
 
+
+
       //Window is exited
       case SDL_QUIT:
          game.loop = false;
          break;
+
+
 
       //Mouse is moved
       case SDL_MOUSEMOTION:
@@ -306,6 +288,8 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
                            game.mousePos);
             break;
          break;
+
+
 
       //A key is pressed
       case SDL_KEYDOWN:
@@ -327,58 +311,42 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
                break;
             }
             break;
-         case SDLK_F11:
-            //F11: toggle FPS display
-            deltaLog.enabled = ! deltaLog.enabled;
-            break;
          }
          break;
 
-      //A mouse button is clicked
+
+
+      //A mouse button is pressed
       case SDL_MOUSEBUTTONDOWN:
          //debug("Mouse down: ", int(event.button.button));
          switch (event.button.button){
          case MOUSE_BUTTON_LEFT:
-            game.leftMouse.mouseDown(game.mousePos - game.map);
-            //check UI bars
-            { //new scope for barClicked
+            {//new scope for barClicked
+               //if not clicking a button
                bool barClicked = false;
                for (UIBars_t::iterator it = bars.begin();
                     !barClicked && it != bars.end(); ++it)
-                  if ((*it)->isActive(game.mode)){
-                     typeNum_t index = (*it)->mouseIndex(game.mousePos);
-                     if (index != NO_TYPE){
-                        (*it)->clickFun(index, game);
+                  if ((*it)->isActive(game.mode))
+                     if ((*it)->mouseIndex(game.mousePos) != NO_TYPE)
                         barClicked = true;
-                     }
-                  }
-               if (barClicked)
-                  break;
-            }
-            switch (game.mode){
-            case BUILD_MODE:
-               assert (game.toBuild != NO_TYPE);
-               if (game.buildLocationOK){
-                  addEntity(game, new Building(game.toBuild,
-                            game.mousePos - game.map));
+               if (!barClicked)
 
-                  //Shift key: construct multiple buildings
-                  Uint8 *keyStates = SDL_GetKeyState(0);
-                  if(!keyStates[SDLK_LSHIFT]){
-                     game.mode = NORMAL_MODE;
-                     game.toBuild = NO_TYPE;
-                  }
-               }
+                  //initialize selection box stuff
+                  game.leftMouse.mouseDown(game.mousePos - game.map);
             }
             break;
          case MOUSE_BUTTON_RIGHT:
+            //initialize right-drag scroll stuff
             game.rightMouse.mouseDown(game.mousePos);
             break;
-         }
+         }// switch mouse button
          break;
 
-      //A mouse button is unclicked
+
+
+      //A mouse button is released
       case SDL_MOUSEBUTTONUP:
+
          switch (event.button.button){
          case MOUSE_BUTTON_RIGHT:
             if (!game.rightMouse.dragging)
@@ -391,23 +359,45 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
             game.rightMouse.mouseUp();
             break;
          case MOUSE_BUTTON_LEFT:
-            game.leftMouse.mouseUp();
+            bool barClicked = false; //whether a UIBar was clicked
+            //check UI bars
+            if (!game.leftMouse.dragging){
+               for (UIBars_t::iterator it = bars.begin();
+                    !barClicked && it != bars.end(); ++it)
+                  if ((*it)->isActive(game.mode)){
+                     typeNum_t index = (*it)->mouseIndex(game.mousePos);
+                     if (index != NO_TYPE){
+                        (*it)->clickFun(index, game);
+                        barClicked = true;
+                     }
+                  }
+            }
+
+            if (!barClicked){
+               //place new building
+               if (game.mode == BUILD_MODE){
+                  assert (game.toBuild != NO_TYPE);
+                  if (game.buildLocationOK){
+                     addEntity(game, new Building(game.toBuild,
+                               game.mousePos - game.map));
+
+                     //Shift key: construct multiple buildings
+                     Uint8 *keyStates = SDL_GetKeyState(0);
+                     if(!keyStates[SDLK_LSHIFT]){
+                        game.mode = NORMAL_MODE;
+                        game.toBuild = NO_TYPE;
+                     }
+                  }
+               }else
+                  select(game);
+               game.leftMouse.mouseUp();
+            }// if barClicked
+
          }
          break;
 
       } //event switch
    } //event while
-}
-
-void addEntity(GameData &game, Entity *entity){
-   game.entities.insert(std::lower_bound(game.entities.begin(),
-                                         game.entities.end(), entity,
-                                         dereferenceLessThan),
-                        entity);
-}
-
-void removeEntity(){
-   //delete() the Entity*
 }
 
 void blitCursor (SDL_Surface *cursor, SDL_Surface *shadow,
@@ -427,8 +417,18 @@ void blitCursor (SDL_Surface *cursor, SDL_Surface *shadow,
    SDL_BlitSurface(cursor, 0, screen, &makeRect(cursorPos));
 }
 
+void addEntity(GameData &game, Entity *entity){
+   game.entities.insert(std::lower_bound(game.entities.begin(),
+                                         game.entities.end(), entity,
+                                         dereferenceLessThan),
+                        entity);
+}
+
+void removeEntity(entities_t::iterator it){
+   //delete() the Entity*
+}
+
 void scrollMap(GameData &game, double delta){
-   //TODO edge of map scrolling
 
    //right-dragging
    if (game.rightMouse.dragging){
@@ -437,9 +437,20 @@ void scrollMap(GameData &game, double delta){
                                                RMB_SCROLL_MULTIPLIER);
    }
 
+   pixels_t scroll = pixels_t(delta * SCROLL_AMOUNT);
+
+   //edge of screen
+   if (game.mousePos.x < EDGE_SCROLL_MARGIN)
+      game.map.x += scroll;
+   else if (game.mousePos.x > SCREEN_WIDTH - EDGE_SCROLL_MARGIN)
+      game.map.x -= scroll;
+   if (game.mousePos.y < EDGE_SCROLL_MARGIN)
+      game.map.y += scroll;
+   else if (game.mousePos.y > SCREEN_HEIGHT - EDGE_SCROLL_MARGIN)
+      game.map.y -= scroll;
+
    //arrow keys
    Uint8 *keyStates = SDL_GetKeyState(0);
-   pixels_t scroll = pixels_t(delta * SCROLL_AMOUNT);
    if (keyStates[SDLK_UP])
       game.map.y += scroll;
    if (keyStates[SDLK_DOWN])
@@ -458,4 +469,60 @@ void scrollMap(GameData &game, double delta){
       game.map.y = SCROLL_MARGIN;
    if (game.map.y + game.map.h < SCREEN_HEIGHT - SCROLL_MARGIN)
       game.map.y = SCREEN_HEIGHT - SCROLL_MARGIN - game.map.h;
+}
+
+SDL_Rect getSelectionRect(const GameData &game){
+   const SDL_Rect &map = game.map;
+   const MouseButton &leftMouse = game.leftMouse;
+   Point modMouse = game.mousePos - map;
+   SDL_Rect selRect;
+
+   if (leftMouse.dragBegin.x < modMouse.x){
+      selRect.x = leftMouse.dragBegin.x;
+      selRect.w = modMouse.x - leftMouse.dragBegin.x;
+   }else{
+      selRect.x = modMouse.x;
+      selRect.w = leftMouse.dragBegin.x - modMouse.x;
+   }
+   if (leftMouse.dragBegin.y < modMouse.y){
+      selRect.y = leftMouse.dragBegin.y;
+      selRect.h = modMouse.y - leftMouse.dragBegin.y;
+   }else{
+      selRect.y = modMouse.y;
+      selRect.h = leftMouse.dragBegin.y - modMouse.y;
+   }
+   return selRect + map;
+}
+
+void select(GameData &game){
+   Uint8 *keyStates = SDL_GetKeyState(0);
+   bool entitySelected = false;
+   for (entities_t::iterator it = game.entities.begin();
+        it != game.entities.end(); ++it){
+      if ((*it)->selectable()){
+         //unselect everything
+         if (!keyStates[SDLK_LCTRL])
+            (*it)->selected = false;
+
+         //determine collision
+         bool collides;
+         if (game.leftMouse.dragging) //selection box
+            collides = collision((*it)->getDrawRect(),
+                                 getSelectionRect(game));
+         else                         //single point
+            collides = collision((*it)->getDrawRect(),
+                                 game.mousePos + Point(game.map));
+
+         if (collides){
+            if (keyStates[SDLK_LCTRL])
+               (*it)->toggleSelect(); //Ctrl: toggle
+            else
+               (*it)->selected = true; //No ctrl: select
+            entitySelected = true;
+            if (!game.leftMouse.dragging) //if single point click
+               break;
+         } //if collides
+      } // if selectable
+   } // for entities
+   if (entitySelected) debug("Something selected");
 }

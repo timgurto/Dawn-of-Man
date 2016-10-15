@@ -6,9 +6,8 @@
 #include "SDL.h"
 #include "globals.h"
 #include "UIBar.h"
-class Debug;
+#include "GameData.h"
 class Entity;
-struct GameData;
 
 //Main game functionality
 void gameMode();
@@ -28,18 +27,25 @@ void render(SDL_Surface *screen,
 //Handles events and changes game data accordingly
 void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars);
 
+//Draws the cursor to the screen
+void blitCursor (SDL_Surface *cursor, SDL_Surface *shadow,
+                 SDL_Surface *screen, const GameData &game);
+
 //Adds an entity to the list, signing it up for garbage collection upon
 //removal
 void addEntity(GameData &game, Entity *entity);
 
 //Removes an entity from the list, and deallocates it
-void removeEntity();
-
-//Draws the cursor to the screen
-void blitCursor (SDL_Surface *cursor, SDL_Surface *shadow,
-                 SDL_Surface *screen, const GameData &game);
+void removeEntity(entities_t::iterator it);
 
 //Scrolls the map, based on keyboard/mouse states
 void scrollMap(GameData &game, double Delta);
+
+//calculates the dimensions of the selection rectangle,
+//for drawing or determining collisions with entities
+SDL_Rect getSelectionRect(const GameData &game);
+
+//Selects entities chosen by the user
+void select(GameData &game);
 
 #endif

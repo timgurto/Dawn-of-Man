@@ -9,7 +9,8 @@ y(original.y){}
 
 Point::Point(pixels_t xCoord, pixels_t yCoord):
 x(xCoord),
-y(yCoord){}
+y(yCoord)
+{}
 
 Point Point::operator=(const SDL_Rect &rhs){
    Point p(rhs.x, rhs.y);

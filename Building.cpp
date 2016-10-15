@@ -78,7 +78,7 @@ void Building::tick(double delta){
       if (progress_ >= game_->buildingTypes[type_].progress_){
          finished = true;
          drawPercent = FULL;
-         debug("building finished");
+         //debug("building finished");
       }else
          drawPercent = 1.0 * progress_ /
                  game_->buildingTypes[type_].progress_;
