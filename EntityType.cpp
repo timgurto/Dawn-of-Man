@@ -4,15 +4,19 @@
 #include "misc.h"
 
 EntityType::EntityType(typeNum_t index, EntityTypeID type,
-           const std::string &name,
-           const SDL_Rect &drawRect, const SDL_Rect &baseRect,
-           const SDL_Color &background):
+                       const std::string &name,
+                       const SDL_Rect &drawRect,
+                       const SDL_Rect &baseRect):
 index_(index),
 name_(name),
 drawRect_(drawRect),
 baseRect_(baseRect){
-   surface = loadImage(makePath(type, index_), background);
-   portrait = loadImage(makePath(type, index_, true), background);
+   surface = loadImage(makePath(type, index_),
+                       ENTITY_BACKGROUND);
+   portrait = loadImage(makePath(type, index_, ICON),
+                        ENTITY_BACKGROUND);
+   mask = loadImage(makePath(type, index_, MASK),
+                    ENTITY_MASK);
 }
 
 EntityType::EntityType(const EntityType &original):
@@ -21,7 +25,8 @@ name_(original.name_),
 drawRect_(original.drawRect_),
 baseRect_(original.baseRect_),
 surface(copySurface(original.surface)),
-portrait(copySurface(original.portrait)){}
+portrait(copySurface(original.portrait)),
+mask(copySurface(original.mask)){}
 
 EntityType &EntityType::operator=(const EntityType &rhs){
    if (&rhs != this){
@@ -31,6 +36,7 @@ EntityType &EntityType::operator=(const EntityType &rhs){
       baseRect_ = rhs.baseRect_;
       surface = copySurface(rhs.surface);
       portrait = copySurface(rhs.portrait);
+      mask = copySurface(rhs.mask);
    }
    return *this;
 }
@@ -38,4 +44,5 @@ EntityType &EntityType::operator=(const EntityType &rhs){
 EntityType::~EntityType(){
    freeSurface(surface);
    freeSurface(portrait);
+   freeSurface(mask);
 }

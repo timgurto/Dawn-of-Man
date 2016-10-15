@@ -24,7 +24,7 @@ const bool MIN_WAIT = true;
 const timer_t DRAW_MS = 1; //time between redraws
 const timer_t CALC_MS = 40; //time between state updates
 //progress points added per state update
-//progress points = time to complete something
+//progress points: proportional to completion time
 const progress_t PROGRESS_PER_CALC = 10;
 
 const pixels_t SCREEN_WIDTH = 1024;
@@ -49,16 +49,25 @@ const SDL_Color WHITE   = {0xff, 0xff, 0xff};
 
 const Uint8 OPAQUE      = 0xff;
 const Uint8 TRANSPARENT = 0;
-
+//anything behind each entity is cleared
+const bool ENTITY_MASKS = false;
+const SDL_Color ENTITY_BACKGROUND = GREEN;
+const SDL_Color ENTITY_MASK       = MAGENTA;
 const Uint32 FOOTPRINT_COLOR_GOOD = 0x008800;
 const Uint32 FOOTPRINT_COLOR_BAD  = 0x880000;
 
-//TODO rename portraits to icons
+//TODO: rename portraits to icons
 const pixels_t ICON_SIZE = 48;
 const std::string IMAGE_SUFFIX = ".png";
 const std::string IMAGE_PATH           = "Images/";
 const std::string BUILDINGS_IMAGE_PATH = "Buildings/";
 const std::string INTERFACE_IMAGE_PATH = "Interface/";
+
+enum ImageModifier{
+   NONE,
+   ICON,
+   MASK
+};
 
 enum EntityTypeID{
    BUILDING

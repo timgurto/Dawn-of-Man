@@ -15,7 +15,6 @@ public:
                 const std::string &name,
                 const SDL_Rect &drawRect,
                 const SDL_Rect &baseRect,
-                const SDL_Color &background,
                 progress_t progress = 0);
 
 };

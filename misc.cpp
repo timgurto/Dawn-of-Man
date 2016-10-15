@@ -96,7 +96,8 @@ SDL_Surface *copySurface(SDL_Surface* src){
 //========misc=========
 
 
-std::string makePath(EntityTypeID type, typeNum_t imageNumber, bool isPortrait){
+std::string makePath(EntityTypeID type, typeNum_t imageNumber,
+                     ImageModifier modifier){
    std::ostringstream path;
    path << IMAGE_PATH; // Images/
    switch (type){
@@ -105,8 +106,14 @@ std::string makePath(EntityTypeID type, typeNum_t imageNumber, bool isPortrait){
       break;
    }
 
-   if (isPortrait)
+   switch (modifier){
+   case ICON:
       path << 'p'; // p
+      break;
+   case MASK:
+      path << 'm'; // m
+      break;
+   }
 
    if (imageNumber < 100) // 0
       path << '0';

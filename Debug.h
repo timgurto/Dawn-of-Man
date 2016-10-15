@@ -12,7 +12,7 @@
 #include "misc.h"
 #include "globals.h"
 
-//TODO: make singleton
+//TODO: rename to MessageLog
 class Debug{
    SDL_Color color_;
    std::string name_;

@@ -8,7 +8,6 @@ BuildingType::BuildingType(typeNum_t index,
                            const std::string &name,
                            const SDL_Rect &drawRect,
                            const SDL_Rect &baseRect,
-                           const SDL_Color &background,
                            progress_t progress):
-EntityType(index, BUILDING, name, drawRect, baseRect, background),
+EntityType(index, BUILDING, name, drawRect, baseRect),
 progress_(progress){}

@@ -19,7 +19,7 @@ int surfacesLoaded(0); //for safety
 int main(int argc, char* argv[]){
    argc; argv; //suppress Goanna warnings
    int sdlInit(SDL_Init(SDL_INIT_VIDEO));
-   assert (sdlInit != -1);
+   assert (sdlInit == 0);
 
    int ttfInit(TTF_Init());
    assert (ttfInit >= 0);

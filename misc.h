@@ -26,7 +26,8 @@ void freeSurface(SDL_Surface *&p);
 SDL_Surface *copySurface(SDL_Surface* src);
 
 //misc
-std::string makePath(EntityTypeID type, typeNum_t imageNumber, bool portrait = false);
+std::string makePath(EntityTypeID type, typeNum_t imageNumber,
+                     ImageModifier modifier = NONE);
 
 template <typename Type> void checkP(Type *pointer){
    if (pointer == 0){

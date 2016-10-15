@@ -28,8 +28,17 @@ void gameMode(){
    SDL_Surface *cursor = loadImage(IMAGE_PATH + "cursor.png", GREEN);
    SDL_Surface *vBar = loadImage(IMAGE_PATH + "vBar.PNG");
    SDL_Surface *hBar = loadImage(IMAGE_PATH + "hBar.PNG");
-
+   SDL_Surface *entitiesTemp = SDL_CreateRGBSurface(SDL_HWSURFACE,
+                                                    SCREEN_WIDTH,
+                                                    SCREEN_HEIGHT,
+                                                    SCREEN_BPP, 0, 0, 0, 0);
+   SDL_SetColorKey(entitiesTemp, SDL_SRCCOLORKEY,
+                   SDL_MapRGB(entitiesTemp->format,
+                              ENTITY_BACKGROUND.r,
+                              ENTITY_BACKGROUND.g,
+                              ENTITY_BACKGROUND.b));
    Point mousePos(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
+
    SDL_ShowCursor(SDL_DISABLE);
 
    //init
@@ -44,13 +53,15 @@ void gameMode(){
    //TODO: load from files
    BuildingType campfire(0, "Campfire",
                          makeRect(-42, -92, 81, 113),
-                         makeRect(-42, -22, 81, 42),
-                         GREEN, 1250);
+                         makeRect(-42, -92, 81, 113),
+                         //makeRect(-42, -22, 81, 42),
+                         1250);
    game.buildingTypes.push_back(campfire);
    BuildingType shrine(1, "Shrine",
                          makeRect(-76, -67, 154, 79),
-                         makeRect(-76, -12, 154, 23),
-                         GREEN, 1750);
+                         makeRect(-76, -67, 154, 79),
+                         //makeRect(-76, -17, 154, 28),
+                         1750);
    game.buildingTypes.push_back(shrine);
 
    UIBars_t bars;
@@ -145,8 +156,8 @@ void gameMode(){
       // Redraw if necessary
       if (ticks - lastDrawTick >= DRAW_MS){
          //debug("Tick: redrawing");
-         drawEverything(screen, back, cursor, controlMode,
-                        mousePos, game, bars, toBuild);
+         drawEverything(screen, back, cursor, entitiesTemp,
+                        controlMode, mousePos, game, bars, toBuild);
          lastDrawTick = MIN_WAIT ? ticks : lastDrawTick + DRAW_MS;
       }
 
@@ -158,11 +169,13 @@ void gameMode(){
    freeSurface(cursor);
    freeSurface(vBar);
    freeSurface(hBar);
+   SDL_FreeSurface(entitiesTemp);
 
 }
 
 void drawEverything(SDL_Surface *screen, SDL_Surface *back,
-                    SDL_Surface *cursor, ControlMode mode,
+                    SDL_Surface *cursor, SDL_Surface *entitiesTemp,
+                    ControlMode mode,
                     const Point &mousePos, const GameData &game,
                     const UIBars_t &bars, typeNum_t toBuild){
 
@@ -186,11 +199,14 @@ void drawEverything(SDL_Surface *screen, SDL_Surface *back,
    }
    
    //Entities
-   //TODO: masks behind for outlines
+   if (ENTITY_MASKS)
+      SDL_FillRect(entitiesTemp, 0, 0x00ff00);
    for (entities_t::const_iterator it = game.entities.begin();
         it != game.entities.end(); ++it){
-      (*it)->draw(screen);
+      (*it)->draw(ENTITY_MASKS ? entitiesTemp : screen);
    }
+   if (ENTITY_MASKS)
+      SDL_BlitSurface(entitiesTemp, 0, screen, 0);
 
    //Interface
    for (UIBars_t::const_iterator it = bars.begin(); it != bars.end(); ++it){

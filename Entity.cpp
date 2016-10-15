@@ -18,6 +18,8 @@ bool Entity::operator<(const Entity &rhs) const{
 void Entity::draw(SDL_Surface *screen) const{
    const EntityType &thisType = type();
    SDL_Rect drawLoc = loc_ + thisType.drawRect_;
+   if (ENTITY_MASKS)
+      SDL_BlitSurface(thisType.mask, 0, screen, &drawLoc);
    if (getAlpha() != OPAQUE)
       SDL_SetAlpha(thisType.surface, SDL_SRCALPHA, getAlpha());
    SDL_BlitSurface(thisType.surface, 0, screen, &drawLoc);
