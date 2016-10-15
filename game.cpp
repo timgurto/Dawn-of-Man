@@ -53,14 +53,14 @@ void gameMode(){
    //TODO: load from files
    BuildingType campfire(0, "Campfire",
                          makeRect(-42, -92, 81, 113),
-                         makeRect(-42, -92, 81, 113),
-                         //makeRect(-42, -22, 81, 42),
+                         //makeRect(-42, -92, 81, 113),
+                         makeRect(-42, -22, 81, 42),
                          1250);
    game.buildingTypes.push_back(campfire);
    BuildingType shrine(1, "Shrine",
                          makeRect(-76, -67, 154, 79),
-                         makeRect(-76, -67, 154, 79),
-                         //makeRect(-76, -17, 154, 28),
+                         //makeRect(-76, -67, 154, 79),
+                         makeRect(-76, -17, 154, 28),
                          1750);
    game.buildingTypes.push_back(shrine);
 
@@ -127,7 +127,11 @@ void gameMode(){
                   assert (toBuild != NO_TYPE);
                   if (noCollision(game, game.buildingTypes[toBuild], mousePos)){
                      addEntity(game, new Building(toBuild, mousePos));
-                     controlMode = NORMAL_MODE;
+                     Uint8 *keyStates = SDL_GetKeyState(0);
+                     if(!keyStates[SDLK_LSHIFT]){
+                        controlMode = NORMAL_MODE;
+                        toBuild = NO_TYPE;
+                     }
                   }
                }
                break;

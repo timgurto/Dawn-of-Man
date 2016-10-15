@@ -16,6 +16,7 @@ protected:
    typeNum_t type_;
    Point loc_;
    static const GameData *game_;
+   short direction;
 
 public:
    Entity(typeNum_t type, const Point &loc);

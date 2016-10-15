@@ -50,7 +50,7 @@ const SDL_Color WHITE   = {0xff, 0xff, 0xff};
 const Uint8 OPAQUE      = 0xff;
 const Uint8 TRANSPARENT = 0;
 //anything behind each entity is cleared
-const bool ENTITY_MASKS = false;
+const bool ENTITY_MASKS = true;
 const SDL_Color ENTITY_BACKGROUND = GREEN;
 const SDL_Color ENTITY_MASK       = MAGENTA;
 const Uint32 FOOTPRINT_COLOR_GOOD = 0x008800;
