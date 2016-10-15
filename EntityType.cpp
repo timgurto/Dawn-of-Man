@@ -7,11 +7,13 @@
 EntityType::EntityType(typeNum_t index, EntityTypeID type,
                        const std::string &name,
                        const SDL_Rect &drawRect,
-                       const SDL_Rect &baseRect):
+                       const SDL_Rect &baseRect,
+                       const Point &selectionCenter):
 index_(index),
 name_(name),
 drawRect_(drawRect),
-baseRect_(baseRect){
+baseRect_(baseRect),
+selectionCenter_(selectionCenter){
    surface = loadImage(makePath(type, index_),
                        ENTITY_MASK);
    icon = loadImage(makePath(type, index_, ICON),

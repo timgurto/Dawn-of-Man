@@ -21,6 +21,8 @@
 #include "Building.h"
 #include "DecorationType.h"
 #include "Decoration.h"
+#include "UnitType.h"
+#include "Unit.h"
 #include "UIBar.h"
 #include "Particle.h"
 
@@ -43,7 +45,6 @@ void gameMode(){
       *cursor = loadImage(MISC_IMAGE_PATH + "cursor.png", GREEN),
       *cursorShadow = loadImage(MISC_IMAGE_PATH +
                                 "cursorShadow.PNG", GREEN),
-      //TODO engrave bar images
       *vBar = loadImage(INTERFACE_IMAGE_PATH + "vBar.PNG"),
       *hBar = loadImage(INTERFACE_IMAGE_PATH + "hBar.PNG"),
       *diagGreen = loadImage(MISC_IMAGE_PATH + "diagGreen.PNG", GREEN),
@@ -71,25 +72,36 @@ void gameMode(){
 
    //TODO load from files
    //=================================================
+   game.players.push_back(0xca6500); //0x... = color
+   //TODO Point center += first rect
    BuildingType campfire(0, "Campfire",
                          makeRect(-42, -92, 81, 113),
                          makeRect(-42, -23, 81, 42),
-                         1250);
+                         Point(2, -37), 1250);
    game.buildingTypes.push_back(campfire);
    BuildingType shrine(1, "Shrine",
                        makeRect(-76, -68, 154, 79),
                        makeRect(-76, -17, 154, 28),
-                       1750);
+                       Point(1, -20), 1750);
    game.buildingTypes.push_back(shrine);
    DecorationType rock(0, "Rock",
                   makeRect(-12, -9, 24, 18),
-                  makeRect(-12, -9, 24, 18));
+                  makeRect(-12, -9, 24, 18),
+                  Point(0, 0));
    game.decorationTypes.push_back(rock);
    for (int i = 0; i != 15; ++i)
       addEntity(game, new Decoration(0, Point(
                                 rand() % game.map.w,
                                 rand() % game.map.h)));
-   game.players.push_back(0xca6500);
+   UnitType drone(0, "Drone",
+                  makeRect(-22, -127, 105, 133),
+                  makeRect(-22,-6, 53, 11),
+                  Point(3, -55));
+   game.unitTypes.push_back(drone);
+   for (int i = 0; i != 15; ++i)
+      addEntity(game, new Unit(0, Point(
+                               rand() % game.map.w,
+                               rand() % game.map.h), 0));
    //=================================================
 
    UIBars_t bars;
@@ -484,13 +496,14 @@ void render(SDL_Surface *screen, SDL_Surface *glow,
    for (entities_t::const_iterator it = game.entities.begin();
       it != game.entities.end(); ++it)
       if ((*it)->selected && (*it)->onScreen()){
-         SDL_Rect drawRect = (*it)->getDrawRect();
-         SDL_Rect dest = drawRect +
-                         locRect(game.map) +
-                         Point(drawRect.w / 2,
-                               drawRect.h / 2) -
-                         Point(glow->clip_rect.w / 2,
-                               glow->clip_rect.h / 2);
+         //SDL_Rect drawRect = (*it)->getDrawRect();
+         //SDL_Rect dest = drawRect +
+         //                locRect(game.map) +
+         //                Point(drawRect.w / 2,
+         //                      drawRect.h / 2) -
+         //                Point(glow->clip_rect.w / 2,
+         //                      glow->clip_rect.h / 2);
+         SDL_Rect dest = (*it)->getSelectionDest(glow);
          SDL_BlitSurface(glow, 0, screen, &dest);
       }
 

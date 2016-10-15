@@ -18,6 +18,8 @@ class EntityType{
    SDL_Rect
       drawRect_, //position of sprite graphic
       baseRect_; //the entity's base, for collisions
+   //where the selection indicator is centered
+   Point selectionCenter_;
    SDL_Surface
       *surface, //main image
       *icon, //icon, for UIBars
@@ -27,7 +29,8 @@ public:
    EntityType(typeNum_t index, EntityTypeID type,
               const std::string &name,
               const SDL_Rect &drawRect,
-              const SDL_Rect &baseRect);
+              const SDL_Rect &baseRect,
+              const Point &selectionCenter);
    EntityType(const EntityType &original);
    EntityType &operator=(const EntityType &rhs);
    ~EntityType();

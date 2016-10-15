@@ -138,6 +138,8 @@ std::string makePath(EntityTypeID type, typeNum_t imageNumber,
    case DECORATION:
       path << DECORATIONS_IMAGE_PATH;
       break;
+   case UNIT:
+      path << UNITS_IMAGE_PATH;
    default:
       type = type;
       break;

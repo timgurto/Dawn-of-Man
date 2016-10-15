@@ -110,6 +110,8 @@ const std::string BUILDINGS_IMAGE_PATH
    = IMAGE_PATH + "Buildings/";
 const std::string DECORATIONS_IMAGE_PATH
    = IMAGE_PATH + "Decorations/";
+const std::string UNITS_IMAGE_PATH
+   = IMAGE_PATH + "Units/";
 const std::string INTERFACE_IMAGE_PATH
    = IMAGE_PATH + "Interface/";
 

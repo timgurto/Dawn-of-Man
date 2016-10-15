@@ -17,6 +17,7 @@ public:
                 const std::string &name,
                 const SDL_Rect &drawRect,
                 const SDL_Rect &baseRect,
+                const Point &selectionCenter,
                 progress_t progress = 0);
 
 };

@@ -29,11 +29,12 @@ bool Entity::operator<(const Entity &rhs) const{
 
 void Entity::draw(SDL_Surface *screen) const{
    const EntityType &thisType = type();
+   //debug("Drawing ", thisType.name_);
    SDL_Rect drawLoc = loc_ + thisType.drawRect_;
    SDL_Rect srcLoc = makeRect(0, 0,
                               thisType.drawRect_.w,
                               thisType.drawRect_.h);
-   colorBlit(ENTITY_DEFAULT, screen, srcLoc, drawLoc);
+   colorBlit(getColor(), screen, srcLoc, drawLoc);
 }
 
 SDL_Rect Entity::getBaseRect(){
@@ -116,4 +117,18 @@ bool Entity::collides() const{
 
 bool Entity::selectable() const{
    return false;
+}
+
+SDL_Rect Entity::getSelectionDest(SDL_Surface *selection) const{
+   const EntityType &t = type();
+   SDL_Rect r;
+   r.x = loc_.x +
+         game_->map.x +
+         t.selectionCenter_.x -
+         selection->clip_rect.w / 2;
+   r.y = loc_.y +
+         game_->map.y +
+         t.selectionCenter_.y -
+         selection->clip_rect.h / 2;
+   return r;
 }

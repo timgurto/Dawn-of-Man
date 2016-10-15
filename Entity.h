@@ -96,6 +96,8 @@ public:
    inline void toggleSelect(){
       selected = !selected;
    }
+
+   SDL_Rect getSelectionDest(SDL_Surface *selection) const;
 };
 
 #endif

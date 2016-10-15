@@ -4,13 +4,23 @@
 #include "Unit.h"
 #include "UnitType.h"
 
-Unit::Unit(typeNum_t type, const Point &loc):
-Entity(type, loc){}
+Unit::Unit(typeNum_t type, const Point &loc,
+           typeNum_t player):
+Entity(type, loc),
+player_(player){}
 
 const EntityType &Unit::type() const{
    return game_->unitTypes[type_];
 }
 
+int Unit::getColor() const{
+   return player_;
+}
+
 EntityTypeID Unit::classID() const{
    return UNIT;
+}
+
+bool Unit::selectable() const{
+   return true;
 }
