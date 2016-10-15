@@ -12,7 +12,6 @@
 #include "misc.h"
 #include "globals.h"
 
-//TODO: rename to MessageLog
 class Debug{
    SDL_Color color_;
    std::string name_;
@@ -22,6 +21,7 @@ class Debug{
    std::queue<std::string> messages;
    SDL_Surface *screen_;
    int height;
+   static bool ttfClosed;
 
 public:
    Debug(SDL_Color color, pixels_t x, pixels_t y,

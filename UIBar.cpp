@@ -8,7 +8,6 @@
 #include "UIBar.h"
 
 const GameData *UIBar::game_ = 0;
-const ControlMode *UIBar::mode_ = 0;
 SDL_Surface *hBarSurface_ = 0;
 SDL_Surface *vBarSurface_ = 0;
 
@@ -54,7 +53,7 @@ SDL_Rect UIBar::rect() const{
 }
 
 void UIBar::draw(SDL_Surface *screen) const{
-   if (*mode_ == requiredMode_){
+   if (game_->mode == requiredMode_){
 
       //blit background
       SDL_Surface *src = (orientation_ == HORIZONTAL ?
@@ -97,11 +96,10 @@ typeNum_t UIBar::mouseIndex(const Point &point) const{
    return NO_TYPE;
 }
 
-void UIBar::set(const GameData *game, const ControlMode *mode,
+void UIBar::set(const GameData *game,
                 SDL_Surface *vBarSurface,
                 SDL_Surface *hBarSurface){
    game_ = game;
-   mode_ = mode;
    vBarSurface_ = vBarSurface;
    hBarSurface_ = hBarSurface;
 }

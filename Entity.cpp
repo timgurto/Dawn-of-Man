@@ -21,59 +21,54 @@ bool Entity::operator<(const Entity &rhs) const{
 }
 
 void Entity::draw(SDL_Surface *screen) const{
-   //const EntityType &thisType = type();
-   //SDL_Rect drawLoc = loc_ + thisType.drawRect_;
-   //if (ENTITY_MASKS)
-   //   SDL_BlitSurface(thisType.mask, 0, screen, &drawLoc);
-   //if (getAlpha() != OPAQUE)
-   //   SDL_SetAlpha(thisType.surface, SDL_SRCALPHA, getAlpha());
-   //SDL_BlitSurface(thisType.surface, 0, screen, &drawLoc);
-   //SDL_SetAlpha(thisType.surface, SDL_SRCALPHA, OPAQUE);
-
    const EntityType &thisType = type();
    SDL_Rect drawLoc = loc_ + thisType.drawRect_;
-   SDL_Rect srcLoc;
-   //short direction = rand() % 4;
+
+if (MASK_BEFORE_CLIP && ENTITY_MASKS)
+   SDL_BlitSurface(thisType.mask, 0, screen, &drawLoc);
+
+   SDL_Rect srcLoc;;
    pixels_t
-      partialW = thisType.drawRect_.w * getAlpha() / 255,
-      partialH = thisType.drawRect_.h * getAlpha() / 255;
+      partialW = pixels_t(getDrawPercent() *
+                          thisType.drawRect_.w),
+      partialH = pixels_t(getDrawPercent() *
+                          thisType.drawRect_.h);
+
+   //clip, based on randomized direction
    switch(direction){
    case 0:
-      srcLoc = makeRect(
-                  0,
-                  0,
-                  partialW,
-                  thisType.drawRect_.h);
+      srcLoc = makeRect(0,
+                        0,
+                        partialW,
+                        thisType.drawRect_.h);
       break;
    case 1:
-      srcLoc = makeRect(
-                  0,
-                  0,
-                  thisType.drawRect_.w,
-                  partialH);
+      srcLoc = makeRect(0,
+                        0,
+                        thisType.drawRect_.w,
+                        partialH);
       break;
    case 2:
-      srcLoc = makeRect(
-                  thisType.drawRect_.w - partialW,
-                  0,
-                  partialW,
-                  thisType.drawRect_.h);
+      srcLoc = makeRect(thisType.drawRect_.w - partialW,
+                        0,
+                        partialW,
+                        thisType.drawRect_.h);
       drawLoc.x += thisType.drawRect_.w - partialW;
       break;
    case 3:
-      srcLoc = makeRect(
-                  0,
-                  thisType.drawRect_.h - partialH,
-                  thisType.drawRect_.w,
-                  partialH);
+      srcLoc = makeRect(0,
+                        thisType.drawRect_.h - partialH,
+                        thisType.drawRect_.w,
+                        partialH);
       drawLoc.y += thisType.drawRect_.h - partialH;
       break;
    default:
       assert(false);
    }
    
-   if (ENTITY_MASKS)
+   if (!MASK_BEFORE_CLIP && ENTITY_MASKS)
       SDL_BlitSurface(thisType.mask, &srcLoc, screen, &drawLoc);
+
    SDL_BlitSurface(thisType.surface, &srcLoc, screen, &drawLoc);
 }
 
@@ -87,6 +82,6 @@ void Entity::setGame(GameData *game){
    game_ = game;
 }
 
-Uint8 Entity::getAlpha() const{
-   return OPAQUE; //default: opaque
+float Entity::getDrawPercent() const{
+   return FULL; //default: full
 }

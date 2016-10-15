@@ -10,6 +10,8 @@
 #include "globals.h"
 #include "Debug.h"
 
+bool Debug::ttfClosed = false;
+
 Debug::Debug(SDL_Color color, pixels_t x, pixels_t y,
              unsigned short count):
 color_(color),
@@ -17,11 +19,13 @@ x_(x),
 y_(y),
 count_(count){}
 
-//TODO ensure this is only called once; static bool
 Debug::~Debug(){
    if (font != 0)
       TTF_CloseFont(font);
-   TTF_Quit();
+   if (!ttfClosed){
+      TTF_Quit();
+      ttfClosed = true;
+   }
 }
 
 void Debug::setScreen(SDL_Surface *screen){

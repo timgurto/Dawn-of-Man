@@ -12,7 +12,6 @@ struct GameData;
 void gameMode();
 void drawEverything(SDL_Surface *screen, SDL_Surface *back,
                     SDL_Surface *cursor, SDL_Surface *entitiesTemp,
-                    ControlMode mode,
                     const Point &mousePos, const GameData &game,
                     const UIBars_t &bars, typeNum_t toBuild);
 void updateState(GameData &game);

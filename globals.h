@@ -47,16 +47,17 @@ const SDL_Color MAGENTA = {0xff, 0, 0xff};
 const SDL_Color YELLOW  = {0xff, 0xff, 0};
 const SDL_Color WHITE   = {0xff, 0xff, 0xff};
 
-const Uint8 OPAQUE      = 0xff;
-const Uint8 TRANSPARENT = 0;
+const float FULL  = 1;
+const float EMPTY = 0;
 //anything behind each entity is cleared
 const bool ENTITY_MASKS = true;
+//whether the entire mask is drawn behind partial sprites
+const bool MASK_BEFORE_CLIP = false;
 const SDL_Color ENTITY_BACKGROUND = GREEN;
 const SDL_Color ENTITY_MASK       = MAGENTA;
 const Uint32 FOOTPRINT_COLOR_GOOD = 0x008800;
 const Uint32 FOOTPRINT_COLOR_BAD  = 0x880000;
 
-//TODO: rename portraits to icons
 const pixels_t ICON_SIZE = 48;
 const std::string IMAGE_SUFFIX = ".png";
 const std::string IMAGE_PATH           = "Images/";

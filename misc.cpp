@@ -140,12 +140,12 @@ bool pointCollision(const Point &point, const SDL_Rect rect){
 }
 
 SDL_Surface *getBuildingTypeIcons(typeNum_t i, const GameData &game){
-   return game.buildingTypes[i].portrait;
+   return game.buildingTypes[i].getIcon();
 }
 
 bool noCollision(const GameData &game, const EntityType &type,
                const Point &mousePos){
-   SDL_Rect rect = mousePos + type.baseRect_;
+   SDL_Rect rect = mousePos + type.getBaseRect();
 
    //check against entities
    for (entities_t::const_iterator it = game.entities.begin();

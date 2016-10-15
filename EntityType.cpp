@@ -1,5 +1,6 @@
 // (C) 2009 Tim Gurto
 
+#include "SDL.h"
 #include "EntityType.h"
 #include "misc.h"
 
@@ -13,7 +14,7 @@ drawRect_(drawRect),
 baseRect_(baseRect){
    surface = loadImage(makePath(type, index_),
                        ENTITY_BACKGROUND);
-   portrait = loadImage(makePath(type, index_, ICON),
+   icon = loadImage(makePath(type, index_, ICON),
                         ENTITY_BACKGROUND);
    mask = loadImage(makePath(type, index_, MASK),
                     ENTITY_MASK);
@@ -25,7 +26,7 @@ name_(original.name_),
 drawRect_(original.drawRect_),
 baseRect_(original.baseRect_),
 surface(copySurface(original.surface)),
-portrait(copySurface(original.portrait)),
+icon(copySurface(original.icon)),
 mask(copySurface(original.mask)){}
 
 EntityType &EntityType::operator=(const EntityType &rhs){
@@ -35,7 +36,7 @@ EntityType &EntityType::operator=(const EntityType &rhs){
       drawRect_ = rhs.drawRect_;
       baseRect_ = rhs.baseRect_;
       surface = copySurface(rhs.surface);
-      portrait = copySurface(rhs.portrait);
+      icon = copySurface(rhs.icon);
       mask = copySurface(rhs.mask);
    }
    return *this;
@@ -43,6 +44,14 @@ EntityType &EntityType::operator=(const EntityType &rhs){
 
 EntityType::~EntityType(){
    freeSurface(surface);
-   freeSurface(portrait);
+   freeSurface(icon);
    freeSurface(mask);
+}
+
+SDL_Rect EntityType::getBaseRect() const{
+   return baseRect_;
+}
+
+SDL_Surface *EntityType::getIcon() const{
+   return icon;
 }

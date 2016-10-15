@@ -19,7 +19,6 @@ class UIBar{
    SDL_Rect rect() const;
 
    static const GameData *game_;
-   static const ControlMode *mode_;
    static SDL_Surface *hBarSurface, vBarSurface;
 
 public:
@@ -28,7 +27,7 @@ public:
                                     const GameData &game),
          typeNum_t initialIconCount,
          ControlMode requiredMode);
-   static void set(const GameData *game, const ControlMode *mode,
+   static void set(const GameData *game,
                    SDL_Surface *vBarSurface,
                    SDL_Surface *hBarSurface);
    typeNum_t iconCount;

@@ -26,7 +26,7 @@ public:
    SDL_Rect baseRect();
    virtual void tick();
    static void setGame(GameData *game);
-   virtual Uint8 getAlpha() const;
+   virtual float getDrawPercent() const;
 };
 
 #endif

@@ -13,13 +13,13 @@ class Building : public Entity{
 
    progress_t progress_;
    bool finished;
-   Uint8 alpha;
+   float drawPercent;
 
 public:
    Building(typeNum_t type, const Point &loc, progress_t progress = 0);
    const virtual EntityType &Building::type() const;
    virtual void tick();
-   virtual Uint8 getAlpha() const;
+   virtual float getDrawPercent() const;
 };
 
 

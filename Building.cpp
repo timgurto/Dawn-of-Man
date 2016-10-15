@@ -10,7 +10,7 @@ Building::Building(typeNum_t type, const Point &loc, progress_t progress):
 Entity(type, loc),
 progress_(progress),
 finished(false),
-alpha(TRANSPARENT){}
+drawPercent(EMPTY){}
 
 const EntityType &Building::type() const{
    return game_->buildingTypes[type_];
@@ -22,14 +22,14 @@ void Building::tick(){
       //debug("progress = ", progress_);
       if (progress_ >= game_->buildingTypes[type_].progress_){
          finished = true;
-         alpha = OPAQUE;
+         drawPercent = FULL;
          debug("building finished");
       }else
-         alpha = 255 * progress_ /
+         drawPercent = 1.0f * progress_ /
                  game_->buildingTypes[type_].progress_;
    }
 }
 
-Uint8 Building::getAlpha() const{
-   return alpha;
+float Building::getDrawPercent() const{
+   return drawPercent;
 }

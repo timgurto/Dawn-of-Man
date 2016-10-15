@@ -45,8 +45,7 @@ void gameMode(){
    //TODO: give GameData pointer to classes
    GameData game;
    Entity::setGame(&game);
-   //TODO: move controlMode to GameData
-   ControlMode controlMode = NORMAL_MODE;
+   game.mode = NORMAL_MODE;
 
    typeNum_t toBuild = NO_TYPE;
 
@@ -65,7 +64,7 @@ void gameMode(){
    game.buildingTypes.push_back(shrine);
 
    UIBars_t bars;
-   UIBar::set(&game, &controlMode, vBar, hBar);
+   UIBar::set(&game, vBar, hBar);
    UIBar buildingsBar(BOTTOM_LEFT, VERTICAL,
                       &getBuildingTypeIcons,
                       game.buildingTypes.size(), NORMAL_MODE);
@@ -101,9 +100,9 @@ void gameMode(){
                SDL_SaveBMP(screen, os.str().c_str());}
                break;
             case SDLK_ESCAPE:
-               switch(controlMode){
+               switch(game.mode){
                case BUILD_MODE:
-                  controlMode = NORMAL_MODE;
+                  game.mode = NORMAL_MODE;
                   break;
                }
                break;
@@ -114,12 +113,12 @@ void gameMode(){
             debug("Mouse down: ", int(event.button.button));
             switch (event.button.button){
             case 1: //left click
-               switch (controlMode){
+               switch (game.mode){
                case NORMAL_MODE:
                   toBuild = buildingsBar.mouseIndex(mousePos);
                   debug("toBuild = ", toBuild);
                   if (toBuild != NO_TYPE){
-                     controlMode = BUILD_MODE;
+                     game.mode = BUILD_MODE;
                   }
                   break;
                case BUILD_MODE:
@@ -129,16 +128,16 @@ void gameMode(){
                      addEntity(game, new Building(toBuild, mousePos));
                      Uint8 *keyStates = SDL_GetKeyState(0);
                      if(!keyStates[SDLK_LSHIFT]){
-                        controlMode = NORMAL_MODE;
+                        game.mode = NORMAL_MODE;
                         toBuild = NO_TYPE;
                      }
                   }
                }
                break;
             case 3: //right click
-               switch(controlMode){
+               switch(game.mode){
                case BUILD_MODE:
-                  controlMode = NORMAL_MODE;
+                  game.mode = NORMAL_MODE;
                   break;
                }
             }
@@ -161,7 +160,7 @@ void gameMode(){
       if (ticks - lastDrawTick >= DRAW_MS){
          //debug("Tick: redrawing");
          drawEverything(screen, back, cursor, entitiesTemp,
-                        controlMode, mousePos, game, bars, toBuild);
+                        mousePos, game, bars, toBuild);
          lastDrawTick = MIN_WAIT ? ticks : lastDrawTick + DRAW_MS;
       }
 
@@ -179,7 +178,6 @@ void gameMode(){
 
 void drawEverything(SDL_Surface *screen, SDL_Surface *back,
                     SDL_Surface *cursor, SDL_Surface *entitiesTemp,
-                    ControlMode mode,
                     const Point &mousePos, const GameData &game,
                     const UIBars_t &bars, typeNum_t toBuild){
 
@@ -192,8 +190,8 @@ void drawEverything(SDL_Surface *screen, SDL_Surface *back,
                          &makeRect(i * back->w, j * back->h));
 
    //Building footprint
-   if (mode == BUILD_MODE){
-      SDL_Rect baseRect = mousePos + game.buildingTypes[toBuild].baseRect_;
+   if (game.mode == BUILD_MODE){
+      SDL_Rect baseRect = mousePos + game.buildingTypes[toBuild].getBaseRect();
       Uint32 footprintColor;
       if (noCollision(game, game.buildingTypes[toBuild], mousePos))
          footprintColor = FOOTPRINT_COLOR_GOOD;
