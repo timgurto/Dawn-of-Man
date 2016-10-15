@@ -190,7 +190,7 @@ bool noCollision(const GameData &game, const EntityType &type,
    if (!inside(rect, game.map))
       return false;
    
-   rect -= game.map;
+   rect -= locRect(game.map);
 
    //check against entities
    for (entities_t::const_iterator it = game.entities.begin();

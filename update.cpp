@@ -65,7 +65,7 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
          game.rightMouse.checkDrag(game.mousePos);
          game.leftMouse.checkDrag(game.mousePos - game.map);
          switch(game.mode)
-         case BUILD_MODE:
+         case MODE_CONSTRUCTION:
             game.buildLocationOK =
                noCollision(game, game.buildingTypes[game.toBuild],
                            game.mousePos);
@@ -86,19 +86,28 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
             break;
          case SDLK_ESCAPE:
             switch(game.mode){
-            case NORMAL_MODE:
+            case MODE_NORMAL:
                game.loop = false;
                break;
-            case BUILD_MODE:
-               game.mode = NORMAL_MODE;
+            case MODE_CONSTRUCTION:
+               game.mode = MODE_NORMAL;
                break;
             }
             break;
          case SDLK_DELETE:
-            for (entities_t::iterator it = game.entities.begin();
-                 it != game.entities.end(); ++it)
-               if ((*it)->selected)
-                  (*it)->kill();
+            //HACK repeats loop for each deletion, to avoid invalidated iterator
+            bool deleted;
+            do{
+               deleted = false;
+               for (entities_t::iterator it = game.entities.begin();
+                  it != game.entities.end(); ++it){
+                     if ((*it)->selected){
+                        (*it)->kill();
+                        deleted = true;
+                        break;
+                     }
+               }
+            }while (deleted);
             Entity::emptyTrash();
          }
          break;
@@ -140,12 +149,12 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
          case MOUSE_BUTTON_RIGHT:
             if (!game.rightMouse.dragging)
                switch(game.mode){
-               case NORMAL_MODE:
+               case MODE_NORMAL:
                   if (!game.leftMouse.dragging)
                      setSelectedTargets(game);
-               case BUILD_MODE:
+               case MODE_CONSTRUCTION:
                   //cancel build mode
-                  game.mode = NORMAL_MODE;
+                  game.mode = MODE_NORMAL;
                   break;
                }
             game.rightMouse.mouseUp();
@@ -167,7 +176,7 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
 
             if (!barClicked){
                //place new building
-               if (game.mode == BUILD_MODE){
+               if (game.mode == MODE_CONSTRUCTION){
                   assert (game.toBuild != NO_TYPE);
                   if (game.buildLocationOK){
                      addEntity(game, new Building(game.toBuild,
@@ -175,7 +184,7 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
 
                      //Shift key: construct multiple buildings
                      if(!isKeyPressed(SDLK_LSHIFT)){
-                        game.mode = NORMAL_MODE;
+                        game.mode = MODE_NORMAL;
                         game.toBuild = NO_TYPE;
                      }
                   }
@@ -266,8 +275,10 @@ void select(GameData &game){
         it != game.entities.rend(); ++it){
       if ((*it)->selectable()){
          //unselect everything
-         if (!(isKeyPressed(SDLK_LCTRL) || isKeyPressed(SDLK_LSHIFT)))
+         if (!(isKeyPressed(SDLK_LCTRL) || isKeyPressed(SDLK_LSHIFT))){
             (*it)->selected = false;
+            game.buildingSelected = 0;
+         }
          
          //if single point click, don't waste time looking for
          //multiple selections
@@ -292,6 +303,8 @@ void select(GameData &game){
                else
                   (*it)->selected = true; //No ctrl: select
                entitySelected = true;
+               if ((*it)->selected && (*it)->classID() == BUILDING)
+                  game.buildingSelected = (Building *)(*it);
             }// if collides
 
          }// if single point etc.
@@ -305,6 +318,12 @@ void select(GameData &game){
          break;
 
    }// for entities
+
+   //if a building is selected
+   if (game.buildingSelected != 0)
+      game.mode = MODE_BUILDING;
+   else
+      game.mode = MODE_NORMAL;
 }
 
 void setSelectedTargets(GameData &game){
@@ -327,7 +346,7 @@ void reSort(entities_t &entities, entities_t::iterator it,
       if (it != entities.begin()){
          entities_t::iterator next = it;
          --next;
-         while (it != entities.begin() && **it < **next){
+         while (next != entities.begin() && **it < **next){
             std::iter_swap(it, next);
             it = next;
             --next;

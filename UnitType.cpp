@@ -18,7 +18,9 @@ UnitType::UnitType(typeNum_t index,
                    int combatWait,
                    damage_t maxHealth,
                    damage_t attack,
-                   damage_t armor):
+                   damage_t armor,
+                   typeNum_t originBuilding,
+                   progress_t maxProgress):
 EntityType(index,
            UNIT,
            name,
@@ -33,4 +35,6 @@ combatFrameCount_(combatFrameCount),
 combatWait_(combatWait),
 maxHealth_(maxHealth),
 attack_(attack),
-armor_(armor){}
+armor_(armor),
+originBuilding_(originBuilding),
+maxProgress_(maxProgress){}

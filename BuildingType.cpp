@@ -9,11 +9,11 @@ BuildingType::BuildingType(typeNum_t index,
                            const SDL_Rect &drawRect,
                            const SDL_Rect &baseRect,
                            const Point &selectionCenter,
-                           progress_t progress):
+                           progress_t maxProgress):
 EntityType(index,
            BUILDING,
            name,
            drawRect,
            baseRect,
            selectionCenter),
-progress_(progress){}
+maxProgress_(maxProgress){}

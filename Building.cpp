@@ -16,10 +16,10 @@ Building::Building(typeNum_t type, const Point &loc,
 Entity(type, loc),
 progress_(progress),
 player_(player),
-finished_(progress == game_->buildingTypes[type].progress_),
+finished_(progress >= game_->buildingTypes[type].maxProgress_),
 drawPercent_(1.0f *
             progress_ /
-            game_->buildingTypes[type_].progress_){}
+            game_->buildingTypes[type].maxProgress_){}
 
 const EntityType &Building::type() const{
    return game_->buildingTypes[type_];
@@ -74,13 +74,13 @@ void Building::tick(double delta){
    if (!finished_){
       progress_ += delta * PROGRESS_PER_CALC;
       //debug("progress = ", progress_);
-      if (progress_ >= game_->buildingTypes[type_].progress_){
+      if (progress_ >= game_->buildingTypes[type_].maxProgress_){
          finished_ = true;
          drawPercent_ = FULL;
          //debug("building finished");
       }else
          drawPercent_ = 1.0 * progress_ /
-                 game_->buildingTypes[type_].progress_;
+                 game_->buildingTypes[type_].maxProgress_;
    }
 
    if (!finished_){

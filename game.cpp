@@ -68,7 +68,7 @@ void gameMode(){
    GameData game(4, 4);
    Entity::init(&game, screen);
    Particle::init(screen, particle, particleShadow);
-   game.mode = NORMAL_MODE;
+   game.mode = MODE_NORMAL;
 
    //TODO load from files
    //=================================================
@@ -114,7 +114,7 @@ void gameMode(){
    UIBar buildingsBar(BOTTOM_LEFT, VERTICAL,
                       &getBuildingTypeIcons,
                       &selectBuilding,
-                      game.buildingTypes.size(), NORMAL_MODE);
+                      game.buildingTypes.size(), MODE_NORMAL);
    bars.push_back(&buildingsBar);
    
 
@@ -165,25 +165,3 @@ void addEntity(GameData &game, Entity *entity){
                                          dereferenceLessThan),
                         entity);
 }
-
-//void killEntity(GameData &game, Entity *p){
-//   assert (p != 0);
-//   //update game stats/score?
-//   //play horrifying sound
-//   //create corpse
-//   //etc.
-//
-//   removeEntity(game, p);
-//}
-//
-//void removeEntity(GameData &game, Entity *p){
-//   assert (p != 0);
-//   for (entities_t::iterator it = game.entities.begin();
-//        it != game.entities.end(); ++it){
-//      if (*it == p){
-//         delete p;
-//         game.entities.erase(it);
-//         break;
-//      }
-//   }
-//}

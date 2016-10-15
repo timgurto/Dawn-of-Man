@@ -8,7 +8,8 @@ rightMouse(),
 mapX(mapSizeX),
 mapY(mapSizeY),
 mousePos(SCREEN_WIDTH/2, SCREEN_HEIGHT/2),
-toBuild(NO_TYPE){
+toBuild(NO_TYPE),
+buildingSelected(0){
    for (typeNum_t i = 0; i != ENTITY_MAX; ++i)
       for (typeNum_t j = 0; j != MAX_TYPES; ++j)
          for (typeNum_t k = 0; k != MAX_ENTITY_TYPE; ++k)

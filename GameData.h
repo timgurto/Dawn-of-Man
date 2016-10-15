@@ -99,6 +99,8 @@ struct GameData{
    //Whether the location being hovered over can be built
    //on
    bool buildLocationOK;
+
+   Building *buildingSelected;
 };
 
 #endif

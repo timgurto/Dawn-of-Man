@@ -12,7 +12,8 @@
 struct GameData;
 class EntityType;
 
-//Mobile, controllable entities capable of combat
+//Mobile, controllable entities capable of combat.
+//Created at buildings
 class Unit : public Entity{
    friend class Entity;
 
@@ -22,6 +23,9 @@ class Unit : public Entity{
    bool moving_; //whether or not the unit is moving
    bool combat_; //whether or not the unit is attacking another
    damage_t health_; //the unit's remaining health
+   progress_t progress_;
+   bool finished_;
+   double drawPercent_;
    
    //the current point in the unit's animation cycle
    double frameCounter_;
@@ -30,7 +34,8 @@ class Unit : public Entity{
 
 public:
    Unit(typeNum_t type, const Point &loc,
-        typeNum_t player = HUMAN_PLAYER);
+        typeNum_t player = HUMAN_PLAYER,
+        progress_t progress = 0);
    virtual const EntityType &Unit::type() const;
    virtual void draw(SDL_Surface *screen) const;
    virtual void tick(double delta);

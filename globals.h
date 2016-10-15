@@ -147,8 +147,9 @@ enum EntityTypeID{
 
 //Interface modes for the game
 enum ControlMode{
-   NORMAL_MODE,
-   BUILD_MODE,
+   MODE_NORMAL,
+   MODE_CONSTRUCTION, //a building is being placed
+   MODE_BUILDING //a building is selected
 };
 
 //Corners of the screen; for UIBar

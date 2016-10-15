@@ -15,9 +15,12 @@ class UnitType: public EntityType{
    int combatFrameCount_;
    int maxCombatFrameCounter_;
    int combatWait_;
-   int maxHealth_;
-   int attack_;
-   int armor_;
+   damage_t maxHealth_;
+   damage_t attack_;
+   damage_t armor_;
+   typeNum_t originBuilding_;
+   progress_t maxProgress_;
+
 
 public:
    UnitType(typeNum_t index,
@@ -33,7 +36,9 @@ public:
             int combatWait = 1,
             damage_t maxHealth = 1,
             damage_t attack = 0,
-            damage_t armor = 0);
+            damage_t armor = 0,
+            typeNum_t originBuilding = NO_TYPE,
+            progress_t maxProgress = 0);
 };
 
 #endif

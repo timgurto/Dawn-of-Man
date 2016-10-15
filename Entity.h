@@ -50,10 +50,11 @@ protected: //everything should be a derived class
 
 public:
 
+   Entity(typeNum_t type, const Point &loc);
+   virtual ~Entity(){}
+
    //whether or not the entity is selected by the user
    bool selected;
-
-   Entity(typeNum_t type, const Point &loc);
 
    //less than; compares y co-ordinates
    bool operator<(const Entity &rhs) const;
@@ -61,8 +62,6 @@ public:
    //type() rectangles + entity's location
    SDL_Rect getBaseRect() const;
    SDL_Rect getDrawRect() const;
-
-   virtual ~Entity(){}
 
    //Returns the EntityType object that this entity
    //is an "instance" of

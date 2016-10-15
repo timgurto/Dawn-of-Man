@@ -21,5 +21,5 @@ void selectBuilding(typeNum_t index, GameData &game){
    game.toBuild = index;
    debug("Building to construct: ",
          game.buildingTypes[game.toBuild].getName());
-   game.mode = BUILD_MODE;
+   game.mode = MODE_CONSTRUCTION;
 }

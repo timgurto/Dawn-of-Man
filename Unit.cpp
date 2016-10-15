@@ -12,7 +12,7 @@
 extern Debug debug;
 
 Unit::Unit(typeNum_t type, const Point &loc,
-           typeNum_t player):
+           typeNum_t player, progress_t progress):
 Entity(type, loc),
 player_(player),
 moving_(false),
@@ -21,7 +21,11 @@ frameCounter_(rand() % game_->unitTypes[type].maxFrameCounter_),
 combatFrameCounter_(0),
 frame_(0),
 targetEntity_(0),
-health_(game_->unitTypes[type].maxHealth_){}
+health_(game_->unitTypes[type].maxHealth_),
+finished_(progress >= game_->unitTypes[type].maxProgress_),
+drawPercent_(1.0f *
+            progress_ /
+            game_->unitTypes[type].maxProgress_){}
 
 const EntityType &Unit::type() const{
    return game_->unitTypes[type_];

@@ -168,6 +168,7 @@ bool Entity::isLocationOK() const{
 }
 
 void Entity::kill(){
+   //TODO make death more spectacular
    trashCan_.push_back(this);
    entities_t::iterator itToErase;
    for (entities_t::iterator it = game_->entities.begin();

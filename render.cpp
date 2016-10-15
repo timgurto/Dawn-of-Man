@@ -55,7 +55,7 @@ void render(SDL_Surface *screen, SDL_Surface *glow,
    //renderFootprint(screen, game, diagRed, diagGreen);
 
    //Building footprint
-   if (game.mode == BUILD_MODE &&
+   if (game.mode == MODE_CONSTRUCTION &&
        !game.rightMouse.dragging){
       SDL_Rect baseRect = game.mousePos +
                           game.buildingTypes[game.toBuild].getBaseRect();
@@ -82,7 +82,7 @@ void render(SDL_Surface *screen, SDL_Surface *glow,
    //renderSelectionRectangle(screen, game);
 
    //Selection rectangle
-   if (game.mode != BUILD_MODE &&
+   if (game.mode != MODE_CONSTRUCTION &&
        game.leftMouse.dragging){
       
       //Get rectangle

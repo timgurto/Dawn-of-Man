@@ -11,7 +11,8 @@
 struct GameData;
 class EntityType;
 
-//Entities which are constructed, and don't move.
+//Entities which are constructed, and can't move or attack.
+//They train units.
 class Building : public Entity{
 
    progress_t progress_; //construction progress

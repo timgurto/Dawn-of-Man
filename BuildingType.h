@@ -10,7 +10,7 @@ class BuildingType: public EntityType{
    friend class Building;
 
    //total progress points necessary for construction
-   progress_t progress_;
+   progress_t maxProgress_;
 
 public:
    BuildingType(typeNum_t index,
@@ -18,7 +18,7 @@ public:
                 const SDL_Rect &drawRect,
                 const SDL_Rect &baseRect,
                 const Point &selectionCenter,
-                progress_t progress = 0);
+                progress_t maxProgress = 0);
 
 };
 
