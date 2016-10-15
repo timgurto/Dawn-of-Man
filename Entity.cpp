@@ -8,13 +8,15 @@
 #include "SDL.h"
 #include "Point.h"
 #include "misc.h"
+#include "globals.h"
 
-const GameData *Entity::game_ = 0;
+GameData *Entity::game_ = 0;
+SDL_Surface *Entity::screen_ = 0;
 
 Entity::Entity(typeNum_t type, const Point &loc):
 type_(type),
 loc_(loc),
-direction(rand() % 4){}
+direction(Direction(rand() % 4)){}
 
 bool Entity::operator<(const Entity &rhs) const{
    return (loc_.y < rhs.loc_.y);
@@ -23,54 +25,14 @@ bool Entity::operator<(const Entity &rhs) const{
 void Entity::draw(SDL_Surface *screen) const{
    const EntityType &thisType = type();
    SDL_Rect drawLoc = loc_ + thisType.drawRect_;
-
-if (MASK_BEFORE_CLIP && ENTITY_MASKS)
-   SDL_BlitSurface(thisType.mask, 0, screen, &drawLoc);
-
-   SDL_Rect srcLoc;;
-   pixels_t
-      partialW = pixels_t(getDrawPercent() *
-                          thisType.drawRect_.w),
-      partialH = pixels_t(getDrawPercent() *
-                          thisType.drawRect_.h);
-
-   //clip, based on randomized direction
-   switch(direction){
-   case 0:
-      srcLoc = makeRect(0,
-                        0,
-                        partialW,
-                        thisType.drawRect_.h);
-      break;
-   case 1:
-      srcLoc = makeRect(0,
-                        0,
-                        thisType.drawRect_.w,
-                        partialH);
-      break;
-   case 2:
-      srcLoc = makeRect(thisType.drawRect_.w - partialW,
-                        0,
-                        partialW,
-                        thisType.drawRect_.h);
-      drawLoc.x += thisType.drawRect_.w - partialW;
-      break;
-   case 3:
-      srcLoc = makeRect(0,
-                        thisType.drawRect_.h - partialH,
-                        thisType.drawRect_.w,
-                        partialH);
-      drawLoc.y += thisType.drawRect_.h - partialH;
-      break;
-   default:
-      assert(false);
-   }
    
    if (!MASK_BEFORE_CLIP && ENTITY_MASKS)
-      SDL_BlitSurface(thisType.mask, &srcLoc, screen, &drawLoc);
+      SDL_BlitSurface(thisType.mask, 0, screen, &drawLoc);
 
-   SDL_BlitSurface(thisType.surface, &srcLoc, screen, &drawLoc);
+   SDL_BlitSurface(thisType.surface, 0, screen, &drawLoc);
 }
+
+void Entity::drawLater() const{};
 
 SDL_Rect Entity::getBaseRect(){
    return loc_ + type().baseRect_;   
@@ -78,8 +40,9 @@ SDL_Rect Entity::getBaseRect(){
 
 void Entity::tick(){} //default: do nothing
 
-void Entity::setGame(GameData *game){
+void Entity::init(GameData *game, SDL_Surface *screen){
    game_ = game;
+   screen_ = screen;
 }
 
 float Entity::getDrawPercent() const{

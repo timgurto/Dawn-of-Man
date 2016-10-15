@@ -22,7 +22,7 @@ int main(int argc, char* argv[]){
    int ttfInit(TTF_Init());
    assert (ttfInit >= 0);
 
-   debug.setFont("Dina.fon", 0);
+   debug.initFont("Dina.fon", 0);
 
    //new game
 

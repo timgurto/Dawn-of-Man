@@ -1,54 +1,73 @@
 // (C) 2009 Tim Gurto
 
 #include <cassert>
+#include <cstdlib>
 #include <vector>
 #include <sstream>
 #include <time.h>
 #include <algorithm>
 
 #include "SDL.h"
+#include "globals.h"
+#include "game.h"
 #include "misc.h"
 #include "Debug.h"
 #include "GameData.h"
-#include "globals.h"
-#include "game.h"
 #include "EntityType.h"
 #include "Entity.h"
 #include "BuildingType.h"
 #include "Building.h"
 #include "UIBar.h"
+#include "Particle.h"
 
 extern Debug debug;
 
 void gameMode(){
-   SDL_Surface *screen = setScreen();
-   debug.setScreen(screen);
+   srand(unsigned(time(0)));
 
-   SDL_Surface *back = loadImage(IMAGE_PATH + "back.png");
-   SDL_Surface *cursor = loadImage(IMAGE_PATH + "cursor.png", GREEN);
-   SDL_Surface *vBar = loadImage(IMAGE_PATH + "vBar.PNG");
-   SDL_Surface *hBar = loadImage(IMAGE_PATH + "hBar.PNG");
-   SDL_Surface *entitiesTemp = SDL_CreateRGBSurface(SDL_HWSURFACE,
-                                                    SCREEN_WIDTH,
-                                                    SCREEN_HEIGHT,
-                                                    SCREEN_BPP, 0, 0, 0, 0);
+   //TODO send screen* to classes
+   SDL_Surface *screen = setScreen();
+   debug.initScreen(screen);
+
+   SDL_Surface
+      *back = loadImage(IMAGE_PATH + "back.png"),
+      *cursor = loadImage(IMAGE_PATH + "cursor.png", GREEN),
+      *cursorShadow = loadImage(IMAGE_PATH +
+                                "cursorShadow.PNG", GREEN),
+      *vBar = loadImage(IMAGE_PATH + "vBar.PNG"),
+      *hBar = loadImage(IMAGE_PATH + "hBar.PNG"),
+      *entitiesTemp = SDL_CreateRGBSurface(SDL_HWSURFACE,
+                                           SCREEN_WIDTH,
+                                           SCREEN_HEIGHT,
+                                           SCREEN_BPP,
+                                           0, 0, 0, 0);
    SDL_SetColorKey(entitiesTemp, SDL_SRCCOLORKEY,
                    SDL_MapRGB(entitiesTemp->format,
                               ENTITY_BACKGROUND.r,
                               ENTITY_BACKGROUND.g,
                               ENTITY_BACKGROUND.b));
+   SDL_Surface
+      *particle = loadImage(IMAGE_PATH + "particle.PNG", GREEN),
+      *particleShadow = loadImage(IMAGE_PATH +
+                                  "particleShadow.PNG", GREEN);
+   
+   SDL_SetAlpha(particleShadow, SDL_SRCALPHA, SHADOW_ALPHA);
+   SDL_SetAlpha(cursorShadow, SDL_SRCALPHA, SHADOW_ALPHA);
+   
+   Particle::init(screen, particle, particleShadow);
+
    Point mousePos(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
 
    SDL_ShowCursor(SDL_DISABLE);
 
    //init
    GameData game;
-   Entity::setGame(&game);
+   Entity::init(&game, screen);
    game.mode = NORMAL_MODE;
 
    typeNum_t toBuild = NO_TYPE;
 
-   //TODO: load from files
+   //TODO load from files
    BuildingType campfire(0, "Campfire",
                          makeRect(-42, -92, 81, 113),
                          //makeRect(-42, -92, 81, 113),
@@ -63,7 +82,7 @@ void gameMode(){
    game.buildingTypes.push_back(shrine);
 
    UIBars_t bars;
-   UIBar::set(&game, vBar, hBar);
+   UIBar::init(&game, vBar, hBar);
    UIBar buildingsBar(BOTTOM_LEFT, VERTICAL,
                       &getBuildingTypeIcons,
                       game.buildingTypes.size(), NORMAL_MODE);
@@ -100,12 +119,16 @@ void gameMode(){
                break;
             case SDLK_ESCAPE:
                switch(game.mode){
+               case NORMAL_MODE:
+                  loop = false;
+                  break;
                case BUILD_MODE:
                   game.mode = NORMAL_MODE;
                   break;
                }
                break;
             }
+
             break;
 
          case SDL_MOUSEBUTTONDOWN:
@@ -158,8 +181,8 @@ void gameMode(){
       // Redraw if necessary
       if (ticks - lastDrawTick >= DRAW_MS){
          //debug("Tick: redrawing");
-         drawEverything(screen, back, cursor, entitiesTemp,
-                        mousePos, game, bars, toBuild);
+         drawEverything(screen, back, cursor, cursorShadow,
+                        entitiesTemp, mousePos, game, bars, toBuild);
          lastDrawTick = MIN_WAIT ? ticks : lastDrawTick + DRAW_MS;
       }
 
@@ -169,14 +192,18 @@ void gameMode(){
 
    freeSurface(back);
    freeSurface(cursor);
+   freeSurface(cursorShadow);
    freeSurface(vBar);
    freeSurface(hBar);
+   freeSurface(particle);
+   freeSurface(particleShadow);
    SDL_FreeSurface(entitiesTemp);
 
 }
 
 void drawEverything(SDL_Surface *screen, SDL_Surface *back,
-                    SDL_Surface *cursor, SDL_Surface *entitiesTemp,
+                    SDL_Surface *cursor, SDL_Surface *cursorShadow,
+                    SDL_Surface *entitiesTemp,
                     const Point &mousePos, const GameData &game,
                     const UIBars_t &bars, typeNum_t toBuild){
 
@@ -203,11 +230,15 @@ void drawEverything(SDL_Surface *screen, SDL_Surface *back,
    if (ENTITY_MASKS)
       SDL_FillRect(entitiesTemp, 0, 0x00ff00);
    for (entities_t::const_iterator it = game.entities.begin();
-        it != game.entities.end(); ++it){
+        it != game.entities.end(); ++it)
       (*it)->draw(ENTITY_MASKS ? entitiesTemp : screen);
-   }
    if (ENTITY_MASKS)
       SDL_BlitSurface(entitiesTemp, 0, screen, 0);
+
+   //Entity extras
+   for (entities_t::const_iterator it = game.entities.begin();
+        it != game.entities.end(); ++it)
+      (*it)->drawLater();
 
    //Interface
    for (UIBars_t::const_iterator it = bars.begin(); it != bars.end(); ++it){
@@ -215,7 +246,7 @@ void drawEverything(SDL_Surface *screen, SDL_Surface *back,
    }
 
    //Cursor
-   blitCursor(cursor, screen, mousePos);
+   blitCursor(cursor, cursorShadow, screen, mousePos);
 
    //Debug text
    debug.display();
@@ -244,6 +275,8 @@ void removeEntity(){
    //delete() the Entity*
 }
 
-void blitCursor (SDL_Surface *cursor, SDL_Surface *screen, const Point &coords){
+void blitCursor (SDL_Surface *cursor, SDL_Surface *shadow,
+                 SDL_Surface *screen, const Point &coords){
+   SDL_BlitSurface(shadow, 0, screen, &makeRect(coords+CURSOR_OFFSET));
    SDL_BlitSurface(cursor, 0, screen, &makeRect(coords+CURSOR_OFFSET));
 }

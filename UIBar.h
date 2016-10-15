@@ -37,9 +37,11 @@ public:
          ControlMode requiredMode);
 
    //Initializes static pointers
-   static void set(const GameData *game,
-                   SDL_Surface *vBarSurface,
-                   SDL_Surface *hBarSurface);
+   static void init(const GameData *game,
+                    SDL_Surface *vBarSurface,
+                    SDL_Surface *hBarSurface);
+
+   //How many icons constitute the bar.  Note: public
    typeNum_t iconCount;
 
    //Draws the bar

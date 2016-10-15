@@ -38,10 +38,10 @@ public:
    ~Debug();
 
    //Initializes static pointers
-   void setScreen(SDL_Surface *screen);
+   void initScreen(SDL_Surface *screen);
 
    //Initializes font info
-   void setFont(std::string name, int size);
+   void initFont(std::string name, int size);
 
    //Adds message
    void add(std::string message);

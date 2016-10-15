@@ -7,6 +7,7 @@
 #include "globals.h"
 #include "UIBar.h"
 class Debug;
+class Entity;
 struct GameData;
 
 //Main game functionality
@@ -14,7 +15,8 @@ void gameMode();
 
 //Draws a frame
 void drawEverything(SDL_Surface *screen, SDL_Surface *back,
-                    SDL_Surface *cursor, SDL_Surface *entitiesTemp,
+                    SDL_Surface *cursor, SDL_Surface *cursorShadow,
+                    SDL_Surface *entitiesTemp,
                     const Point &mousePos, const GameData &game,
                     const UIBars_t &bars, typeNum_t toBuild);
 
@@ -29,6 +31,7 @@ void addEntity(GameData &game, Entity *entity);
 void removeEntity();
 
 //Draws the cursor to the screen
-void blitCursor (SDL_Surface *cursor, SDL_Surface *screen, const Point &coords);
+void blitCursor (SDL_Surface *cursor, SDL_Surface *shadow,
+                 SDL_Surface *screen, const Point &coords);
 
 #endif

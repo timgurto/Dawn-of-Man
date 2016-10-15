@@ -11,6 +11,7 @@
 //regular actions, and in-game behavior
 class EntityType{
    friend class Entity;
+   friend class Building;
 
    typeNum_t index_; //for graphics
    std::string name_; //the entity's name
@@ -31,6 +32,7 @@ public:
    EntityType &operator=(const EntityType &rhs);
    ~EntityType();
    SDL_Rect getBaseRect() const;
+   SDL_Rect getDrawRect() const;
    SDL_Surface *getIcon() const;
 };
 

@@ -28,12 +28,12 @@ Debug::~Debug(){
    }
 }
 
-void Debug::setScreen(SDL_Surface *screen){
+void Debug::initScreen(SDL_Surface *screen){
 if (DEBUG){
    screen_ = screen;
 }}
 
-void Debug::setFont(std::string name, int size){
+void Debug::initFont(std::string name, int size){
 if (DEBUG){
    font = TTF_OpenFont(name.c_str(), size);
    assert (font != 0);

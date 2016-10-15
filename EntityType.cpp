@@ -52,6 +52,10 @@ SDL_Rect EntityType::getBaseRect() const{
    return baseRect_;
 }
 
+SDL_Rect EntityType::getDrawRect() const{
+   return drawRect_;
+}
+
 SDL_Surface *EntityType::getIcon() const{
    return icon;
 }

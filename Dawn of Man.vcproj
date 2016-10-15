@@ -211,6 +211,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Particle.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Point.h"
 				>
 			</File>
@@ -260,6 +264,10 @@
 			</File>
 			<File
 				RelativePath=".\misc.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Particle.cpp"
 				>
 			</File>
 			<File

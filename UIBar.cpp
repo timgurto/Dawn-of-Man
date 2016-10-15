@@ -22,6 +22,8 @@ surfaceFun_(surfaceFun),
 iconCount(initialIconCount),
 requiredMode_(requiredMode){}
 
+//TODO one-by-one
+//TODO Make it an attribute instead of a function
 SDL_Rect UIBar::rect() const{
    SDL_Rect barRect;
 
@@ -65,8 +67,7 @@ void UIBar::draw(SDL_Surface *screen) const{
       
       //blit icons
       pixels_t x = rect().x, y = rect().y;
-      typeNum_t i = 0;
-      while (i != iconCount){
+      for (typeNum_t i = 0; i != iconCount; ++i){
          //draw
          SDL_BlitSurface(surfaceFun_(i, *game_), 0, screen, &makeRect(x, y));
 
@@ -75,8 +76,6 @@ void UIBar::draw(SDL_Surface *screen) const{
             x += ICON_SIZE;
          else
             y += ICON_SIZE;
-
-         ++i;
       }
    }
 }
@@ -96,7 +95,7 @@ typeNum_t UIBar::mouseIndex(const Point &point) const{
    return NO_TYPE;
 }
 
-void UIBar::set(const GameData *game,
+void UIBar::init(const GameData *game,
                 SDL_Surface *vBarSurface,
                 SDL_Surface *hBarSurface){
    game_ = game;

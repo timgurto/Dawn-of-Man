@@ -34,7 +34,7 @@ const pixels_t SCREEN_HEIGHT = 768;
 const int SCREEN_BPP = 32;
 
 //in case the cursor point isn't at 0,0
-const Point CURSOR_OFFSET(-2,-1);
+const Point CURSOR_OFFSET(0,-9);
 
 const typeNum_t NO_TYPE = 0xffff;
 
@@ -50,6 +50,8 @@ const SDL_Color WHITE   = {0xff, 0xff, 0xff};
 const float FULL  = 1;
 const float EMPTY = 0;
 
+const Uint8 SHADOW_ALPHA = 0x44;
+
 //anything behind each entity is cleared
 const bool ENTITY_MASKS = true;
 
@@ -58,14 +60,21 @@ const bool MASK_BEFORE_CLIP = false;
 
 const SDL_Color ENTITY_BACKGROUND = GREEN;
 const SDL_Color ENTITY_MASK       = MAGENTA;
-const Uint32 FOOTPRINT_COLOR_GOOD = 0x008800;
-const Uint32 FOOTPRINT_COLOR_BAD  = 0x880000;
+const Uint32 FOOTPRINT_COLOR_GOOD = 0x008800; //dark green
+const Uint32 FOOTPRINT_COLOR_BAD  = 0x880000; //dark red
 
 const pixels_t ICON_SIZE = 48;
 const std::string IMAGE_SUFFIX = ".png";
 const std::string IMAGE_PATH           = "Images/";
 const std::string BUILDINGS_IMAGE_PATH = "Buildings/";
 const std::string INTERFACE_IMAGE_PATH = "Interface/";
+
+enum Direction{
+   UP,
+   DOWN,
+   LEFT,
+   RIGHT
+};
 
 //For makePath()
 enum ImageModifier{

@@ -3,9 +3,10 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
+#include <list>
 #include "SDL.h"
-#include "Point.h"
 #include "globals.h"
+#include "Point.h"
 
 struct GameData;
 class EntityType;
@@ -20,8 +21,9 @@ protected:
    Point loc_; //location
 
    //direction of clipping for partial drawing
-   short direction;
-   static const GameData *game_; //static pointer to game
+   Direction direction;
+   static GameData *game_; //static pointer to game
+   static SDL_Surface *screen_;
 
 public:
    Entity(typeNum_t type, const Point &loc);
@@ -34,14 +36,19 @@ public:
 
    //Draws the entity, as well as a green mask behind
    //it if ENTITY_MASKS is true
-   void draw(SDL_Surface *screen) const;
+   virtual void draw(SDL_Surface *screen = screen_) const;
+
+   //Anything extra that should be drawn after all
+   //entities' standard draw()s are called
+   //Example: construction particles
+   virtual void drawLater() const;
    
    //Any changes that need to be made to the entity
    //by the game loop
    virtual void tick();
 
    //Initializes the class' static pointer
-   static void setGame(GameData *game);
+   static void init(GameData *game, SDL_Surface *screen);
 
    //How much of the entity should be drawn.
    //FULL (1) by default

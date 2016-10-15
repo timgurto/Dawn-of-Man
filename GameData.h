@@ -6,10 +6,10 @@
 #include <vector>
 #include <list>
 
-#include "BuildingType.h"
 #include "globals.h"
+#include "BuildingType.h"
 
-class Building;
+class Entity;
 
 typedef std::vector<BuildingType> buildingTypes_t;
 typedef std::list<Entity *> entities_t;
@@ -23,11 +23,12 @@ struct GameData{
    buildingTypes_t buildingTypes;
    
    //All entities in the game, sorted by y co-ordinate.
-   //Entity* used for polymorphism
+   //Entity* used, for polymorphism
    entities_t entities;
 
    //The current game mode
    ControlMode mode;
+
 };
 
 #endif
