@@ -41,6 +41,8 @@ SDL_Rect getSelectionRect(const GameData &game);
 //Selects entities chosen by the user
 void select(GameData &game);
 
+void setSelectedTargets(GameData &game);
+
 
 
 //=== render ===

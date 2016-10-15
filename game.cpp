@@ -280,6 +280,9 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
          case MOUSE_BUTTON_RIGHT:
             if (!game.rightMouse.dragging)
                switch(game.mode){
+               case NORMAL_MODE:
+                  if (!game.leftMouse.dragging)
+                     setSelectedTargets(game);
                case BUILD_MODE:
                   //cancel build mode
                   game.mode = NORMAL_MODE;
@@ -453,6 +456,18 @@ void select(GameData &game){
          break;
 
    }// for entities
+}
+
+void setSelectedTargets(GameData &game){
+   Point target = game.mousePos - Point(game.map);
+   for (entities_t::iterator it = game.entities.begin();
+        it != game.entities.end(); ++it){
+      if ((*it)->classID() == UNIT &&
+          (*it)->selected){
+         Unit *unitP = (Unit *)(*it);
+         unitP->target = target;
+      }
+   }
 }
 
 

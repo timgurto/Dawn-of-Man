@@ -13,6 +13,10 @@ const EntityType &Unit::type() const{
    return game_->unitTypes[type_];
 }
 
+void Unit::tick(double delta){
+   
+}
+
 int Unit::getColor() const{
    return player_;
 }

@@ -15,9 +15,11 @@ class Unit : public Entity{
    typeNum_t player_; //the unit's controlling player
 
 public:
+   Point target;
    Unit(typeNum_t type, const Point &loc,
         typeNum_t player = HUMAN_PLAYER);
    const virtual EntityType &Unit::type() const;
+   virtual void tick(double delta);
    virtual int getColor() const;
    virtual EntityTypeID classID() const;
    virtual bool selectable() const;

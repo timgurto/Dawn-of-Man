@@ -126,7 +126,7 @@ SDL_Rect locRect(const SDL_Rect &original){
 //TODO Might be slow to repeat
 bool isKeyPressed(SDLKey key){
    Uint8 *keyStates = SDL_GetKeyState(0);
-   return bool(keyStates[key]);
+   return keyStates[key] == 0;
 }
 
 Uint8 *keyStates = SDL_GetKeyState(0);
