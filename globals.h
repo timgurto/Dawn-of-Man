@@ -92,6 +92,8 @@ const std::string DECORATIONS_IMAGE_PATH
    = IMAGE_PATH + "Decorations/";
 const std::string UNITS_IMAGE_PATH
    = IMAGE_PATH + "Units/";
+const std::string RESOURCES_IMAGE_PATH
+   = IMAGE_PATH + "Resources/";
 const std::string INTERFACE_IMAGE_PATH
    = IMAGE_PATH + "Interface/";
 
@@ -120,7 +122,8 @@ enum EntityTypeID{
    ENT_MAX, //for array sizes.
    ENT_NONE,
 
-   ENT_DECORATION
+   ENT_DECORATION,
+   ENT_RESOURCE
 };
 
 //Interface modes for the game

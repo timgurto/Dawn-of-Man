@@ -155,6 +155,10 @@ std::string makePath(EntityTypeID type, typeNum_t imageNumber,
       break;
    case ENT_UNIT:
       path << UNITS_IMAGE_PATH;
+      break;
+   case ENT_RESOURCE:
+      path << RESOURCES_IMAGE_PATH;
+      break;
    }
 
    switch (modifier){
@@ -291,4 +295,9 @@ double modulo(double a, int b){
       return a;
    int aInt = int(a);
    return aInt % b + a - aInt;
+}
+
+void centerMap(GameData &game, const Point &center){
+   game.map.x = SCREEN_WIDTH / 2 - center.x;
+   game.map.y = SCREEN_HEIGHT / 2 - center.y;
 }

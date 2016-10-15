@@ -154,25 +154,6 @@ void renderEntities(SDL_Surface *screen, const GameData &game){
            it != game.entities.end(); ++it)
          if ((*it)->onScreen())
             (*it)->draw(screen);
-
-   //Indicators for base rectangles and locations, for all entities
-   //that can collide
-   //if (DEBUG)
-   //   for (entities_t::const_iterator it = game.entities.begin();
-   //        it != game.entities.end(); ++it)
-   //      if ((*it)->onScreen() && (*it)->collides()){
-   //         SDL_Rect base = (*it)->getBaseRect() +
-   //                         locRect(game.map);
-   //         SDL_FillRect(screen, &base, WHITE_UINT);
-   //         SDL_Rect loc = makeRect(-1, 0, 3, 1) +
-   //                        locRect(game.map) +
-   //                        (*it)->getLoc();
-   //         SDL_FillRect(screen, &loc, BLACK_UINT);
-   //         loc = makeRect(0, -1, 1, 3) +
-   //                        locRect(game.map) +
-   //                        (*it)->getLoc();
-   //         SDL_FillRect(screen, &loc, BLACK_UINT);
-   //      }
 }
 
 //Draws the selection rectangle

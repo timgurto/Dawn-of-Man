@@ -113,4 +113,6 @@ pixels_t distance(pixels_t a, pixels_t b);
 //double % int, preserves fraction
 double modulo(double a, int b);
 
+void centerMap(GameData &game, const Point &center);
+
 #endif

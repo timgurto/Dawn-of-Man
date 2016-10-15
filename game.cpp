@@ -20,6 +20,8 @@
 #include "Decoration.h"
 #include "UnitType.h"
 #include "Unit.h"
+#include "ResourceType.h"
+#include "Resource.h"
 #include "UIBar.h"
 #include "Particle.h"
 #include "Point.h"
@@ -81,6 +83,8 @@ void gameMode(){
    //=================================================
    game.players.push_back(0xca6500); //0x... = color
    game.players.push_back(0x882222);
+
+   //building types
    BuildingType campfire(0, "Campfire",
                          makeRect(-42, -92, 81, 113),
                          makeRect(-42, -23, 81, 42),
@@ -91,6 +95,8 @@ void gameMode(){
                        makeRect(-76, -17, 154, 28),
                        Point(1, -20), 1750);
    game.buildingTypes.push_back(shrine);
+
+   //decoration types
    DecorationType rock(0, "Rock",
                   makeRect(-12, -9, 24, 18),
                   makeRect(-12, -9, 24, 18),
@@ -100,6 +106,8 @@ void gameMode(){
       addEntity(game, new Decoration(0, Point(
                                 rand() % game.map.w,
                                 rand() % game.map.h)));
+
+   //unit types
    UnitType generic(0, "Generic",
                   makeRect(-22, -107, 70, 113),
                   makeRect(-22,-6, 53, 11),
@@ -124,7 +132,6 @@ void gameMode(){
                   0, //origin building
                   1000); //progress cost
    game.unitTypes.push_back(grunt);
-
    //human start: one grunt
    Unit *newGrunt = new Unit(1,
                              Point(rand() % game.map.w,
@@ -132,19 +139,32 @@ void gameMode(){
                              HUMAN_PLAYER,
                              1000);
    addEntity(game, newGrunt);
-   //centerMap(game, newGrunt->getLoc);
-   game.map.x = SCREEN_WIDTH / 2 - newGrunt->getLoc().x;
-   game.map.y = SCREEN_HEIGHT / 2 - newGrunt->getLoc().y;
-
+   centerMap(game, newGrunt->getLoc());
    //computer start: a bunch of generics
    for (int i = 0; i != 10; ++i){
       pixels_t x, y;
       do{
          x = rand() % game.map.w;
          y = rand() % game.map.h;
-      }while (noCollision(game, game.buildingTypes[1],
+      }while (!noCollision(game, game.buildingTypes[1],
                           Point(x, y)));
       addEntity(game, new Unit(0, Point(x, y), 1, 1000));
+   }
+
+   //resource types
+   ResourceType tree(0, "Tree",
+                     makeRect(-57, -133, 116, 135),
+                     makeRect(-17, -5, 34, 12),
+                     Point(2, -78));
+   game.resourceTypes.push_back(tree);
+   for (int i = 0; i != 10; ++i){
+      pixels_t x, y;
+      do{
+         x = rand() % game.map.w;
+         y = rand() % game.map.h;
+      }while (!noCollision(game, game.resourceTypes[0],
+                          Point(x, y)));
+      addEntity(game, new Resource(0, Point(x, y)));
    }
    //=================================================
 

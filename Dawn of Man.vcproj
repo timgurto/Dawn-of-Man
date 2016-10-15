@@ -252,6 +252,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Resource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ResourceType.h"
+				>
+			</File>
+			<File
 				RelativePath=".\types.h"
 				>
 			</File>
@@ -349,6 +357,14 @@
 			</File>
 			<File
 				RelativePath=".\render.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Resource.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ResourceType.cpp"
 				>
 			</File>
 			<File

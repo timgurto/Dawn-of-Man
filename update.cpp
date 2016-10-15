@@ -27,7 +27,7 @@ void updateState(double delta, GameData &game,
    if (!game.paused){
 
       //Entities
-      for (entities_t::iterator it = game.entities.begin();
+         for (entities_t::iterator it = game.entities.begin();
            it != game.entities.end(); ++it){
          (*it)->tick(delta);
          VerticalMovement v = (*it)->getVerticalMovement();
