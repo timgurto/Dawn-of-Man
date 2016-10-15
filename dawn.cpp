@@ -11,7 +11,7 @@
 #include "game.h"
 
 //globals
-Debug debug(makeColor(0xff, 0xff, 0), 0, 0, 59);
+Debug debug(YELLOW, 0, 0, 59);
 int surfacesLoaded(0);
 
 int main(int argc, char* args[]){

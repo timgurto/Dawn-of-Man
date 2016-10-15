@@ -191,11 +191,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\RGB.h"
-				>
-			</File>
-			<File
-				RelativePath=".\SDL_wrappers.h"
+				RelativePath=".\misc.h"
 				>
 			</File>
 		</Filter>
@@ -227,7 +223,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\SDL_wrappers.cpp"
+				RelativePath=".\misc.cpp"
 				>
 			</File>
 		</Filter>

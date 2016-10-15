@@ -10,11 +10,9 @@ class BuildingType{
 
 public:
    BuildingType(std::string name, typeNum_t imageNumber,
-                SDL_Rect drawRect, SDL_Rect baseRect, RGB background);
+                SDL_Rect drawRect, SDL_Rect baseRect,
+                SDL_Color background);
    BuildingType(const BuildingType &original);
-
-   /*bool operator==(const CaveBuildingType &rhs);
-   bool operator!=(const CaveBuildingType &rhs);*/
    BuildingType &operator=(const BuildingType &rhs);
    ~BuildingType();
 
@@ -24,7 +22,7 @@ public:
    SDL_Surface *iconSurface_;
    typeNum_t imageNumber_;
 
-   RGB background_;
+   SDL_Color background_;
 
    //the x and y values of these are offsets from the building's location
    SDL_Rect drawRect_;

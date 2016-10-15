@@ -6,7 +6,7 @@
 #include "SDL.h"
 #include "SDL_ttf.h"
 
-#include "SDL_wrappers.h"
+#include "misc.h"
 #include "globals.h"
 
 class Debug{

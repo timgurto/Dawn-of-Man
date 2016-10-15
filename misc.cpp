@@ -5,14 +5,17 @@
 #include "SDL.h"
 #include "SDL_image.h"
 
-#include "RGB.h"
 #include "Debug.h"
 
 #include "Globals.h"
-#include "SDL_wrappers.h"
+#include "misc.h"
 
 extern Debug debug;
 extern int surfacesLoaded;
+
+
+//========SDL=========
+
 
 SDL_Surface *loadImage(const char* fileName){
    std::string strFile(fileName);
@@ -26,11 +29,10 @@ SDL_Surface *loadImage(const char* fileName){
    SDL_FreeSurface(load);
    ++surfacesLoaded;
 
-   SDL_WM_SetCaption("Surface loaded", NULL);
    return opt;
 }
 
-SDL_Surface *loadImage(const char* fileName, RGB background){
+SDL_Surface *loadImage(const char* fileName, SDL_Color background){
    SDL_Surface *img = loadImage(fileName);
    SDL_SetColorKey(img, SDL_SRCCOLORKEY, SDL_MapRGB( img->format, background.r, background.g, background.b));
    return img;
@@ -40,7 +42,7 @@ SDL_Surface *loadImage(const std::string fileName){
    return loadImage(fileName.c_str());
 }
 
-SDL_Surface *loadImage(const std::string fileName, RGB background){
+SDL_Surface *loadImage(const std::string fileName, SDL_Color background){
    return loadImage(fileName.c_str(), background);
 }
 
@@ -67,15 +69,6 @@ SDL_Surface *setScreen(){
    return screen;
 }
 
-template <typename Type> void checkP(Type *pointer){
-   if (pointer == 0){
-      SDL_WM_SetCaption(SDL_GetError(), NULL);
-      bool pointerProperlyInitialized(false);
-      assert (pointerProperlyInitialized);
-   }
-   assert (pointer != 0);
-}
-
 void blitCursor (SDL_Surface *cursor, SDL_Surface *screen, SDL_MouseMotionEvent coords){
    SDL_BlitSurface(cursor, 0, screen, &makeRect());
 }
@@ -88,8 +81,13 @@ void freeSurface(SDL_Surface *&p){
    }
 }
 
+
+
+//========misc=========
+
+
 std::string makePath(EntityType type, typeNum_t imageNumber, bool isPortrait){
-   std::stringstream path;
+   std::ostringstream path;
    path << IMAGE_PATH; // Images/
    switch (type){
    case Building:
@@ -108,4 +106,13 @@ std::string makePath(EntityType type, typeNum_t imageNumber, bool isPortrait){
    
    path << IMAGE_SUFFIX; // .png
    return path.str();
+}
+
+template <typename Type> void checkP(Type *pointer){
+   if (pointer == 0){
+      SDL_WM_SetCaption(SDL_GetError(), NULL);
+      bool pointerProperlyInitialized(false);
+      assert (pointerProperlyInitialized);
+   }
+   assert (pointer != 0);
 }

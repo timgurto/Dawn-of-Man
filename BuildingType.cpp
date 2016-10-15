@@ -2,7 +2,7 @@
 #include <string>
 
 #include "SDL.h"
-#include "SDL_wrappers.h"
+#include "misc.h"
 #include "globals.h"
 #include "BuildingType.h"
 #include "Debug.h"
@@ -13,7 +13,7 @@ BuildingType::BuildingType(std::string name,
                            typeNum_t imageNumber,
                            SDL_Rect drawRect,
                            SDL_Rect baseRect,
-                           RGB background):
+                           SDL_Color background):
 name_(name),
 imageNumber_(imageNumber),
 drawRect_(drawRect),

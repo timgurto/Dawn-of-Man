@@ -1,8 +1,10 @@
 #include <cassert>
 #include <vector>
+#include <sstream>
+#include <time.h>
 
 #include "SDL.h"
-#include "SDL_wrappers.h"
+#include "misc.h"
 
 #include "Debug.h"
 #include "BuildingType.h"
@@ -19,8 +21,8 @@ debug("Beginning game mode");
 
 
    SDL_Surface *back = loadImage(IMAGE_PATH + "back.png");
-   SDL_Surface *image = loadImage(IMAGE_PATH + "c0.png", RGB_MAGENTA);
-   SDL_Surface *cursor = loadImage(IMAGE_PATH + "cursor.png", RGB_GREEN);
+   SDL_Surface *image = loadImage(IMAGE_PATH + "c0.png", MAGENTA);
+   SDL_Surface *cursor = loadImage(IMAGE_PATH + "cursor.png", GREEN);
 
    screenSize_t
       mouseX(SCREEN_WIDTH/2),
@@ -33,30 +35,57 @@ debug("Beginning game mode");
    buildingTypes.push_back(BuildingType("Campfire", 0,
                              makeRect(-61, -118, 114, 143),
                              makeRect(-61, -15, 111, 40),
-                             RGB_GREEN));
+                             GREEN));
 
    typeNum_t toBuild = 0;
+   
+
+   timer_t ticks(SDL_GetTicks());
+   timer_t lastCalcTick(ticks), lastDrawTick(ticks);
 
    bool loop = true;
    while (loop){
-      //While there's an event to handle
+      // Handle events
       SDL_Event event;
       while (SDL_PollEvent(&event) ){
          switch (event.type){
-            case SDL_MOUSEMOTION:
-               mouseX = event.motion.x;
-               mouseY = event.motion.y;
-               break;
-            case SDL_QUIT: //If the user has Xed out the window
-               loop = false;
-               break;
+         case SDL_MOUSEMOTION:
+            mouseX = event.motion.x;
+            mouseY = event.motion.y;
+            break;
+         case SDL_KEYDOWN:
+            switch (event.key.keysym.sym){
+            case SDLK_PRINT:
+               std::ostringstream os;
+               os << "shot" << time(0) << ".bmp";
+               SDL_SaveBMP(screen, os.str().c_str());
+            }
+            break;
+         case SDL_QUIT: //If the user has Xed out the window
+            loop = false;
+            break;
          }
       }
-      drawEverything(screen, buildingTypes.front().surface_,
-                     back, image, cursor, mouseX, mouseY);
-   }
+      
+      ticks = SDL_GetTicks();
 
-      //while(1);
+      // Update state if necessary
+      if (ticks - lastCalcTick >= CALC_MS){
+         debug("Tick: updating state");
+         updateState();
+         lastCalcTick = MIN_WAIT ? ticks : lastCalcTick + CALC_MS;
+      }
+
+
+      // Redraw if necessary
+      if (ticks - lastDrawTick >= DRAW_MS){
+         debug("Tick: redrawing");
+         drawEverything(screen, buildingTypes.front().surface_,
+                        back, image, cursor, mouseX, mouseY);
+         lastDrawTick = MIN_WAIT ? ticks : lastDrawTick + DRAW_MS;
+      }
+
+   }
 
 
    SDL_ShowCursor(SDL_ENABLE);
@@ -86,3 +115,5 @@ void drawEverything(SDL_Surface *screen,
    bool test = SDL_Flip(screen) == 0;
    assert(test);
 }
+
+void updateState(){}
