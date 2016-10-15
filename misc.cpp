@@ -184,20 +184,12 @@ Uint32 getEntityColor(const GameData &game, int color){
    if (color < MAX_PLAYERS)
       return game.players[color].color;
    
-   //else
-   switch(color){
-   case ENTITY_DEFAULT:
-      return ENTITY_DEFAULT_COLOR;
-   case ENTITY_SHADOW_LIGHT:
-      return 0xdddddd; //WHITE_UINT;
-   case ENTITY_SHADOW_DARK:
-      return 0x444444; //BLACK_UINT;
-   case ENTITY_DECORATION:
-      return ENTITY_DECORATION_COLOR;
-   default:
+   //otherwise
+   //switch(color){
+   //default:
       return ENTITY_DEFAULT_COLOR;
 
-   }
+   //}
 }
 
 //whether a is inside b

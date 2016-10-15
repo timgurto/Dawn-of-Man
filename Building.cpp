@@ -67,8 +67,8 @@ void Building::draw(SDL_Surface *screen) const{
    default:
       assert(false);
    }
-   
-   shadowBlit(&srcLoc, &drawLoc, screen);
+   colorBlit(player_, screen, srcLoc, drawLoc);
+   //shadowBlit(&srcLoc, &drawLoc, screen);
 }
 
 void Building::tick(double delta){

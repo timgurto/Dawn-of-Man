@@ -38,10 +38,12 @@ void Particle::tick(double delta){
 
 void Particle::draw(const GameData &game) const{
    SDL_Rect dest = makeRect(int(x), int(y)) + game.map;
-   if (SHADOWS){
-      SDL_Rect disp = makeRect(int(dest.x - offset), int(dest.y + offset));
-      SDL_BlitSurface(shadow_, 0, screen_, &disp);
-   }
+
+   //shadow
+   SDL_Rect disp = makeRect(int(dest.x - offset), int(dest.y + offset));
+   SDL_BlitSurface(shadow_, 0, screen_, &disp);
+
+   //particle
    if (PARTICLE_FADE)
       SDL_SetAlpha(image_, SDL_SRCALPHA, Uint8(age));
    SDL_BlitSurface(image_, 0, screen_, &dest);

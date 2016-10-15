@@ -33,33 +33,7 @@ void Entity::draw(SDL_Surface *screen) const{
    SDL_Rect srcLoc = makeRect(0, 0,
                               thisType.drawRect_.w,
                               thisType.drawRect_.h);
-   shadowBlit(&srcLoc, &drawLoc, screen);
-}
-
-void Entity::shadowBlit(SDL_Rect *srcLoc,
-                        SDL_Rect *dstLoc,
-                        SDL_Surface *screen) const{
-   const EntityType &thisType = type();
-
-   SDL_Rect dest = *dstLoc + Point(game_->map);
-
-   //blit mask, hiding anything that would otherwise
-   //show through the gaps in the sprite
-   if (ENTITY_MASKS)
-      SDL_BlitSurface(thisType.mask, srcLoc, screen,
-                      &makeRect(dest)); 
-
-   //shadow - white and black
-   if (SHADOWS){
-      colorBlit(ENTITY_SHADOW_LIGHT, thisType.surface, screen,
-                *srcLoc, (dest + Point(1,1)));
-      colorBlit(ENTITY_SHADOW_DARK, thisType.surface, screen,
-                *srcLoc, (dest - Point(1,1)));
-   }
-   
-   //colored sprite
-   colorBlit(getColor(), thisType.surface, screen,
-             *srcLoc, dest);
+   colorBlit(ENTITY_DEFAULT, screen, srcLoc, drawLoc);
 }
 
 SDL_Rect Entity::getBaseRect(){
@@ -90,12 +64,11 @@ int Entity::getColor() const{
    return ENTITY_DEFAULT; //default
 }
 
-void Entity::colorBlit(int color, SDL_Surface *surface,
-                       SDL_Surface *screen,
+void Entity::colorBlit(int color, SDL_Surface *screen,
                        SDL_Rect &srcLoc,
                        SDL_Rect &dstLoc) const{
-
       assert(color < ENTITY_MAX);
+      const EntityType &thisType = type();
       SDL_Surface *&index = game_->surfaceIndex
                                      [color]
                                      [type_]
@@ -123,14 +96,22 @@ void Entity::colorBlit(int color, SDL_Surface *surface,
                       getEntityColor(*game_, color));
 
          //3. add sprite
-         SDL_BlitSurface(surface, 0, index, 0);
+         SDL_BlitSurface(thisType.surface, 0, index, 0);
       }
+
+      SDL_Rect dest = dstLoc + Point(game_->map);
+
+      //blit mask, hiding anything that would otherwise
+      //show through the gaps in the sprite
+      if (ENTITY_MASKS)
+         SDL_BlitSurface(thisType.mask, &srcLoc, screen,
+                         &SDL_Rect(dest));
+      //note: the "SDL_Rect(dest)" above avoids SDL_Blit
+      //messing with the draw location
 
       //blit colored sprite to the screen.
       //The indexed version definitely exists now.
-      SDL_BlitSurface(index, &srcLoc, screen,
-                      &SDL_Rect(dstLoc));
-
+      SDL_BlitSurface(index, &srcLoc, screen, &dest);
 }
 
 bool Entity::collides() const{

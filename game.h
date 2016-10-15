@@ -18,11 +18,11 @@ void updateState(double delta, GameData &game, SDL_Surface *screen,
                  UIBars_t &bars);
 
 //Draws a frame
-void drawEverything(SDL_Surface *screen,
-                    SDL_Surface *map, SDL_Surface *darkMap,
-                    SDL_Surface *cursor, SDL_Surface *cursorShadow,
-                    SDL_Surface *entitiesTemp,
-                    const GameData &game, const UIBars_t &bars);
+void render(SDL_Surface *screen,
+            SDL_Surface *map, SDL_Surface *darkMap,
+            SDL_Surface *cursor, SDL_Surface *cursorShadow,
+            SDL_Surface *entitiesTemp,
+            const GameData &game, const UIBars_t &bars);
 
 //Handles events and changes game data accordingly
 void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars);

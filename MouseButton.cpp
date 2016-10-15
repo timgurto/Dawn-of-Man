@@ -3,6 +3,9 @@
 #include "MouseButton.h"
 #include "globals.h"
 #include "Point.h"
+#include "Debug.h"
+
+extern Debug debug;
 
 const pixels_t MouseButton::MOVEMENT_THRESHOLD = 10;
 
@@ -20,4 +23,15 @@ void MouseButton::mouseDown(const Point &mousePos){
 void MouseButton::mouseUp(){
    down = false;
    dragging = false;
+}
+
+void MouseButton::checkDrag(const Point &mousePos){
+   if (down && !dragging)
+      if (mousePos.x - dragBegin.x >= MOVEMENT_THRESHOLD ||
+          dragBegin.x - mousePos.x >= MOVEMENT_THRESHOLD ||
+          mousePos.y - dragBegin.y >= MOVEMENT_THRESHOLD ||
+          dragBegin.y - mousePos.y >= MOVEMENT_THRESHOLD){
+         debug("Dragging");
+         dragging = true;
+      }
 }

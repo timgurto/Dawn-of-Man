@@ -220,6 +220,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MouseButton.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Particle.h"
 				>
 			</File>
@@ -293,6 +297,10 @@
 			</File>
 			<File
 				RelativePath=".\misc.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\MouseButton.cpp"
 				>
 			</File>
 			<File

@@ -1,4 +1,4 @@
-// (C) 2009 Tim Gurto
+// (C) 2009-2010 Tim Gurto
 
 #include "GameData.h"
 #include "Decoration.h"
@@ -9,10 +9,6 @@ Entity(type, loc){}
 
 const EntityType &Decoration::type() const{
    return game_->decorationTypes[type_];
-}
-
-int Decoration::getColor() const{
-   return ENTITY_DECORATION;
 }
 
 EntityTypeID Decoration::classID() const{

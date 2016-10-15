@@ -73,18 +73,18 @@ void gameMode(){
    //TODO load from files
    //=================================================
    BuildingType campfire(0, "Campfire",
-                         makeRect(-41, -91, 79, 111),
-                         makeRect(-41, -22, 79, 40),
+                         makeRect(-42, -92, 81, 113),
+                         makeRect(-42, -23, 81, 42),
                          1250);
    game.buildingTypes.push_back(campfire);
    BuildingType shrine(1, "Shrine",
-                       makeRect(-75, -67, 152, 77),
-                       makeRect(-75, -16, 152, 26),
+                       makeRect(-76, -68, 154, 79),
+                       makeRect(-76, -17, 154, 28),
                        1750);
    game.buildingTypes.push_back(shrine);
    DecorationType rock(0, "Rock",
-                  makeRect(-11, -8, 22, 16),
-                  makeRect(-11, -8, 22, 16));
+                  makeRect(-12, -9, 24, 18),
+                  makeRect(-12, -9, 24, 18));
    game.decorationTypes.push_back(rock);
    for (int i = 0; i != 15; ++i)
       addEntity(game, new Decoration(0, Point(
@@ -114,14 +114,15 @@ void gameMode(){
       
       deltaLog("    Framerate: ", (delta == 0 ? 0 : 1000 / delta));
       deltaLog("        Delta: ", delta, "ms");
-      deltaLog("ms per entity: ", 0.01 * (100 * delta / game.entities.size()));
+      deltaLog("ms per entity: ", 0.01 * (100 * delta /
+                                          game.entities.size()));
 
       //update state
       updateState(deltaMod, game, screen, bars);
 
       //render
-      drawEverything(screen, map, darkMap, cursor, cursorShadow,
-                     entitiesTemp, game, bars);
+      render(screen, map, darkMap, cursor, cursorShadow,
+             entitiesTemp, game, bars);
 
    }
 
@@ -166,11 +167,11 @@ void updateState(double delta, GameData &game,
 
 }
 
-void drawEverything(SDL_Surface *screen,
-                    SDL_Surface *map, SDL_Surface *darkMap,
-                    SDL_Surface *cursor, SDL_Surface *cursorShadow,
-                    SDL_Surface *entitiesTemp,
-                    const GameData &game, const UIBars_t &bars){
+void render(SDL_Surface *screen,
+            SDL_Surface *map, SDL_Surface *darkMap,
+            SDL_Surface *cursor, SDL_Surface *cursorShadow,
+            SDL_Surface *entitiesTemp,
+            const GameData &game, const UIBars_t &bars){
 
    //const Point &mousePos = game.mousePos;
    //const typeNum_t &toBuild = game.toBuild;
@@ -198,7 +199,7 @@ void drawEverything(SDL_Surface *screen,
          }
       }
 
-   
+   //TODO check inside screen
    //Entities
    if (ENTITY_MASKS)
       SDL_FillRect(entitiesTemp, 0, ENTITY_BACKGROUND_UINT);
@@ -208,6 +209,7 @@ void drawEverything(SDL_Surface *screen,
    if (ENTITY_MASKS)
       SDL_BlitSurface(entitiesTemp, 0, screen, 0);
 
+   //TODO theme this better
    //Building footprint
    if (game.mode == BUILD_MODE){
       SDL_Rect baseRect = game.mousePos +
@@ -219,6 +221,11 @@ void drawEverything(SDL_Surface *screen,
          footprintColor = FOOTPRINT_COLOR_BAD;
       SDL_FillRect(screen, &baseRect, footprintColor);
    }
+
+   //TODO implement
+   //Selection rectangle
+   //if (game.leftMouse.dragging)
+      
 
    //Interface
    for (UIBars_t::const_iterator it = bars.begin(); it != bars.end(); ++it){
@@ -262,18 +269,8 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
          game.mousePos.x = event.motion.x;
          game.mousePos.y = event.motion.y;
          //check right mouse movement
-         if (game.rightMouse.down && !game.rightMouse.dragging)
-            if ((game.mousePos.x - game.rightMouse.dragBegin.x >=
-               MouseButton::MOVEMENT_THRESHOLD) ||
-                (game.rightMouse.dragBegin.x - game.mousePos.x >=
-                 MouseButton::MOVEMENT_THRESHOLD) ||
-                (game.mousePos.y - game.rightMouse.dragBegin.y >=
-                 MouseButton::MOVEMENT_THRESHOLD) ||
-                (game.rightMouse.dragBegin.y - game.mousePos.y >=
-                 MouseButton::MOVEMENT_THRESHOLD)){
-               game.rightMouse.dragging = true;
-               debug("RMB moved");
-            }
+         game.rightMouse.checkDrag(game.mousePos);
+         game.leftMouse.checkDrag(game.mousePos - game.map);
          break;
 
       //A key is pressed
@@ -308,6 +305,7 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
          //debug("Mouse down: ", int(event.button.button));
          switch (event.button.button){
          case MOUSE_BUTTON_LEFT:
+            game.leftMouse.mouseDown(game.mousePos - game.map);
             //check UI bars
             { //new scope for barClicked
                bool barClicked = false;
@@ -367,7 +365,6 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
 }
 
 void addEntity(GameData &game, Entity *entity){
-
    game.entities.insert(std::lower_bound(game.entities.begin(),
                                          game.entities.end(), entity,
                                          dereferenceLessThan),
@@ -378,7 +375,6 @@ void removeEntity(){
    //delete() the Entity*
 }
 
-//TODO if RMB down and moved then show anchor
 void blitCursor (SDL_Surface *cursor, SDL_Surface *shadow,
                  SDL_Surface *screen, const GameData &game){
    //cursor might appear 'raised' from the wall
@@ -396,6 +392,8 @@ void blitCursor (SDL_Surface *cursor, SDL_Surface *shadow,
 }
 
 void scrollMap(GameData &game, double delta){
+   //TODO edge of map scrolling
+
    //right-dragging
    if (game.rightMouse.dragging){
       Point rmbDisplacement = game.mousePos - game.rightMouse.dragBegin;

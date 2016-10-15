@@ -6,6 +6,7 @@
 #include "globals.h"
 #include "Point.h"
 
+//TODO comments
 //Describes the state of a mouse button
 struct MouseButton{
    //How far the mouse has to move to switch
@@ -25,6 +26,8 @@ struct MouseButton{
 
    void mouseDown(const Point &mousePos);
    void mouseUp();
+
+   void checkDrag(const Point &mousePos);
 };
 
 #endif

@@ -75,14 +75,10 @@ const bool PARTICLE_FADE = false;
 //Alpha of shadows (particles, cursor)
 const Uint8 SHADOW_ALPHA = 0x44;
 
-//Graphics settings: each of these has a substantial
-//(~45%, multiplicative) effect on performance
+//This has a substantial effect on performance
 //===================================================
 //anything behind each entity is cleared
 const bool ENTITY_MASKS = true;
-//entities appear engraved, cursor and particles have
-//shadows
-const bool SHADOWS = true;
 //===================================================
 
 const SDL_Color ENTITY_BACKGROUND   = GREEN;
@@ -155,12 +151,8 @@ enum Orientation{
 //For the surface index
 enum EntityColor{
    ENTITY_DEFAULT = MAX_PLAYERS,
-   ENTITY_SHADOW_LIGHT,
-   ENTITY_SHADOW_DARK,
-   ENTITY_DECORATION,
    ENTITY_MAX //for array sizes
 };
 const Uint32 ENTITY_DEFAULT_COLOR = 0xaaaa22;
-const Uint32 ENTITY_DECORATION_COLOR = 0x888888;
 
 #endif

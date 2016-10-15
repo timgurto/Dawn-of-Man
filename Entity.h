@@ -38,12 +38,11 @@ protected: //everything should be a derived class
                    SDL_Rect *dstLoc,
                    SDL_Surface *screen) const;
 
-   //blit to the color mask, then blit the color mask
-   //to the screen, to create a colored sprite
-   void colorBlit(int color, SDL_Surface *surface,
-                  SDL_Surface *screen,
-                  SDL_Rect &srcLoc,
-                  SDL_Rect &dstLoc) const;
+   //Draws the mask, then the colored sprite, creating
+   //and indexing it if necessary
+   void Entity::colorBlit(int color, SDL_Surface *screen,
+                          SDL_Rect &srcLoc,
+                          SDL_Rect &dstLoc) const;
 
 public:
 

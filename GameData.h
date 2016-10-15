@@ -20,6 +20,7 @@ typedef std::vector<DecorationType> decorationTypes_t;
 typedef std::vector<Player> players_t;
 typedef std::list<Entity *> entities_t;
 typedef std::list<Particle> particles_t;
+//TODO only entity types that have changing colors
 typedef SDL_Surface *surfaceIndex_t
                         [ENTITY_MAX] //number of colors
                         [MAX_TYPES] //number of types
@@ -35,7 +36,6 @@ struct GameData{
 
    //free entities and surfaces pointed to
    ~GameData();
-
 
    //Entity types
    //vectors:
@@ -91,7 +91,7 @@ struct GameData{
 
    //Information about button positions and dragging, for:
    // - right-mouse scrolling
-   MouseButton /*leftMouse, */rightMouse;
+   MouseButton leftMouse, rightMouse;
 
 };
 
