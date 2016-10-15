@@ -10,7 +10,7 @@ const double Particle::GRAVITY = 1.6;
 const int Particle::PARTICLE_COUNT = 15;
 const double Particle::VELOCITY_RANGE = 1.5;
 const int Particle::DELAY = 25; //ms
-const int Particle::DECAY = 4;
+const int Particle::DECAY = 6;
 
 SDL_Surface
    *Particle::screen_ = 0,
@@ -31,8 +31,6 @@ void Particle::tick(double delta){
    x += hV;
    offset += (hV >= 0 ? delta * hV : -1 * delta * hV);
    y -= delta * vV;
-   if (y > SCREEN_HEIGHT)
-      age = 0;
    vV -= delta * GRAVITY;
 }
 

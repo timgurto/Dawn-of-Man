@@ -142,7 +142,8 @@ void gameMode(){
 
 void updateState(double delta, GameData &game,
                  SDL_Surface *screen, UIBars_t &bars){
-   
+
+   //handle user input since last tick
    handleEvents(game, screen, bars);
 
    //Map scrolling
@@ -159,6 +160,7 @@ void updateState(double delta, GameData &game,
         it != game.particles.end(); ++it){
       it->tick(delta);
       if (it->expired()){
+         debug("particle expired");
          it = game.particles.erase(it);
          if (it == game.particles.end())
             break;
