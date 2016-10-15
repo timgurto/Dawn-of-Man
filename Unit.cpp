@@ -42,9 +42,20 @@ void Unit::tick(double delta){
       double xMod = cos(angle);
       double yMod = sin(angle);
 
-      pixels_t speed = game_->unitTypes[type_].speed_;
-      loc_.x += pixels_t(xMod * speed);
-      loc_.y += pixels_t(yMod * speed);
+      double speed = delta * game_->unitTypes[type_].speed_;
+      pixels_t
+         xDelta = pixels_t(xMod * speed),
+         yDelta = pixels_t(yMod * speed);
+
+      loc_.x += xDelta;
+      loc_.y += yDelta;
+
+      // if collision, undo
+      if (!isLocationOK()){
+         loc_.x -= xDelta;
+         loc_.y -= yDelta;
+         return;
+      }
 
       if (yMod > 0)
          verticalMovement_ = VM_DOWN;

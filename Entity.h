@@ -55,8 +55,8 @@ public:
    bool operator<(const Entity &rhs) const;
    
    //type() rectangles + entity's location
-   SDL_Rect getBaseRect();
-   SDL_Rect getDrawRect();
+   SDL_Rect getBaseRect() const;
+   SDL_Rect getDrawRect() const;
 
    virtual ~Entity(){}
 
@@ -104,6 +104,8 @@ public:
    SDL_Rect getSelectionDest(SDL_Surface *selection) const;
 
    VerticalMovement getVerticalMovement() const;
+
+   bool isLocationOK() const;
 };
 
 #endif

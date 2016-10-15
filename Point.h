@@ -14,7 +14,7 @@ struct Point{
    Point(const SDL_Rect &original);
    Point(pixels_t xCoord = 0, pixels_t yCoord = 0);
 
-   Point operator=(const SDL_Rect &rhs);
+   Point &operator=(const SDL_Rect &rhs);
 
    Point operator+(const Point &rhs) const;
    Point &operator+=(const Point &rhs);

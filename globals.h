@@ -36,8 +36,8 @@ const progress_t PROGRESS_PER_CALC = 4;
 
 const pixels_t DEFAULT_W_SCREEN_WIDTH = 1280;
 const pixels_t DEFAULT_W_SCREEN_HEIGHT = 800;
-const pixels_t DEFAULT_SCREEN_WIDTH = 1024;
-const pixels_t DEFAULT_SCREEN_HEIGHT = 768;
+const pixels_t DEFAULT_SCREEN_WIDTH = 1280;
+const pixels_t DEFAULT_SCREEN_HEIGHT = 1024;
 const int SCREEN_BPP = 32;
 
 //in case the cursor point isn't at 0,0

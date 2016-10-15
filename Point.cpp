@@ -12,9 +12,10 @@ x(xCoord),
 y(yCoord)
 {}
 
-Point Point::operator=(const SDL_Rect &rhs){
-   Point p(rhs.x, rhs.y);
-   return p;
+Point &Point::operator=(const SDL_Rect &rhs){
+   this->x = rhs.x;
+   this->y = rhs.y;
+   return *this;
 }
 
 Point Point::operator+(const Point &rhs) const{

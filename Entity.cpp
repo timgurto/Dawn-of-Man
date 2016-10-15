@@ -21,7 +21,8 @@ Entity::Entity(typeNum_t type, const Point &loc):
 type_(type),
 loc_(loc),
 direction(Direction(rand() % 4)),
-selected(false){}
+selected(false),
+verticalMovement_(VM_NONE){}
 
 bool Entity::operator<(const Entity &rhs) const{
    return (loc_.y < rhs.loc_.y);
@@ -29,7 +30,6 @@ bool Entity::operator<(const Entity &rhs) const{
 
 void Entity::draw(SDL_Surface *screen) const{
    const EntityType &thisType = type();
-   //debug("Drawing ", thisType.name_);
    SDL_Rect drawLoc = loc_ + thisType.drawRect_;
    SDL_Rect srcLoc = makeRect(0, 0,
                               thisType.drawRect_.w,
@@ -37,11 +37,11 @@ void Entity::draw(SDL_Surface *screen) const{
    colorBlit(getColor(), screen, srcLoc, drawLoc);
 }
 
-SDL_Rect Entity::getBaseRect(){
+SDL_Rect Entity::getBaseRect() const{
    return loc_ + type().baseRect_;   
 }
 
-SDL_Rect Entity::getDrawRect(){
+SDL_Rect Entity::getDrawRect() const{
    return loc_ + type().drawRect_;   
 }
 
@@ -135,4 +135,27 @@ SDL_Rect Entity::getSelectionDest(SDL_Surface *selection) const{
 
 VerticalMovement Entity::getVerticalMovement() const{
    return verticalMovement_;
+}
+
+bool Entity::isLocationOK() const{
+   SDL_Rect rect = getBaseRect();
+   
+   //map
+   if (!inside(rect, dimRect(game_->map)))
+      return false;
+
+   //entities
+   for (entities_t::const_iterator it = game_->entities.begin();
+        it != game_->entities.end(); ++it){
+      
+      //skip this
+      if (*it == this)
+         continue;
+
+      if ((*it)->collides() &&
+          collision(rect, (*it)->getBaseRect()))
+         return false;
+   }
+
+   return true;
 }

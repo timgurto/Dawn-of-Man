@@ -95,12 +95,12 @@ void gameMode(){
    UnitType drone(0, "Drone",
                   makeRect(-22, -127, 105, 133),
                   makeRect(-22,-6, 53, 11),
-                  Point(3, -55), 4);
+                  Point(3, -55), 8);
    game.unitTypes.push_back(drone);
    for (int i = 0; i != 15; ++i)
       addEntity(game, new Unit(0, Point(
-                               rand() % game.map.w,
-                               rand() % game.map.h), 0));
+                                  rand() % game.map.w,
+                                  rand() % game.map.h), 0));
    //=================================================
 
    UIBars_t bars;
