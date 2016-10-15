@@ -5,11 +5,11 @@
 #include <list>
 #include "Particle.h"
 
-double Particle::GRAVITY = 1;
-int Particle::PARTICLE_COUNT = 8;
-double Particle::VELOCITY_RANGE = 4;
-int Particle::DELAY = 25; //ms
-int Particle::DECAY = 3;
+const double Particle::GRAVITY = 1;
+const int Particle::PARTICLE_COUNT = 8;
+const double Particle::VELOCITY_RANGE = 4;
+const int Particle::DELAY = 25; //ms
+const int Particle::DECAY = 3;
 
 SDL_Surface
    *Particle::screen_ = 0,

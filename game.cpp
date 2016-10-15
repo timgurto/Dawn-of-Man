@@ -25,7 +25,6 @@ extern Debug debug;
 void gameMode(){
    srand(unsigned(time(0)));
 
-   //TODO send screen* to classes
    SDL_Surface *screen = setScreen();
    debug.initScreen(screen);
 
@@ -50,10 +49,8 @@ void gameMode(){
       *particle = loadImage(IMAGE_PATH + "particle.PNG", GREEN),
       *particleShadow = loadImage(IMAGE_PATH +
                                   "particleShadow.PNG", GREEN);
-   
    SDL_SetAlpha(particleShadow, SDL_SRCALPHA, SHADOW_ALPHA);
    SDL_SetAlpha(cursorShadow, SDL_SRCALPHA, SHADOW_ALPHA);
-   
    Particle::init(screen, particle, particleShadow);
 
    Point mousePos(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
@@ -82,7 +79,7 @@ void gameMode(){
    game.buildingTypes.push_back(shrine);
 
    UIBars_t bars;
-   UIBar::init(&game, vBar, hBar);
+   UIBar::init(&game, screen, vBar, hBar);
    UIBar buildingsBar(BOTTOM_LEFT, VERTICAL,
                       &getBuildingTypeIcons,
                       game.buildingTypes.size(), NORMAL_MODE);
@@ -242,7 +239,7 @@ void drawEverything(SDL_Surface *screen, SDL_Surface *back,
 
    //Interface
    for (UIBars_t::const_iterator it = bars.begin(); it != bars.end(); ++it){
-      (*it)->draw(screen);
+      (*it)->draw();
    }
 
    //Cursor

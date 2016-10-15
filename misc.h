@@ -13,7 +13,7 @@ class EntityType;
 struct Point;
 struct GameData;
 
-//SDL
+//===SDL===
 
 //Loads an image file into an SDL_Surface, with optional transparent
 //background color.  Increments surfacesLoaded.
@@ -39,7 +39,7 @@ void freeSurface(SDL_Surface *&p);
 SDL_Surface *copySurface(SDL_Surface* src);
 
 
-//misc
+//===misc===
 
 //Constructs a file path to load graphics for entities
 std::string makePath(EntityTypeID type, typeNum_t imageNumber,

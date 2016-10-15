@@ -18,16 +18,21 @@ class UIBar{
    //control mode necessary for this bar to appear
    ControlMode requiredMode_;
 
+   //How many icons constitute the bar
+   typeNum_t iconCount;
+
    //the function that returns icons to draw
    SDL_Surface *(*surfaceFun_)(typeNum_t index,
                                const GameData &game);
 
    //The rectangle describing the bar's dimensions
-   SDL_Rect rect() const;
+   SDL_Rect rect;
+   void calculateRect();
 
    //static pointers to access game data and bar backgrounds
-   static const GameData *game_;
-   static SDL_Surface *hBarSurface, vBarSurface;
+   static GameData *game_;
+   static SDL_Surface *screen_;
+   static SDL_Surface *hBarSurface_, *vBarSurface_;
 
 public:
    UIBar(Corner corner, Orientation orientation,
@@ -37,15 +42,13 @@ public:
          ControlMode requiredMode);
 
    //Initializes static pointers
-   static void init(const GameData *game,
+   static void init(GameData *game,
+                    SDL_Surface *screen,
                     SDL_Surface *vBarSurface,
                     SDL_Surface *hBarSurface);
 
-   //How many icons constitute the bar.  Note: public
-   typeNum_t iconCount;
-
    //Draws the bar
-   void draw(SDL_Surface *screen) const;
+   void draw() const;
 
    //Which button the Point is pointing at;
    //NO_TYPE if none

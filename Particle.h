@@ -19,12 +19,11 @@ class Particle{
 
    static SDL_Surface *screen_, *image_, *shadow_;
 
-   //TODO make const
-   static double GRAVITY;
-   static int PARTICLE_COUNT;
-   static double VELOCITY_RANGE;
-   static int DELAY; //ms
-   static int DECAY;
+   const static double GRAVITY;
+   const static int PARTICLE_COUNT;
+   const static double VELOCITY_RANGE;
+   const static int DELAY; //ms
+   const static int DECAY;
 
 public:
    Particle(const pixels_t xPos, const pixels_t yPos);
