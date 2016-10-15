@@ -4,6 +4,7 @@
 #define UNIT_TYPE_H
 
 #include "EntityType.h"
+#include "Resources.h"
 #include "types.h"
 
 //Entities which can move and engage in combat.
@@ -47,6 +48,12 @@ class UnitType: public EntityType{
    //whether this unit can construct buildings
    bool builder_;
 
+   //whether this unit can gather resources
+   bool gatherer_;
+
+   //How many resources it costs to train this unit
+   Resources cost_;
+
 
 public:
 
@@ -55,6 +62,7 @@ public:
             const SDL_Rect &drawRect,
             const SDL_Rect &baseRect,
             const Point &selectionCenter,
+            const Resources &cost,
             pixels_t speed = 0,
             int maxFrameCounter = 0,
             int frameCount = 1,
@@ -65,12 +73,12 @@ public:
             damage_t attack = 0,
             damage_t armor = 0,
             bool builder = false,
+            bool gatherer = false,
             typeNum_t originBuilding = NO_TYPE,
             progress_t maxProgress = 0);
 
    //get
    typeNum_t getOriginBuilding() const;
-   bool isBuilder() const;
 };
 
 #endif

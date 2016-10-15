@@ -4,6 +4,7 @@
 #define RENDER_H
 
 #include "UIBar.h"
+#include "MessageBox.h"
 
 struct GameData;
 struct SDL_Surface;
@@ -13,8 +14,8 @@ void render(SDL_Surface *screen, SDL_Surface *selection,
             SDL_Surface *diagGreen, SDL_Surface *diagRed,
             SDL_Surface *map, SDL_Surface *darkMap,
             SDL_Surface *cursor, SDL_Surface *cursorShadow,
-            SDL_Surface *cursorPause,
-            const GameData &game, const UIBars_t &bars);
+            SDL_Surface *cursorPause, const GameData &game,
+            const UIBars_t &bars, const messageBoxes_t &messageBoxes);
 
 //Draws the cursor
 void renderCursor (SDL_Surface *screen, const GameData &game,
@@ -44,5 +45,9 @@ void renderInterface(const UIBars_t &bars);
 
 //Draws all active particles
 void renderParticles(const GameData &game);
+
+//Draws all message boxes
+void renderMessageBoxes(SDL_Surface *screen,
+                        const messageBoxes_t messageBoxes);
 
 #endif

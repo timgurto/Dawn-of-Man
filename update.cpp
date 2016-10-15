@@ -17,7 +17,8 @@ const Uint8 MOUSE_BUTTON_SCROLL_UP   = 4;
 const Uint8 MOUSE_BUTTON_SCROLL_DOWN = 5;
 
 void updateState(double delta, GameData &game,
-                 SDL_Surface *screen, UIBars_t &bars){
+                 SDL_Surface *screen, UIBars_t &bars,
+                 messageBoxes_t &messageBoxes){
 
    //Interface stuff
    handleEvents(game, screen, bars);
@@ -219,34 +220,35 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
                //place new building
                if (game.mode == MODE_CONSTRUCTION){
                   assert (game.toBuild != NO_TYPE);
-                  if (game.buildLocationOK){
+                  if (game.players[HUMAN_PLAYER].sufficientResources(
+                      game.buildingTypes[game.toBuild].getCost()))
+                     if (game.buildLocationOK){
 
-                     //create new building
-                     Building *newBuilding =
-                        new Building(game.toBuild, game.mousePos -
-                                                   game.map);
-                     addEntity(game, newBuilding);
+                        //create new building
+                        Building *newBuilding =
+                           new Building(game.toBuild, game.mousePos -
+                                                      game.map);
+                        addEntity(game, newBuilding);
 
-                     //assign selected builders to the construction
-                     for (entities_t::iterator it = game.entities.begin();
-                          it != game.entities.end(); ++it)
-                        if ((*it)->classID() == ENT_UNIT){
-                           Unit *unitP = (Unit *)(*it);
-                           if (unitP->selected){
-                              const UnitType &thisType =
-                                 (const UnitType &)(unitP->type());
-                              if (thisType.isBuilder())
-                                 unitP->setTarget(newBuilding);
+                        //assign selected builders to the construction
+                        for (entities_t::iterator it = game.entities.begin();
+                             it != game.entities.end(); ++it)
+                           if ((*it)->classID() == ENT_UNIT){
+                              Unit *unitP = (Unit *)(*it);
+                              if (unitP->selected)
+                                 if (unitP->isBuilder())
+                                    unitP->setTarget(newBuilding);
                            }
-                        }
 
-                     //Shift key doesn't allow multiple constructions, as
-                     //placed buildings are initially invisible and thus
-                     //would be impossible to see if builders moved to another
-                     //target
-                     game.mode = MODE_BUILDER;
-                     game.toBuild = NO_TYPE;
-                  }
+                        //Shift key doesn't allow multiple constructions, as
+                        //placed buildings are initially invisible and thus
+                        //would be impossible to see if builders moved to another
+                        //target
+                        //TODO make newly placed buildings visible somehow
+                        //if(!isKeyPressed(SDLK_LSHIFT)){
+                        game.mode = MODE_BUILDER;
+                        game.toBuild = NO_TYPE;
+                     }
                }else
                   select(game, bars);
                game.leftMouse.mouseUp();
@@ -371,8 +373,8 @@ void select(GameData &game, UIBars_t &bars){
                      game.buildingSelected = (Building *)(*it);
                   //if unit, set flag
                   else if ((*it)->classID() == ENT_UNIT){
-                     const UnitType &uType = (const UnitType &)((*it)->type());
-                     if (uType.isBuilder())
+                     const Unit &unit = (const Unit &)(**it);
+                     if (unit.isBuilder())
                         builderSelected = true;
                   }
             }// if collides
@@ -432,6 +434,12 @@ void setSelectedTargets(GameData &game){
             unitP->setTarget(targetEntity);
             continue;
          }
+
+         //resource node
+         if (targetEntity->classID() == ENT_RESOURCE_NODE &&
+             unitP->isGatherer())
+            unitP->setTarget(targetEntity);
+         continue;
       }
    }
 }

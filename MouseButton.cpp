@@ -27,11 +27,6 @@ void MouseButton::mouseUp(){
 
 void MouseButton::checkDrag(const Point &mousePos){
    if (down && !dragging)
-      if (mousePos.x - dragBegin.x >= MOVEMENT_THRESHOLD ||
-          dragBegin.x - mousePos.x >= MOVEMENT_THRESHOLD ||
-          mousePos.y - dragBegin.y >= MOVEMENT_THRESHOLD ||
-          dragBegin.y - mousePos.y >= MOVEMENT_THRESHOLD){
-         //debug("Dragging");
+      if (distance(mousePos, dragBegin) >= MOVEMENT_THRESHOLD)
          dragging = true;
-      }
 }

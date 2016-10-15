@@ -49,10 +49,10 @@ public:
    void add(std::string message);
 
    //Draws messages to the screen
-   void display();
+   void display() const;
 
    //Generic wrappers for add(string)
-   //A, B, C must have << defined
+   //A, B, C, D must have << defined
    template <typename A>
    void operator()(A a){
       std::ostringstream ss;

@@ -60,6 +60,7 @@ public:
 
    //get
    bool isBuilder() const;
+   bool isGatherer() const;
    Entity *getTargetEntity() const;
    virtual int getColor() const;
    virtual typeNum_t getPlayer() const;

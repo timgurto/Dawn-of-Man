@@ -6,6 +6,7 @@
 #include "update.h"
 #include "GameData.h"
 #include "Debug.h"
+#include "MessageBox.h"
 #include "misc.h"
 
 extern Debug debug, deltaLog;
@@ -17,8 +18,8 @@ void render(SDL_Surface *screen, SDL_Surface *selection,
             SDL_Surface *diagGreen, SDL_Surface *diagRed,
             SDL_Surface *map, SDL_Surface *darkMap,
             SDL_Surface *cursor, SDL_Surface *cursorShadow,
-            SDL_Surface *cursorPause,
-            const GameData &game, const UIBars_t &bars){
+            SDL_Surface *cursorPause, const GameData &game,
+            const UIBars_t &bars, const messageBoxes_t &messageBoxes){
 
    assert (screen != 0);
 
@@ -30,6 +31,7 @@ void render(SDL_Surface *screen, SDL_Surface *selection,
    if (game.mode != MODE_CONSTRUCTION && game.leftMouse.dragging)
       renderSelectionRect(screen, game);
    renderInterface(bars);
+   renderMessageBoxes(screen, messageBoxes);
    renderCursor(screen, game, cursor, cursorShadow, cursorPause);
    renderParticles(game);
 
@@ -182,4 +184,11 @@ void renderParticles(const GameData &game){
    for (particles_t::const_iterator it = game.particles.begin();
         it != game.particles.end(); ++it)
       it->draw(game);
+}
+
+void renderMessageBoxes(SDL_Surface *screen,
+                        const messageBoxes_t messageBoxes){
+   for (messageBoxes_t::const_iterator it = messageBoxes.begin();
+        it != messageBoxes.end(); ++it)
+      (*it)->display(screen);
 }

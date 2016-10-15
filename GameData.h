@@ -10,7 +10,7 @@
 #include "BuildingType.h"
 #include "DecorationType.h"
 #include "UnitType.h"
-#include "ResourceType.h"
+#include "ResourceNodeType.h"
 #include "Entity.h"
 #include "Particle.h"
 #include "Player.h"
@@ -21,7 +21,7 @@
 typedef std::vector<BuildingType> buildingTypes_t;
 typedef std::vector<DecorationType> decorationTypes_t;
 typedef std::vector<UnitType> unitTypes_t;
-typedef std::vector<ResourceType> resourceTypes_t;
+typedef std::vector<ResourceNodeType> resourceNodeTypes_t;
 typedef std::vector<Player> players_t;
 typedef std::list<Particle> particles_t;
 typedef SDL_Surface *surfaceIndex_t
@@ -51,7 +51,7 @@ struct GameData{
    buildingTypes_t buildingTypes;
    decorationTypes_t decorationTypes;
    unitTypes_t unitTypes;
-   resourceTypes_t resourceTypes;
+   resourceNodeTypes_t resourceNodeTypes;
    
    //Each player in the game.
    //[0] is always the human player.

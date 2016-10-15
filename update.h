@@ -5,12 +5,13 @@
 
 #include "UIBar.h"
 #include "GameData.h"
+#include "MessageBox.h"
 
 struct SDL_Surface;
 
 //Any processing within the game loop
 void updateState(double delta, GameData &game, SDL_Surface *screen,
-                 UIBars_t &bars);
+                 UIBars_t &bars, messageBoxes_t &messageBoxes);
 
 //Handles events and changes game data accordingly
 void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars);

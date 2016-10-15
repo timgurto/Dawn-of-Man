@@ -9,6 +9,8 @@
 #include "UnitType.h"
 #include "Debug.h"
 #include "Building.h"
+#include "ResourceNode.h"
+#include "ResourceNodeType.h"
 
 extern Debug debug;
 
@@ -200,9 +202,9 @@ void Unit::tick(double delta){
                   }
                }
                break;
-
+            //TODO remove health in target's method
             case ENT_UNIT:
-               {
+               {//local scope for target, targetType, damage
                   Unit &target = (Unit &)(*targetEntity_);
                   const UnitType &targetType =
                      game_->unitTypes[target.typeIndex_];
@@ -212,6 +214,12 @@ void Unit::tick(double delta){
                   else
                      target.health_ -= damage;
                   break;
+               }
+            case ENT_RESOURCE_NODE:
+               {//local scope for target, targetType
+                  ResourceNode &target = (ResourceNode &)(*targetEntity_);
+                  Resources yield = target.harvest();
+                  game_->players[player_].addResources(yield);
                }
             }
          }
@@ -307,6 +315,10 @@ void Unit::updateTarget(){
 
 bool Unit::isBuilder() const{
    return game_->unitTypes[typeIndex_].builder_;
+}
+
+bool Unit::isGatherer() const{
+   return game_->unitTypes[typeIndex_].gatherer_;
 }
 
 Entity *Unit::getTargetEntity() const{

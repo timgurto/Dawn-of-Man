@@ -157,8 +157,8 @@ std::string makePath(EntityTypeID type, typeNum_t imageNumber,
    case ENT_UNIT:
       path << UNITS_IMAGE_PATH;
       break;
-   case ENT_RESOURCE:
-      path << RESOURCES_IMAGE_PATH;
+   case ENT_RESOURCE_NODE:
+      path << RESOURCE_NODES_IMAGE_PATH;
       break;
    }
 
@@ -279,7 +279,7 @@ int whatIsArg(std::string arg, int argc, char* argv[]){
          std::stringstream ss(s.substr(len + 1));
          int result;
          ss >> result;
-         debug(result);
+         debug(arg, " = ", result);
          return result;
       }
    }

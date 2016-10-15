@@ -20,11 +20,13 @@
 #include "Decoration.h"
 #include "UnitType.h"
 #include "Unit.h"
-#include "ResourceType.h"
-#include "Resource.h"
+#include "ResourceNodeType.h"
+#include "ResourceNode.h"
 #include "UIBar.h"
 #include "Particle.h"
 #include "Point.h"
+#include "Resources.h"
+#include "MessageBox.h"
 
 extern Debug debug;
 extern Debug deltaLog;
@@ -81,19 +83,25 @@ void gameMode(){
 
    //TODO load from files
    //=================================================
+   std::vector<std::string> resourceNames;
+   resourceNames.push_back("Wood");
+   Resources::init(1, resourceNames);
+
    game.players.push_back(0xca6500); //0x... = color
    game.players.push_back(0x882222);
 
    //building types
+   resources_t campfireCost; campfireCost.push_back(100);
    BuildingType campfire(0, "Campfire",
                          makeRect(-42, -92, 81, 113),
                          makeRect(-42, -23, 81, 42),
-                         Point(2, -37), 1250);
+                         Point(2, -37), campfireCost, 1250);
    game.buildingTypes.push_back(campfire);
+   resources_t shrineCost; shrineCost.push_back(180);
    BuildingType shrine(1, "Shrine",
                        makeRect(-76, -68, 154, 79),
                        makeRect(-76, -17, 154, 28),
-                       Point(1, -20), 1750);
+                       Point(1, -20), shrineCost, 1750);
    game.buildingTypes.push_back(shrine);
 
    //decoration types
@@ -108,27 +116,33 @@ void gameMode(){
                                 rand() % game.map.h)));
 
    //unit types
+   resources_t genericCost; genericCost.push_back(50);
    UnitType generic(0, "Generic",
                   makeRect(-22, -107, 70, 113),
                   makeRect(-22,-6, 53, 11),
                   Point(3, -55),
+                  genericCost,
                   8, //speed
                   25, 8, //frames
                   10, 4, 25, //combat frames
                   50, 10, 2, //combat details
                   false, //builder
+                  false, //gatherer
                   1, //origin building
                   1000); //progress cost
    game.unitTypes.push_back(generic);
+   resources_t gruntCost; gruntCost.push_back(30);
    UnitType grunt(1, "Grunt",
                   makeRect(-22, -107, 70, 113),
                   makeRect(-22,-6, 53, 11),
                   Point(3, -55),
+                  gruntCost,
                   8, //speed
                   25, 8, //frames
                   10, 4, 25, //combat frames
                   25, 5, 0, //combat details
                   true, //builder
+                  true, //gatherer
                   0, //origin building
                   1000); //progress cost
    game.unitTypes.push_back(grunt);
@@ -152,19 +166,24 @@ void gameMode(){
    }
 
    //resource types
-   ResourceType tree(0, "Tree",
+   resources_t treeMax, treeYield;
+   treeMax.push_back(78);
+   treeYield.push_back(5);
+   ResourceNodeType tree(0, "Tree",
                      makeRect(-57, -133, 116, 135),
                      makeRect(-17, -5, 34, 12),
-                     Point(2, -78));
-   game.resourceTypes.push_back(tree);
+                     Point(2, -78),
+                     treeMax,
+                     treeYield);
+   game.resourceNodeTypes.push_back(tree);
    for (int i = 0; i != 10; ++i){
       pixels_t x, y;
       do{
          x = rand() % game.map.w;
          y = rand() % game.map.h;
-      }while (!noCollision(game, game.resourceTypes[0],
+      }while (!noCollision(game, game.resourceNodeTypes[0],
                           Point(x, y)));
-      addEntity(game, new Resource(0, Point(x, y)));
+      addEntity(game, new ResourceNode(0, Point(x, y)));
    }
    //=================================================
 
@@ -182,7 +201,14 @@ void gameMode(){
                   &trainUnit,
                   MODE_BUILDING);
    bars.push_back(&unitsBar);
-   
+
+   messageBoxes_t messageBoxes;
+   MessageBox contextHelp(WHITE,
+                          ICON_SIZE, SCREEN_HEIGHT - 15,
+                          "Dina.fon", 0);
+   messageBoxes.push_back(&contextHelp);
+
+   contextHelp("test");
 
    timer_t oldTicks = SDL_GetTicks();
    game.loop = true;
@@ -199,11 +225,11 @@ void gameMode(){
       deltaLog("        Delta: ", delta, "ms");
 
       //update state
-      updateState(deltaMod, game, screen, bars);
+      updateState(deltaMod, game, screen, bars, messageBoxes);
 
       //render
       render(screen, glow, diagGreen, diagRed, map, darkMap, cursor,
-             cursorShadow, cursorPause, game, bars);
+             cursorShadow, cursorPause, game, bars, messageBoxes);
 
    }
 

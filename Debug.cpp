@@ -47,18 +47,20 @@ void Debug::add(std::string message){
       messages.pop();
 }
 
-void Debug::display(){
+void Debug::display() const{
    if (screen_ != 0){
       std::queue<std::string> copy(messages);
       int lat = 0;
       while (copy.size() != 0){
          std::string message = copy.front();
          copy.pop();
+         //draw text
          SDL_Surface *blackSurface = TTF_RenderText_Solid(font_,
                                                           message.c_str(),
                                                           BLACK);
          SDL_BlitSurface(blackSurface, 0, screen_, &makeRect(x_+1, y_+1 + lat));
          
+         //draw shadow
          SDL_Surface *surface = TTF_RenderText_Solid(font_,
                                                      message.c_str(),
                                                      color_);

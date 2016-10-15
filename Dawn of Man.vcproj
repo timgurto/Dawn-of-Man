@@ -228,6 +228,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MessageBox.h"
+				>
+			</File>
+			<File
 				RelativePath=".\misc.h"
 				>
 			</File>
@@ -252,11 +256,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Resource.h"
+				RelativePath=".\ResourceNode.h"
 				>
 			</File>
 			<File
-				RelativePath=".\ResourceType.h"
+				RelativePath=".\ResourceNodeType.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources.h"
 				>
 			</File>
 			<File
@@ -336,6 +344,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MessageBox.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\misc.cpp"
 				>
 			</File>
@@ -360,11 +372,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Resource.cpp"
+				RelativePath=".\ResourceNode.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\ResourceType.cpp"
+				RelativePath=".\ResourceNodeType.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources.cpp"
 				>
 			</File>
 			<File

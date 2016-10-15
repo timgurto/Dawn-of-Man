@@ -116,12 +116,19 @@ pixels_t distance(Point a, Point b);
 //double % int, preserves fraction
 double modulo(double a, int b);
 
+//Centers the map on the provided co-ordinates.
+//Map edges are taken into account automatically
 void centerMap(GameData &game, const Point &center);
 
 template<typename T>
 //param is copied; eval'd once
 T square(T x){
    return x * x;
+}
+
+template<typename T>
+T min(T a, T b){
+   return a < b ? a : b;
 }
 
 #endif

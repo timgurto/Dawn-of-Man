@@ -9,6 +9,7 @@ BuildingType::BuildingType(typeNum_t index,
                            const SDL_Rect &drawRect,
                            const SDL_Rect &baseRect,
                            const Point &selectionCenter,
+                           const Resources &cost,
                            progress_t maxProgress):
 EntityType(index,
            ENT_BUILDING,
@@ -16,4 +17,9 @@ EntityType(index,
            drawRect,
            baseRect,
            selectionCenter),
-maxProgress_(maxProgress){}
+maxProgress_(maxProgress),
+cost_(cost){}
+
+const Resources &BuildingType::getCost(){
+   return cost_;
+}
