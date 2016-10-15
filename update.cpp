@@ -91,22 +91,27 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
                SDL_SaveBMP(screen, os.str().c_str());
             }
             break;
+
          case SDLK_ESCAPE:
             switch(game.mode){
-            case MODE_NORMAL:
-               //TODO remove
-               game.loop = false;
-               return; //break;
+            //unselect all
             case MODE_BUILDING:
                game.buildingSelected->selected = false;
                game.buildingSelected = 0;
                //fall-through
+            case MODE_BUILDER:
+            case MODE_NORMAL:
+               for (entities_t::iterator it = game.entities.begin();
+                    it != game.entities.end(); ++it)
+                  (*it)->selected = false;
+               break;
             case MODE_CONSTRUCTION:
                game.toBuild = NO_TYPE;
                game.mode = MODE_NORMAL;
                break;
             }
             break;
+
          case SDLK_DELETE:
             //HACK repeats loop for each deletion, to avoid invalidated iterator
             bool deleted;
@@ -122,6 +127,20 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
                }
             }while (deleted);
             Entity::emptyTrash();
+            break;
+         
+         //HACK replace with pause menu
+         case SDLK_F10:
+            game.loop = false;
+            return;
+
+         case SDLK_F4:
+            //Alt+F4 = quit
+            if (isKeyPressed(SDLK_LALT) || isKeyPressed(SDLK_RALT)){
+               game.loop = false;
+               return;
+            }
+            break;
          }
          break;
 
