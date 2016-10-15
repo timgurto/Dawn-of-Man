@@ -69,12 +69,11 @@ void Entity::draw(SDL_Surface *screen) const{
       drawLoc.y += thisType.drawRect_.h - partialH;
       break;
    default:
-      srcLoc = makeRect();
       assert(false);
    }
    
    if (ENTITY_MASKS)
-      SDL_BlitSurface(thisType.mask, 0, screen, &drawLoc);
+      SDL_BlitSurface(thisType.mask, &srcLoc, screen, &drawLoc);
    SDL_BlitSurface(thisType.surface, &srcLoc, screen, &drawLoc);
 }
 
