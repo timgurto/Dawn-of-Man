@@ -101,6 +101,9 @@ struct GameData{
    //dragging
    MouseButton leftMouse, rightMouse;
 
+   //Whether the game is paused
+   bool paused;
+
    //Whether the location being hovered over is viable
    //for construction
    bool buildLocationOK;

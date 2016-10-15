@@ -17,6 +17,7 @@ void render(SDL_Surface *screen, SDL_Surface *selection,
             SDL_Surface *diagGreen, SDL_Surface *diagRed,
             SDL_Surface *map, SDL_Surface *darkMap,
             SDL_Surface *cursor, SDL_Surface *cursorShadow,
+            SDL_Surface *cursorPause,
             const GameData &game, const UIBars_t &bars){
 
    assert (screen != 0);
@@ -29,8 +30,16 @@ void render(SDL_Surface *screen, SDL_Surface *selection,
    if (game.mode != MODE_CONSTRUCTION && game.leftMouse.dragging)
       renderSelectionRect(screen, game);
    renderInterface(bars);
-   renderCursor(screen, game, cursor, cursorShadow);
+   renderCursor(screen, game, cursor, cursorShadow, cursorPause);
    renderParticles(game);
+
+   if (game.paused){
+      SDL_Surface *darkCover = createSurface();
+      SDL_FillRect(darkCover, &darkCover->clip_rect, BLACK_UINT);
+      SDL_SetAlpha(darkCover, SDL_SRCALPHA, SHADOW_ALPHA);
+      SDL_BlitSurface(darkCover, 0, screen, 0);
+      freeSurface(darkCover);
+   }
 
    //Debug text
    debug.display();
@@ -43,17 +52,22 @@ void render(SDL_Surface *screen, SDL_Surface *selection,
 }
 
 void renderCursor (SDL_Surface *screen, const GameData &game,
-                   SDL_Surface *cursor, SDL_Surface *shadow){
-   //cursor might appear 'raised' from the wall
-   bool raised = game.rightMouse.dragging;
-
+                   SDL_Surface *cursor, SDL_Surface *shadow,
+                   SDL_Surface *pause){
    Point
       cursorPos = game.mousePos + CURSOR_OFFSET,
       shadowPos = cursorPos;
+
+   if (game.paused)
+      SDL_BlitSurface(pause, 0, screen, &makeRect(cursorPos));
+
+   //cursor might appear 'raised' from the wall
+   bool raised = game.rightMouse.dragging;
    if (raised){
       cursorPos -= CURSOR_RAISED;
       shadowPos += CURSOR_RAISED;
    }
+
    SDL_BlitSurface(shadow, 0, screen, &makeRect(shadowPos));
    SDL_BlitSurface(cursor, 0, screen, &makeRect(cursorPos));
 }

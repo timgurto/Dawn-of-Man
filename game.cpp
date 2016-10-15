@@ -49,6 +49,8 @@ void gameMode(){
       *cursor = loadImage(MISC_IMAGE_PATH + "cursor.png", GREEN),
       *cursorShadow = loadImage(MISC_IMAGE_PATH +
                                 "cursorShadow.PNG", GREEN),
+      *cursorPause = loadImage(MISC_IMAGE_PATH +
+                               "cursorPause.PNG", GREEN),
       *vBar = loadImage(INTERFACE_IMAGE_PATH + "vBar.PNG"),
       *hBar = loadImage(INTERFACE_IMAGE_PATH + "hBar.PNG"),
       *diagGreen = loadImage(MISC_IMAGE_PATH + "diagGreen.PNG", GREEN),
@@ -169,7 +171,7 @@ void gameMode(){
 
       //render
       render(screen, glow, diagGreen, diagRed, map, darkMap, cursor,
-             cursorShadow, game, bars);
+             cursorShadow, cursorPause, game, bars);
 
    }
 
@@ -180,6 +182,7 @@ void gameMode(){
    freeSurface(darkMap);
    freeSurface(cursor);
    freeSurface(cursorShadow);
+   freeSurface(cursorPause);
    freeSurface(vBar);
    freeSurface(hBar);
    freeSurface(particle);

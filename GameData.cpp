@@ -8,6 +8,7 @@ rightMouse(),
 mapX(mapSizeX),
 mapY(mapSizeY),
 mousePos(SCREEN_WIDTH/2, SCREEN_HEIGHT/2),
+paused(false),
 toBuild(NO_TYPE),
 buildingSelected(0){
    for (typeNum_t i = 0; i != CLR_MAX; ++i)

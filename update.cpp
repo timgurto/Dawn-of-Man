@@ -19,32 +19,35 @@ const Uint8 MOUSE_BUTTON_SCROLL_DOWN = 5;
 void updateState(double delta, GameData &game,
                  SDL_Surface *screen, UIBars_t &bars){
 
-   //handle user input since last tick
+   //Interface stuff
    handleEvents(game, screen, bars);
-
-   //Map scrolling
    scrollMap(game, delta);
 
-   //Entities
-   for (entities_t::iterator it = game.entities.begin();
-        it != game.entities.end(); ++it){
-      (*it)->tick(delta);
-      VerticalMovement v = (*it)->getVerticalMovement();
-      if (v != VM_NONE)
-         reSort(game.entities, it, v);
-   }
-   Entity::emptyTrash();
+   //Actual updates
+   if (!game.paused){
 
-   //Particles
-   for (particles_t::iterator it = game.particles.begin();
-        it != game.particles.end(); ++it){
-      it->tick(delta);
-      if (it->expired()){
-         //debug("particle expired");
-         it = game.particles.erase(it);
-         if (it == game.particles.end())
-            break;
+      //Entities
+      for (entities_t::iterator it = game.entities.begin();
+           it != game.entities.end(); ++it){
+         (*it)->tick(delta);
+         VerticalMovement v = (*it)->getVerticalMovement();
+         if (v != VM_NONE)
+            reSort(game.entities, it, v);
       }
+      Entity::emptyTrash();
+
+      //Particles
+      for (particles_t::iterator it = game.particles.begin();
+           it != game.particles.end(); ++it){
+         it->tick(delta);
+         if (it->expired()){
+            //debug("particle expired");
+            it = game.particles.erase(it);
+            if (it == game.particles.end())
+               break;
+         }
+      }
+
    }
 
 }
@@ -93,6 +96,12 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
             break;
 
          case SDLK_ESCAPE:
+            //HACK remove this exit
+            {
+               game.loop = false;
+               return;
+            }
+
             switch(game.mode){
             //unselect all
             case MODE_BUILDING:
@@ -128,11 +137,6 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
             }while (deleted);
             Entity::emptyTrash();
             break;
-         
-         //HACK replace with pause menu
-         case SDLK_F10:
-            game.loop = false;
-            return;
 
          case SDLK_F4:
             //Alt+F4 = quit
@@ -140,6 +144,12 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
                game.loop = false;
                return;
             }
+            break;
+         
+         case SDLK_F3:
+         case SDLK_PAUSE:
+            //toggle pause
+            game.paused = !game.paused;
             break;
          }
          break;
