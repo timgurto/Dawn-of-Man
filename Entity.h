@@ -27,8 +27,13 @@ protected:
 
 public:
    Entity(typeNum_t type, const Point &loc);
+
+   //less than; compares y co-ordinates
    bool operator<(const Entity &rhs) const;
+   
    SDL_Rect getBaseRect();
+
+   virtual ~Entity(){}
 
    //Returns the EntityType object that this entity
    //is an "instance" of

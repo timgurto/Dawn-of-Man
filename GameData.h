@@ -9,9 +9,8 @@
 #include "globals.h"
 #include "BuildingType.h"
 #include "DecorationType.h"
-
-class Entity;
-class Particle;
+#include "Entity.h"
+#include "Particle.h"
 
 //type containers need to be contiguous for index access
 typedef std::vector<BuildingType> buildingTypes_t;
@@ -38,6 +37,13 @@ struct GameData{
 
    //All particles in the game
    particles_t particles;
+
+   ~GameData(){
+      for (entities_t::iterator it = entities.begin();
+           it != entities.end(); ++it){
+         delete(*it);
+      }
+   }
 };
 
 #endif
