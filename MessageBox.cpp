@@ -32,22 +32,27 @@ void MessageBox::display(SDL_Surface *screen) const{
    if (message_ != ""){
       assert (screen != 0);
 
-      //background
-      SDL_FillRect(screen,
-                   &makeRect(x_ - margin_, y_ - margin_,
-                   width_ + 1, height_ + 1),
-                   ENGRAVE_DARK_UINT);
-      SDL_FillRect(screen,
-                   &makeRect(x_ - margin_ - 1, y_ - margin_ - 1,
-                             width_ + 1, height_ + 1),
-                   ENGRAVE_LIGHT_UINT);
-      SDL_BlitSurface(background_, &makeRect(0, 0, width_, height_),
-                      screen, &makeRect(x_ - margin_, y_ - margin_));
-
-      //message
+      //message surface
       SDL_Surface *text = TTF_RenderText_Solid(font_,
                                                message_.c_str(),
                                                color_);
+      pixels_t width = text->clip_rect.w + margin_;
+
+      //background
+      if (background_ != 0){
+         SDL_FillRect(screen,
+                      &makeRect(x_ - margin_, y_ - margin_,
+                      width + 1, height_ + 1),
+                      ENGRAVE_DARK_UINT);
+         SDL_FillRect(screen,
+                      &makeRect(x_ - margin_ - 1, y_ - margin_ - 1,
+                                width + 1, height_ + 1),
+                      ENGRAVE_LIGHT_UINT);
+         SDL_BlitSurface(background_, &makeRect(0, 0, width, height_),
+                         screen, &makeRect(x_ - margin_, y_ - margin_));
+      }
+
+      //message
       SDL_BlitSurface(text, 0,
                       screen, &makeRect(x_ + margin_, y_ + margin_));
    }

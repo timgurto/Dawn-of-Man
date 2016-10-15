@@ -81,14 +81,47 @@ void gameMode(){
    Particle::init(screen, particle, particleShadow);
    game.mode = MODE_NORMAL;
 
+   //UI Bars
+   UIBars_t bars;
+   UIBar::init(&game, screen, vBar, hBar);
+   UIBar buildingsBar(BOTTOM_LEFT, HORIZONTAL,
+                      &getNumBuildingIcons,
+                      &getBuildingTypeIcons,
+                      &selectBuilding,
+                      &buildingHelp,
+                      MODE_BUILDER);
+   bars.push_back(&buildingsBar);
+   UIBar unitsBar(BOTTOM_LEFT, HORIZONTAL,
+                  &getNumUnitIcons,
+                  &getUnitTypeIcons,
+                  &trainUnit,
+                  &unitHelp,
+                  MODE_BUILDING);
+   bars.push_back(&unitsBar);
+
+   //Message Boxes
+   messageBoxes_t messageBoxes;
+   MessageBox contextHelp(WHITE,
+                          1, SCREEN_HEIGHT - ICON_SIZE - 1,
+                          275, 0,
+                          darkMap,
+                          "Woodbrush.ttf", 18,
+                          true);
+   messageBoxes.push_back(&contextHelp);
+   MessageBox resourcesBox(WHITE,
+                           1, 1, 150, 1,
+                           darkMap,
+                           "Woodbrush.ttf", 18);
+   messageBoxes.push_back(&resourcesBox);
+
    //TODO load from files
    //=================================================
    std::vector<std::string> resourceNames;
    resourceNames.push_back("Wood");
    Resources::init(1, resourceNames);
 
-   game.players.push_back(0xca6500); //0x... = color
-   game.players.push_back(0x882222);
+   game.players.push_back(Player(0xca6500)); //0x... = color
+   game.players.push_back(Player(0x882222));
 
    //building types
    resources_t campfireCost; campfireCost.push_back(100);
@@ -117,7 +150,7 @@ void gameMode(){
 
    //unit types
    resources_t genericCost; genericCost.push_back(50);
-   UnitType generic(0, "Generic",
+   UnitType generic(0, "Warrior",
                   makeRect(-22, -107, 70, 113),
                   makeRect(-22,-6, 53, 11),
                   Point(3, -55),
@@ -132,7 +165,7 @@ void gameMode(){
                   1000); //progress cost
    game.unitTypes.push_back(generic);
    resources_t gruntCost; gruntCost.push_back(30);
-   UnitType grunt(1, "Grunt",
+   UnitType grunt(1, "Peon",
                   makeRect(-22, -107, 70, 113),
                   makeRect(-22,-6, 53, 11),
                   Point(3, -55),
@@ -187,32 +220,6 @@ void gameMode(){
    }
    //=================================================
 
-   UIBars_t bars;
-   UIBar::init(&game, screen, vBar, hBar);
-   UIBar buildingsBar(BOTTOM_LEFT, HORIZONTAL,
-                      &getNumBuildingIcons,
-                      &getBuildingTypeIcons,
-                      &selectBuilding,
-                      &buildingHelp,
-                      MODE_BUILDER);
-   bars.push_back(&buildingsBar);
-   UIBar unitsBar(BOTTOM_LEFT, HORIZONTAL,
-                  &getNumUnitIcons,
-                  &getUnitTypeIcons,
-                  &trainUnit,
-                  &unitHelp,
-                  MODE_BUILDING);
-   bars.push_back(&unitsBar);
-
-   messageBoxes_t messageBoxes;
-   MessageBox contextHelp(WHITE,
-                          1, SCREEN_HEIGHT - ICON_SIZE - 1,
-                          400, 0,
-                          darkMap,
-                          "Woodbrush.ttf", 21,
-                          true);
-   messageBoxes.push_back(&contextHelp);
-
    timer_t oldTicks = SDL_GetTicks();
    game.loop = true;
    while (game.loop){
@@ -228,7 +235,8 @@ void gameMode(){
       deltaLog("    Delta: ", delta, "ms");
 
       //update state
-      updateState(deltaMod, game, screen, bars, contextHelp);
+      updateState(deltaMod, game, screen, bars,
+                  contextHelp, resourcesBox);
 
       //render
       render(screen, glow, diagGreen, diagRed, map, darkMap, cursor,

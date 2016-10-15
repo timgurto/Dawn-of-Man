@@ -50,6 +50,10 @@ typeNum_t UnitType::getOriginBuilding() const{
    return originBuilding_;
 }
 
+const Resources &UnitType::getCost() const{
+   return cost_;
+}
+
 std::string UnitType::getCostString() const{
    return cost_.str();
 }

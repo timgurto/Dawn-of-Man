@@ -94,65 +94,73 @@ const pixels_t PLACEMENT_MARGIN = 1;
             ++count;
          }
       
-      //find location
-      Point loc;
-      const UnitType &unitType = game.unitTypes[typeIndex];
+      //check player's resources
+      if (game.players[HUMAN_PLAYER].
+         sufficientResources(game.unitTypes[typeIndex].getCost())){
 
-      int tries = 0;
-      do{
-         ++tries;
-         Direction dir = Direction(rand() % DIR_MAX);
-         SDL_Rect
-            buildingBaseRect = building.getBaseRect(),
-            unitTypeBaseRect = unitType.getBaseRect();
+         //find location
+         Point loc;
+         const UnitType &unitType = game.unitTypes[typeIndex];
 
-         switch(dir){
-         case DIR_UP:
-            loc.y = buildingBaseRect.y -
-                    unitTypeBaseRect.h -
-                    unitTypeBaseRect.y -
-                    PLACEMENT_MARGIN;
-            break;
-         case DIR_DOWN:
-            loc.y = buildingBaseRect.y +
-                    buildingBaseRect.h -
-                    unitTypeBaseRect.y +
-                    PLACEMENT_MARGIN;
-            break;
-         case DIR_LEFT:
-            loc.x = buildingBaseRect.x -
-                    unitTypeBaseRect.w -
-                    unitTypeBaseRect.x -
-                    PLACEMENT_MARGIN;
-            break;
-         case DIR_RIGHT:
-            loc.x = buildingBaseRect.x +
-                    buildingBaseRect.w -
-                    unitTypeBaseRect.x +
-                    PLACEMENT_MARGIN;
-         }
+         int tries = 0;
+         do{
+            ++tries;
+            Direction dir = Direction(rand() % DIR_MAX);
+            SDL_Rect
+               buildingBaseRect = building.getBaseRect(),
+               unitTypeBaseRect = unitType.getBaseRect();
 
-         if (dir == DIR_UP || dir == DIR_DOWN)
-            loc.x = rand() % (buildingBaseRect.w +
-                              unitTypeBaseRect.w) +
-                    buildingBaseRect.x -
-                    unitTypeBaseRect.w -
-                    unitTypeBaseRect.x;
-         else
-            loc.y = rand() % (buildingBaseRect.h +
-                              unitTypeBaseRect.h) +
-                    buildingBaseRect.y -
-                    unitTypeBaseRect.h -
-                    unitTypeBaseRect.y;
-      }while (tries != NUM_PLACEMENT_TRIES &&
-              !noCollision(game, unitType, loc));
+            switch(dir){
+            case DIR_UP:
+               loc.y = buildingBaseRect.y -
+                       unitTypeBaseRect.h -
+                       unitTypeBaseRect.y -
+                       PLACEMENT_MARGIN;
+               break;
+            case DIR_DOWN:
+               loc.y = buildingBaseRect.y +
+                       buildingBaseRect.h -
+                       unitTypeBaseRect.y +
+                       PLACEMENT_MARGIN;
+               break;
+            case DIR_LEFT:
+               loc.x = buildingBaseRect.x -
+                       unitTypeBaseRect.w -
+                       unitTypeBaseRect.x -
+                       PLACEMENT_MARGIN;
+               break;
+            case DIR_RIGHT:
+               loc.x = buildingBaseRect.x +
+                       buildingBaseRect.w -
+                       unitTypeBaseRect.x +
+                       PLACEMENT_MARGIN;
+            }
 
-      if (tries != NUM_PLACEMENT_TRIES){
-         //place unit
-         Unit *unit = new Unit(typeIndex, loc);
-         addEntity(game, unit);
-      }else
-         debug("Unable to place unit");
+            if (dir == DIR_UP || dir == DIR_DOWN)
+               loc.x = rand() % (buildingBaseRect.w +
+                                 unitTypeBaseRect.w) +
+                       buildingBaseRect.x -
+                       unitTypeBaseRect.w -
+                       unitTypeBaseRect.x;
+            else
+               loc.y = rand() % (buildingBaseRect.h +
+                                 unitTypeBaseRect.h) +
+                       buildingBaseRect.y -
+                       unitTypeBaseRect.h -
+                       unitTypeBaseRect.y;
+         }while (tries != NUM_PLACEMENT_TRIES &&
+                 !noCollision(game, unitType, loc));
+
+         if (tries != NUM_PLACEMENT_TRIES){
+            //place unit
+            Unit *unit = new Unit(typeIndex, loc);
+            addEntity(game, unit);
+            game.players[HUMAN_PLAYER].
+               subtractResources(game.unitTypes[typeIndex].getCost());
+         }else
+            debug("Unable to place unit");
+      }else //insufficient resources
+         debug("Insufficient resources");
    }
 
 //UIBar::helpFun_

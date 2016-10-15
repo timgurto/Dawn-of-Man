@@ -115,7 +115,9 @@ void renderFootprint(SDL_Surface *screen, const GameData &game,
                      SDL_Surface *goodImage, SDL_Surface *badImage){
    SDL_Rect baseRect = game.mousePos +
                        game.buildingTypes[game.toBuild].getBaseRect();
-   if (game.buildLocationOK)
+   if (game.buildLocationOK &&
+       game.players[HUMAN_PLAYER].
+          sufficientResources(game.buildingTypes[game.toBuild].getCost()))
       SDL_BlitSurface(goodImage, &dimRect(baseRect),
                       screen, &SDL_Rect(baseRect));
    else

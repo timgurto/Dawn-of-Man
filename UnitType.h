@@ -79,6 +79,7 @@ public:
 
    //get
    typeNum_t getOriginBuilding() const;
+   const Resources &getCost() const;
    std::string getCostString() const;
 };
 

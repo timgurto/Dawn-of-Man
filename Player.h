@@ -16,15 +16,21 @@ class Player{
    //the player's resource stockpiles
    Resources resources_;
 
+   //So that it doesn't have to be recalculated constantly
+   std::string resourcesString_;
+
 public:
+   //TODO comments
    Player(Uint32 color);
 
    void addResources(const Resources &r);
+   void subtractResources(const Resources &r);
 
-   bool sufficientResources(const Resources &r);
+   bool sufficientResources(const Resources &r) const;
 
    //get
    Uint32 getColor() const;
+   std::string getResources() const;
 };
 
 #endif

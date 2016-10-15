@@ -11,7 +11,8 @@ struct SDL_Surface;
 
 //Any processing within the game loop
 void updateState(double delta, GameData &game, SDL_Surface *screen,
-                 UIBars_t &bars, MessageBox &contextHelp);
+                 UIBars_t &bars, MessageBox &contextHelp,
+                 MessageBox &resourcesBox);
 
 //Handles events and changes game data accordingly
 void handleEvents(GameData &game, SDL_Surface *screen,

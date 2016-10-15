@@ -47,7 +47,7 @@ public:
    const SDL_Rect &getBaseRect() const;
    const SDL_Rect &getDrawRect() const;
    SDL_Surface *getIcon() const;
-   const std::string &getName();
+   const std::string &getName() const;
 };
 
 #endif

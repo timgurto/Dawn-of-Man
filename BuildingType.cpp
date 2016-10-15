@@ -20,7 +20,7 @@ EntityType(index,
 maxProgress_(maxProgress),
 cost_(cost){}
 
-const Resources &BuildingType::getCost(){
+const Resources &BuildingType::getCost() const{
    return cost_;
 }
 

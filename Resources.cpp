@@ -9,7 +9,7 @@ size_t Resources::resourceCount_ = 0;
 std::vector<std::string> Resources::names_;   
 
 Resources::Resources():
-vals_(resources_t(resourceCount_, 1000)){}
+vals_(resources_t(resourceCount_, 100)){}
 
 Resources::Resources(const resources_t &v):
 vals_(v){}

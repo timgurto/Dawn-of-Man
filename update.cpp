@@ -11,6 +11,7 @@
 #include "Unit.h"
 #include "Debug.h"
 #include "MessageBox.h"
+#include "Entity.h"
 
 extern Debug debug;
 
@@ -22,7 +23,8 @@ const Uint8 MOUSE_BUTTON_SCROLL_DOWN = 5;
 
 void updateState(double delta, GameData &game,
                  SDL_Surface *screen, UIBars_t &bars,
-                 MessageBox &contextHelp){
+                 MessageBox &contextHelp,
+                 MessageBox &resourcesBox){
 
    //Interface stuff
    handleEvents(game, screen, bars, contextHelp);
@@ -52,6 +54,9 @@ void updateState(double delta, GameData &game,
                break;
          }
       }
+      
+      //Misc.
+      resourcesBox(game.players[HUMAN_PLAYER].getResources());
 
    }
 
@@ -75,15 +80,16 @@ void handleEvents(GameData &game, SDL_Surface *screen,
 
       //Mouse is moved
       case SDL_MOUSEMOTION:
-         contextHelp("");
-         game.mousePos.x = event.motion.x;
-         game.mousePos.y = event.motion.y;
-         //check right mouse movement
-         game.rightMouse.checkDrag(game.mousePos);
-         game.leftMouse.checkDrag(game.mousePos - game.map);
-
-         //if over a UI bar
          {//new scope for overBar, index
+            contextHelp("");
+            game.mousePos.x = event.motion.x;
+            game.mousePos.y = event.motion.y;
+            //check right mouse movement
+            game.rightMouse.checkDrag(game.mousePos);
+            game.leftMouse.checkDrag(game.mousePos - game.map);
+
+            //if over a UI bar
+            bool overBar = false;
             typeNum_t index;
             for (UIBars_t::iterator it = bars.begin();
                  it != bars.end(); ++it)
@@ -92,20 +98,25 @@ void handleEvents(GameData &game, SDL_Surface *screen,
                   if (index != NO_TYPE){
                      //mousing over this bar
                      contextHelp((*it)->helpText(index));
+                     overBar = true;
                      break;
                   }
                }
+
+            if (!overBar){
+               Entity *entityP = findEntity(game);
+               if (entityP != 0)
+                  contextHelp(entityP->type().getName());
+            }
+
+            switch(game.mode){
+            case MODE_CONSTRUCTION:
+               game.buildLocationOK =
+                  noCollision(game, game.buildingTypes[game.toBuild],
+                              game.mousePos - locRect(game.map));
+               break;
+            }
          }
-
-         //initialize selection box stuff
-         //game.leftMouse.mouseDown(game.mousePos - game.map);
-
-         switch(game.mode)
-         case MODE_CONSTRUCTION:
-            game.buildLocationOK =
-               noCollision(game, game.buildingTypes[game.toBuild],
-                           game.mousePos - locRect(game.map));
-            break;
          break;
 
 
@@ -123,10 +134,10 @@ void handleEvents(GameData &game, SDL_Surface *screen,
 
          case SDLK_ESCAPE:
             //HACK remove this exit
-            {
-               game.loop = false;
-               return;
-            }
+            //{
+            //   game.loop = false;
+            //   return;
+            //}
 
             switch(game.mode){
             //unselect all
@@ -139,6 +150,7 @@ void handleEvents(GameData &game, SDL_Surface *screen,
                for (entities_t::iterator it = game.entities.begin();
                     it != game.entities.end(); ++it)
                   (*it)->selected = false;
+               game.mode = MODE_NORMAL;
                break;
             case MODE_CONSTRUCTION:
                game.toBuild = NO_TYPE;
@@ -221,7 +233,8 @@ void handleEvents(GameData &game, SDL_Surface *screen,
                   switch(game.mode){
                   case MODE_CONSTRUCTION:
                      //cancel build mode
-                     game.mode = MODE_NORMAL;
+                     game.mode = MODE_BUILDER;
+                     
                      break;
                   default:
                      setSelectedTargets(game);
@@ -246,46 +259,49 @@ void handleEvents(GameData &game, SDL_Surface *screen,
                   //place new building
                   if (game.mode == MODE_CONSTRUCTION){
                      assert (game.toBuild != NO_TYPE);
-                     if (game.players[HUMAN_PLAYER].sufficientResources(
-                        game.buildingTypes[game.toBuild].getCost())){
-                        if (game.buildLocationOK){
+                     if (game.players[HUMAN_PLAYER].
+                        sufficientResources(game.buildingTypes[game.toBuild].getCost()) &&
+                         game.buildLocationOK){
 
-                           //create new building
-                           Building *newBuilding =
-                              new Building(game.toBuild, game.mousePos -
-                                                         game.map);
-                           addEntity(game, newBuilding);
+                        //Subtract resource cost
+                        game.players[HUMAN_PLAYER].
+                           subtractResources(game.buildingTypes[game.toBuild].getCost());
 
-                           //assign selected builders to the construction
-                           for (entities_t::iterator it = game.entities.begin();
-                                it != game.entities.end(); ++it)
-                              if ((*it)->classID() == ENT_UNIT){
-                                 Unit *unitP = (Unit *)(*it);
-                                 if (unitP->selected)
-                                    if (unitP->isBuilder())
-                                       unitP->setTarget(newBuilding);
-                              }
+                        //create new building
+                        Building *newBuilding =
+                           new Building(game.toBuild, game.mousePos -
+                                                      game.map);
+                        addEntity(game, newBuilding);
 
-                           //Shift key doesn't allow multiple constructions, as
-                           //placed buildings are initially invisible and thus
-                           //would be impossible to see if builders moved to another
-                           //target
-                           //TODO make newly placed buildings visible somehow
-                           //if(!isKeyPressed(SDLK_LSHIFT)){
-                           game.mode = MODE_BUILDER;
-                           game.toBuild = NO_TYPE;
-                        }
-                     }else{ //not enough resources
-                        debug("Not enough resources");
+                        //assign selected builders to the construction
+                        for (entities_t::iterator it = game.entities.begin();
+                             it != game.entities.end(); ++it)
+                           if ((*it)->classID() == ENT_UNIT){
+                              Unit *unitP = (Unit *)(*it);
+                              if (unitP->selected)
+                                 if (unitP->isBuilder())
+                                    unitP->setTarget(newBuilding);
+                           }
+
+                        //Shift key doesn't allow multiple constructions, as
+                        //placed buildings are initially invisible and thus
+                        //would be impossible to see if builders moved to another
+                        //target
+                        //TODO make newly placed buildings visible somehow
+                        //if(!isKeyPressed(SDLK_LSHIFT)){
+                        game.mode = MODE_BUILDER;
+                        game.toBuild = NO_TYPE;
+                     }else{ //not enough resources, or bad place
+                        debug("Cannot construct building");
                      }
                   }else //not construction mode
                      select(game, bars);
                }// if !barClicked
             }else //if dragging
                select(game, bars);
+            game.leftMouse.mouseUp();
             break;
          }
-         game.leftMouse.mouseUp();
          break;
       } //event switch
    } //event while
