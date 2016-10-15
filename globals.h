@@ -78,9 +78,9 @@ const Uint8 SHADOW_ALPHA = 0x44;
 //(~45%, multiplicative) effect on performance
 //===================================================
 //anything behind each entity is cleared
-const bool ENTITY_MASKS = false;
+const bool ENTITY_MASKS = true;
 //entities appear engraved
-const bool SHADOWS = false;
+const bool SHADOWS = true;
 //===================================================
 
 const SDL_Color ENTITY_BACKGROUND   = GREEN;
