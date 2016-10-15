@@ -79,7 +79,8 @@ const Uint8 SHADOW_ALPHA = 0x44;
 //===================================================
 //anything behind each entity is cleared
 const bool ENTITY_MASKS = true;
-//entities appear engraved
+//entities appear engraved, cursor and particles have
+//shadows
 const bool SHADOWS = true;
 //===================================================
 
@@ -93,10 +94,16 @@ const Uint32 FOOTPRINT_COLOR_BAD  = 0x880000; //dark red
 
 const pixels_t ICON_SIZE = 48;
 const std::string IMAGE_SUFFIX = ".png";
-const std::string IMAGE_PATH             = "Images/";
-const std::string BUILDINGS_IMAGE_PATH   = "Buildings/";
-const std::string DECORATIONS_IMAGE_PATH = "Decorations/";
-const std::string INTERFACE_IMAGE_PATH   = "Interface/";
+const std::string IMAGE_PATH             = IMAGE_PATH + 
+                                           "Images/";
+const std::string MISC_IMAGE_PATH        = IMAGE_PATH + 
+                                           "Misc/";
+const std::string BUILDINGS_IMAGE_PATH   = IMAGE_PATH + 
+                                           "Buildings/";
+const std::string DECORATIONS_IMAGE_PATH = IMAGE_PATH + 
+                                           "Decorations/";
+const std::string INTERFACE_IMAGE_PATH   = IMAGE_PATH + 
+                                           "Interface/";
 
 enum Direction{
    UP,

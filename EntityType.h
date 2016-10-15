@@ -1,4 +1,4 @@
-// (C) 2009 Tim Gurto
+// (C) 2009-2010 Tim Gurto
 
 #ifndef ENTITY_TYPE_H
 #define ENTITY_TYPE_H
@@ -34,6 +34,7 @@ public:
    SDL_Rect getBaseRect() const;
    SDL_Rect getDrawRect() const;
    SDL_Surface *getIcon() const;
+   const std::string &getName();
 };
 
 #endif

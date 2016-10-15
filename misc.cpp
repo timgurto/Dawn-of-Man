@@ -105,10 +105,9 @@ SDL_Surface *copySurface(SDL_Surface* src){
 std::string makePath(EntityTypeID type, typeNum_t imageNumber,
                      ImageModifier modifier){
    std::ostringstream path;
-   path << IMAGE_PATH; // Images/
    switch (type){
    case BUILDING:
-      path << BUILDINGS_IMAGE_PATH; // Units/
+      path << BUILDINGS_IMAGE_PATH;
       break;
    case DECORATION:
       path << DECORATIONS_IMAGE_PATH;
@@ -124,6 +123,7 @@ std::string makePath(EntityTypeID type, typeNum_t imageNumber,
       break;
    }
 
+   assert (imageNumber < 1000);
    if (imageNumber < 100) // 0
       path << '0';
    if (imageNumber < 10) // 0

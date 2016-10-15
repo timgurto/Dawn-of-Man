@@ -3,6 +3,7 @@
 #include "uiBarFunctions.h"
 #include "GameData.h"
 #include "Debug.h"
+#include "BuildingType.h"
 
 extern Debug debug;
 
@@ -18,6 +19,7 @@ SDL_Surface *getBuildingTypeIcons(typeNum_t i,
 
 void selectBuilding(typeNum_t index, GameData &game){
    game.toBuild = index;
-   debug("toBuild = ", game.toBuild);
+   debug("Building to construct: ",
+         game.buildingTypes[game.toBuild].getName());
    game.mode = BUILD_MODE;
 }

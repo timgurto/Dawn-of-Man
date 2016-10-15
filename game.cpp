@@ -38,14 +38,12 @@ void gameMode(){
    srand(unsigned(time(0)));
 
    SDL_Surface
-      *back = loadImage(IMAGE_PATH + "back.png"),
-      *cursor = loadImage(IMAGE_PATH + "cursor.png", GREEN),
-      *cursorShadow = loadImage(IMAGE_PATH +
+      *back = loadImage(MISC_IMAGE_PATH + "back.png"),
+      *cursor = loadImage(MISC_IMAGE_PATH + "cursor.png", GREEN),
+      *cursorShadow = loadImage(MISC_IMAGE_PATH +
                                 "cursorShadow.PNG", GREEN),
-      *vBar = loadImage(IMAGE_PATH +
-                        INTERFACE_IMAGE_PATH + "vBar.PNG"),
-      *hBar = loadImage(IMAGE_PATH +
-                        INTERFACE_IMAGE_PATH + "hBar.PNG"),
+      *vBar = loadImage(INTERFACE_IMAGE_PATH + "vBar.PNG"),
+      *hBar = loadImage(INTERFACE_IMAGE_PATH + "hBar.PNG"),
       *entitiesTemp = SDL_CreateRGBSurface(SDL_HWSURFACE,
                                            SCREEN_WIDTH,
                                            SCREEN_HEIGHT,
@@ -57,8 +55,8 @@ void gameMode(){
                               ENTITY_BACKGROUND.g,
                               ENTITY_BACKGROUND.b));
    SDL_Surface
-      *particle = loadImage(IMAGE_PATH + "particle.PNG", GREEN),
-      *particleShadow = loadImage(IMAGE_PATH +
+      *particle = loadImage(MISC_IMAGE_PATH + "particle.PNG", GREEN),
+      *particleShadow = loadImage(MISC_IMAGE_PATH +
                                   "particleShadow.PNG", GREEN);
    SDL_SetAlpha(particleShadow, SDL_SRCALPHA, SHADOW_ALPHA);
    SDL_SetAlpha(cursorShadow, SDL_SRCALPHA, SHADOW_ALPHA);
@@ -272,7 +270,7 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
 
       //A mouse button is clicked
       case SDL_MOUSEBUTTONDOWN:
-         debug("Mouse down: ", int(event.button.button));
+         //debug("Mouse down: ", int(event.button.button));
          switch (event.button.button){
          case MOUSE_BUTTON_LEFT:
             { //new scope for barClicked
