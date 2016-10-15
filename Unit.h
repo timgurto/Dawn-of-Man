@@ -18,9 +18,11 @@ class Unit : public Entity{
    Point target_; //where the unit is trying to go
    Entity *targetEntity_; //the unit this unit is targetting
    bool moving_; //whether or not the unit is moving
+   bool combat_; //whether or not the unit is attacking another
    
-    //the current point in the unit's animation cycle
+   //the current point in the unit's animation cycle
    double frameCounter_;
+   double combatFrameCounter_;
    int frame_; //which frame to draw for this unit
 
 public:

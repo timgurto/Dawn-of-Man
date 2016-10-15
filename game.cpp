@@ -95,7 +95,9 @@ void gameMode(){
                   makeRect(-22, -127, 105, 133),
                   makeRect(-22,-6, 53, 11),
                   Point(3, -55),
-                  8, 25, 8);
+                  8, //speed
+                  25, 8, //frames
+                  25, 4); //combat frames
    game.unitTypes.push_back(drone);
    for (int i = 0; i != 30; ++i)
       addEntity(game, new Unit(0, Point(

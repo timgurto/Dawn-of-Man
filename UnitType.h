@@ -11,6 +11,8 @@ class UnitType: public EntityType{
    pixels_t speed_; //movement per tick, in px
    int frameCount_;
    int maxFrameCounter_;
+   int combatFrameCount_;
+   int maxCombatFrameCounter_;
 
 public:
    UnitType(typeNum_t index,
@@ -20,7 +22,9 @@ public:
             const Point &selectionCenter,
             pixels_t speed = 0,
             int maxFrameCounter = 0,
-            int frameCount = 1);
+            int frameCount = 1,
+            int maxCombatFrameCounter = 0,
+            int combatFrameCount = 1);
 };
 
 #endif

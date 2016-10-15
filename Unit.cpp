@@ -7,13 +7,18 @@
 #include "GameData.h"
 #include "Unit.h"
 #include "UnitType.h"
+#include "Debug.h"
+
+extern Debug debug;
 
 Unit::Unit(typeNum_t type, const Point &loc,
            typeNum_t player):
 Entity(type, loc),
 player_(player),
 moving_(false),
+combat_(false),
 frameCounter_(rand() % game_->unitTypes[type].maxFrameCounter_),
+combatFrameCounter_(0),
 frame_(0),
 targetEntity_(0){}
 
@@ -98,18 +103,37 @@ void Unit::tick(double delta){
          loc_.y = game_->map.h - base.y - base.h;
 
       //check whether target has been reached
-      if (atTarget())
+      if (targetEntity_ != 0){
+         combat_ = atTarget();
+         moving_ = !combat_;
+      }else if (atTarget())
          moving_ = false;
-      
+         
    }
 
-   //set drawing frame
-   frameCounter_ = modulo(frameCounter_ + delta, thisType.maxFrameCounter_);
-   frame_ = moving_ ?
-               int(frameCounter_ /
-                   thisType.maxFrameCounter_ *
-                   thisType.frameCount_) :
-               0;
+   //set frame
+   if (combat_){
+      //debug("in combat");
+      combatFrameCounter_ += delta;
+      if (combatFrameCounter_ >= thisType.maxCombatFrameCounter_){
+         combatFrameCounter_ -= thisType.maxCombatFrameCounter_;
+         ; //attack
+      }
+      frame_ = int(combatFrameCounter_ /
+                   thisType.maxCombatFrameCounter_ *
+                   thisType.combatFrameCount_ +
+                   thisType.frameCount_);
+   }else{
+         frameCounter_ = modulo(frameCounter_ + delta,
+                                thisType.maxFrameCounter_);
+      frame_ = moving_ ?
+                  int(frameCounter_ /
+                      thisType.maxFrameCounter_ *
+                      thisType.frameCount_) :
+                  0;
+   }
+
+
 }
 
 int Unit::getColor() const{
@@ -139,7 +163,8 @@ void Unit::setTarget(Entity *targetEntity, Point loc){
 }
 
 bool Unit::atTarget(){
-   pixels_t threshold = game_->unitTypes[type_].speed_ / 2;
+   double multiplier = (targetEntity_ == 0) ? 0.5 : 8;
+   double threshold = game_->unitTypes[type_].speed_ * multiplier;
 
    if (loc_.x - target_.x > threshold ||
        target_.x - loc_.x > threshold)
@@ -154,4 +179,6 @@ bool Unit::atTarget(){
 void Unit::updateTarget(){
    if (targetEntity_ != 0)
       target_ = targetEntity_->loc_;
+   else
+      combat_ = false;
 }

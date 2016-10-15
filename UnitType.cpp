@@ -12,7 +12,9 @@ UnitType::UnitType(typeNum_t index,
                    const Point &selectionCenter,
                    pixels_t speed,
                    int maxFrameCounter,
-                   int frameCount):
+                   int frameCount,
+                   int maxCombatFrameCounter,
+                   int combatFrameCount):
 EntityType(index,
            UNIT,
            name,
@@ -21,4 +23,6 @@ EntityType(index,
            selectionCenter),
 speed_(speed),
 maxFrameCounter_(maxFrameCounter),
-frameCount_(frameCount){}
+frameCount_(frameCount),
+maxCombatFrameCounter_(maxCombatFrameCounter),
+combatFrameCount_(combatFrameCount){}
