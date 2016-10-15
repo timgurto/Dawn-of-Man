@@ -13,9 +13,9 @@ name_(name),
 drawRect_(drawRect),
 baseRect_(baseRect){
    surface = loadImage(makePath(type, index_),
-                       ENTITY_BACKGROUND);
+                       ENTITY_MASK);
    icon = loadImage(makePath(type, index_, ICON),
-                        ENTITY_BACKGROUND);
+                    ENTITY_BACKGROUND);
    mask = loadImage(makePath(type, index_, MASK),
                     ENTITY_MASK);
 }

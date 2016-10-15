@@ -12,6 +12,7 @@
 
 GameData *Entity::game_ = 0;
 SDL_Surface *Entity::screen_ = 0;
+SDL_Surface *Entity::colorTemp = 0;
 
 Entity::Entity(typeNum_t type, const Point &loc):
 type_(type),
@@ -25,11 +26,23 @@ bool Entity::operator<(const Entity &rhs) const{
 void Entity::draw(SDL_Surface *screen) const{
    const EntityType &thisType = type();
    SDL_Rect drawLoc = loc_ + thisType.drawRect_;
-   
+   SDL_Rect srcLoc = makeRect(0, 0,
+                              thisType.drawRect_.w,
+                              thisType.drawRect_.h);
+
+   //TODO put this stuff into a separate function
+   //TODO shadows
+   //color sprite
+   SDL_FillRect(colorTemp, 0, getColor());
+   SDL_BlitSurface(thisType.surface, 0, colorTemp, 0);
+
+   //blit mask, hiding anything that would otherwise
+   //show through the gaps in the sprite
    if (!MASK_BEFORE_CLIP && ENTITY_MASKS)
       SDL_BlitSurface(thisType.mask, 0, screen, &drawLoc);
-
-   SDL_BlitSurface(thisType.surface, 0, screen, &drawLoc);
+   
+   //blit the sprite
+   SDL_BlitSurface(colorTemp, &srcLoc, screen, &drawLoc);
 }
 
 SDL_Rect Entity::getBaseRect(){
@@ -41,8 +54,21 @@ void Entity::tick(){} //default: do nothing
 void Entity::init(GameData *game, SDL_Surface *screen){
    game_ = game;
    screen_ = screen;
+   colorTemp =SDL_CreateRGBSurface(SDL_HWSURFACE,
+                                   SCREEN_WIDTH,
+                                   SCREEN_HEIGHT, SCREEN_BPP,
+                                   0, 0, 0, 0);
+   SDL_SetColorKey(colorTemp, SDL_SRCCOLORKEY,
+                   SDL_MapRGB(colorTemp->format,
+                              ENTITY_BACKGROUND.r,
+                              ENTITY_BACKGROUND.g,
+                              ENTITY_BACKGROUND.b));
 }
 
 float Entity::getDrawPercent() const{
    return FULL; //default: full
+}
+
+Uint32 Entity::getColor() const{
+   return DEFAULT_ENTITY_COLOR; //default
 }

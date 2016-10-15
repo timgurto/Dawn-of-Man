@@ -67,16 +67,16 @@ void gameMode(){
    //TODO load from files
    //=================================================
    BuildingType campfire(0, "Campfire",
-                         makeRect(-42, -92, 81, 113),
-                         makeRect(-42, -22, 81, 42),
+                         makeRect(-41, -91, 79, 111),
+                         makeRect(-41, -22, 79, 40),
                          1250);
    game.buildingTypes.push_back(campfire);
    BuildingType shrine(1, "Shrine",
-                         makeRect(-76, -67, 154, 79),
-                         makeRect(-76, -17, 154, 28),
+                         makeRect(-75, -67, 152, 77),
+                         makeRect(-75, -16, 152, 26),
                          1750);
    game.buildingTypes.push_back(shrine);
-   game.players.push_back(makeColor(0x44, 0x44, 0xff));
+   game.players.push_back(0xca6500);
    //=================================================
 
    UIBars_t bars;
@@ -226,7 +226,7 @@ void drawEverything(SDL_Surface *screen, SDL_Surface *back,
    
    //Entities
    if (ENTITY_MASKS)
-      SDL_FillRect(entitiesTemp, 0, 0x00ff00);
+      SDL_FillRect(entitiesTemp, 0, ENTITY_BACKGROUND_UINT);
    for (entities_t::const_iterator it = game.entities.begin();
         it != game.entities.end(); ++it)
       (*it)->draw(ENTITY_MASKS ? entitiesTemp : screen);

@@ -1,4 +1,4 @@
 #include "Player.h"
 
-Player::Player(SDL_Color playerColor):
+Player::Player(Uint32 playerColor):
 color(playerColor){}

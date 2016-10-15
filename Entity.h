@@ -15,13 +15,20 @@ class EntityType;
 //is an on-screen, in-game element.
 class Entity{
    friend class EntityPtr;
-protected:
+protected: //everything should be a derived class
+
    //type; index in vector of related EntityTypes
    typeNum_t type_;
-   Point loc_; //location
 
    //direction of clipping for partial drawing
    Direction direction;
+
+   Point loc_; //location
+
+   //used in drawing; static to avoid having to
+   //recreate it constantly
+   static SDL_Surface *colorTemp;
+
    static GameData *game_; //static pointer to game
    static SDL_Surface *screen_;
 
@@ -53,6 +60,9 @@ public:
    //How much of the entity should be drawn.
    //FULL (1.0) by default
    virtual float getDrawPercent() const;
+
+   //The color used to draw the entity
+   virtual Uint32 getColor() const;
 };
 
 #endif

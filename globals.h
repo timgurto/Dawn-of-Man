@@ -48,6 +48,7 @@ const SDL_Color MAGENTA = {0xff, 0, 0xff};
 const SDL_Color YELLOW  = {0xff, 0xff, 0};
 const SDL_Color WHITE   = {0xff, 0xff, 0xff};
 
+
 const float FULL  = 1;
 const float EMPTY = 0;
 
@@ -59,10 +60,14 @@ const bool ENTITY_MASKS = true;
 //whether the entire mask is drawn behind partial sprites
 const bool MASK_BEFORE_CLIP = false;
 
-const SDL_Color ENTITY_BACKGROUND = GREEN;
-const SDL_Color ENTITY_MASK       = MAGENTA;
+const SDL_Color ENTITY_BACKGROUND   = GREEN;
+const Uint32 ENTITY_BACKGROUND_UINT = 0x00ff00;
+const SDL_Color ENTITY_MASK         = MAGENTA;
+const Uint32 ENTITY_MASK_UINT       = 0xff00ff;
+
 const Uint32 FOOTPRINT_COLOR_GOOD = 0x008800; //dark green
 const Uint32 FOOTPRINT_COLOR_BAD  = 0x880000; //dark red
+const Uint32 DEFAULT_ENTITY_COLOR = 0xaaaa22;
 
 const pixels_t ICON_SIZE = 48;
 const std::string IMAGE_SUFFIX = ".png";

@@ -8,9 +8,9 @@
 //TODO comments
 class Player{
 public:
-   SDL_Color color;
+   Uint32 color;
 
-   Player(SDL_Color playerColor);
+   Player(Uint32 playerColor);
 };
 
 #endif

@@ -2,6 +2,7 @@
 
 #include <list>
 #include <cassert>
+#include "SDL.h"
 #include "Building.h"
 #include "GameData.h"
 #include "Debug.h"
@@ -10,9 +11,11 @@
 
 extern Debug debug;
 
-Building::Building(typeNum_t type, const Point &loc, progress_t progress):
+Building::Building(typeNum_t type, const Point &loc,
+                   typeNum_t player, progress_t progress):
 Entity(type, loc),
 progress_(progress),
+player_(player),
 finished(false),
 drawPercent(EMPTY){}
 
@@ -24,7 +27,7 @@ void Building::draw(SDL_Surface *screen) const{
    const EntityType &thisType = type();
    SDL_Rect drawLoc = loc_ + thisType.drawRect_;
 
-   SDL_Rect srcLoc;;
+   SDL_Rect srcLoc;
    pixels_t
       partialW = pixels_t(getDrawPercent() *
                           thisType.drawRect_.w),
@@ -63,10 +66,22 @@ void Building::draw(SDL_Surface *screen) const{
       assert(false);
    }
    
-   if (!MASK_BEFORE_CLIP && ENTITY_MASKS)
-      SDL_BlitSurface(thisType.mask, &srcLoc, screen, &drawLoc);
 
-   SDL_BlitSurface(thisType.surface, &srcLoc, screen, &drawLoc);
+   //TODO see Entity::draw()
+   //color sprite
+   SDL_FillRect(colorTemp, 0, getColor());
+   SDL_BlitSurface(thisType.surface, 0, colorTemp, 0);
+
+   //blit mask, hiding anything that would otherwise
+   //show through the gaps in the sprite
+   if (!MASK_BEFORE_CLIP && ENTITY_MASKS)
+      SDL_BlitSurface(thisType.mask, &srcLoc,
+                      screen, &drawLoc);
+   
+   //blit the sprite
+   SDL_BlitSurface(colorTemp, &srcLoc, screen, &drawLoc);
+
+
 }
 
 void Building::tick(){
@@ -89,7 +104,7 @@ void Building::tick(){
                               /*PROGRESS_PER_CALC;*/
 
       for (int i = 0; i != particlesToDraw; ++i){
-         //calculate co-ords
+         //calculate initial co-ords
          pixels_t x = 0, y = 0;
          switch(direction){
          case UP:
@@ -133,4 +148,8 @@ void Building::tick(){
 
 float Building::getDrawPercent() const{
    return drawPercent;
+}
+
+Uint32 Building::getColor() const{
+   return game_->players[player_].color;
 }
