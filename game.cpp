@@ -97,7 +97,7 @@ void gameMode(){
                   Point(3, -55),
                   8, //speed
                   25, 8, //frames
-                  25, 4); //combat frames
+                  10, 4, 25); //combat frames
    game.unitTypes.push_back(drone);
    for (int i = 0; i != 30; ++i)
       addEntity(game, new Unit(0, Point(
@@ -164,5 +164,5 @@ void addEntity(GameData &game, Entity *entity){
 }
 
 void removeEntity(entities_t::iterator it){
-   //delete() the Entity*
+   //delete the Entity*
 }

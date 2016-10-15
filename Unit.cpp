@@ -116,13 +116,18 @@ void Unit::tick(double delta){
       //debug("in combat");
       combatFrameCounter_ += delta;
       if (combatFrameCounter_ >= thisType.maxCombatFrameCounter_){
-         combatFrameCounter_ -= thisType.maxCombatFrameCounter_;
+         combatFrameCounter_ -= (thisType.maxCombatFrameCounter_ +
+                                 thisType.combatWait_);
+         debug("hit");
          ; //attack
       }
-      frame_ = int(combatFrameCounter_ /
-                   thisType.maxCombatFrameCounter_ *
-                   thisType.combatFrameCount_ +
-                   thisType.frameCount_);
+      if (combatFrameCounter_ < 0)
+         frame_ = thisType.frameCount_;
+      else
+         frame_ = int(combatFrameCounter_ /
+                      thisType.maxCombatFrameCounter_ *
+                      thisType.combatFrameCount_ +
+                      thisType.frameCount_);
    }else{
          frameCounter_ = modulo(frameCounter_ + delta,
                                 thisType.maxFrameCounter_);
@@ -132,8 +137,6 @@ void Unit::tick(double delta){
                       thisType.frameCount_) :
                   0;
    }
-
-
 }
 
 int Unit::getColor() const{

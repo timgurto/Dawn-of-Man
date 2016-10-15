@@ -14,7 +14,8 @@ UnitType::UnitType(typeNum_t index,
                    int maxFrameCounter,
                    int frameCount,
                    int maxCombatFrameCounter,
-                   int combatFrameCount):
+                   int combatFrameCount,
+                   int combatWait):
 EntityType(index,
            UNIT,
            name,
@@ -25,4 +26,5 @@ speed_(speed),
 maxFrameCounter_(maxFrameCounter),
 frameCount_(frameCount),
 maxCombatFrameCounter_(maxCombatFrameCounter),
-combatFrameCount_(combatFrameCount){}
+combatFrameCount_(combatFrameCount),
+combatWait_(combatWait){}

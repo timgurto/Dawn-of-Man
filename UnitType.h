@@ -13,6 +13,7 @@ class UnitType: public EntityType{
    int maxFrameCounter_;
    int combatFrameCount_;
    int maxCombatFrameCounter_;
+   int combatWait_;
 
 public:
    UnitType(typeNum_t index,
@@ -24,7 +25,8 @@ public:
             int maxFrameCounter = 0,
             int frameCount = 1,
             int maxCombatFrameCounter = 0,
-            int combatFrameCount = 1);
+            int combatFrameCount = 1,
+            int combatWait = 1);
 };
 
 #endif
