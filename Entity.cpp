@@ -49,6 +49,7 @@ SDL_Rect Entity::getDrawRect() const{
    return loc_ + type().drawRect_;   
 }
 
+//unnamed arg to suppress 'unused' warning
 void Entity::tick(double){} //default: do nothing
 
 bool Entity::onScreen() const{

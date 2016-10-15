@@ -12,8 +12,8 @@
 
 extern Debug debug;
 
-const int NUM_PLACEMENT_TRIES = 20;
-const pixels_t PLACEMENT_MARGIN = 2;
+const int NUM_PLACEMENT_TRIES = 40;
+const pixels_t PLACEMENT_MARGIN = 1;
 
 
 
@@ -103,7 +103,6 @@ const pixels_t PLACEMENT_MARGIN = 2;
             buildingBaseRect = building.getBaseRect(),
             unitTypeBaseRect = unitType.getBaseRect();
 
-         //TODO fix; right and down are too close
          switch(dir){
          case DIR_UP:
             loc.y = buildingBaseRect.y -
@@ -120,7 +119,7 @@ const pixels_t PLACEMENT_MARGIN = 2;
          case DIR_LEFT:
             loc.x = buildingBaseRect.x -
                     unitTypeBaseRect.w -
-                    unitTypeBaseRect.y -
+                    unitTypeBaseRect.x -
                     PLACEMENT_MARGIN;
             break;
          case DIR_RIGHT:
@@ -133,12 +132,12 @@ const pixels_t PLACEMENT_MARGIN = 2;
          if (dir == DIR_UP || dir == DIR_DOWN)
             loc.x = rand() % (buildingBaseRect.w + unitTypeBaseRect.w) +
                     buildingBaseRect.x -
-                    unitTypeBaseRect.w +
+                    unitTypeBaseRect.w -
                     unitTypeBaseRect.x;
          else
             loc.y = rand() % (buildingBaseRect.h + unitTypeBaseRect.h) +
                     buildingBaseRect.y -
-                    unitTypeBaseRect.h +
+                    unitTypeBaseRect.h -
                     unitTypeBaseRect.y;
       }while (tries != NUM_PLACEMENT_TRIES &&
               !noCollision(game, unitType, loc));

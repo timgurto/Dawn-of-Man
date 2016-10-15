@@ -98,7 +98,7 @@ void gameMode(){
                                 rand() % game.map.w,
                                 rand() % game.map.h)));
    UnitType generic(0, "Generic",
-                  makeRect(-22, -127, 70, 113),
+                  makeRect(-22, -107, 70, 113),
                   makeRect(-22,-6, 53, 11),
                   Point(3, -55),
                   8, //speed
@@ -116,7 +116,7 @@ void gameMode(){
                                1,
                                1000));
    UnitType grunt(1, "Grunt",
-                  makeRect(-22, -127, 70, 113),
+                  makeRect(-22, -107, 70, 113),
                   makeRect(-22,-6, 53, 11),
                   Point(3, -55),
                   8, //speed

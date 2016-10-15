@@ -144,8 +144,8 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
 
                   //initialize selection box stuff
                   game.leftMouse.mouseDown(game.mousePos - game.map);
+               break;
             }
-            break;
          case MOUSE_BUTTON_RIGHT:
             //initialize right-drag scroll stuff
             game.rightMouse.mouseDown(game.mousePos);
@@ -211,12 +211,12 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
                            }
                         }
 
-                     //TODO decide on shift functionality
-                     //Shift key: construct multiple buildings
-                     //if(!isKeyPressed(SDLK_LSHIFT)){
-                        game.mode = MODE_BUILDER;
-                        game.toBuild = NO_TYPE;
-                     //}
+                     //Shift key doesn't allow multiple constructions, as
+                     //placed buildings are initially invisible and thus
+                     //would be impossible to see if builders moved to another
+                     //target
+                     game.mode = MODE_BUILDER;
+                     game.toBuild = NO_TYPE;
                   }
                }else
                   select(game, bars);
