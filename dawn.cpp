@@ -1,29 +1,36 @@
 //Standard Library
 #include <cassert>
-#include <string>
 
 //SDL
 #include "SDL.h"
-#include "SDL_image.h"
+#include "SDL_ttf.h"
 
-//Classes
-#include "RGB.h"
-#include "Point.h"
-#include "CaveBuildingType.h"
+#include "Debug.h"
 
 //Functions
-#include "SDL_wrappers.h"
-#include "cave.h"
+#include "game.h"
+
+//globals
+Debug debug(makeColor(0xff, 0xff, 0), 0, 0, 59);
+int surfacesLoaded(0);
 
 int main(int argc, char* args[]){
-   assert (SDL_Init(SDL_INIT_EVERYTHING) != -1);
+   int sdlInit(SDL_Init(SDL_INIT_EVERYTHING));
+   assert (sdlInit != -1);
+
+   int ttfInit(TTF_Init());
+   assert (ttfInit >= 0);
+
+   debug.setFont("Dina.fon", 0);
 
    //new game
 
-   
 
-   caveMode();
 
+   gameMode();
+
+   //TTF_Quit(); Quit now happens with debug dtor
    SDL_Quit();
+   assert (surfacesLoaded == 0);
    return 0;
 }
