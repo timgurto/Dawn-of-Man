@@ -24,7 +24,8 @@ UnitType::UnitType(typeNum_t index,
                    bool builder,
                    bool gatherer,
                    typeNum_t originBuilding,
-                   progress_t maxProgress):
+                   progress_t maxProgress,
+                   typeNum_t resourceAtDeath):
 EntityType(index,
            ENT_UNIT,
            name,
@@ -44,7 +45,8 @@ builder_(builder),
 gatherer_(gatherer),
 originBuilding_(originBuilding),
 maxProgress_(maxProgress),
-cost_(cost){}
+cost_(cost),
+resourceAtDeath_(resourceAtDeath){}
 
 typeNum_t UnitType::getOriginBuilding() const{
    return originBuilding_;
@@ -56,4 +58,8 @@ const Resources &UnitType::getCost() const{
 
 std::string UnitType::getCostString() const{
    return cost_.str();
+}
+
+typeNum_t UnitType::getDeathResource() const{
+   return resourceAtDeath_;
 }

@@ -25,8 +25,9 @@ const double DUMMY_ANGLE = 3 * PI;
 const typeNum_t MAX_TYPES = 8;
 const typeNum_t NO_TYPE = 0xffff;
 
-const typeNum_t MAX_PLAYERS = 2;
-const typeNum_t HUMAN_PLAYER = 0;
+const typeNum_t MAX_PLAYERS = 3; //including Nature
+const typeNum_t HUMAN_PLAYER = 1;
+const typeNum_t NATURE_PLAYER = 0;
 
 //in case the cursor point isn't at 0,0
 const Point CURSOR_OFFSET(0,-9);
@@ -161,6 +162,7 @@ enum EntityColor{
    CLR_BLACK,
    CLR_DECORATION,
    CLR_RESOURCE_WOOD,
+   CLR_RESOURCE_FOOD,
 
    CLR_MAX //for array sizes
 };
@@ -168,14 +170,15 @@ const Uint32 ENTITY_DEFAULT_COLOR = 0xaaaa22;
 
 const SDL_Color ENGRAVE_DARK      = {0x44, 0x44, 0x44};
 const Uint32 ENGRAVE_DARK_UINT    = 0x444444;
-const SDL_Color ENGRAVE_LIGHT     = {0xdd, 0xdd, 0xdd};
-const Uint32 ENGRAVE_LIGHT_UINT   = 0xdddddd;
+const SDL_Color ENGRAVE_LIGHT     = {0xbb, 0xbb, 0xbb}; //{0xdd, 0xdd, 0xdd};
+const Uint32 ENGRAVE_LIGHT_UINT   = 0xbbbbbb; //0xdddddd;
 
 const Uint32 RESOURCE_WOOD_COLOR  = 0x406040;
+const Uint32 RESOURCE_FOOD_COLOR  = 0xd75757;
 
 const Uint32 DECORATION_COLOR     = 0x666666;
 
-const Uint8 BLACK_ENTITY_ALPHA = 0x66; //0x44;
+const Uint8 BLACK_ENTITY_ALPHA = 0x3b; //0x44;
 //The health percentage, below which the sprite is blackened
 const double ENTITY_BLACK_HEALTH = 0.5;
 

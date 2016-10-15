@@ -253,6 +253,8 @@ Uint32 getEntityColor(const GameData &game, int color){
       return BLACK_UINT;
    case CLR_RESOURCE_WOOD:
       return RESOURCE_WOOD_COLOR;
+   case CLR_RESOURCE_FOOD:
+      return RESOURCE_FOOD_COLOR;
    case CLR_DECORATION:
       return DECORATION_COLOR;
    default:

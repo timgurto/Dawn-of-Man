@@ -1,4 +1,4 @@
-// (C) 2009 Tim Gurto
+// (C) 2009-2010 Tim Gurto
 
 #include "EntityType.h"
 #include "DecorationType.h"
@@ -9,11 +9,13 @@ DecorationType::DecorationType(typeNum_t index,
                                const SDL_Rect &drawRect,
                                const SDL_Rect &baseRect,
                                const Point &selectionCenter,
-                               int color):
+                               int color,
+                               bool collides):
 EntityType(index,
            ENT_DECORATION,
            name,
            drawRect,
            baseRect,
            selectionCenter),
-color_(color){}
+color_(color),
+collides_(collides){}

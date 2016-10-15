@@ -78,7 +78,7 @@ void gameMode(){
    SDL_ShowCursor(SDL_DISABLE);
 
    //init
-   GameData game(4, 4);
+   GameData game(8, 8);
    Entity::init(&game, screen, diagGreen);
    Particle::init(screen, particle, particleShadow);
 
@@ -115,18 +115,18 @@ void gameMode(){
                           darkMap,
                           "Woodbrush.ttf", 18,
                           true);
-   messageBoxes.push_back(&contextHelp);
    MessageBox resourcesBox(WHITE,
                            2, 2, 1,
                            darkMap,
                            "Woodbrush.ttf", 18);
-   messageBoxes.push_back(&resourcesBox);
    MessageBox fpsDisplay(WHITE,
                          SCREEN_WIDTH / 2 - 40, 2,
                          1,
                          darkMap,
                          "Dina.fon", 0,
                          false, DEBUG);
+   messageBoxes.push_back(&contextHelp);
+   messageBoxes.push_back(&resourcesBox);
    messageBoxes.push_back(&fpsDisplay);
 
    //TODO load from files
@@ -142,12 +142,12 @@ void gameMode(){
                          makeRect(-41, -91, 79, 111),
                          makeRect(-42, -23, 81, 42),
                          Point(2, -37), campfireCost, 1250);
-   game.buildingTypes.push_back(campfire);
    resources_t shrineCost; shrineCost.push_back(180);
    BuildingType shrine(1, "Shrine",
                        makeRect(-75, -67, 152, 77),
                        makeRect(-76, -17, 154, 28),
                        Point(1, -20), shrineCost, 1750);
+   game.buildingTypes.push_back(campfire);
    game.buildingTypes.push_back(shrine);
    for (typeNum_t i = 0; i != game.buildingTypes.size(); ++i)
       assert (game.buildingTypes[i].getIndex() == i);
@@ -159,12 +159,14 @@ void gameMode(){
                   Point(0, 0),
                   CLR_DECORATION);
    game.decorationTypes.push_back(rock);
+   for (typeNum_t i = 0; i != game.decorationTypes.size(); ++i)
+      assert (game.decorationTypes[i].getIndex() == i);
+
+   //starting rocks
    for (int i = 0; i != 15; ++i)
       addEntity(game, new Decoration(0, Point(
                                 rand() % game.map.w,
                                 rand() % game.map.h)));
-   for (typeNum_t i = 0; i != game.decorationTypes.size(); ++i)
-      assert (game.decorationTypes[i].getIndex() == i);
 
    //unit types
    resources_t genericCost; genericCost.push_back(50);
@@ -181,7 +183,6 @@ void gameMode(){
                   false, //gatherer
                   1, //origin building
                   1000); //progress cost
-   game.unitTypes.push_back(generic);
    resources_t gruntCost; gruntCost.push_back(30);
    UnitType grunt(1, "Caveman",
                   makeRect(-22, -107, 70, 113),
@@ -196,7 +197,24 @@ void gameMode(){
                   true, //gatherer
                   0, //origin building
                   1000); //progress cost
+   resources_t deerCost; gruntCost.push_back(5);
+   UnitType deer(2, "Deer",
+                 makeRect(-132, -155, 235, 165),
+                 makeRect(-67, -52, 139, 82),
+                 Point(-29, -64),
+                 gruntCost,
+                 14, //speed
+                 17, 8, //frames
+                 13, 4, 5, //combat frames
+                 20, 8, 0, //combat details
+                 true, //builder
+                 true, //gatherer
+                 NO_TYPE, //origin building
+                 1000, //progress cost
+                 1); //resource at death
+   game.unitTypes.push_back(generic);
    game.unitTypes.push_back(grunt);
+   game.unitTypes.push_back(deer);
    for (typeNum_t i = 0; i != game.unitTypes.size(); ++i)
       assert (game.unitTypes[i].getIndex() == i);
 
@@ -209,14 +227,24 @@ void gameMode(){
    addEntity(game, newGrunt);
    centerMap(game, newGrunt->getLoc());
    //computer start: a bunch of generics
+   for (int i = 0; i != 30; ++i){
+      pixels_t x, y;
+      do{
+         x = rand() % game.map.w;
+         y = rand() % game.map.h;
+      }while (!noCollision(game, game.unitTypes[0],
+                          Point(x, y)));
+      addEntity(game, new Unit(0, Point(x, y), 2, 1000));
+   }
+   //nature start: some deer
    for (int i = 0; i != 10; ++i){
       pixels_t x, y;
       do{
          x = rand() % game.map.w;
          y = rand() % game.map.h;
-      }while (!noCollision(game, game.buildingTypes[1],
+      }while (!noCollision(game, game.unitTypes[2],
                           Point(x, y)));
-      addEntity(game, new Unit(0, Point(x, y), 1, 1000));
+      addEntity(game, new Unit(2, Point(x, y), NATURE_PLAYER, 1000));
    }
 
    //resource node types
@@ -230,8 +258,22 @@ void gameMode(){
                      treeMax,
                      treeYield,
                      CLR_RESOURCE_WOOD);
+   resources_t deerMax, deerYield;
+   deerMax.push_back(50);
+   deerYield.push_back(3);
+   //Unit --> Resource: resource's baseRect should be the same or smaller
+   ResourceNodeType deadDeer(1, "Dead Deer",
+                             makeRect(-110, -112, 219, 141),
+                             makeRect(-67, -52, 139, 82),
+                             Point(-19, -32),
+                             deerMax,
+                             deerYield,
+                             CLR_RESOURCE_FOOD);
    game.resourceNodeTypes.push_back(tree);
-   for (int i = 0; i != 10; ++i){
+   game.resourceNodeTypes.push_back(deadDeer);
+
+   //starting trees
+   for (int i = 0; i != 100; ++i){
       pixels_t x, y;
       do{
          x = rand() % game.map.w;
@@ -249,7 +291,8 @@ void gameMode(){
    game.techs.push_back(fireArmor);
 
    techsResearched_t noneResearched(game.techs.size(), false);
-   game.players.push_back(Player(0xca6500, noneResearched)); //0x... = color
+   game.players.push_back(Player(0x735e3e, noneResearched)); //0: nature
+   game.players.push_back(Player(0xca6500, noneResearched)); //1: human
    game.players.push_back(Player(0x882222, noneResearched));
    //=================================================
 

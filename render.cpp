@@ -161,6 +161,7 @@ void renderEntities(SDL_Surface *screen, const GameData &game){
             (*it)->draw(screen);
 }
 
+//TODO only draw what's in the screen
 //Draws the selection rectangle
 void renderSelectionRect(SDL_Surface *screen, const GameData &game){
    //Get rectangle

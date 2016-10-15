@@ -13,6 +13,8 @@
 #include "Point.h"
 #include "GameData.h"
 #include "Unit.h"
+#include "ResourceNode.h"
+#include "game.h"
 
 extern Debug debug;
 
@@ -356,6 +358,27 @@ bool Entity::isLocationOK() const{
 
 void Entity::kill(){
    //TODO make death more spectacular
+
+   typeNum_t resourceType = NO_TYPE;
+   if (this->classID() == ENT_UNIT){
+      resourceType =
+         game_->unitTypes[this->type().getIndex()].getDeathResource();
+      if (resourceType != NO_TYPE){
+         ResourceNode *node = new ResourceNode(resourceType, loc_);
+         addEntity(*game_, node);
+
+         //fix units that were targetting this
+         for (entities_t::iterator it = game_->entities.begin();
+              it != game_->entities.end(); ++it){
+            if ((*it)->classID() == ENT_UNIT){
+               Unit &unit = (Unit &)(**it);
+               if (unit.targetEntity_ == this)
+                  unit.setTarget(node);
+            }
+         }
+      }
+   }
+
    trashCan_.push_back(this);
    if ((Entity *)(game_->buildingSelected) == this){
       game_->buildingSelected = 0;
@@ -367,7 +390,10 @@ void Entity::kill(){
         it != game_->entities.end(); ++it){
       if (*it == this)
          itToErase = it;
-      else if ((*it)->classID() == ENT_UNIT){
+
+      //fix units that were targetting this
+      else if (resourceType == NO_TYPE &&
+               (*it)->classID() == ENT_UNIT){
          Unit &unit = (Unit &)(**it);
          if (unit.targetEntity_ == this)
             unit.setTarget(0, (*it)->loc_);

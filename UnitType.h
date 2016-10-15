@@ -54,6 +54,8 @@ class UnitType: public EntityType{
    //How many resources it costs to train this unit
    Resources cost_;
 
+   //Which resource site this unit becomes when it dies
+   typeNum_t resourceAtDeath_;
 
 public:
 
@@ -75,12 +77,14 @@ public:
             bool builder = false,
             bool gatherer = false,
             typeNum_t originBuilding = NO_TYPE,
-            progress_t maxProgress = 0);
+            progress_t maxProgress = 0,
+            typeNum_t resourceAtDeath = NO_TYPE);
 
    //get
    typeNum_t getOriginBuilding() const;
    const Resources &getCost() const;
    std::string getCostString() const;
+   typeNum_t getDeathResource() const;
 };
 
 #endif

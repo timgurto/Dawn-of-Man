@@ -64,32 +64,6 @@ void Unit::draw(SDL_Surface *screen) const{
              //partial, if not finished
              !finished_);
    //debug("health / max = ", 1.0f * health_ / thisType.maxHealth_);
-
-
-
-   ////TODO better health display
-   //if (finished_){
-   //   SDL_FillRect(screen,
-   //                &makeRect(drawLoc.x + game_->map.x - 1,
-   //                          drawLoc.y + game_->map.y - 1,
-   //                          thisType.maxHealth_, 5),
-   //                ENGRAVE_DARK_UINT);
-   //   SDL_FillRect(screen,
-   //                &makeRect(drawLoc.x + game_->map.x + 1,
-   //                          drawLoc.y + game_->map.y + 1,
-   //                          thisType.maxHealth_, 5),
-   //                ENGRAVE_LIGHT_UINT);
-   //   SDL_FillRect(screen,
-   //                &makeRect(drawLoc.x + game_->map.x,
-   //                          drawLoc.y + game_->map.y,
-   //                          thisType.maxHealth_, 5),
-   //                BLACK_UINT);
-   //   SDL_FillRect(screen,
-   //                &makeRect(drawLoc.x + game_->map.x,
-   //                          drawLoc.y + game_->map.y,
-   //                          health_, 5),
-   //                getEntityColor(*game_, player_));
-   //}
 }
 
 void Unit::tick(double delta){
@@ -214,8 +188,11 @@ void Unit::tick(double delta){
                   damage_t damage = thisType.attack_ - target.getArmor();
                   if (damage > target.health_)
                      target.kill();
-                  else
+                  else{
                      target.health_ -= damage;
+                     if (target.getTargetEntity() == 0)
+                        target.setTarget(this);
+                  }
                   break;
                }
             case ENT_RESOURCE_NODE:
