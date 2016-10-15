@@ -49,6 +49,11 @@ public:
    //Draws the entity, as well as a green mask behind
    //it if ENTITY_MASKS is true
    virtual void draw(SDL_Surface *screen = screen_) const;
+
+   //Actually draws the sprite, after draw() figures out
+   //the two rectangle parameters
+   void layeredBlit(SDL_Rect *srcLoc, SDL_Rect *dstLoc,
+                    SDL_Surface *screen) const;
    
    //Any changes that need to be made to the entity
    //by the game loop

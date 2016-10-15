@@ -29,8 +29,13 @@ void Entity::draw(SDL_Surface *screen) const{
    SDL_Rect srcLoc = makeRect(0, 0,
                               thisType.drawRect_.w,
                               thisType.drawRect_.h);
+   layeredBlit(&srcLoc, &drawLoc, screen);
+}
 
-   //TODO put this stuff into a separate function
+void Entity::layeredBlit(SDL_Rect *srcLoc,
+                         SDL_Rect *dstLoc,
+                         SDL_Surface *screen) const{
+   const EntityType &thisType = type();
    //TODO shadows
    //color sprite
    SDL_FillRect(colorTemp, 0, getColor());
@@ -39,10 +44,10 @@ void Entity::draw(SDL_Surface *screen) const{
    //blit mask, hiding anything that would otherwise
    //show through the gaps in the sprite
    if (!MASK_BEFORE_CLIP && ENTITY_MASKS)
-      SDL_BlitSurface(thisType.mask, 0, screen, &drawLoc);
+      SDL_BlitSurface(thisType.mask, srcLoc, screen, dstLoc);
    
    //blit the sprite
-   SDL_BlitSurface(colorTemp, &srcLoc, screen, &drawLoc);
+   SDL_BlitSurface(colorTemp, srcLoc, screen, dstLoc);
 }
 
 SDL_Rect Entity::getBaseRect(){

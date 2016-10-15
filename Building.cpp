@@ -66,22 +66,7 @@ void Building::draw(SDL_Surface *screen) const{
       assert(false);
    }
    
-
-   //TODO see Entity::draw()
-   //color sprite
-   SDL_FillRect(colorTemp, 0, getColor());
-   SDL_BlitSurface(thisType.surface, 0, colorTemp, 0);
-
-   //blit mask, hiding anything that would otherwise
-   //show through the gaps in the sprite
-   if (!MASK_BEFORE_CLIP && ENTITY_MASKS)
-      SDL_BlitSurface(thisType.mask, &srcLoc,
-                      screen, &drawLoc);
-   
-   //blit the sprite
-   SDL_BlitSurface(colorTemp, &srcLoc, screen, &drawLoc);
-
-
+   layeredBlit(&srcLoc, &drawLoc, screen);
 }
 
 void Building::tick(){
