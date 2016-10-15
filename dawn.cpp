@@ -1,7 +1,6 @@
 // (C) 2009-2010 Tim Gurto
 
 //TODO copy comments at declarations to definitions
-//TODO make function names a consistent case (verb)
 //TODO replace get functions with const references named after the attr
 
 #include <cassert>

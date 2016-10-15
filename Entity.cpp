@@ -5,6 +5,7 @@
 
 #include "misc.h"
 #include "types.h"
+#include "globals.h"
 #include "SDL.h"
 #include "Debug.h"
 #include "Entity.h"
@@ -111,6 +112,87 @@ void Entity::colorBlit(int color, SDL_Surface *screen,
    //blit colored sprite to the screen.
    //The indexed version definitely exists now.
    SDL_BlitSurface(index, &srcLoc, screen, &dest);
+}
+
+void Entity::addParticles(int count) const{
+   for (int i = 0; i != count; ++i){
+      //calculate initial co-ords
+      pixels_t x = 0, y = 0;
+      double drawPercent = getDrawPercent();
+      switch(direction_){
+      case UP:
+         x = loc_.x + 
+             type().drawRect_.x +
+             rand() % type().drawRect_.w;
+         y = loc_.y + 
+             type().drawRect_.y +
+             pixels_t((1.0 - drawPercent) * type().drawRect_.h);
+         break;
+      case DOWN:
+         x = loc_.x + 
+             type().drawRect_.x +
+             rand() % type().drawRect_.w;
+         y = loc_.y + 
+             type().drawRect_.y +
+             pixels_t(drawPercent * type().drawRect_.h);
+         break;
+      case LEFT:
+         x = loc_.x + 
+             type().drawRect_.x +
+             pixels_t((1.0 - drawPercent) * type().drawRect_.w);
+         y = loc_.y + 
+             type().drawRect_.y +
+             rand() % type().drawRect_.h;
+         break;
+      case RIGHT:
+         x = loc_.x + 
+             type().drawRect_.x +
+             pixels_t(drawPercent * type().drawRect_.w);
+         y = loc_.y + 
+             type().drawRect_.y +
+             rand() % type().drawRect_.h;
+      }
+
+      //add
+      game_->particles.push_back(Particle(x, y));
+   }
+}
+
+SDL_Rect Entity::getSrcClip(pixels_t wPartial,
+                            pixels_t hPartial,
+                            int xMutiplier) const{
+   SDL_Rect srcLoc;
+   const EntityType &thisType = type();
+   switch(direction_){
+   case RIGHT:
+      srcLoc = makeRect(xMutiplier * thisType.drawRect_.w,
+                        0,
+                        wPartial,
+                        thisType.drawRect_.h);
+      break;
+   case DOWN:
+      srcLoc = makeRect(xMutiplier * thisType.drawRect_.w,
+                        0,
+                        thisType.drawRect_.w,
+                        hPartial);
+      break;
+   case LEFT:
+      srcLoc = makeRect((xMutiplier + 1) *
+                        thisType.drawRect_.w -
+                        wPartial,
+                        0,
+                        wPartial,
+                        thisType.drawRect_.h);
+      //drawLoc.x += thisType.drawRect_.w - wPartial;
+      break;
+   case UP:
+      srcLoc = makeRect(xMutiplier * thisType.drawRect_.w,
+                        thisType.drawRect_.h - hPartial,
+                        thisType.drawRect_.w,
+                        hPartial);
+      //drawLoc.y += thisType.drawRect_.h - hPartial;
+   }
+   return srcLoc;
 }
 
 bool Entity::collides() const{

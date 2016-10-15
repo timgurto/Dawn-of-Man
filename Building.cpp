@@ -29,7 +29,6 @@ void Building::draw(SDL_Surface *screen) const{
    const EntityType &thisType = type();
    SDL_Rect drawLoc = loc_ + thisType.drawRect_;
 
-   SDL_Rect srcLoc;
    pixels_t
       partialW = pixels_t(getDrawPercent() *
                           thisType.drawRect_.w),
@@ -37,36 +36,16 @@ void Building::draw(SDL_Surface *screen) const{
                           thisType.drawRect_.h);
 
    //clip, based on randomized direction
+   SDL_Rect srcLoc = getSrcClip(partialW, partialH);
+
    switch(direction_){
-   case RIGHT:
-      srcLoc = makeRect(0,
-                        0,
-                        partialW,
-                        thisType.drawRect_.h);
-      break;
-   case DOWN:
-      srcLoc = makeRect(0,
-                        0,
-                        thisType.drawRect_.w,
-                        partialH);
-      break;
    case LEFT:
-      srcLoc = makeRect(thisType.drawRect_.w - partialW,
-                        0,
-                        partialW,
-                        thisType.drawRect_.h);
       drawLoc.x += thisType.drawRect_.w - partialW;
       break;
    case UP:
-      srcLoc = makeRect(0,
-                        thisType.drawRect_.h - partialH,
-                        thisType.drawRect_.w,
-                        partialH);
       drawLoc.y += thisType.drawRect_.h - partialH;
-      break;
-   default:
-      assert(false);
    }
+
    colorBlit(getColor(), screen, srcLoc, drawLoc);
 }
 
@@ -88,46 +67,7 @@ void Building::tick(double delta){
                                 delta * Particle::DECAY *
                                 1);//delta);
 
-      for (int i = 0; i != particlesToDraw; ++i){
-         //calculate initial co-ords
-         pixels_t x = 0, y = 0;
-         switch(direction_){
-         case UP:
-            x = loc_.x + 
-                type().drawRect_.x +
-                rand() % type().drawRect_.w;
-            y = loc_.y + 
-                type().drawRect_.y +
-                pixels_t((1.0 - drawPercent_) * type().drawRect_.h);
-            break;
-         case DOWN:
-            x = loc_.x + 
-                type().drawRect_.x +
-                rand() % type().drawRect_.w;
-            y = loc_.y + 
-                type().drawRect_.y +
-                pixels_t(drawPercent_ * type().drawRect_.h);
-            break;
-         case LEFT:
-            x = loc_.x + 
-                type().drawRect_.x +
-                pixels_t((1.0 - drawPercent_) * type().drawRect_.w);
-            y = loc_.y + 
-                type().drawRect_.y +
-                rand() % type().drawRect_.h;
-            break;
-         case RIGHT:
-            x = loc_.x + 
-                type().drawRect_.x +
-                pixels_t(drawPercent_ * type().drawRect_.w);
-            y = loc_.y + 
-                type().drawRect_.y +
-                rand() % type().drawRect_.h;
-         }
-
-         //add
-         game_->particles.push_back(Particle(x, y));
-      }
+      addParticles(particlesToDraw);
    }
 }
 

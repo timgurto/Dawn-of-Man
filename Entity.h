@@ -44,9 +44,15 @@ protected: //everything should be a derived class
 
    //Draws the mask, then the colored sprite, creating
    //and indexing it if necessary
-   void Entity::colorBlit(int color, SDL_Surface *screen,
-                          SDL_Rect &srcLoc,
-                          SDL_Rect &dstLoc) const;
+   void colorBlit(int color, SDL_Surface *screen,
+                 SDL_Rect &srcLoc,
+                 SDL_Rect &dstLoc) const;
+
+   void addParticles(int count) const;
+
+   SDL_Rect getSrcClip(pixels_t wPartial,
+                       pixels_t hPartial,
+                       int xMutiplier = 0) const;
 
 public:
 

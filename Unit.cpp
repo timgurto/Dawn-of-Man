@@ -34,13 +34,9 @@ const EntityType &Unit::type() const{
 
 
 void Unit::draw(SDL_Surface *screen) const{
-   const UnitType &thisType = dynamic_cast<const UnitType &>(type());
-
-   //HACK duplicate code; see Building.cpp
-   //const EntityType &thisType = type();
+   const UnitType &thisType = (const UnitType &)(type());
    SDL_Rect drawLoc = loc_ + thisType.drawRect_;
 
-   SDL_Rect srcLoc;
    pixels_t
       partialW = pixels_t(getDrawPercent() *
                           thisType.drawRect_.w),
@@ -48,55 +44,49 @@ void Unit::draw(SDL_Surface *screen) const{
                           thisType.drawRect_.h);
 
    //clip, based on randomized direction
+   SDL_Rect srcLoc = getSrcClip(partialW, partialH, frame_);
+
    switch(direction_){
-   case RIGHT:
-      srcLoc = makeRect(frame_ * thisType.drawRect_.w,
-                        0,
-                        partialW,
-                        thisType.drawRect_.h);
-      break;
-   case DOWN:
-      srcLoc = makeRect(frame_ * thisType.drawRect_.w,
-                        0,
-                        thisType.drawRect_.w,
-                        partialH);
-      break;
    case LEFT:
-      srcLoc = makeRect((frame_ + 1) *
-                        thisType.drawRect_.w -
-                        partialW,
-                        0,
-                        partialW,
-                        thisType.drawRect_.h);
       drawLoc.x += thisType.drawRect_.w - partialW;
       break;
    case UP:
-      srcLoc = makeRect(frame_ * thisType.drawRect_.w,
-                        thisType.drawRect_.h - partialH,
-                        thisType.drawRect_.w,
-                        partialH);
       drawLoc.y += thisType.drawRect_.h - partialH;
-      break;
-   default:
-      assert(false);
    }
+
    colorBlit(player_, screen, srcLoc, drawLoc);
 
 
 
    //TODO better health display
    if (finished_){
-      SDL_FillRect(screen, &makeRect(drawLoc.x + game_->map.x, drawLoc.y + game_->map.y, thisType.maxHealth_, 5), BLACK_UINT);
-      SDL_FillRect(screen, &makeRect(drawLoc.x + game_->map.x, drawLoc.y + game_->map.y, health_, 5), 0x00fe00);
+      SDL_FillRect(screen,
+                   &makeRect(drawLoc.x + game_->map.x - 1,
+                             drawLoc.y + game_->map.y - 1,
+                             thisType.maxHealth_, 5),
+                   0x444444);
+      SDL_FillRect(screen,
+                   &makeRect(drawLoc.x + game_->map.x + 1,
+                             drawLoc.y + game_->map.y + 1,
+                             thisType.maxHealth_, 5),
+                   0xdddddd);
+      SDL_FillRect(screen,
+                   &makeRect(drawLoc.x + game_->map.x,
+                             drawLoc.y + game_->map.y,
+                             thisType.maxHealth_, 5),
+                   BLACK_UINT);
+      SDL_FillRect(screen,
+                   &makeRect(drawLoc.x + game_->map.x,
+                             drawLoc.y + game_->map.y,
+                             health_, 5),
+                   getEntityColor(*game_, player_));
    }
 }
 
 void Unit::tick(double delta){
-
-   //HACK duplicate code, see Building.cpp
    if (!finished_){
       progress_ += delta * PROGRESS_PER_CALC;
-      debug("progress = ", progress_);
+      //debug("progress = ", progress_);
       if (progress_ >= game_->unitTypes[typeIndex_].maxProgress_){
          finished_ = true;
          drawPercent_ = FULL;
@@ -109,49 +99,7 @@ void Unit::tick(double delta){
                                 Particle::PARTICLE_COUNT *
                                 delta * Particle::DECAY *
                                 1);//delta);
-
-      for (int i = 0; i != particlesToDraw; ++i){
-         //calculate initial co-ords
-         pixels_t x = 0, y = 0;
-         switch(direction_){
-         case UP:
-            x = loc_.x + 
-                type().drawRect_.x +
-                rand() % type().drawRect_.w;
-            y = loc_.y + 
-                type().drawRect_.y +
-                pixels_t((1.0 - drawPercent_) * type().drawRect_.h);
-            break;
-         case DOWN:
-            x = loc_.x + 
-                type().drawRect_.x +
-                rand() % type().drawRect_.w;
-            y = loc_.y + 
-                type().drawRect_.y +
-                pixels_t(drawPercent_ * type().drawRect_.h);
-            break;
-         case LEFT:
-            x = loc_.x + 
-                type().drawRect_.x +
-                pixels_t((1.0 - drawPercent_) * type().drawRect_.w);
-            y = loc_.y + 
-                type().drawRect_.y +
-                rand() % type().drawRect_.h;
-            break;
-         case RIGHT:
-            x = loc_.x + 
-                type().drawRect_.x +
-                pixels_t(drawPercent_ * type().drawRect_.w);
-            y = loc_.y + 
-                type().drawRect_.y +
-                rand() % type().drawRect_.h;
-         }
-
-         //add
-         game_->particles.push_back(Particle(x, y));
-      }
-
-
+      addParticles(particlesToDraw);
 
    }else{
 
