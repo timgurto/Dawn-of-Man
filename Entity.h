@@ -23,6 +23,10 @@ protected: //everything should be a derived class
    //direction of clipping for partial drawing
    Direction direction;
 
+   //any vertical movement that took place during the
+   //last tick()
+   VerticalMovement verticalMovement_;
+
    Point loc_; //location
    //TODO use reference instead of ptr
    static GameData *game_; //static pointer to game
@@ -98,6 +102,8 @@ public:
    }
 
    SDL_Rect getSelectionDest(SDL_Surface *selection) const;
+
+   VerticalMovement getVerticalMovement() const;
 };
 
 #endif

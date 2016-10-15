@@ -12,6 +12,7 @@
 class EntityType{
    friend class Entity;
    friend class Building;
+   friend class Unit;
 
    typeNum_t index_; //for graphics
    std::string name_; //the entity's name

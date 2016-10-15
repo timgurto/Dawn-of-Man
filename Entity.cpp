@@ -132,3 +132,7 @@ SDL_Rect Entity::getSelectionDest(SDL_Surface *selection) const{
          selection->clip_rect.h / 2;
    return r;
 }
+
+VerticalMovement Entity::getVerticalMovement() const{
+   return verticalMovement_;
+}

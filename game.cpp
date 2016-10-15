@@ -95,7 +95,7 @@ void gameMode(){
    UnitType drone(0, "Drone",
                   makeRect(-22, -127, 105, 133),
                   makeRect(-22,-6, 53, 11),
-                  Point(3, -55), 10);
+                  Point(3, -55), 4);
    game.unitTypes.push_back(drone);
    for (int i = 0; i != 15; ++i)
       addEntity(game, new Unit(0, Point(
@@ -172,6 +172,9 @@ void updateState(double delta, GameData &game,
    for (entities_t::iterator it = game.entities.begin();
         it != game.entities.end(); ++it){
       (*it)->tick(delta);
+      VerticalMovement v = (*it)->getVerticalMovement();
+      if (v != VM_NONE)
+         resort(game.entities, it, v);
    }
 
    //Particles
@@ -470,6 +473,36 @@ void setSelectedTargets(GameData &game){
    }
 }
 
+void resort(entities_t &entities, entities_t::iterator it,
+            VerticalMovement verticalMovement){
+   switch(verticalMovement){
+   case UP:
+      if (it != entities.begin()){
+         entities_t::iterator original = it;
+         //move up until sorted
+         do
+            --it;
+         while (it != entities.begin() && **original < **it);
+         ++it;
+         if (it != original)
+            iter_swap(it, original);
+      }
+      break;
+   case DOWN:
+      if (it != entities.begin()){
+         entities_t::iterator original = it;
+         //move down until sorted
+         do
+            ++it;
+         while (it != entities.end() && **it < **original);
+         --it;
+         if (it != original)
+            iter_swap(it, original);
+      }
+      break;
+   }
+}
+
 
 
 
@@ -509,13 +542,6 @@ void render(SDL_Surface *screen, SDL_Surface *glow,
    for (entities_t::const_iterator it = game.entities.begin();
       it != game.entities.end(); ++it)
       if ((*it)->selected && (*it)->onScreen()){
-         //SDL_Rect drawRect = (*it)->getDrawRect();
-         //SDL_Rect dest = drawRect +
-         //                locRect(game.map) +
-         //                Point(drawRect.w / 2,
-         //                      drawRect.h / 2) -
-         //                Point(glow->clip_rect.w / 2,
-         //                      glow->clip_rect.h / 2);
          SDL_Rect dest = (*it)->getSelectionDest(glow);
          SDL_BlitSurface(glow, 0, screen, &dest);
       }

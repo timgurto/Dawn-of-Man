@@ -43,6 +43,9 @@ void select(GameData &game);
 
 void setSelectedTargets(GameData &game);
 
+void resort(entities_t &entities, entities_t::iterator it,
+            VerticalMovement verticalMovement);
+
 
 
 //=== render ===

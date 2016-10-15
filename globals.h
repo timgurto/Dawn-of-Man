@@ -172,4 +172,11 @@ enum EntityColor{
 };
 const Uint32 ENTITY_DEFAULT_COLOR = 0xaaaa22;
 
+//For re-sorting after movement
+enum VerticalMovement{
+   VM_UP,
+   VM_DOWN,
+   VM_NONE
+};
+
 #endif

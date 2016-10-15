@@ -16,7 +16,7 @@ public:
             const SDL_Rect &drawRect,
             const SDL_Rect &baseRect,
             const Point &selectionCenter,
-            double speed = 0);
+            pixels_t speed = 0);
 };
 
 #endif

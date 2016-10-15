@@ -10,7 +10,7 @@ UnitType::UnitType(typeNum_t index,
                          const SDL_Rect &drawRect,
                          const SDL_Rect &baseRect,
                          const Point &selectionCenter,
-                         double speed):
+                         pixels_t speed):
 EntityType(index,
            UNIT,
            name,

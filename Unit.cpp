@@ -20,29 +20,58 @@ const EntityType &Unit::type() const{
 void Unit::tick(double delta){
    if (moving_){
       //keep them sorted
-      
-      double gradient =
-         (target_.y - loc_.y) /
-         (target_.x - loc_.x);
-      double angle = atan(gradient);
-      if (target_.x < loc_.x){
-         if (target_.y > loc_.y)
-            angle += PI;
-         else
-            angle -= PI;
+
+      double angle;
+      if (target_.x == loc_.x)
+         angle =
+            (target_.y < loc_.y ?
+            1.5 * PI :
+            0.5 * PI);
+      else{
+         double gradient = 1.0 *
+            (target_.y - loc_.y) /
+            (target_.x - loc_.x);
+         angle = atan(gradient);
+         if (target_.x < loc_.x){
+            if (target_.y > loc_.y)
+               angle += PI;
+            else
+               angle -= PI;
+         }
       }
       double xMod = cos(angle);
       double yMod = sin(angle);
 
-
-      
-      //const UnitType &thisType = dynamic_cast<UnitType &>(type()));
-      //pixels_t speed = thisType.speed_;
       pixels_t speed = game_->unitTypes[type_].speed_;
       loc_.x += pixels_t(xMod * speed);
       loc_.y += pixels_t(yMod * speed);
 
-      //checkAtTarget();
+      if (yMod > 0)
+         verticalMovement_ = VM_DOWN;
+      else if (yMod < 0)
+         verticalMovement_ = VM_UP;
+      else
+         verticalMovement_ = VM_NONE;
+
+      const SDL_Rect &base = type().baseRect_;
+
+      //check in bounds
+      if (xMod < 0 &&
+          loc_.x + base.x < 0)
+         loc_.x = -1 * base.x;
+      else if (xMod > 0 &&
+          loc_.x + base.x + base.w > game_->map.w)
+         loc_.x = game_->map.w - base.x - base.w;
+      if (yMod < 0 &&
+          loc_.y + base.y < 0)
+         loc_.y = -1 * base.y;
+      else if (yMod > 0 &&
+          loc_.y + base.y + base.h > game_->map.h)
+         loc_.y = game_->map.h - base.y - base.h;
+
+      //check whether target has been reached
+      if (atTarget())
+         moving_ = false;
       
    }
 }
@@ -63,4 +92,17 @@ bool Unit::selectable() const{
 void Unit::setTarget(Point target){
    target_ = target;
    moving_ = true;
+}
+
+bool Unit::atTarget(){
+   pixels_t threshold = game_->unitTypes[type_].speed_ / 2;
+
+   if (loc_.x - target_.x > threshold ||
+       target_.x - loc_.x > threshold)
+      return false;
+   if (loc_.y - target_.y > threshold ||
+       target_.y - loc_.y > threshold)
+      return false;
+
+   return true;
 }
