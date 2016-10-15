@@ -13,6 +13,8 @@ class EntityType;
 struct Point;
 struct GameData;
 
+extern pixels_t SCREEN_WIDTH, SCREEN_HEIGHT;
+
 //===SDL===
 
 //Loads an image file into an SDL_Surface, with optional transparent
@@ -86,5 +88,9 @@ Uint32 getEntityColor(const GameData &game, int color);
 
 //whether rect A is completely inside rect B
 bool inside(const SDL_Rect &a, const SDL_Rect &b);
+
+//For interpretting arguments
+bool isArg(std::string arg, int argc, char* argv[]);
+int whatIsArg(std::string arg, int argc, char* argv[]);
 
 #endif

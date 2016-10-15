@@ -9,6 +9,7 @@
 #include "globals.h"
 #include "BuildingType.h"
 #include "DecorationType.h"
+#include "UnitType.h"
 #include "Entity.h"
 #include "Particle.h"
 #include "Player.h"
@@ -17,6 +18,7 @@
 
 typedef std::vector<BuildingType> buildingTypes_t;
 typedef std::vector<DecorationType> decorationTypes_t;
+typedef std::vector<UnitType> unitTypes_t;
 typedef std::vector<Player> players_t;
 typedef std::list<Entity *> entities_t;
 typedef std::list<Particle> particles_t;
@@ -41,6 +43,7 @@ struct GameData{
    // - contiguous for index access
    buildingTypes_t buildingTypes;
    decorationTypes_t decorationTypes;
+   unitTypes_t unitTypes;
    
    //Each player in the game.
    //[0] is always the human player.

@@ -255,6 +255,14 @@
 				RelativePath=".\uiBarFunctions.h"
 				>
 			</File>
+			<File
+				RelativePath=".\Unit.h"
+				>
+			</File>
+			<File
+				RelativePath=".\UnitType.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
@@ -333,6 +341,14 @@
 			</File>
 			<File
 				RelativePath=".\uiBarFunctions.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Unit.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\UnitType.cpp"
 				>
 			</File>
 		</Filter>

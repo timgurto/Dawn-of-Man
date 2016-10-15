@@ -31,8 +31,10 @@ const int DELTA_MODIFIER = 40;
 //progress points: proportional to completion time
 const progress_t PROGRESS_PER_CALC = 4;
 
-const pixels_t SCREEN_WIDTH = 1024;
-const pixels_t SCREEN_HEIGHT = 768;
+const pixels_t DEFAULT_W_SCREEN_WIDTH = 1280;
+const pixels_t DEFAULT_W_SCREEN_HEIGHT = 800;
+const pixels_t DEFAULT_SCREEN_WIDTH = 1024;
+const pixels_t DEFAULT_SCREEN_HEIGHT = 768;
 const int SCREEN_BPP = 32;
 
 //in case the cursor point isn't at 0,0
@@ -128,6 +130,7 @@ enum ImageModifier{
 //For makePath()
 enum EntityTypeID{
    BUILDING,
+   UNIT,
    //Everything above this comment
    //has multiple colors.
    MAX_ENTITY_TYPE, //for array sizes.

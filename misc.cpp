@@ -17,6 +17,7 @@
 
 extern Debug debug;
 extern int surfacesLoaded;
+extern bool WINDOWED_MODE;
 
 
 //========SDL=========
@@ -93,7 +94,7 @@ SDL_Surface *setScreen(){
                                           SCREEN_HEIGHT,
                                           SCREEN_BPP,
                                           SDL_HWSURFACE |
-                                          (DEBUG ?
+                                          (WINDOWED_MODE ?
                                              0 :
                                              SDL_FULLSCREEN));
    SDL_WM_SetCaption( "Dawn of Man", NULL );
@@ -237,4 +238,32 @@ bool inside(const SDL_Rect &a, const SDL_Rect &b){
       return false;
 
    return true;
+}
+
+bool isArg(std::string arg, int argc, char* argv[]){
+   for (int i = 1; i != argc; ++i){
+      std::string s(argv[i]);
+      if (s.substr(0, s.find('=')) == arg){
+         debug("Argument exists: ", s.substr(0, s.find('=')));
+         return true;
+      }
+   }
+
+   return false;
+}
+
+int whatIsArg(std::string arg, int argc, char* argv[]){
+   assert(isArg(arg, argc, argv));
+   for (int i = 1; i != argc; ++i){
+      std::string s(argv[i]);
+      if (s.substr(0, s.find('=')) == arg){
+         std::stringstream ss(s.substr(s.find('=') + 1));
+         int result;
+         ss >> result;
+         debug(result);
+         return result;
+      }
+   }
+   assert(false);
+   return -1;
 }

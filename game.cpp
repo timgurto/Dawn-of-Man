@@ -398,8 +398,10 @@ SDL_Rect getSelectionRect(const GameData &game){
 void select(GameData &game){
    Uint8 *keyStates = SDL_GetKeyState(0);
    bool entitySelected = false;
-   for (entities_t::iterator it = game.entities.begin();
-        it != game.entities.end(); ++it){
+   //loop backwards, so objects in front have priority to be
+   //selected
+   for (entities_t::reverse_iterator it = game.entities.rbegin();
+        it != game.entities.rend(); ++it){
       if ((*it)->selectable()){
          //unselect everything
          if (!(keyStates[SDLK_LCTRL] || keyStates[SDLK_LSHIFT]))
