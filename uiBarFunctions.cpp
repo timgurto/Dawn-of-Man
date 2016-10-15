@@ -98,38 +98,38 @@ const pixels_t PLACEMENT_MARGIN = 2;
       int tries = 0;
       do{
          ++tries;
-         Direction dir = Direction(rand() % MAX_DIR);
+         Direction dir = Direction(rand() % DIR_MAX);
          SDL_Rect
             buildingBaseRect = building.getBaseRect(),
             unitTypeBaseRect = unitType.getBaseRect();
 
          switch(dir){
-         case UP:
+         case DIR_UP:
             loc.y = buildingBaseRect.y -
                     unitTypeBaseRect.h -
                     unitTypeBaseRect.y -
                     PLACEMENT_MARGIN;
             break;
-         case DOWN:
+         case DIR_DOWN:
             loc.y = buildingBaseRect.y +
                     buildingBaseRect.h -
                     unitTypeBaseRect.y +
                     PLACEMENT_MARGIN;
             break;
-         case LEFT:
+         case DIR_LEFT:
             loc.x = buildingBaseRect.x -
                     unitTypeBaseRect.w -
                     unitTypeBaseRect.y -
                     PLACEMENT_MARGIN;
             break;
-         case RIGHT:
+         case DIR_RIGHT:
             loc.x = buildingBaseRect.x +
                     buildingBaseRect.w -
                     unitTypeBaseRect.x +
                     PLACEMENT_MARGIN;
          }
 
-         if (dir == UP || dir == DOWN)
+         if (dir == DIR_UP || dir == DIR_DOWN)
             loc.x = rand() % (buildingBaseRect.w + unitTypeBaseRect.w) +
                     buildingBaseRect.x -
                     unitTypeBaseRect.w +

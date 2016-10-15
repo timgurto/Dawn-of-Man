@@ -22,7 +22,7 @@ UnitType::UnitType(typeNum_t index,
                    typeNum_t originBuilding,
                    progress_t maxProgress):
 EntityType(index,
-           UNIT,
+           ENT_UNIT,
            name,
            drawRect,
            baseRect,

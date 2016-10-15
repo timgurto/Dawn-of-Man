@@ -39,10 +39,10 @@ void Building::draw(SDL_Surface *screen) const{
    SDL_Rect srcLoc = getSrcClip(partialW, partialH);
 
    switch(direction_){
-   case LEFT:
+   case DIR_LEFT:
       drawLoc.x += thisType.drawRect_.w - partialW;
       break;
-   case UP:
+   case DIR_UP:
       drawLoc.y += thisType.drawRect_.h - partialH;
    }
 
@@ -80,7 +80,7 @@ int Building::getColor() const{
 }
 
 EntityTypeID Building::classID() const{
-   return BUILDING;
+   return ENT_BUILDING;
 }
 
 bool Building::selectable() const{

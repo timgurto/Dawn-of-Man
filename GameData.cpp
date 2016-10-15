@@ -10,9 +10,9 @@ mapY(mapSizeY),
 mousePos(SCREEN_WIDTH/2, SCREEN_HEIGHT/2),
 toBuild(NO_TYPE),
 buildingSelected(0){
-   for (typeNum_t i = 0; i != ENTITY_MAX; ++i)
+   for (typeNum_t i = 0; i != CLR_MAX; ++i)
       for (typeNum_t j = 0; j != MAX_TYPES; ++j)
-         for (typeNum_t k = 0; k != MAX_ENTITY_TYPE; ++k)
+         for (typeNum_t k = 0; k != ENT_MAX; ++k)
             surfaceIndex[i][j][k] = 0;
    
    //map
@@ -34,8 +34,8 @@ GameData::~GameData(){
    }
 
    //surface index (SDL_FreeSurface)
-   for (typeNum_t i = 0; i != ENTITY_MAX; ++i)
+   for (typeNum_t i = 0; i != CLR_MAX; ++i)
       for (typeNum_t j = 0; j != MAX_TYPES; ++j)
-         for (typeNum_t k = 0; k != MAX_ENTITY_TYPE; ++k)
+         for (typeNum_t k = 0; k != ENT_MAX; ++k)
             freeSurface(surfaceIndex[i][j][k]);
 }

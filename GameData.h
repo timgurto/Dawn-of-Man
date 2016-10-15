@@ -25,13 +25,13 @@ typedef std::list<Particle> particles_t;
 typedef SDL_Surface *surfaceIndex_t
                         //number of colors
         //[0] - [MAX_PLAYERS-1] = each player's color
-                        [ENTITY_MAX]
+                        [CLR_MAX]
 
                         //number of types
                         [MAX_TYPES]
 
                         //number of entity subclasses
-                        [MAX_ENTITY_TYPE];
+                        [ENT_MAX];
 
 //Contains all data necessary to describe the game's
 //state.  Makes passing this information to classes

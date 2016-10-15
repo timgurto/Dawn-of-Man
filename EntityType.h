@@ -33,15 +33,13 @@ class EntityType{
       *mask_; //green and magenta background mask
 
 public:
+   //deep-copy, loading and allocating new surfaces
    EntityType(typeNum_t index, EntityTypeID type,
               const std::string &name,
               const SDL_Rect &drawRect,
               const SDL_Rect &baseRect,
               const Point &selectionCenter);
    EntityType(const EntityType &original);
-
-   //deep-copy, loading and allocating new surfaces
-   EntityType &operator=(const EntityType &rhs);
 
    ~EntityType();
 

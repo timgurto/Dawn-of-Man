@@ -16,9 +16,9 @@ baseRect_(baseRect),
 selectionCenter_(selectionCenter){
    surface_ = loadImage(makePath(type, index_),
                        ENTITY_MASK);
-   icon_ = loadImage(makePath(type, index_, ICON),
+   icon_ = loadImage(makePath(type, index_, IMG_ICON),
                     ENTITY_BACKGROUND);
-   mask_ = loadImage(makePath(type, index_, MASK),
+   mask_ = loadImage(makePath(type, index_, IMG_MASK),
                     ENTITY_MASK);
 }
 
@@ -31,20 +31,6 @@ selectionCenter_(original.selectionCenter_),
 surface_(copySurface(original.surface_)),
 icon_(copySurface(original.icon_)),
 mask_(copySurface(original.mask_)){}
-
-EntityType &EntityType::operator=(const EntityType &rhs){
-   if (&rhs != this){
-      index_ = rhs.index_;
-      name_ = rhs.name_;
-      drawRect_ = rhs.drawRect_;
-      baseRect_ = rhs.baseRect_;
-      selectionCenter_ = rhs.selectionCenter_;
-      surface_ = copySurface(rhs.surface_);
-      icon_ = copySurface(rhs.icon_);
-      mask_ = copySurface(rhs.mask_);
-   }
-   return *this;
-}
 
 EntityType::~EntityType(){
    freeSurface(surface_);

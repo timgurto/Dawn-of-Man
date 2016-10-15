@@ -68,7 +68,7 @@ SDL_Rect &operator-=(SDL_Rect &lhs, const SDL_Rect &rhs);
 
 //Constructs a file path to load graphics for entities
 std::string makePath(EntityTypeID type, typeNum_t imageNumber,
-                     ImageModifier modifier = NONE);
+                     ImageModifier modifier = IMG_NONE);
 
 //Checks whether a pointer is NULL
 template <typename Type> void checkP(Type *pointer){

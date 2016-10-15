@@ -146,21 +146,21 @@ std::string makePath(EntityTypeID type, typeNum_t imageNumber,
                      ImageModifier modifier){
    std::ostringstream path;
    switch (type){
-   case BUILDING:
+   case ENT_BUILDING:
       path << BUILDINGS_IMAGE_PATH;
       break;
-   case DECORATION:
+   case ENT_DECORATION:
       path << DECORATIONS_IMAGE_PATH;
       break;
-   case UNIT:
+   case ENT_UNIT:
       path << UNITS_IMAGE_PATH;
    }
 
    switch (modifier){
-   case ICON:
+   case IMG_ICON:
       path << 'p'; // p
       break;
-   case MASK:
+   case IMG_MASK:
       path << 'm'; // m
       break;
    }

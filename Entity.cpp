@@ -24,7 +24,7 @@ entities_t Entity::trashCan_;
 Entity::Entity(typeNum_t typeIndex, const Point &loc):
 typeIndex_(typeIndex),
 loc_(loc),
-direction_(Direction(rand() % MAX_DIR)),
+direction_(Direction(rand() % DIR_MAX)),
 selected(false),
 verticalMovement_(VM_NONE){}
 
@@ -66,13 +66,13 @@ double Entity::getDrawPercent() const{
 }
 
 int Entity::getColor() const{
-   return ENTITY_DEFAULT; //default
+   return CLR_DEFAULT; //default
 }
 
 void Entity::colorBlit(int color, SDL_Surface *screen,
                        SDL_Rect &srcLoc,
                        SDL_Rect &dstLoc) const{
-   assert(color < ENTITY_MAX);
+   assert(color < CLR_MAX);
    const EntityType &thisType = type();
    SDL_Surface *&index = game_->surfaceIndex
                                   [color]
@@ -121,7 +121,7 @@ void Entity::addParticles(int count) const{
       pixels_t x = 0, y = 0;
       double drawPercent = getDrawPercent();
       switch(direction_){
-      case UP:
+      case DIR_UP:
          x = loc_.x + 
              type().drawRect_.x +
              rand() % type().drawRect_.w;
@@ -129,7 +129,7 @@ void Entity::addParticles(int count) const{
              type().drawRect_.y +
              pixels_t((1.0 - drawPercent) * type().drawRect_.h);
          break;
-      case DOWN:
+      case DIR_DOWN:
          x = loc_.x + 
              type().drawRect_.x +
              rand() % type().drawRect_.w;
@@ -137,7 +137,7 @@ void Entity::addParticles(int count) const{
              type().drawRect_.y +
              pixels_t(drawPercent * type().drawRect_.h);
          break;
-      case LEFT:
+      case DIR_LEFT:
          x = loc_.x + 
              type().drawRect_.x +
              pixels_t((1.0 - drawPercent) * type().drawRect_.w);
@@ -145,7 +145,7 @@ void Entity::addParticles(int count) const{
              type().drawRect_.y +
              rand() % type().drawRect_.h;
          break;
-      case RIGHT:
+      case DIR_RIGHT:
          x = loc_.x + 
              type().drawRect_.x +
              pixels_t(drawPercent * type().drawRect_.w);
@@ -165,19 +165,19 @@ SDL_Rect Entity::getSrcClip(pixels_t wPartial,
    SDL_Rect srcLoc;
    const EntityType &thisType = type();
    switch(direction_){
-   case RIGHT:
+   case DIR_RIGHT:
       srcLoc = makeRect(xMutiplier * thisType.drawRect_.w,
                         0,
                         wPartial,
                         thisType.drawRect_.h);
       break;
-   case DOWN:
+   case DIR_DOWN:
       srcLoc = makeRect(xMutiplier * thisType.drawRect_.w,
                         0,
                         thisType.drawRect_.w,
                         hPartial);
       break;
-   case LEFT:
+   case DIR_LEFT:
       srcLoc = makeRect((xMutiplier + 1) *
                         thisType.drawRect_.w -
                         wPartial,
@@ -186,7 +186,7 @@ SDL_Rect Entity::getSrcClip(pixels_t wPartial,
                         thisType.drawRect_.h);
       //drawLoc.x += thisType.drawRect_.w - wPartial;
       break;
-   case UP:
+   case DIR_UP:
       srcLoc = makeRect(xMutiplier * thisType.drawRect_.w,
                         thisType.drawRect_.h - hPartial,
                         thisType.drawRect_.w,
@@ -263,7 +263,7 @@ void Entity::kill(){
         it != game_->entities.end(); ++it){
       if (*it == this)
          itToErase = it;
-      else if ((*it)->classID() == UNIT){
+      else if ((*it)->classID() == ENT_UNIT){
          Unit &unit = (Unit &)(**it);
          if (unit.targetEntity_ == this)
             unit.setTarget(0, (*it)->loc_);

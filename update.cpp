@@ -319,9 +319,9 @@ void select(GameData &game, UIBars_t &bars){
                   (*it)->selected = true; //No ctrl: select
                entitySelected = true;
                if ((*it)->selected)
-                  if ((*it)->classID() == BUILDING)
+                  if ((*it)->classID() == ENT_BUILDING)
                      game.buildingSelected = (Building *)(*it);
-                  else if ((*it)->classID() == UNIT)
+                  else if ((*it)->classID() == ENT_UNIT)
                      unitSelected = true;
             }// if collides
 
@@ -351,7 +351,7 @@ void setSelectedTargets(GameData &game){
    Entity *targetEntity = findEntity(game);
    for (entities_t::iterator it = game.entities.begin();
         it != game.entities.end(); ++it){
-      if ((*it)->classID() == UNIT &&
+      if ((*it)->classID() == ENT_UNIT &&
           (*it)->selected){
          Unit *unitP = (Unit *)(*it); //change to Unit*
          unitP->setTarget(targetEntity);
@@ -363,7 +363,7 @@ void reSort(entities_t &entities, entities_t::iterator it,
             VerticalMovement verticalMovement){
    entities_t::iterator old = it;
    switch(verticalMovement){
-   case UP:
+   case DIR_UP:
       if (it != entities.begin()){
          entities_t::iterator next = it;
          --next;
@@ -375,7 +375,7 @@ void reSort(entities_t &entities, entities_t::iterator it,
       }
    break;
 
-   case DOWN:
+   case DIR_DOWN:
       entities_t::iterator next = it;
       ++next;
       while (next != entities.end() && **next < **it){

@@ -11,7 +11,7 @@ BuildingType::BuildingType(typeNum_t index,
                            const Point &selectionCenter,
                            progress_t maxProgress):
 EntityType(index,
-           BUILDING,
+           ENT_BUILDING,
            name,
            drawRect,
            baseRect,

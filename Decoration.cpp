@@ -12,7 +12,7 @@ const EntityType &Decoration::type() const{
 }
 
 EntityTypeID Decoration::classID() const{
-   return DECORATION;
+   return ENT_DECORATION;
 }
 
 bool Decoration::collides() const{

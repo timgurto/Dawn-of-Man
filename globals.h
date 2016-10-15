@@ -95,33 +95,32 @@ const std::string UNITS_IMAGE_PATH
 const std::string INTERFACE_IMAGE_PATH
    = IMAGE_PATH + "Interface/";
 
-//TODO give names prefixes
 enum Direction{
-   UP,
-   DOWN,
-   LEFT,
-   RIGHT,
-   MAX_DIR
+   DIR_UP,
+   DIR_DOWN,
+   DIR_LEFT,
+   DIR_RIGHT,
+   DIR_MAX
 };
 
 //For makePath()
 enum ImageModifier{
-   NONE,
-   ICON,
-   MASK
+   IMG_NONE,
+   IMG_ICON,
+   IMG_MASK
 };
 
 //For makePath()
 enum EntityTypeID{
-   BUILDING,
-   UNIT,
+   ENT_BUILDING,
+   ENT_UNIT,
 
    //Everything above this comment
    //has multiple colors.
-   MAX_ENTITY_TYPE, //for array sizes.
-   NO_ENTITY_TYPE,
+   ENT_MAX, //for array sizes.
+   ENT_NONE,
 
-   DECORATION
+   ENT_DECORATION
 };
 
 //Interface modes for the game
@@ -147,9 +146,9 @@ enum Orientation{
 
 //For the surface index
 enum EntityColor{
-   ENTITY_DEFAULT = MAX_PLAYERS,
+   CLR_DEFAULT = MAX_PLAYERS,
    //insert more colors here
-   ENTITY_MAX //for array sizes
+   CLR_MAX //for array sizes
 };
 const Uint32 ENTITY_DEFAULT_COLOR = 0xaaaa22;
 

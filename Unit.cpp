@@ -47,10 +47,10 @@ void Unit::draw(SDL_Surface *screen) const{
    SDL_Rect srcLoc = getSrcClip(partialW, partialH, frame_);
 
    switch(direction_){
-   case LEFT:
+   case DIR_LEFT:
       drawLoc.x += thisType.drawRect_.w - partialW;
       break;
-   case UP:
+   case DIR_UP:
       drawLoc.y += thisType.drawRect_.h - partialH;
    }
 
@@ -184,7 +184,7 @@ void Unit::tick(double delta){
                                     thisType.combatWait_);
             debug("hit");
             switch (targetEntity_->classID()){
-            case UNIT:
+            case ENT_UNIT:
                Unit &target = (Unit &)(*targetEntity_);
                UnitType &targetType = game_->unitTypes[target.typeIndex_];
                damage_t damage = thisType.attack_ - targetType.armor_;
@@ -223,7 +223,7 @@ int Unit::getColor() const{
 }
 
 EntityTypeID Unit::classID() const{
-   return UNIT;
+   return ENT_UNIT;
 }
 
 bool Unit::selectable() const{

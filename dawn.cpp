@@ -29,9 +29,12 @@ Debug debug(YELLOW, 0, 0, 59);
 // - increases with loadImage()
 // - increases with createSurface()
 // - decreases with freeSurface()
-int surfacesLoaded(0);
+int surfacesLoaded = 0;
 
-int main(int argc, char* argv[]){
+//Set screen resolution, based on command line arguments
+void setScreenResolution(int argc, char **argv);
+
+int main(int argc, char **argv){
 
    //SDL initialization
    int sdlInit(SDL_Init(SDL_INIT_VIDEO));
@@ -39,13 +42,24 @@ int main(int argc, char* argv[]){
    int ttfInit(TTF_Init());
    assert (ttfInit >= 0);
 
-   //debug objects initialization
    debug.initFont("Dina.fon", 0);
    deltaLog.initFont("Dina.fon", 0);
 
+   setScreenResolution(argc, argv);
 
-   //TODO put in function
-   //Screen resolution stuff
+
+   //New game
+   gameMode();
+
+
+   //Quit
+   //TTF_Quit() happens at debug dtor
+   SDL_Quit();
+   assert (surfacesLoaded == 0);
+   return 0;
+}
+
+void setScreenResolution(int argc, char **argv){
    const SDL_VideoInfo *current = SDL_GetVideoInfo();
    debug("Current resolution: ", current->current_w, "x", current->current_h);
    SDL_Rect** resolutions = SDL_ListModes(0, SDL_FULLSCREEN | SDL_HWSURFACE | SDL_DOUBLEBUF);
@@ -83,17 +97,4 @@ int main(int argc, char* argv[]){
       SCREEN_HEIGHT = DEFAULT_SCREEN_HEIGHT;
    }
 
-
-
-
-   //New game
-   gameMode();
-
-
-
-   //Quit
-   //TTF_Quit() happens at debug dtor
-   SDL_Quit();
-   assert (surfacesLoaded == 0);
-   return 0;
 }
