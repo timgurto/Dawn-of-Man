@@ -191,10 +191,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\EntityPtr.h"
-				>
-			</File>
-			<File
 				RelativePath=".\EntityType.h"
 				>
 			</File>
@@ -248,10 +244,6 @@
 			</File>
 			<File
 				RelativePath=".\Entity.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\EntityPtr.cpp"
 				>
 			</File>
 			<File

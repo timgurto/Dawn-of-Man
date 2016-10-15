@@ -9,9 +9,12 @@
 #include "BuildingType.h"
 #include "Building.h"
 
+typedef std::vector<BuildingType> buildingTypes_t;
+typedef std::list<Entity *> entities_t;
+
 struct GameData{
-   std::vector<BuildingType> buildingTypes;
-   std::list<Entity *> entities;
+   buildingTypes_t buildingTypes;
+   entities_t entities;
 };
 
 #endif

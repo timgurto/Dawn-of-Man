@@ -9,6 +9,8 @@
 
 #include "globals.h"
 
+class Entity;
+
 //SDL
 SDL_Surface *loadImage(const char* fileName);
 SDL_Surface *loadImage(const char* fileName, const SDL_Color &background);
@@ -32,5 +34,7 @@ template <typename Type> void checkP(Type *pointer){
    }
    assert (pointer != 0);
 }
+
+bool dereferenceLessThan(Entity *p1, Entity *p2);
 
 #endif

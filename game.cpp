@@ -13,7 +13,6 @@
 #include "globals.h"
 #include "game.h"
 #include "Entity.h"
-#include "EntityPtr.h"
 
 extern Debug debug;
 
@@ -74,11 +73,8 @@ void gameMode(){
             //debug("Mouse down: ", int(event.button.button));
             switch (event.button.button){
             case 1: //left click
-               Entity *newBuilding(new Building(0, Point(mouseX, mouseY)));
-               game.entities.push_back(newBuilding);
-               //TODO fix sort
-               //should be individually inserted rather than sorting the whole list
-               game.entities.sort();
+               Entity *newBuilding = new Building(0, Point(mouseX, mouseY));
+               addEntity(game, newBuilding);
                break;
             }
             break;
@@ -125,7 +121,7 @@ void drawEverything(SDL_Surface *screen, SDL_Surface *back,
    SDL_BlitSurface(image, 0, screen, &makeRect(50,50));
    
 
-   for (std::list<Entity *>::const_iterator it = game.entities.begin();
+   for (entities_t::const_iterator it = game.entities.begin();
         it != game.entities.end(); ++it){
       (*it)->draw(screen, game);
    }
@@ -140,3 +136,27 @@ void drawEverything(SDL_Surface *screen, SDL_Surface *back,
 }
 
 void updateState(){}
+
+void addEntity(GameData &game, Entity *entity){
+
+   entities_t::iterator it = std::lower_bound(game.entities.begin(),
+                                              game.entities.end(),
+                                              entity,
+                                              dereferenceLessThan);
+   game.entities.insert(it, entity);
+
+   //game.entities.insert(std::lower_bound(game.entities.begin(),
+   //                                      game.entities.end(), entity,
+   //                                      dereferenceLessThan),
+   //                   entity)
+
+ /*  entities_t::iterator it = game.entities.begin();
+   while (it != game.entities.end() && *(*it) < *entity ){
+      ++it;
+   }
+   game.entities.insert(it, entity);*/
+}
+
+void removeEntity(){
+   //delete() the Entity*
+}

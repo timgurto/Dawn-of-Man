@@ -11,6 +11,7 @@
 
 #include "Globals.h"
 #include "misc.h"
+#include "Entity.h"
 
 extern Debug debug;
 extern int surfacesLoaded;
@@ -113,4 +114,8 @@ std::string makePath(EntityTypeID type, typeNum_t imageNumber, bool isPortrait){
    
    path << IMAGE_SUFFIX; // .png
    return path.str();
+}
+
+bool dereferenceLessThan(Entity *p1, Entity *p2){
+   return *p1 < *p2;
 }

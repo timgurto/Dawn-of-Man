@@ -7,6 +7,7 @@
 #include "Debug.h"
 #include "GameData.h"
 
+void addEntity(GameData &game, Entity *entity);
 void gameMode();
 void drawEverything(SDL_Surface *screen, SDL_Surface *back,
                     SDL_Surface *image, SDL_Surface *cursor,
