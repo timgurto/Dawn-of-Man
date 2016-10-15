@@ -8,8 +8,6 @@
 
 struct SDL_Surface;
 
-//TODO comments
-
 //Any processing within the game loop
 void updateState(double delta, GameData &game, SDL_Surface *screen,
                  UIBars_t &bars);
@@ -17,10 +15,10 @@ void updateState(double delta, GameData &game, SDL_Surface *screen,
 //Handles events and changes game data accordingly
 void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars);
 
-//Scroll the map, based on keyboard/mouse states
+//Scrolls the map, based on keyboard/mouse states
 void scrollMap(GameData &game, double Delta);
 
-//calculates the dimensions of the selection rectangle,
+//Calculates the dimensions of the selection rectangle,
 //for drawing or determining collisions with entities
 SDL_Rect getSelectionRect(const GameData &game);
 

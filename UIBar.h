@@ -51,20 +51,25 @@ public:
                     SDL_Surface *screen,
                     SDL_Surface *vBarSurface,
                     SDL_Surface *hBarSurface);
-   
-   void calculateRect(); //TODO: call whenever tech levels change
+
+   //TODO: call whenever tech levels change, buildings constructed, etc.
+   //determines the number of icons on the bar, and
+   //calculates the rectangle for drawing it
+   void calculateRect();
 
    //Draws the bar
    void draw() const;
 
-   //Which button the Point is pointing at;
+   //Which button the mouse is pointing at;
    //NO_TYPE if none
-   typeNum_t mouseIndex(const Point &point) const;
+   typeNum_t mouseIndex() const;
 
    //Whether this bar is active, given the current game mode
    bool isActive(ControlMode mode);
 
-   void click(typeNum_t index);
+   //executes the relevant action when the user clicks on
+   //the bar; calls clickFun_
+   void click();
 };
 
 //So that all bars can be dealt with at the same time

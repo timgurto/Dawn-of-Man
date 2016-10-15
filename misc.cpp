@@ -226,7 +226,7 @@ bool collision(const SDL_Rect &rect, const Point &point){
 Uint32 getEntityColor(const GameData &game, int color){
    //if a player color
    if (color < MAX_PLAYERS)
-      return game.players[color].color_;
+      return game.players[color].getColor();
    
    //otherwise
    //switch(color){

@@ -138,7 +138,7 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
                for (UIBars_t::iterator it = bars.begin();
                     !barClicked && it != bars.end(); ++it)
                   if ((*it)->isActive(game.mode))
-                     if ((*it)->mouseIndex(game.mousePos) != NO_TYPE)
+                     if ((*it)->mouseIndex() != NO_TYPE)
                         barClicked = true;
                if (!barClicked)
 
@@ -180,9 +180,9 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
                for (UIBars_t::iterator it = bars.begin();
                     !barClicked && it != bars.end(); ++it)
                   if ((*it)->isActive(game.mode)){
-                     typeNum_t index = (*it)->mouseIndex(game.mousePos);
+                     typeNum_t index = (*it)->mouseIndex();
                      if (index != NO_TYPE){
-                        (*it)->click(index);
+                        (*it)->click();
                         barClicked = true;
                      }
                   }

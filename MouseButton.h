@@ -6,7 +6,6 @@
 #include "types.h"
 #include "Point.h"
 
-//TODO comments
 //Describes the state of a mouse button
 struct MouseButton{
 

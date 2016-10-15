@@ -6,10 +6,10 @@
 #include "EntityType.h"
 
 //Entities which are not functional, and
-//do not collide
+//do not collide.
+//Minimalist class
 class DecorationType: public EntityType{
    friend class Decoration;
-
 
 public:
    DecorationType(typeNum_t index,

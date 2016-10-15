@@ -101,8 +101,9 @@ void UIBar::draw() const{
    }
 }
 
-typeNum_t UIBar::mouseIndex(const Point &point) const{
+typeNum_t UIBar::mouseIndex() const{
    //if collision with bar
+   const Point &point = game_->mousePos;
    SDL_Rect barRect = rect_;
    if (collision(point, barRect))
       switch (orientation_){
@@ -130,6 +131,6 @@ void UIBar::init(GameData *game,
    hBarSurface_ = hBarSurface;
 }
 
-void UIBar::click(typeNum_t index){
-   clickFun_(index, *game_);
+void UIBar::click(){
+   clickFun_(mouseIndex(), *game_);
 }

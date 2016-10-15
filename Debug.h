@@ -12,11 +12,13 @@
 #include "misc.h"
 #include "types.h"
 
+//In Release, these objects have zero functionality.
+//The methods are macro'd to be empty, and calls are
+//hopefully optimized away by the compiler.
 #ifndef NDEBUG
+
 //A box of scrolling messages sent from various parts
 //of the program
-//Not singleton, since I might use this class for actual
-//in-game messages too
 class Debug{
    SDL_Color color_; //font color
    std::string name_; //font name
@@ -77,6 +79,8 @@ public:
    }
 };
 
+//Empty class for Release mode, that keeps method calls
+//valid
 #else
 
 //empty functions
@@ -98,6 +102,6 @@ public:
    void operator()(A a, B b, C c, D d){}
 };
 
-#endif //class
+#endif //class definition
 
 #endif //header guard

@@ -60,6 +60,7 @@ SDL_Rect locRect(const SDL_Rect &original);
 //Whether the specified key is currently down
 bool isKeyPressed(SDLKey key);
 
+//SDL_Rect -= SDL_Rect
 SDL_Rect &operator-=(SDL_Rect &lhs, const SDL_Rect &rhs);
 
 
@@ -78,9 +79,12 @@ template <typename Type> void checkP(Type *pointer){
 //(used in sorting the Entities list)
 bool dereferenceLessThan(Entity *p1, Entity *p2);
 
-//Checks for collisions against every entity in the game.
+//Checks for collisions against every entity in the game:
+//a potential entity, of given type and location...
 bool noCollision(const GameData &game, const EntityType &type,
                 const Point &loc);
+
+//...and an existing entity with some proposed movement
 bool noCollision(const Entity &entity, const Point displacement);
 
 //Checks for a collision between two SDL_Rects
@@ -96,12 +100,17 @@ Uint32 getEntityColor(const GameData &game, int color);
 //whether rect A is completely inside rect B
 bool inside(const SDL_Rect &a, const SDL_Rect &b);
 
-//For interpretting arguments
+//Whether an argument exists
 bool isArg(std::string arg, int argc, char* argv[]);
+
+//The numeric value associated with an argument
+// arg=???
 int whatIsArg(std::string arg, int argc, char* argv[]);
 
+//The one-dimensional distance between two points
 pixels_t distance(pixels_t a, pixels_t b);
 
+//double % int, preserves fraction
 double modulo(double a, int b);
 
 #endif

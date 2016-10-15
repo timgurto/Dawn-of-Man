@@ -5,7 +5,8 @@
 
 #include "EntityType.h"
 
-//Entities which are constructed, and don't move
+//Entities which are constructed, don't move, and can
+//train units
 class BuildingType: public EntityType{
    friend class Building;
 

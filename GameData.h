@@ -23,8 +23,13 @@ typedef std::vector<UnitType> unitTypes_t;
 typedef std::vector<Player> players_t;
 typedef std::list<Particle> particles_t;
 typedef SDL_Surface *surfaceIndex_t
-                        [ENTITY_MAX] //number of colors
-                        [MAX_TYPES] //number of types
+                        //number of colors
+        //[0] - [MAX_PLAYERS-1] = each player's color
+                        [ENTITY_MAX]
+
+                        //number of types
+                        [MAX_TYPES]
+
                         //number of entity subclasses
                         [MAX_ENTITY_TYPE];
 
@@ -66,7 +71,7 @@ struct GameData{
    particles_t particles;
 
    //An index of already-used, colored entity surfaces.
-   //[0] - [MAX_PLAYERS-1] = each player's color
+   
    //see enum EntityColor and getEntityColor() for the
    //rest
    surfaceIndex_t surfaceIndex;
@@ -92,14 +97,17 @@ struct GameData{
    //w, h = map size
    SDL_Rect map;
 
-   //Information about button positions and dragging, for:
-   // - right-mouse scrolling
+   //Information about mouse button positions and
+   //dragging
    MouseButton leftMouse, rightMouse;
 
-   //Whether the location being hovered over can be built
-   //on
+   //Whether the location being hovered over is viable
+   //for construction
    bool buildLocationOK;
 
+   //A pointer to the frontmost building that is
+   //selected, or 0 if none is.
+   //Used for UIBar display, and unit training
    Building *buildingSelected;
 };
 

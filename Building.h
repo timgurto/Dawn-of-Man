@@ -24,14 +24,16 @@ public:
    Building(typeNum_t type, const Point &loc,
             typeNum_t player = HUMAN_PLAYER,
             progress_t progress = 0);
-   const virtual EntityType &Building::type() const;
+
+   //Inherited from Entity
+   virtual const EntityType &Building::type() const;
    virtual void draw(SDL_Surface *screen = screen_) const;
    virtual void tick(double delta);
-   virtual double getDrawPercent() const;
-   virtual int getColor() const;
    virtual EntityTypeID classID() const;
    virtual bool selectable() const;
+   virtual int getColor() const;
    virtual typeNum_t getPlayer() const;
+   virtual double getDrawPercent() const;
 };
 
 #endif

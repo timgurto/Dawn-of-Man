@@ -16,6 +16,7 @@
 
 extern Debug debug;
 
+const progress_t Entity::PROGRESS_PER_CALC = 4;
 GameData *Entity::game_ = 0;
 SDL_Surface *Entity::screen_ = 0;
 entities_t Entity::trashCan_;
@@ -50,7 +51,7 @@ SDL_Rect Entity::getDrawRect() const{
 
 void Entity::tick(double){} //default: do nothing
 
-bool Entity::onScreen(){
+bool Entity::onScreen() const{
    return collision(loc_ + type().drawRect_ + locRect(game_->map),
                     screen_->clip_rect);
 }
@@ -272,10 +273,12 @@ void Entity::kill(){
 }
 
 void Entity::emptyTrash(){
-   for (entities_t::iterator it = trashCan_.begin();
-        it != trashCan_.end(); ++it)
-      delete (*it);
-   trashCan_.clear();
+   if (!trashCan_.empty()){
+      for (entities_t::iterator it = trashCan_.begin();
+           it != trashCan_.end(); ++it)
+         delete (*it);
+      trashCan_.clear();
+   }
 }
 
 typeNum_t Entity::getTypeIndex() const{

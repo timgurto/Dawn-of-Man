@@ -6,20 +6,42 @@
 #include "EntityType.h"
 #include "types.h"
 
-//TODO comments
+//Entities which can move and engage in combat.
+//They are trained at buildings.
 class UnitType: public EntityType{
    friend class Unit;
 
    pixels_t speed_; //movement per tick, in px
+   
+   //the number of walking animation frames
    int frameCount_;
+   
+   //how long the walking animation cycle takes
    int maxFrameCounter_;
+
+   //the number of combat animation frames
    int combatFrameCount_;
+
+   //how long the combat anumation cycle takes
    int maxCombatFrameCounter_;
+
+   //extra wait time before each combat cycle
    int combatWait_;
+
+   //the unit's maximum/full health value
    damage_t maxHealth_;
+
+   //how much damage the unit deals in combat
    damage_t attack_;
+
+   //how much damage is avoided when attacked
    damage_t armor_;
+
+   //the building where this unit can be trained.
+   //NO_TYPE indicates that the unit can't be trained
    typeNum_t originBuilding_;
+
+   //total progress points necessary for construction
    progress_t maxProgress_;
 
 
@@ -42,6 +64,7 @@ public:
             typeNum_t originBuilding = NO_TYPE,
             progress_t maxProgress = 0);
 
+   //get
    typeNum_t getOriginBuilding() const;
 };
 

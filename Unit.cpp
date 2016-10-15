@@ -261,7 +261,7 @@ bool Unit::atTarget(){
 
 void Unit::updateTarget(){
    if (targetEntity_ != 0)
-      target_ = targetEntity_->loc_;
+      target_ = targetEntity_->getLoc();
    else
       combat_ = false;
 }

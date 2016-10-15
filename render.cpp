@@ -10,6 +10,9 @@
 
 extern Debug debug, deltaLog;
 
+//Alpha of the selection rectangle
+const Uint8 SELECTION_RECT_ALPHA = 0x66;
+
 //TODO break into smaller functions
 void render(SDL_Surface *screen, SDL_Surface *glow,
             SDL_Surface *diagGreen, SDL_Surface *diagRed,

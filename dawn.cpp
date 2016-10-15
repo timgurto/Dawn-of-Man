@@ -1,7 +1,6 @@
 // (C) 2009-2010 Tim Gurto
 
 //TODO copy comments at declarations to definitions
-//TODO replace get functions with const references named after the attr
 
 #include <cassert>
 #include "SDL.h"
@@ -9,6 +8,7 @@
 #include "Debug.h"
 #include "game.h"
 
+//Default screen resolutions, 16:10 and 4:3
 const pixels_t DEFAULT_W_SCREEN_WIDTH = 1280;
 const pixels_t DEFAULT_W_SCREEN_HEIGHT = 800;
 const pixels_t DEFAULT_SCREEN_WIDTH = 1024;

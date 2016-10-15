@@ -10,6 +10,7 @@
 
 //DEBUG determines:
 // -The displaying of debug messages
+// -The displaying of delta/FPS
 #ifdef NDEBUG //VS: Debug vs. Release mode
 #define DEBUG false
 #else
@@ -19,15 +20,10 @@
 const double PI = 3.14159265358979323846;
 
 const typeNum_t MAX_TYPES = 256;
+const typeNum_t NO_TYPE = 0xffff;
+
 const typeNum_t MAX_PLAYERS = 2;
-
-//higher = slower game speed.
-//Game is normalized around this delta.
-const int DELTA_MODIFIER = 40; //40;
-
-//progress points added per state update
-//progress points: proportional to completion time
-const progress_t PROGRESS_PER_CALC = 4;
+const typeNum_t HUMAN_PLAYER = 0;
 
 //in case the cursor point isn't at 0,0
 const Point CURSOR_OFFSET(0,-9);
@@ -38,9 +34,6 @@ const Point CURSOR_RAISED(-16, 16);
 //bits per pixel
 const int SCREEN_BPP = 32;
 
-const typeNum_t NO_TYPE = 0xffff;
-
-const typeNum_t HUMAN_PLAYER = 0;
 
 //unfortunately, different SDL functions use different
 //color formats
@@ -64,14 +57,8 @@ const Uint32 WHITE_UINT   = 0xffffff;
 const float FULL  = 1;
 const float EMPTY = 0;
 
-//whether particles fade over time
-const bool PARTICLE_FADE = false;
-
 //Alpha of shadows (particles, cursor)
 const Uint8 SHADOW_ALPHA = 0x44;
-
-//Alpha of the selection rectangle
-const Uint8 SELECTION_RECT_ALPHA = 0x66;
 
 //This has a substantial effect on performance
 //===================================================

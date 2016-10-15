@@ -15,13 +15,18 @@ class EntityType{
    friend class Building;
    friend class Unit;
 
-   typeNum_t index_; //for graphics
+   //for loading graphics, and position in vector
+   typeNum_t index_;
+
    std::string name_; //the entity's name
+
    SDL_Rect
       drawRect_, //position of sprite graphic
       baseRect_; //the entity's base, for collisions
+
    //where the selection indicator is centered
    Point selectionCenter_;
+
    SDL_Surface
       *surface_, //main image
       *icon_, //icon, for UIBars
@@ -34,15 +39,17 @@ public:
               const SDL_Rect &baseRect,
               const Point &selectionCenter);
    EntityType(const EntityType &original);
+
+   //deep-copy, loading and allocating new surfaces
    EntityType &operator=(const EntityType &rhs);
+
    ~EntityType();
-   SDL_Rect getBaseRect() const;
-   SDL_Rect getDrawRect() const;
+
+   //get
+   const SDL_Rect &getBaseRect() const;
+   const SDL_Rect &getDrawRect() const;
    SDL_Surface *getIcon() const;
    const std::string &getName();
-   const SDL_Rect &getBaseRect();
-
-   virtual void f(){}
 };
 
 #endif

@@ -52,11 +52,11 @@ EntityType::~EntityType(){
    freeSurface(mask_);
 }
 
-SDL_Rect EntityType::getBaseRect() const{
+const SDL_Rect &EntityType::getBaseRect() const{
    return baseRect_;
 }
 
-SDL_Rect EntityType::getDrawRect() const{
+const SDL_Rect &EntityType::getDrawRect() const{
    return drawRect_;
 }
 
@@ -66,8 +66,4 @@ SDL_Surface *EntityType::getIcon() const{
 
 const std::string &EntityType::getName(){
    return name_;
-}
-
-const SDL_Rect &EntityType::getBaseRect(){
-   return baseRect_;
 }

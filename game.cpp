@@ -26,6 +26,10 @@
 extern Debug debug;
 extern Debug deltaLog;
 
+//higher = slower game speed.
+//Game is normalized around this delta.
+const int DELTA_MODIFIER = 40; //40;
+
 void gameMode(){
 
    //TODO init functions

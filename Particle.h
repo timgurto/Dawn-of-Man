@@ -1,5 +1,4 @@
 // (C) 2009-2010 Tim Gurto
-//TODO comments
 #ifndef PARTICLE_H
 #define PARTICLE_H
 
@@ -10,6 +9,9 @@
 
 struct GameData;
 
+//Describes a particle.  At this point the images and
+//trajectories used are static, and so each object
+//keeps track only of its location, age and velocities.
 class Particle{
 
    double x_, y_; //position
@@ -19,28 +21,43 @@ class Particle{
 
    //static pointers to surfaces
    static SDL_Surface
-      *screen_,
+      *screen_, //the screen
       *image_, //the particle image
       *shadow_; //the particle shadow image
 
 public:
+   
+   //whether particles fade over time
+   static const bool PARTICLE_FADE;
 
-   //constants
-   const static double GRAVITY;
-   const static int PARTICLE_COUNT;
-   const static double VELOCITY_RANGE; //in pixels/tick
-   const static int DELAY; //in ms
-   const static int DECAY;
+   //How much particles' verticle velocity increases
+   //over time
+   static const double GRAVITY;
+
+   //How many particles should exist at once
+   static const int PARTICLE_COUNT;
+
+   //The range of starting velocities.
+   //Higher = wider and more varying trajectories
+   //in pixels/tick
+   static const double VELOCITY_RANGE;
+
+   //How much particles age per tick.
+   static const int DECAY;
 
    Particle(const pixels_t x, const pixels_t y);
 
    //updates to velocity and position
    void tick(double delta);
 
+   //renders the particle and shadow
    void draw(const GameData &game) const;
 
+   //whether the particle has aged enough that it
+   //should be removed
    bool expired() const;
 
+   //initializes static pointers
    static void init(SDL_Surface *screen,
                     SDL_Surface *image,
                     SDL_Surface *shadow);

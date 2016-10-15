@@ -17,8 +17,11 @@ typedef std::list<Entity *> entities_t;
 //An "instance" of an EntityType.  Basically, each entity
 //is an on-screen, in-game element.
 class Entity{
-   friend class Unit;
 protected: //everything should be a derived class
+
+   //progress points added per state update
+   //progress points: proportional to completion time
+   static const progress_t PROGRESS_PER_CALC;
 
    //type; index in vector of related EntityTypes
    typeNum_t typeIndex_;
@@ -32,15 +35,13 @@ protected: //everything should be a derived class
 
    Point loc_; //location
    static GameData *game_; //static pointer to game
-   static SDL_Surface *screen_;
+   static SDL_Surface *screen_; // " " to the screen
 
+   //a list of Entity pointers.  Pointers are copied
+   //here when marked for deletion, but deleting would
+   //invalidate data or iterators.
+   //Allows deletion at a later time.
    static entities_t trashCan_;
-
-   //Actually draws the sprite, after draw() figures out
-   //the two rectangle parameters
-   void shadowBlit(SDL_Rect *srcLoc,
-                   SDL_Rect *dstLoc,
-                   SDL_Surface *screen) const;
 
    //Draws the mask, then the colored sprite, creating
    //and indexing it if necessary
@@ -48,8 +49,10 @@ protected: //everything should be a derived class
                  SDL_Rect &srcLoc,
                  SDL_Rect &dstLoc) const;
 
+   //creates particles indicating construction progress
    void addParticles(int count) const;
 
+   //calculates
    SDL_Rect getSrcClip(pixels_t wPartial,
                        pixels_t hPartial,
                        int xMutiplier = 0) const;
@@ -82,18 +85,10 @@ public:
    virtual void tick(double delta);
 
    //Whether the entity is within the screen frame
-   bool onScreen();
+   bool onScreen() const;
 
-   //Initializes the class' static pointer
+   //Initializes the class' static pointers
    static void init(GameData *game, SDL_Surface *screen);
-
-   //How much of the entity should be drawn.
-   //FULL (1.0) by default
-   virtual double getDrawPercent() const;
-
-   //The color used to draw the entity
-   //(See enum EntityColor)
-   virtual int getColor() const;
 
    //identitifes which entity subclass this is
    virtual EntityTypeID classID() const = 0;
@@ -106,25 +101,40 @@ public:
    //default: false
    virtual bool selectable() const;
 
-   virtual typeNum_t getPlayer() const;
-
+   //toggles the entity's selection status
    inline void toggleSelect(){
       selected = !selected;
    }
 
+   //calculates where to draw the selection indicator
    SDL_Rect getSelectionDest(SDL_Surface *selection) const;
 
+   //whether the entity has moved vertically.
+   //if so, the entities list may need to be re-sorted
    VerticalMovement getVerticalMovement() const;
 
+   //whether the entity's location is valid
    bool isLocationOK() const;
 
+   //kills the entity, removing it from the game
    void kill();
 
+   //empties the trashCan_, deallocating memory
    static void emptyTrash();
 
+   //get
    typeNum_t getTypeIndex() const;
-
    const Point &getLoc() const;
+
+   //default: NO_TYPE
+   virtual typeNum_t getPlayer() const;
+
+   //default: FULL (1.0)
+   virtual double getDrawPercent() const;
+
+   //default: ENTITY_DEFAULT
+   //see enum EntityColor
+   virtual int getColor() const;
 };
 
 #endif
