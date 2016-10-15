@@ -77,9 +77,8 @@ void gameMode(){
 
    //init
    GameData game(4, 4);
-   Entity::init(&game, screen);
+   Entity::init(&game, screen, diagGreen);
    Particle::init(screen, particle, particleShadow);
-   game.mode = MODE_NORMAL;
 
    //UI Bars
    UIBars_t bars;
@@ -136,6 +135,8 @@ void gameMode(){
                        makeRect(-76, -17, 154, 28),
                        Point(1, -20), shrineCost, 1750);
    game.buildingTypes.push_back(shrine);
+   for (typeNum_t i = 0; i != game.buildingTypes.size(); ++i)
+      assert (game.buildingTypes[i].getIndex() == i);
 
    //decoration types
    DecorationType rock(0, "Rock",

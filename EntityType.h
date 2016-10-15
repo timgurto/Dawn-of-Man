@@ -15,6 +15,7 @@ class EntityType{
    friend class Building;
    friend class Unit;
 
+protected:
    //for loading graphics, and position in vector
    typeNum_t index_;
 

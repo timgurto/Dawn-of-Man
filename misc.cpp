@@ -9,13 +9,12 @@
 #include "SDL.h"
 #include "SDL_image.h"
 
-#include "Debug.h"
-
 #include "globals.h"
 #include "misc.h"
 #include "Entity.h"
 #include "Point.h"
 #include "GameData.h"
+#include "Debug.h"
 
 extern Debug debug;
 extern int surfacesLoaded;
@@ -197,7 +196,7 @@ bool dereferenceLessThan(Entity *p1, Entity *p2){
 }
 
 bool noCollision(const GameData &game, const EntityType &type,
-               const Point &loc){
+               const Point &loc, const Entity *ignore){
    SDL_Rect rect = loc + type.getBaseRect();
 
    //check that it's inside map
@@ -207,7 +206,9 @@ bool noCollision(const GameData &game, const EntityType &type,
    //check against entities
    for (entities_t::const_iterator it = game.entities.begin();
         it != game.entities.end(); ++it){
-      if ((*it)->collides() && collision(rect, (*it)->getBaseRect()))
+      if (*it != ignore &&
+          (*it)->collides() &&
+          collision(rect, (*it)->getBaseRect()))
          return false;
    }
    return true;
@@ -244,6 +245,8 @@ Uint32 getEntityColor(const GameData &game, int color){
    
    //otherwise
    switch(color){
+   case CLR_BLACK:
+      return BLACK_UINT;
    case CLR_RESOURCE_WOOD:
       return RESOURCE_WOOD_COLOR;
    case CLR_DECORATION:
@@ -319,4 +322,56 @@ double modulo(double a, int b){
 void centerMap(GameData &game, const Point &center){
    game.map.x = SCREEN_WIDTH / 2 - center.x;
    game.map.y = SCREEN_HEIGHT / 2 - center.y;
+}
+
+bool isPathClear(const Point &start,
+                 const Point &end,
+                 const GameData &game,
+                 const Entity &entity,
+                 double angle){
+   const EntityType &thisType = entity.type();
+
+
+   //if not already done, calculate angle
+   if (angle == DUMMY_ANGLE)
+      if (end.x == start.x)
+         angle =
+            end.y < start.y ?
+            1.5 * PI :
+            0.5 * PI;
+      else{
+         double gradient =
+            1.0 *
+            (end.y - start.y) /
+            (end.x - start.x);
+         angle = atan(gradient);
+         if (end.x < start.x)
+            if (end.y > start.y)
+               angle += PI;
+            else
+               angle -= PI;
+      }
+
+   double
+      xDelta = cos(angle) * PATH_CHECK_DISTANCE,
+      yDelta = sin(angle) * PATH_CHECK_DISTANCE;
+
+   double x = start.x, y = start.y;
+   bool finished = false;
+   while (!finished){
+      //debug("Checking ", x, ",", y);
+      if (!noCollision(game,
+                       thisType,
+                       Point(pixels_t(x),
+                             pixels_t(y)),
+                       &entity))
+         return false;
+
+      x += xDelta;
+      y += yDelta;
+      finished =
+         (start.x < end.x ? x >= end.x : x <= end.x) &&
+         (start.y < end.y ? y >= end.y : y <= end.y);
+   }
+   return true;
 }

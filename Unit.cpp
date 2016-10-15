@@ -11,6 +11,8 @@
 #include "Building.h"
 #include "ResourceNode.h"
 #include "ResourceNodeType.h"
+#include "TechBonuses.h"
+#include "Player.h"
 
 extern Debug debug;
 
@@ -58,7 +60,13 @@ void Unit::draw(SDL_Surface *screen) const{
       drawLoc.y += thisType.drawRect_.h - partialH;
    }
 
-   colorBlit(player_, screen, srcLoc, drawLoc, !finished_);
+   colorBlit(player_, screen, srcLoc, drawLoc,
+             //blackened, if below the health threshold
+             1.0 * health_ / thisType.maxHealth_ <
+             ENTITY_BLACK_HEALTH,
+             //partial, if not finished
+             !finished_);
+   //debug("health / max = ", 1.0f * health_ / thisType.maxHealth_);
 
 
 
@@ -206,9 +214,7 @@ void Unit::tick(double delta){
             case ENT_UNIT:
                {//local scope for target, targetType, damage
                   Unit &target = (Unit &)(*targetEntity_);
-                  const UnitType &targetType =
-                     game_->unitTypes[target.typeIndex_];
-                  damage_t damage = thisType.attack_ - targetType.armor_;
+                  damage_t damage = thisType.attack_ - target.getArmor();
                   if (damage > target.health_)
                      target.kill();
                   else
@@ -275,6 +281,8 @@ void Unit::setTarget(Entity *targetEntity, Point loc){
    else
       updateTarget();
    moving_ = !isAtTarget();
+   //debug("Path clear: ", isPathClear(loc_, target_,
+   //                                  *game_, *this));
 }
 
 bool Unit::isAtTarget() const{
@@ -323,4 +331,10 @@ bool Unit::isGatherer() const{
 
 Entity *Unit::getTargetEntity() const{
    return targetEntity_;
+}
+
+damage_t Unit::getArmor() const{
+   return
+      game_->unitTypes[typeIndex_].armor_ +
+      game_->players[player_].getBonuses().unitArmor;
 }

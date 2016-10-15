@@ -11,6 +11,7 @@
 
 class Entity;
 class EntityType;
+class Unit;
 struct Point;
 struct GameData;
 
@@ -81,17 +82,15 @@ template <typename Type> void checkP(Type *pointer){
 bool dereferenceLessThan(Entity *p1, Entity *p2);
 
 //Checks for collisions against every entity in the game:
-//a potential entity, of given type and location...
+//a potential entity, of given type and location
+//ignore: an entity to skip checking, i.e. the current unit
 bool noCollision(const GameData &game, const EntityType &type,
-                const Point &loc);
-
-//...and an existing entity with some proposed movement
-bool noCollision(const Entity &entity, const Point displacement);
+                const Point &loc, const Entity *ignore = 0);
 
 //Checks for a collision between two SDL_Rects
 bool collision(const SDL_Rect &r1, const SDL_Rect &r2);
 
-//Whether the Point lies on the SDL_Rect
+//Whether a Point lies on an SDL_Rect
 bool collision(const Point &point, const SDL_Rect &rect);
 bool collision(const SDL_Rect &rect, const Point &point);
 
@@ -121,15 +120,25 @@ double modulo(double a, int b);
 //Map edges are taken into account automatically
 void centerMap(GameData &game, const Point &center);
 
+//squares a number
 template<typename T>
 //param is copied; eval'd once
 T square(T x){
    return x * x;
 }
 
+//returns the minimum of two values
 template<typename T>
 T min(T a, T b){
    return a < b ? a : b;
 }
+
+//Whether an entity with the specified base has a
+//clear straight path between points
+bool isPathClear(const Point &start,
+                 const Point &end,
+                 const GameData &game,
+                 const Entity &entity,
+                 double angle = DUMMY_ANGLE);
 
 #endif

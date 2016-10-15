@@ -27,3 +27,7 @@ const Resources &BuildingType::getCost() const{
 std::string BuildingType::getCostString() const{
    return cost_.str();
 }
+
+typeNum_t BuildingType::getIndex() const{
+   return index_;
+}

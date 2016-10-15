@@ -6,7 +6,8 @@
 extern Debug debug;
 
 Player::Player(Uint32 color):
-color_(color){
+color_(color),
+bonuses_(){
    resourcesString_ = resources_.str();
 }
 
@@ -30,4 +31,8 @@ bool Player::sufficientResources(const Resources &r) const{
 
 std::string Player::getResources() const{
    return resourcesString_;
+}
+
+const TechBonuses &Player::getBonuses() const{
+   return bonuses_;
 }

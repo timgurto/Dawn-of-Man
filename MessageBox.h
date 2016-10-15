@@ -35,7 +35,6 @@ public:
 
    //Generic wrappers for changeMessage(string)
    //A, B, C, D must have << defined
-   //TODO specialists for strings and char*
    template <typename A>
    void operator()(A a){
       std::ostringstream ss;
@@ -59,6 +58,14 @@ public:
       std::ostringstream ss;
       ss << a << b << c << d;
       message_ = ss.str();
+   }
+   template<>
+   void operator()<std::string>(std::string s){
+      message_ = s;
+   }
+   template<>
+   void operator()<char *>(char *s){
+      message_ = s;
    }
 };
 

@@ -77,6 +77,14 @@ public:
       ss << a << b << c << d;
       add(ss.str());
    }
+   template<>
+   void operator()<std::string>(std::string s){
+      add(s);
+   }
+   template<>
+   void operator()<char *>(char *s){
+      add(s);
+   }
 };
 
 //Empty class for Release mode, that keeps method calls

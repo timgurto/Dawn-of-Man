@@ -36,6 +36,9 @@ protected: //everything should be a derived class
    Point loc_; //location
    static GameData *game_; //static pointer to game
    static SDL_Surface *screen_; // " " to the screen
+   
+   //stark base for invisible entities
+   static SDL_Surface *diagGreen_;
 
    //a list of Entity pointers.  Pointers are copied
    //here when marked for deletion, but deleting would
@@ -45,9 +48,12 @@ protected: //everything should be a derived class
 
    //Draws the mask, then the colored sprite, creating
    //and indexing it if necessary
+   //partial: whether the entity is only partially drawn
+   //black: whether the entity should be darkened
    void colorBlit(int color, SDL_Surface *screen,
                  SDL_Rect &srcLoc,
                  SDL_Rect &dstLoc,
+                 bool black = false,
                  bool partial = false) const;
 
    //creates particles indicating construction progress
@@ -89,7 +95,8 @@ public:
    bool onScreen() const;
 
    //Initializes the class' static pointers
-   static void init(GameData *game, SDL_Surface *screen);
+   static void init(GameData *game, SDL_Surface *screen,
+                    SDL_Surface *diagGreen);
 
    //identitifes which entity subclass this is
    virtual EntityTypeID classID() const = 0;

@@ -5,6 +5,7 @@
 
 #include "SDL.h"
 #include "Resources.h"
+#include "TechBonuses.h"
 
 //Represents one player, be it the human or a
 //computer opponent
@@ -19,6 +20,9 @@ class Player{
    //So that it doesn't have to be recalculated constantly
    std::string resourcesString_;
 
+   //bonuses from researched techs
+   TechBonuses bonuses_;
+
 public:
    //TODO comments
    Player(Uint32 color);
@@ -31,6 +35,8 @@ public:
    //get
    Uint32 getColor() const;
    std::string getResources() const;
+   const TechBonuses &getBonuses() const;
 };
+
 
 #endif

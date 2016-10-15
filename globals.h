@@ -19,6 +19,9 @@
 
 const double PI = 3.14159265358979323846;
 
+//a yet-to-be-calculated angle
+const double DUMMY_ANGLE = 3 * PI;
+
 const typeNum_t MAX_TYPES = 256;
 const typeNum_t NO_TYPE = 0xffff;
 
@@ -33,7 +36,6 @@ const Point CURSOR_RAISED(-16, 16);
 
 //bits per pixel
 const int SCREEN_BPP = 32;
-
 
 //unfortunately, different SDL functions use different
 //color formats
@@ -55,18 +57,6 @@ const Uint32 MAGENTA_UINT = 0xff00ff;
 const Uint32 YELLOW_UINT  = 0xffff00;
 const Uint32 WHITE_UINT   = 0xffffff;
 
-const double FULL  = 1;
-const double EMPTY = 0;
-
-//Alpha of shadows (particles, cursor)
-const Uint8 SHADOW_ALPHA = 0x44;
-
-//This has a substantial effect on performance
-//===================================================
-//anything behind each entity is cleared
-const bool ENTITY_MASKS = true;
-//===================================================
-
 const SDL_Color ENTITY_BACKGROUND   = GREEN;
 const Uint32 ENTITY_BACKGROUND_UINT = GREEN_UINT;
 const SDL_Color ENTITY_MASK         = MAGENTA;
@@ -75,6 +65,17 @@ const Uint32 ENTITY_MASK_UINT       = MAGENTA_UINT;
 const Uint32 FOOTPRINT_COLOR_GOOD = 0x008800; //dark green
 const Uint32 FOOTPRINT_COLOR_BAD  = 0x880000; //dark red
 
+//Alpha of shadows (particles, cursor)
+const Uint8 SHADOW_ALPHA = 0x44;
+
+//This has a substantial effect on performance
+//anything behind each entity is cleared
+const bool ENTITY_MASKS = true;
+
+const double FULL  = 1;
+const double EMPTY = 0;
+
+const double PATH_CHECK_DISTANCE = 4;
 const pixels_t MAP_TILE_SIZE = 512;
 const pixels_t SCROLL_AMOUNT = 40;
 const pixels_t SCROLL_MARGIN = 100;
@@ -151,6 +152,7 @@ enum EntityColor{
    CLR_DEFAULT = MAX_PLAYERS,
    CLR_SHADOW_DARK,
    CLR_SHADOW_LIGHT,
+   CLR_BLACK,
    CLR_DECORATION,
    CLR_RESOURCE_WOOD,
 
@@ -166,6 +168,10 @@ const Uint32 ENGRAVE_LIGHT_UINT   = 0xdddddd;
 const Uint32 RESOURCE_WOOD_COLOR  = 0x406040;
 
 const Uint32 DECORATION_COLOR     = 0x666666;
+
+const Uint8 BLACK_ENTITY_ALPHA = 0x66; //0x44;
+//The health percentage, below which the sprite is blackened
+const double ENTITY_BLACK_HEALTH = 0.5;
 
 //For re-sorting after movement
 enum VerticalMovement{

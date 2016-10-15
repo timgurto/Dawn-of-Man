@@ -50,7 +50,17 @@ void Building::draw(SDL_Surface *screen) const{
       drawLoc.y += thisType.drawRect_.h - partialH;
    }
 
-   colorBlit(getColor(), screen, srcLoc, drawLoc, !finished_);
+   if (progress_ == 0){
+      SDL_Rect altDrawLoc =
+         loc_ +
+         thisType.baseRect_ +
+         locRect(game_->map);
+      SDL_BlitSurface(diagGreen_, &dimRect(getBaseRect()),
+      screen, &altDrawLoc);
+   }else
+      colorBlit(getColor(), screen, srcLoc, drawLoc,
+         false, //black
+         !finished_); //partial
 }
 
 double Building::getDrawPercent() const{

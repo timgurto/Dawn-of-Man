@@ -29,6 +29,7 @@ public:
    //get
    const Resources &getCost() const;
    std::string getCostString() const;
+   typeNum_t getIndex() const;
 };
 
 #endif

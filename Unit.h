@@ -62,6 +62,7 @@ public:
    bool isBuilder() const;
    bool isGatherer() const;
    Entity *getTargetEntity() const;
+   damage_t getArmor() const;
    virtual int getColor() const;
    virtual typeNum_t getPlayer() const;
    virtual double getDrawPercent() const;

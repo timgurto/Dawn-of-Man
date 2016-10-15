@@ -244,11 +244,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Player.h"
+				RelativePath=".\Path.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Point.h"
+				RelativePath=".\Player.h"
 				>
 			</File>
 			<File
@@ -265,6 +265,14 @@
 			</File>
 			<File
 				RelativePath=".\Resources.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Tech.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TechBonuses.h"
 				>
 			</File>
 			<File
