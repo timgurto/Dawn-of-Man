@@ -150,3 +150,7 @@ bool Building::selectable() const{
       finished_ &&
       player_ == HUMAN_PLAYER;
 }
+
+typeNum_t Building::getPlayer() const{
+   return player_;
+}

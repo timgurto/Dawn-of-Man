@@ -2,7 +2,7 @@
 
 #include "EntityType.h"
 #include "BuildingType.h"
-#include "globals.h"
+#include "types.h"
 
 BuildingType::BuildingType(typeNum_t index,
                            const std::string &name,

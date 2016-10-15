@@ -1,7 +1,7 @@
 // (C) 2010 Tim Gurto
 
 #include "MouseButton.h"
-#include "globals.h"
+#include "types.h"
 #include "Point.h"
 #include "Debug.h"
 

@@ -2,11 +2,7 @@
 
 #include <cassert>
 #include <cstdlib>
-#include <vector>
-#include <list>
-#include <sstream>
 #include <ctime>
-#include <algorithm>
 
 #include "SDL.h"
 #include "game.h"
@@ -14,7 +10,6 @@
 #include "update.h"
 #include "render.h"
 #include "misc.h"
-#include "uiBarFunctions.h"
 #include "Debug.h"
 #include "GameData.h"
 #include "EntityType.h"
@@ -41,6 +36,7 @@ void gameMode(){
    //seed random generator
    srand(unsigned(time(0)));
 
+   //load surfaces
    SDL_Surface
       *map = loadImage(MISC_IMAGE_PATH + "back.png"),
       *darkMap = loadImage(MISC_IMAGE_PATH + "dark.png"),

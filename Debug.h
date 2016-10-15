@@ -10,7 +10,7 @@
 #include "SDL_ttf.h"
 
 #include "misc.h"
-#include "globals.h"
+#include "types.h"
 
 #ifndef NDEBUG
 //A box of scrolling messages sent from various parts

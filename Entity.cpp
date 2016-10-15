@@ -4,7 +4,7 @@
 #include <cassert>
 
 #include "misc.h"
-#include "globals.h"
+#include "types.h"
 #include "SDL.h"
 #include "Debug.h"
 #include "Entity.h"
@@ -118,6 +118,10 @@ bool Entity::collides() const{
 
 bool Entity::selectable() const{
    return false;
+}
+
+typeNum_t Entity::getPlayer() const{
+   return NO_TYPE;
 }
 
 SDL_Rect Entity::getSelectionDest(SDL_Surface *selection) const{

@@ -1,7 +1,7 @@
 // (C) 2009-2010 Tim Gurto
 
 #include "SDL.h"
-#include "globals.h"
+#include "types.h"
 #include "misc.h"
 #include "GameData.h"
 #include "Point.h"

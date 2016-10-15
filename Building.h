@@ -4,7 +4,7 @@
 #define BUILDING_H
 
 #include "SDL.h"
-#include "globals.h"
+#include "types.h"
 #include "Entity.h"
 #include "Particle.h"
 
@@ -30,6 +30,7 @@ public:
    virtual int getColor() const;
    virtual EntityTypeID classID() const;
    virtual bool selectable() const;
+   virtual typeNum_t getPlayer() const;
 };
 
 #endif

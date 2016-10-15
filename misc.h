@@ -87,8 +87,8 @@ bool noCollision(const Entity &entity, const Point displacement);
 bool collision(const SDL_Rect &r1, const SDL_Rect &r2);
 
 //Whether the Point lies on the SDL_Rect
-bool collision(const Point &point, const SDL_Rect rect);
-bool collision(const SDL_Rect rect, const Point &point);
+bool collision(const Point &point, const SDL_Rect &rect);
+bool collision(const SDL_Rect &rect, const Point &point);
 
 //looks up the relevant color based on index input
 Uint32 getEntityColor(const GameData &game, int color);

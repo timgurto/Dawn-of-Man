@@ -5,7 +5,7 @@
 
 #include <cstdlib>
 #include "SDL.h"
-#include "globals.h"
+#include "types.h"
 #include "misc.h"
 
 struct GameData;

@@ -14,7 +14,8 @@ Entity(type, loc),
 player_(player),
 moving_(false),
 frameCounter_(rand() % game_->unitTypes[type].maxFrameCounter_),
-frame_(0){}
+frame_(0),
+targetEntity_(0){}
 
 const EntityType &Unit::type() const{
    return game_->unitTypes[type_];
@@ -32,7 +33,8 @@ void Unit::draw(SDL_Surface *screen) const{
 }
 
 void Unit::tick(double delta){
-   const UnitType &thisType = dynamic_cast<const UnitType &>(type());
+   updateTarget();
+   const UnitType &thisType = (const UnitType &)(type());
 
    if (moving_){
 
@@ -123,9 +125,17 @@ bool Unit::selectable() const{
       player_ == HUMAN_PLAYER;
 }
 
-void Unit::setTarget(Point target){
-   target_ = target;
+typeNum_t Unit::getPlayer() const{
+   return player_;
+}
+
+void Unit::setTarget(Entity *targetEntity, Point loc){
    moving_ = true;
+   targetEntity_ = targetEntity;
+   if (targetEntity == 0)
+      target_ = loc;
+   else
+      updateTarget();
 }
 
 bool Unit::atTarget(){
@@ -139,4 +149,9 @@ bool Unit::atTarget(){
       return false;
 
    return true;
+}
+
+void Unit::updateTarget(){
+   if (targetEntity_ != 0)
+      target_ = targetEntity_->loc_;
 }

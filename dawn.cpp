@@ -1,14 +1,12 @@
 // (C) 2009-2010 Tim Gurto
 
 //TODO copy comments at declarations to definitions
+//TODO make function comments a consistent case (verb)
 
 #include <cassert>
-
 #include "SDL.h"
 #include "SDL_ttf.h"
-
 #include "Debug.h"
-
 #include "game.h"
 
 //globals

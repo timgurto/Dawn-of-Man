@@ -5,19 +5,23 @@
 
 #include <queue>
 #include "SDL.h"
-#include "globals.h"
+#include "types.h"
 #include "Entity.h"
+#include "Point.h"
 
 struct GameData;
 class EntityType;
 
-//TODO comments
+//Mobile, controllable entities capable of combat
 class Unit : public Entity{
    typeNum_t player_; //the unit's controlling player
-   Point target_;
-   bool moving_;
+   Point target_; //where the unit is trying to go
+   Entity *targetEntity_; //the unit this unit is targetting
+   bool moving_; //whether or not the unit is moving
+   
+    //the current point in the unit's animation cycle
    double frameCounter_;
-   int frame_;
+   int frame_; //which frame to draw for this unit
 
 public:
    Unit(typeNum_t type, const Point &loc,
@@ -28,9 +32,19 @@ public:
    virtual int getColor() const;
    virtual EntityTypeID classID() const;
    virtual bool selectable() const;
-   void setTarget(Point target = game_->mousePos -
-                                 Point(game_->map));
+   virtual typeNum_t getPlayer() const;
+
+   //TODO add loc default to GameData, updated with mouse move
+   //sets the target co-ordinates
+   void setTarget(Entity *targetEntity,
+                  Point loc = game_->mousePos -
+                              Point(game_->map));
+
+   //Whether or not the unit has reached its target
    bool atTarget();
+
+   //sets target co-ordinates if targetting an entity
+   void updateTarget();
 };
 
 #endif

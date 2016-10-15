@@ -17,7 +17,7 @@ void render(SDL_Surface *screen, SDL_Surface *glow,
             const GameData &game, const UIBars_t &bars);
 
 //Draws the cursor to the screen
-void blitCursor (SDL_Surface *cursor, SDL_Surface *shadow,
-                 SDL_Surface *screen, const GameData &game);
+void renderCursor (SDL_Surface *screen, const GameData &game,
+                   SDL_Surface *cursor, SDL_Surface *shadow);
 
 #endif

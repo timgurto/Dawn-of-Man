@@ -9,7 +9,7 @@
 #include "SDL_ttf.h"
 
 #include "misc.h"
-#include "globals.h"
+#include "types.h"
 #include "Debug.h"
 
 int Debug::debugCount_ = 0;

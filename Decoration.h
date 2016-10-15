@@ -4,7 +4,7 @@
 #define DECORATION_H
 
 #include "SDL.h"
-#include "globals.h"
+#include "types.h"
 #include "Entity.h"
 
 struct GameData;

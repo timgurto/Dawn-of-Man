@@ -3,12 +3,8 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "SDL.h"
-#include "globals.h"
-#include "update.h"
-#include "render.h"
-#include "UIBar.h"
 #include "GameData.h"
+
 class Entity;
 
 //Main game functionality

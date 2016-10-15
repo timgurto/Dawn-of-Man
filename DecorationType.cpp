@@ -2,7 +2,7 @@
 
 #include "EntityType.h"
 #include "DecorationType.h"
-#include "globals.h"
+#include "types.h"
 
 DecorationType::DecorationType(typeNum_t index,
                                const std::string &name,

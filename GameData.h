@@ -6,7 +6,7 @@
 #include <vector>
 #include <list>
 
-#include "globals.h"
+#include "types.h"
 #include "BuildingType.h"
 #include "DecorationType.h"
 #include "UnitType.h"

@@ -3,12 +3,13 @@
 #ifndef MOUSE_BUTTON_H
 #define MOUSE_BUTTON_H
 
-#include "globals.h"
+#include "types.h"
 #include "Point.h"
 
 //TODO comments
 //Describes the state of a mouse button
 struct MouseButton{
+
    //How far the mouse has to move to switch
    //from a click to a drag
    static const pixels_t MOVEMENT_THRESHOLD;
@@ -24,9 +25,14 @@ struct MouseButton{
 
    MouseButton();
 
+   //sets values when the button is clicked
    void mouseDown(const Point &mousePos);
+
+   //sets values when the button is released
    void mouseUp();
 
+   //checks whether the mouse has moved enough,
+   //and if so flags the button as dragging
    void checkDrag(const Point &mousePos);
 };
 

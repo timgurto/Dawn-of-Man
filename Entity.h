@@ -14,7 +14,7 @@ class EntityType;
 //An "instance" of an EntityType.  Basically, each entity
 //is an on-screen, in-game element.
 class Entity{
-   friend class EntityPtr;
+   friend class Unit;
 protected: //everything should be a derived class
 
    //type; index in vector of related EntityTypes
@@ -95,6 +95,8 @@ public:
    //whether these entities can be selected
    //default: false
    virtual bool selectable() const;
+
+   virtual typeNum_t getPlayer() const;
 
    inline void toggleSelect(){
       selected = !selected;

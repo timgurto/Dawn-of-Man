@@ -3,7 +3,7 @@
 
 #include "EntityType.h"
 #include "UnitType.h"
-#include "globals.h"
+#include "types.h"
 
 UnitType::UnitType(typeNum_t index,
                    const std::string &name,

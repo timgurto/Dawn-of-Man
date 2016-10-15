@@ -302,12 +302,13 @@ void select(GameData &game){
 }
 
 void setSelectedTargets(GameData &game){
+   Entity *targetEntity = findEntity(game);
    for (entities_t::iterator it = game.entities.begin();
         it != game.entities.end(); ++it){
       if ((*it)->classID() == UNIT &&
           (*it)->selected){
          Unit *unitP = (Unit *)(*it); //change to Unit*
-         unitP->setTarget();
+         unitP->setTarget(targetEntity);
       }
    }
 }
@@ -326,6 +327,7 @@ void reSort(entities_t &entities, entities_t::iterator it,
             --next;
          }
       }
+   break;
 
    case DOWN:
       entities_t::iterator next = it;
@@ -337,4 +339,22 @@ void reSort(entities_t &entities, entities_t::iterator it,
       }
 
    }
+}
+
+Entity *findEntity(GameData &game){
+   //loop backwards, so objects in front have priority
+   for (entities_t::reverse_iterator it = game.entities.rbegin();
+        it != game.entities.rend(); ++it){
+
+      //filtering
+      //only enemy entities can be targetted
+      if ((*it)->getPlayer() == HUMAN_PLAYER ||
+          (*it)->getPlayer() == NO_TYPE)
+         continue;
+
+      if (collision((*it)->getDrawRect(),
+                    game.mousePos - Point(game.map)))
+         return *it;
+   }
+   return 0;
 }

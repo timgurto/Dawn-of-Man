@@ -3,8 +3,8 @@
 #ifndef UNIT_TYPE_H
 #define UNIT_TYPE_H
 
-#include "globals.h"
 #include "EntityType.h"
+#include "types.h"
 
 class UnitType: public EntityType{
    friend class Unit;

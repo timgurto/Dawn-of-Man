@@ -6,7 +6,7 @@
 //contains the functions used by the UIBar class to fetch icons
 //surfaces, and execute actions when clicked.
 
-#include "globals.h"
+#include "types.h"
 
 struct SDL_Surface;
 struct GameData;

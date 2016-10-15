@@ -6,6 +6,7 @@
 #include <string>
 #include "SDL.h"
 #include "Point.h"
+#include "types.h"
 
 //DEBUG determines:
 // -The displaying of debug messages
@@ -14,11 +15,6 @@
 #else
 #define DEBUG true
 #endif
-
-typedef unsigned short typeNum_t;
-typedef Sint32 pixels_t;
-typedef Uint32 timer_t;
-typedef double progress_t;
 
 const double PI = 3.14159265358979323846;
 
@@ -35,8 +31,8 @@ const progress_t PROGRESS_PER_CALC = 4;
 
 const pixels_t DEFAULT_W_SCREEN_WIDTH = 1280;
 const pixels_t DEFAULT_W_SCREEN_HEIGHT = 800;
-const pixels_t DEFAULT_SCREEN_WIDTH = 1280;
-const pixels_t DEFAULT_SCREEN_HEIGHT = 1024;
+const pixels_t DEFAULT_SCREEN_WIDTH = 1024;
+const pixels_t DEFAULT_SCREEN_HEIGHT = 768;
 const int SCREEN_BPP = 32;
 
 //in case the cursor point isn't at 0,0
@@ -139,9 +135,12 @@ enum ImageModifier{
 enum EntityTypeID{
    BUILDING,
    UNIT,
+
    //Everything above this comment
    //has multiple colors.
    MAX_ENTITY_TYPE, //for array sizes.
+   NO_ENTITY_TYPE,
+
    DECORATION
 };
 

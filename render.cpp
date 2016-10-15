@@ -18,6 +18,8 @@ void render(SDL_Surface *screen, SDL_Surface *glow,
             SDL_Surface *entitiesTemp,
             const GameData &game, const UIBars_t &bars){
 
+   //renderMap(screen, game);
+
    //Map
    for (int x = -1; x != game.mapX + 1; ++x)
       for (int y = -1; y != game.mapY + 1; ++y){
@@ -39,6 +41,8 @@ void render(SDL_Surface *screen, SDL_Surface *glow,
          }
       }
 
+   //renderSelection(screen, game, glow);
+
    //Selection markers
    for (entities_t::const_iterator it = game.entities.begin();
       it != game.entities.end(); ++it)
@@ -46,6 +50,8 @@ void render(SDL_Surface *screen, SDL_Surface *glow,
          SDL_Rect dest = (*it)->getSelectionDest(glow);
          SDL_BlitSurface(glow, 0, screen, &dest);
       }
+
+   //renderFootprint(screen, game, diagRed, diagGreen);
 
    //Building footprint
    if (game.mode == BUILD_MODE &&
@@ -58,6 +64,8 @@ void render(SDL_Surface *screen, SDL_Surface *glow,
          SDL_BlitSurface(diagRed, &dimRect(baseRect), screen, &SDL_Rect(baseRect));
    }
 
+   //renderEntities(screen, game);
+
    //Entities
    if (ENTITY_MASKS)
       SDL_FillRect(entitiesTemp, 0, ENTITY_BACKGROUND_UINT);
@@ -69,6 +77,8 @@ void render(SDL_Surface *screen, SDL_Surface *glow,
       }
    if (ENTITY_MASKS)
       SDL_BlitSurface(entitiesTemp, 0, screen, 0);
+
+   //renderSelectionRectangle(screen, game);
 
    //Selection rectangle
    if (game.mode != BUILD_MODE &&
@@ -85,13 +95,16 @@ void render(SDL_Surface *screen, SDL_Surface *glow,
       freeSurface(temp);
    }
 
+   //renderInterface(screen, bars);
+
    //Interface
    for (UIBars_t::const_iterator it = bars.begin(); it != bars.end(); ++it){
       (*it)->draw();
    }
 
-   //Cursor
-   blitCursor(cursor, cursorShadow, screen, game);
+   renderCursor(screen, game, cursor, cursorShadow);
+
+   //renderParticles(screen, game);
 
    //Particles
    for (particles_t::const_iterator it = game.particles.begin();
@@ -107,8 +120,8 @@ void render(SDL_Surface *screen, SDL_Surface *glow,
    assert(test);
 }
 
-void blitCursor (SDL_Surface *cursor, SDL_Surface *shadow,
-                 SDL_Surface *screen, const GameData &game){
+void renderCursor (SDL_Surface *screen, const GameData &game,
+                   SDL_Surface *cursor, SDL_Surface *shadow){
    //cursor might appear 'raised' from the wall
    bool raised = game.rightMouse.dragging/* ||
                  (game.mode == BUILD_MODE && !game.buildLocationOK)*/;

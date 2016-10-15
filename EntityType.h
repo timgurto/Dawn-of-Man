@@ -5,6 +5,7 @@
 
 #include <string>
 #include "SDL.h"
+#include "Point.h"
 #include "globals.h"
 
 //A category of entities, differing by attributes,

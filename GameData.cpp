@@ -1,6 +1,6 @@
 // (C) 2010 Tim Gurto
 
-#include "globals.h"
+#include "types.h"
 #include "GameData.h"
 
 GameData::GameData(int mapSizeX, int mapSizeY):

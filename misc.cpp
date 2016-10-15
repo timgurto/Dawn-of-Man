@@ -216,7 +216,7 @@ bool collision(const SDL_Rect &r1, const SDL_Rect &r2){
    return true;
 }
 
-bool collision(const Point &point, const SDL_Rect rect){
+bool collision(const Point &point, const SDL_Rect &rect){
    if (point.x < rect.x) return false;
    if (point.y < rect.y) return false;
    if (point.x > rect.x + rect.w) return false;
@@ -224,7 +224,7 @@ bool collision(const Point &point, const SDL_Rect rect){
    return true;
 }
 
-bool collision(const SDL_Rect rect, const Point &point){
+bool collision(const SDL_Rect &rect, const Point &point){
    return collision(point, rect);
 }
 
