@@ -507,11 +507,14 @@ void select(GameData &game){
          //determine collision
          bool collides;
          if (game.leftMouse.dragging) //selection box
+            //collision(SDL_Rect, SDL_Rect)
             collides = collision((*it)->getDrawRect(),
-                                 getSelectionRect(game));
+                                 getSelectionRect(game) -
+                                 Point(game.map));
          else                         //single point
+            //collision(SDL_Rect, Point)
             collides = collision((*it)->getDrawRect(),
-                                 game.mousePos + Point(game.map));
+                                 game.mousePos - Point(game.map));
 
          if (collides){
             if (keyStates[SDLK_LCTRL])
