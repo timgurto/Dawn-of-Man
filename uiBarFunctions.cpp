@@ -30,12 +30,26 @@ const pixels_t PLACEMENT_MARGIN = 1;
       if (game.buildingSelected == 0)
          return 0;
       typeNum_t count = 0;
-      if (game.buildingSelected != 0)
-         for (unitTypes_t::const_iterator it = game.unitTypes.begin();
-              it != game.unitTypes.end(); ++it)
-            if (it->getOriginBuilding() ==
-                game.buildingSelected->getTypeIndex())
-               ++count;
+      for (unitTypes_t::const_iterator it = game.unitTypes.begin();
+           it != game.unitTypes.end(); ++it)
+         //if unit comes from this building
+         if (it->getOriginBuilding() == game.buildingSelected->getTypeIndex())
+            ++count;
+      return count;
+   }
+
+   //Techs bar:
+   typeNum_t getNumTechIcons(const GameData &game){
+      if (game.buildingSelected  == 0)
+         return 0;
+      typeNum_t count = 0;
+      for (techs_t::const_iterator it = game.techs.begin();
+           it != game.techs.end(); ++it)
+         //if tech comes from this building,
+         if (it->getOriginBuilding() == game.buildingSelected->getTypeIndex() &&
+             //and hasn't been researched yet
+             !game.players[HUMAN_PLAYER].isTechResearched(it->getIndex()))
+            ++count;
       return count;
    }
 
@@ -63,6 +77,24 @@ const pixels_t PLACEMENT_MARGIN = 1;
              building.getTypeIndex()){
             if (count == i)
                return game.unitTypes[loop].getIcon();
+            ++count;
+         }
+      assert (false);
+      return 0;
+   }
+
+   SDL_Surface *getTechIcons(typeNum_t i,
+                             typeNum_t size,
+                             const GameData &game){
+      assert (i < size);
+      Building &building = *game.buildingSelected;
+      int count = 0;
+      //find techs that come from this building
+      for (typeNum_t loop = 0; loop != game.techs.size(); ++loop)
+         if (game.techs[loop].getOriginBuilding() == building.getTypeIndex() &&
+             !game.players[HUMAN_PLAYER].isTechResearched(loop)){
+            if (count == i)
+               return game.techs[loop].getIcon();
             ++count;
          }
       assert (false);
@@ -163,6 +195,33 @@ const pixels_t PLACEMENT_MARGIN = 1;
          debug("Insufficient resources");
    }
 
+   void researchTech(typeNum_t index, GameData &game){
+      Building &building = *game.buildingSelected;
+
+      //get type
+      typeNum_t count = 0, typeIndex = 0;
+      for (typeIndex = 0; typeIndex != game.techs.size(); ++typeIndex)
+         if (game.unitTypes[typeIndex].getOriginBuilding() == building.getTypeIndex() &&
+             !game.players[HUMAN_PLAYER].isTechResearched(typeIndex)){
+            if (count == index)
+               break;
+            ++count;
+         }
+      
+      //check player's resources
+      if (game.players[HUMAN_PLAYER].
+             sufficientResources(game.techs[typeIndex].getCost())){
+
+         //research tech
+         game.players[HUMAN_PLAYER].
+            subtractResources(game.techs[typeIndex].getCost());
+         game.players[HUMAN_PLAYER].
+            researchTech(typeIndex);
+
+      }else //insufficient resources
+         debug("Insufficient resources");
+   }
+
 //UIBar::helpFun_
 //Returns relevant context help text for the specified button
 
@@ -189,6 +248,27 @@ const pixels_t PLACEMENT_MARGIN = 1;
                   game.unitTypes[loop].getName() +
                   ": " +
                   game.unitTypes[loop].getCostString();
+            ++count;
+         }
+      assert(false);
+      return "";
+   }
+
+   std::string techHelp(typeNum_t index,
+                        GameData &game){
+      const Building &building = *game.buildingSelected;
+      int count = 0;
+      //find units that come from this building
+      for (typeNum_t loop = 0; loop != game.techs.size(); ++loop)
+         if (game.techs[loop].getOriginBuilding() ==
+             building.getTypeIndex() &&
+             !game.players[HUMAN_PLAYER].isTechResearched(loop)){
+            if (count == index)
+               return
+                  "Research " +
+                  game.techs[loop].getName() +
+                  ": " +
+                  game.techs[loop].getCostString();
             ++count;
          }
       assert(false);

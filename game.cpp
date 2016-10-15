@@ -31,7 +31,7 @@
 #include "TechBonuses.h"
 
 extern Debug debug;
-extern Debug deltaLog;
+//extern Debug deltaLog;
 
 //higher = slower game speed.
 //Game is normalized around this delta.
@@ -44,7 +44,7 @@ void gameMode(){
    //initialize screen and debug objects
    SDL_Surface *screen = setScreen();
    debug.initScreen(screen);
-   deltaLog.initScreen(screen);
+   //deltaLog.initScreen(screen);
 
    //seed random generator
    srand(unsigned(time(0)));
@@ -91,38 +91,50 @@ void gameMode(){
                       &selectBuilding,
                       &buildingHelp,
                       MODE_BUILDER);
-   bars.push_back(&buildingsBar);
    UIBar unitsBar(BOTTOM_LEFT, HORIZONTAL,
                   &getNumUnitIcons,
                   &getUnitTypeIcons,
                   &trainUnit,
                   &unitHelp,
                   MODE_BUILDING);
+   UIBar techsBar(BOTTOM_LEFT, HORIZONTAL,
+                  &getNumTechIcons,
+                  &getTechIcons,
+                  &researchTech,
+                  &techHelp,
+                  MODE_BUILDING);
+   bars.push_back(&buildingsBar);
    bars.push_back(&unitsBar);
+   bars.push_back(&techsBar);
 
    //Message Boxes
    messageBoxes_t messageBoxes;
    MessageBox contextHelp(WHITE,
                           2, SCREEN_HEIGHT - ICON_SIZE - 1,
-                          275, 1,
+                          1,
                           darkMap,
                           "Woodbrush.ttf", 18,
                           true);
    messageBoxes.push_back(&contextHelp);
    MessageBox resourcesBox(WHITE,
-                           2, 2, 150, 1,
+                           2, 2, 1,
                            darkMap,
                            "Woodbrush.ttf", 18);
    messageBoxes.push_back(&resourcesBox);
+   MessageBox fpsDisplay(WHITE,
+                         SCREEN_WIDTH / 2 - 40, 2,
+                         1,
+                         darkMap,
+                         "Dina.fon", 0,
+                         false, DEBUG);
+   messageBoxes.push_back(&fpsDisplay);
 
    //TODO load from files
    //=================================================
    std::vector<std::string> resourceNames;
    resourceNames.push_back("Wood");
    Resources::init(1, resourceNames);
-
-   game.players.push_back(Player(0xca6500)); //0x... = color
-   game.players.push_back(Player(0x882222));
+   Player::init(&game);
 
    //building types
    resources_t campfireCost; campfireCost.push_back(100);
@@ -235,6 +247,10 @@ void gameMode(){
    TechBonuses fireShieldBonuses(5);
    Tech fireArmor(0, "Fire Armor", fireShieldBonuses, 0, fireShieldCost, NO_TYPE);
    game.techs.push_back(fireArmor);
+
+   techsResearched_t noneResearched(game.techs.size(), false);
+   game.players.push_back(Player(0xca6500, noneResearched)); //0x... = color
+   game.players.push_back(Player(0x882222, noneResearched));
    //=================================================
 
    timer_t oldTicks = SDL_GetTicks();
@@ -247,13 +263,14 @@ void gameMode(){
       oldTicks = newTicks;
       double deltaMod = 1.0 * delta / DELTA_MODIFIER;
       
-      //TODO some better means of displaying FPS in Release
-      deltaLog("Framerate: ", (delta == 0 ? 0 : 1000 / delta));
-      deltaLog("    Delta: ", delta, "ms");
+      double fps = delta == 0 ? 0 : 1000 / delta;
+      //deltaLog("Framerate: ", fps);
+      //deltaLog("    Delta: ", delta, "ms");
+      fpsDisplay(format3(fps), "fps  |  ", delta, "ms ");
 
       //update state
       updateState(deltaMod, game, screen, bars,
-                  contextHelp, resourcesBox);
+                  contextHelp, resourcesBox, fpsDisplay);
 
       //render
       render(screen, glow, diagGreen, diagRed, map, darkMap, cursor,

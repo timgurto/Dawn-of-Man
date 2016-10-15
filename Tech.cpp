@@ -33,3 +33,31 @@ icon_(copySurface(original.icon_)){}
 Tech::~Tech(){
    freeSurface(icon_);
 }
+
+const TechBonuses &Tech::getBonuses() const{
+   return bonuses_;
+}
+
+typeNum_t Tech::getOriginBuilding() const{
+   return originBuilding_;
+}
+
+typeNum_t Tech::getIndex() const{
+   return index_;
+}
+
+SDL_Surface *Tech::getIcon() const{
+   return icon_;
+}
+
+const Resources &Tech::getCost() const{
+   return cost_;
+}
+
+std::string Tech::getCostString() const{
+   return cost_.str();
+}
+
+std::string Tech::getName() const{
+   return name_;
+}

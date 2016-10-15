@@ -24,10 +24,11 @@ const Uint8 MOUSE_BUTTON_SCROLL_DOWN = 5;
 void updateState(double delta, GameData &game,
                  SDL_Surface *screen, UIBars_t &bars,
                  MessageBox &contextHelp,
-                 MessageBox &resourcesBox){
+                 MessageBox &resourcesBox,
+                 MessageBox &fpsDisplay){
 
    //Interface stuff
-   handleEvents(game, screen, bars, contextHelp);
+   handleEvents(game, screen, bars, contextHelp, fpsDisplay);
    scrollMap(game, delta);
 
    //Actual updates
@@ -63,7 +64,8 @@ void updateState(double delta, GameData &game,
 }
 
 void handleEvents(GameData &game, SDL_Surface *screen,
-                  UIBars_t &bars, MessageBox &contextHelp){
+                  UIBars_t &bars, MessageBox &contextHelp,
+                  MessageBox &fpsDisplay){
 
    SDL_Event event;
    while (SDL_PollEvent(&event)){
@@ -174,6 +176,11 @@ void handleEvents(GameData &game, SDL_Surface *screen,
                }
             }while (deleted);
             Entity::emptyTrash();
+            break;
+
+         case SDLK_F11:
+            //F11: toggle FPS display
+            fpsDisplay.toggleVisibility();
             break;
 
          case SDLK_F4:

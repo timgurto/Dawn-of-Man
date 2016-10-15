@@ -34,6 +34,15 @@ public:
         typeNum_t prereqTech);
    Tech (const Tech &rhs);
    ~Tech();
+
+   //get
+   const TechBonuses &getBonuses() const;
+   typeNum_t getOriginBuilding()const;
+   typeNum_t getIndex() const;
+   SDL_Surface *getIcon() const;
+   const Resources &getCost() const;
+   std::string getCostString() const;
+   std::string getName() const;
 };
 
 #endif

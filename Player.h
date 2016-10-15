@@ -7,6 +7,10 @@
 #include "Resources.h"
 #include "TechBonuses.h"
 
+struct GameData;
+
+typedef std::vector<bool> techsResearched_t;
+
 //Represents one player, be it the human or a
 //computer opponent
 class Player{
@@ -23,20 +27,30 @@ class Player{
    //bonuses from researched techs
    TechBonuses bonuses_;
 
+   //which techs have been researched
+   techsResearched_t techsResearched_;
+
+   static GameData *game_;
+
 public:
    //TODO comments
-   Player(Uint32 color);
+   Player(Uint32 color,
+          const techsResearched_t &techsResearched);
+
+   static void init(GameData *game);
 
    void addResources(const Resources &r);
    void subtractResources(const Resources &r);
 
    bool sufficientResources(const Resources &r) const;
 
+   void researchTech(typeNum_t index);
+
    //get
    Uint32 getColor() const;
    std::string getResources() const;
    const TechBonuses &getBonuses() const;
+   bool isTechResearched(typeNum_t i) const;
 };
-
 
 #endif

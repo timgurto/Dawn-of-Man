@@ -5,6 +5,7 @@
 #include <sstream>
 #include <cstdlib>
 #include <cmath>
+#include <sstream>
 
 #include "SDL.h"
 #include "SDL_image.h"
@@ -166,6 +167,9 @@ std::string makePath(EntityTypeID type, typeNum_t imageNumber,
       break;
    case ENT_RESOURCE_NODE:
       path << RESOURCE_NODES_IMAGE_PATH;
+      break;
+   case ENT_TECH:
+      path << TECHS_IMAGE_PATH;
       break;
    }
 
@@ -374,4 +378,12 @@ bool isPathClear(const Point &start,
          (start.y < end.y ? y >= end.y : y <= end.y);
    }
    return true;
+}
+
+std::string format3(double x){
+   std::ostringstream oss;
+   if (x < 100)
+      oss << ' ';
+   oss << x;
+   return oss.str();
 }

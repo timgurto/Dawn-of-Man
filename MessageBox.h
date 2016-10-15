@@ -15,23 +15,26 @@ class MessageBox{
    std::string name_; //font name
    TTF_Font *font_; //SDL font object
    pixels_t x_, y_; //co-ordinates of top-left corner
-   pixels_t width_; //horizontal width of the box
    pixels_t height_; //height of the box
    pixels_t margin_; //padding around the text
    std::string message_; //the message
    SDL_Surface *background_; //the background image
+   bool visible_; //whether the box is drawn
 
 public:
    MessageBox(SDL_Color color, pixels_t x, pixels_t y,
-              pixels_t width, pixels_t margin,
+              pixels_t margin,
               SDL_Surface *background,
               const std::string &fontName, int fontSize,
-              bool accountForHeight = false);
+              bool accountForHeight = false,
+              bool visible = true);
 
    //Draws messages to the screen
    void display(SDL_Surface *screen) const;
 
    void clear();
+
+   void toggleVisibility();
 
    //Generic wrappers for changeMessage(string)
    //A, B, C, D must have << defined

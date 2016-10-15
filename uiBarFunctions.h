@@ -24,6 +24,9 @@ typedef iconCountFun *iconCountFunPtr;
    //Units bar:
    iconCountFun getNumUnitIcons;
 
+   //Techs bar:
+   iconCountFun getNumTechIcons;
+
 
 
 //surfaceFun_
@@ -37,6 +40,9 @@ typedef surfaceFun *surfaceFunPtr;
    //Units bar: UnitType icons, based on the selected building
    surfaceFun getUnitTypeIcons;
 
+   //Techs bar: Tech icons, as above
+   surfaceFun getTechIcons;
+
 
 
 //clickFun_
@@ -48,6 +54,9 @@ typedef clickFun *clickFunPtr;
 
    //Units bar: Trains the chosen unit, at the selected building
    clickFun trainUnit;
+
+   //Techs bar: Researches the chosen tech
+   clickFun researchTech;
 
 
 
@@ -61,5 +70,8 @@ typedef clickFun *clickFunPtr;
 
    //Units bar: returns the name of the unit
    helpFun unitHelp;
+
+   //Techs bar: returns the name of the tech
+   helpFun techHelp;
 
 #endif

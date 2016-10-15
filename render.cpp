@@ -45,7 +45,7 @@ void render(SDL_Surface *screen, SDL_Surface *selection,
 
    //Debug text
    debug.display();
-   deltaLog.display();
+   //deltaLog.display();
 
    //Finalize
    bool test = SDL_Flip(screen) == 0;
@@ -53,6 +53,7 @@ void render(SDL_Surface *screen, SDL_Surface *selection,
 
 }
 
+//TODO different cursor for attacking, maybe for gathering
 void renderCursor (SDL_Surface *screen, const GameData &game,
                    SDL_Surface *cursor, SDL_Surface *shadow,
                    SDL_Surface *pause){

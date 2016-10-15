@@ -396,6 +396,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\TechBonuses.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\UIBar.cpp"
 				>
 			</File>

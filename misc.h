@@ -141,4 +141,7 @@ bool isPathClear(const Point &start,
                  const Entity &entity,
                  double angle = DUMMY_ANGLE);
 
+//Adds a leading zero if x < 100
+std::string format3(double x);
+
 #endif

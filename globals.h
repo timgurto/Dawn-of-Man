@@ -22,7 +22,7 @@ const double PI = 3.14159265358979323846;
 //a yet-to-be-calculated angle
 const double DUMMY_ANGLE = 3 * PI;
 
-const typeNum_t MAX_TYPES = 256;
+const typeNum_t MAX_TYPES = 8;
 const typeNum_t NO_TYPE = 0xffff;
 
 const typeNum_t MAX_PLAYERS = 2;
@@ -62,8 +62,8 @@ const Uint32 ENTITY_BACKGROUND_UINT = GREEN_UINT;
 const SDL_Color ENTITY_MASK         = MAGENTA;
 const Uint32 ENTITY_MASK_UINT       = MAGENTA_UINT;
 
-const Uint32 FOOTPRINT_COLOR_GOOD = 0x008800; //dark green
-const Uint32 FOOTPRINT_COLOR_BAD  = 0x880000; //dark red
+//const Uint32 FOOTPRINT_COLOR_GOOD = 0x008800; //dark green
+//const Uint32 FOOTPRINT_COLOR_BAD  = 0x880000; //dark red
 
 //Alpha of shadows (particles, cursor)
 const Uint8 SHADOW_ALPHA = 0x44;
@@ -96,6 +96,8 @@ const std::string UNITS_IMAGE_PATH
    = IMAGE_PATH + "Units/";
 const std::string RESOURCE_NODES_IMAGE_PATH
    = IMAGE_PATH + "Resources/";
+const std::string TECHS_IMAGE_PATH
+   = IMAGE_PATH + "Techs/";
 const std::string INTERFACE_IMAGE_PATH
    = IMAGE_PATH + "Interface/";
 
