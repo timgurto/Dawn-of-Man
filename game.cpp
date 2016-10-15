@@ -112,9 +112,9 @@ void gameMode(){
       oldTicks = newTicks;
       double deltaMod = 1.0 * delta / DELTA_MODIFIER;
       
-      deltaLog("       Framerate: ", (delta == 0 ? 0 : 1000 / delta));
-      deltaLog("           Delta: ", delta, "ms");
-      deltaLog("Delta per entity: ", 0.01 * (100 * delta / game.entities.size()));
+      deltaLog("    Framerate: ", (delta == 0 ? 0 : 1000 / delta));
+      deltaLog("        Delta: ", delta, "ms");
+      deltaLog("ms per entity: ", 0.01 * (100 * delta / game.entities.size()));
 
       //update state
       updateState(deltaMod, game, screen, bars);
@@ -145,31 +145,7 @@ void updateState(double delta, GameData &game,
    handleEvents(game, screen, bars);
 
    //Map scrolling
-   if (game.rightMouseMoved){
-      Point rmbDisplacement = game.mousePos - game.rightMouseBegin;
-      game.map = game.map - rmbDisplacement * (delta *
-                                               RMB_SCROLL_MULTIPLIER);
-   }
-
-   Uint8 *keyStates = SDL_GetKeyState(0);
-   pixels_t scroll = pixels_t(delta * SCROLL_AMOUNT);
-   if (keyStates[SDLK_UP])
-      game.map.y += scroll;
-   if (keyStates[SDLK_DOWN])
-      game.map.y -= scroll;
-   if (keyStates[SDLK_LEFT])
-      game.map.x += scroll;
-   if (keyStates[SDLK_RIGHT])
-      game.map.x -= scroll;
-
-   if (game.map.x > SCROLL_MARGIN)
-      game.map.x = SCROLL_MARGIN;
-   if (game.map.x + game.map.w < SCREEN_WIDTH - SCROLL_MARGIN)
-      game.map.x = SCREEN_WIDTH - SCROLL_MARGIN - game.map.w;
-   if (game.map.y > SCROLL_MARGIN)
-      game.map.y = SCROLL_MARGIN;
-   if (game.map.y + game.map.h < SCREEN_HEIGHT - SCROLL_MARGIN)
-      game.map.y = SCREEN_HEIGHT - SCROLL_MARGIN - game.map.h;
+   scrollMap(game, delta);
 
    //Entities
    for (entities_t::iterator it = game.entities.begin();
@@ -286,16 +262,16 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
          game.mousePos.x = event.motion.x;
          game.mousePos.y = event.motion.y;
          //check right mouse movement
-         if (game.rightMouseDown && !game.rightMouseMoved)
-            if ((game.mousePos.x - game.rightMouseBegin.x >=
-                 RMB_MOVEMENT_THRESHOLD) ||
-                (game.rightMouseBegin.x - game.mousePos.x >=
-                 RMB_MOVEMENT_THRESHOLD) ||
-                (game.mousePos.y - game.rightMouseBegin.y >=
-                 RMB_MOVEMENT_THRESHOLD) ||
-                (game.rightMouseBegin.y - game.mousePos.y >=
-                 RMB_MOVEMENT_THRESHOLD)){
-               game.rightMouseMoved = true;
+         if (game.rightMouse.down && !game.rightMouse.dragging)
+            if ((game.mousePos.x - game.rightMouse.dragBegin.x >=
+               MouseButton::MOVEMENT_THRESHOLD) ||
+                (game.rightMouse.dragBegin.x - game.mousePos.x >=
+                 MouseButton::MOVEMENT_THRESHOLD) ||
+                (game.mousePos.y - game.rightMouse.dragBegin.y >=
+                 MouseButton::MOVEMENT_THRESHOLD) ||
+                (game.rightMouse.dragBegin.y - game.mousePos.y >=
+                 MouseButton::MOVEMENT_THRESHOLD)){
+               game.rightMouse.dragging = true;
                debug("RMB moved");
             }
          break;
@@ -365,9 +341,8 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
             }
             break;
          case MOUSE_BUTTON_RIGHT:
-            game.rightMouseDown = true;
-            game.rightMouseMoved = false;
-            game.rightMouseBegin = game.mousePos;
+            game.rightMouse.mouseDown(game.mousePos);
+            break;
          }
          break;
 
@@ -375,15 +350,14 @@ void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars){
       case SDL_MOUSEBUTTONUP:
          switch (event.button.button){
          case MOUSE_BUTTON_RIGHT:
-            if (!game.rightMouseMoved)
+            if (!game.rightMouse.dragging)
                switch(game.mode){
                case BUILD_MODE:
                   //cancel build mode
                   game.mode = NORMAL_MODE;
                   break;
                }
-            game.rightMouseDown = false;
-            game.rightMouseMoved = false;
+            game.rightMouse.mouseUp();
             break;
          }
          break;
@@ -408,7 +382,7 @@ void removeEntity(){
 void blitCursor (SDL_Surface *cursor, SDL_Surface *shadow,
                  SDL_Surface *screen, const GameData &game){
    //cursor might appear 'raised' from the wall
-   bool raised = (game.rightMouseMoved);
+   bool raised = (game.rightMouse.dragging);
 
    Point
       cursorPos = game.mousePos + CURSOR_OFFSET,
@@ -419,4 +393,35 @@ void blitCursor (SDL_Surface *cursor, SDL_Surface *shadow,
    }
    SDL_BlitSurface(shadow, 0, screen, &makeRect(shadowPos));
    SDL_BlitSurface(cursor, 0, screen, &makeRect(cursorPos));
+}
+
+void scrollMap(GameData &game, double delta){
+   //right-dragging
+   if (game.rightMouse.dragging){
+      Point rmbDisplacement = game.mousePos - game.rightMouse.dragBegin;
+      game.map = game.map - rmbDisplacement * (delta *
+                                               RMB_SCROLL_MULTIPLIER);
+   }
+
+   //arrow keys
+   Uint8 *keyStates = SDL_GetKeyState(0);
+   pixels_t scroll = pixels_t(delta * SCROLL_AMOUNT);
+   if (keyStates[SDLK_UP])
+      game.map.y += scroll;
+   if (keyStates[SDLK_DOWN])
+      game.map.y -= scroll;
+   if (keyStates[SDLK_LEFT])
+      game.map.x += scroll;
+   if (keyStates[SDLK_RIGHT])
+      game.map.x -= scroll;
+
+   //Enforce scroll boundaries
+   if (game.map.x > SCROLL_MARGIN)
+      game.map.x = SCROLL_MARGIN;
+   if (game.map.x + game.map.w < SCREEN_WIDTH - SCROLL_MARGIN)
+      game.map.x = SCREEN_WIDTH - SCROLL_MARGIN - game.map.w;
+   if (game.map.y > SCROLL_MARGIN)
+      game.map.y = SCROLL_MARGIN;
+   if (game.map.y + game.map.h < SCREEN_HEIGHT - SCROLL_MARGIN)
+      game.map.y = SCREEN_HEIGHT - SCROLL_MARGIN - game.map.h;
 }

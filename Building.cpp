@@ -89,7 +89,7 @@ void Building::tick(double delta){
                                 0.02 * 
                                 Particle::PARTICLE_COUNT *
                                 delta * Particle::DECAY *
-                                delta);
+                                1);//delta);
 
       for (int i = 0; i != particlesToDraw; ++i){
          //calculate initial co-ords
@@ -144,4 +144,8 @@ int Building::getColor() const{
 
 EntityTypeID Building::classID() const{
    return BUILDING;
+}
+
+bool Building::selectable() const{
+   return true;
 }

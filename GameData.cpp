@@ -4,8 +4,7 @@
 #include "GameData.h"
 
 GameData::GameData(int mapSizeX, int mapSizeY):
-rightMouseDown(false),
-rightMouseMoved(false),
+rightMouse(),
 mapX(mapSizeX),
 mapY(mapSizeY),
 mousePos(SCREEN_WIDTH/2, SCREEN_HEIGHT/2),

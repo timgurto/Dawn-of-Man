@@ -29,6 +29,7 @@ public:
    virtual double getDrawPercent() const;
    virtual int getColor() const;
    virtual EntityTypeID classID() const;
+   virtual bool selectable() const;
 };
 
 #endif

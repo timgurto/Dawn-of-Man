@@ -38,4 +38,7 @@ void removeEntity();
 void blitCursor (SDL_Surface *cursor, SDL_Surface *shadow,
                  SDL_Surface *screen, const GameData &game);
 
+//Scrolls the map, based on keyboard/mouse states
+void scrollMap(GameData &game, double Delta);
+
 #endif

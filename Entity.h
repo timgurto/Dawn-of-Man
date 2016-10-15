@@ -46,6 +46,10 @@ protected: //everything should be a derived class
                   SDL_Rect &dstLoc) const;
 
 public:
+
+   //whether or not the entity is selected by the user
+   bool selected;
+
    Entity(typeNum_t type, const Point &loc);
 
    //less than; compares y co-ordinates
@@ -82,7 +86,16 @@ public:
    virtual EntityTypeID classID() const = 0;
 
    //whether these entities can collide with others
+   //default: true
    virtual bool collides() const;
+
+   //whether these entities can be selected
+   //default: false
+   virtual bool selectable() const;
+
+   inline void toggleSelect(){
+      selected = !selected;
+   }
 };
 
 #endif

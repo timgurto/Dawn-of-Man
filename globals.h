@@ -97,7 +97,6 @@ const pixels_t MAP_TILE_SIZE = 512;
 const pixels_t SCROLL_AMOUNT = 40;
 const pixels_t SCROLL_MARGIN = 50;
 
-const pixels_t RMB_MOVEMENT_THRESHOLD = 10;
 const double RMB_SCROLL_MULTIPLIER = 0.5;
 
 const pixels_t ICON_SIZE = 48;

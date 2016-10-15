@@ -60,7 +60,6 @@ void Entity::shadowBlit(SDL_Rect *srcLoc,
    //colored sprite
    colorBlit(getColor(), thisType.surface, screen,
              *srcLoc, dest);
-
 }
 
 SDL_Rect Entity::getBaseRect(){
@@ -135,5 +134,9 @@ void Entity::colorBlit(int color, SDL_Surface *surface,
 }
 
 bool Entity::collides() const{
-   return true; //default: collides
+   return true;
+}
+
+bool Entity::selectable() const{
+   return false;
 }
