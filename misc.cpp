@@ -22,13 +22,15 @@ extern int surfacesLoaded;
 //========SDL=========
 
 
-SDL_Surface *loadImage(const char* fileName){
+SDL_Surface *loadImage(const char* fileName,bool alpha){
    debug("Loading surface: ", fileName);
    std::string strFile(fileName);
    SDL_Surface *load, *opt;
    load = IMG_Load(fileName);
    checkP(load);
-   opt = SDL_DisplayFormat(load);
+   opt = alpha ?
+      SDL_DisplayFormatAlpha(load) :
+      SDL_DisplayFormat(load);
    checkP(opt);
    SDL_FreeSurface(load);
    ++surfacesLoaded;
@@ -36,23 +38,33 @@ SDL_Surface *loadImage(const char* fileName){
    return opt;
 }
 
-SDL_Surface *loadImage(const char* fileName, const SDL_Color &background){
-   SDL_Surface *img = loadImage(fileName);
-   SDL_SetColorKey(img, SDL_SRCCOLORKEY, SDL_MapRGB( img->format, background.r, background.g, background.b));
+SDL_Surface *loadImage(const char* fileName,
+                       const SDL_Color &background,
+                       bool alpha){
+   SDL_Surface *img = loadImage(fileName, alpha);
+   SDL_SetColorKey(img, SDL_SRCCOLORKEY,
+                   SDL_MapRGB(img->format,
+                              background.r,
+                              background.g,
+                              background.b));
    return img;
 }
 
-SDL_Surface *loadImage(const std::string fileName){
-   return loadImage(fileName.c_str());
+SDL_Surface *loadImage(const std::string fileName,
+                       bool alpha){
+   return loadImage(fileName.c_str(), alpha);
 }
 
-SDL_Surface *loadImage(const std::string fileName, const SDL_Color &background){
-   return loadImage(fileName.c_str(), background);
+SDL_Surface *loadImage(const std::string fileName,
+                       const SDL_Color &background,
+                       bool alpha){
+   return loadImage(fileName.c_str(), background, alpha);
 }
 
 SDL_Surface *createSurface(int width, int height){
    ++surfacesLoaded;
-   return SDL_CreateRGBSurface(SDL_HWSURFACE, width, height, SCREEN_BPP, 0, 0, 0, 0);
+   return SDL_CreateRGBSurface(SDL_HWSURFACE, width, height,
+                               SCREEN_BPP, 0, 0, 0, 0);
 }
 
 SDL_Rect makeRect(Sint16 x, Sint16 y, Uint16 w, Uint16 h){

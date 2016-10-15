@@ -17,10 +17,16 @@ struct GameData;
 
 //Loads an image file into an SDL_Surface, with optional transparent
 //background color.  Increments surfacesLoaded.
-SDL_Surface *loadImage(const char* fileName);
-SDL_Surface *loadImage(const char* fileName, const SDL_Color &background);
-SDL_Surface *loadImage(const std::string fileName);
-SDL_Surface *loadImage(const std::string fileName, const SDL_Color &background);
+SDL_Surface *loadImage(const char* fileName,
+                       bool alpha = false);
+SDL_Surface *loadImage(const char* fileName,
+                       const SDL_Color &background,
+                       bool alpha = false);
+SDL_Surface *loadImage(const std::string fileName,
+                       bool alpha = false);
+SDL_Surface *loadImage(const std::string fileName,
+                       const SDL_Color &background,
+                       bool alpha = false);
 
 SDL_Surface *createSurface(int width = SCREEN_WIDTH, int height = SCREEN_HEIGHT);
 

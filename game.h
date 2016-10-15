@@ -12,24 +12,17 @@ class Entity;
 //Main game functionality
 void gameMode();
 
+
+
+//=== update ===
+
+
 //Any processing within the game loop
 void updateState(double delta, GameData &game, SDL_Surface *screen,
                  UIBars_t &bars);
 
-//Draws a frame
-void render(SDL_Surface *screen,
-            SDL_Surface *diagGreen, SDL_Surface *diagRed,
-            SDL_Surface *map, SDL_Surface *darkMap,
-            SDL_Surface *cursor, SDL_Surface *cursorShadow,
-            SDL_Surface *entitiesTemp,
-            const GameData &game, const UIBars_t &bars);
-
 //Handles events and changes game data accordingly
 void handleEvents(GameData &game, SDL_Surface *screen, UIBars_t &bars);
-
-//Draws the cursor to the screen
-void blitCursor (SDL_Surface *cursor, SDL_Surface *shadow,
-                 SDL_Surface *screen, const GameData &game);
 
 //Adds an entity to the list, signing it up for garbage collection upon
 //removal
@@ -48,4 +41,20 @@ SDL_Rect getSelectionRect(const GameData &game);
 //Selects entities chosen by the user
 void select(GameData &game);
 
+
+
+//=== render ===
+
+
+//Draws a frame
+void render(SDL_Surface *screen, SDL_Surface *glow,
+            SDL_Surface *diagGreen, SDL_Surface *diagRed,
+            SDL_Surface *map, SDL_Surface *darkMap,
+            SDL_Surface *cursor, SDL_Surface *cursorShadow,
+            SDL_Surface *entitiesTemp,
+            const GameData &game, const UIBars_t &bars);
+
+//Draws the cursor to the screen
+void blitCursor (SDL_Surface *cursor, SDL_Surface *shadow,
+                 SDL_Surface *screen, const GameData &game);
 #endif

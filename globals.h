@@ -3,6 +3,7 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
+//TODO move stuff to related classes
 #include <string>
 #include "SDL.h"
 #include "Point.h"
