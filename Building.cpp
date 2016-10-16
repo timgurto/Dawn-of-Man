@@ -33,7 +33,7 @@ const EntityType &Building::type() const{
    return core_->buildingTypes[typeIndex_];
 }
 
-void Building::draw(SDL_Surface *screen) const{
+void Building::draw(Surface &screen) const{
    const EntityType &thisType = type();
 
    //draw footprint if construction hasn't begun
@@ -42,8 +42,7 @@ void Building::draw(SDL_Surface *screen) const{
          loc_ +
          thisType.baseRect_ +
          locRect(game_->map);
-      SDL_BlitSurface(diagGreen_, &dimRect(getBaseRect()),
-      screen, &altDrawLoc);
+      diagGreen_->draw(*screen_, &altDrawLoc, &dimRect(getBaseRect()));
       return;
    }
 
@@ -72,7 +71,7 @@ void Building::draw(SDL_Surface *screen) const{
                         thisType.drawRect_.w,
                         thisType.drawRect_.h);
    
-   colorBlit(getColor(), screen, srcLoc, drawLoc,
+   colorBlit(getColor(), *screen_, srcLoc, drawLoc,
          !finished_); //partial
 }
 

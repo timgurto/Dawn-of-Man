@@ -11,6 +11,7 @@
 struct GameData;
 struct CoreData;
 class EntityType;
+class Surface;
 
 class Entity;
 typedef std::list<Entity *> entities_t;
@@ -39,10 +40,10 @@ protected: //everything should be a derived class
    Point loc_; //location
    static GameData *game_; //static pointer to game
    static const CoreData *core_; //static pointer to core data
-   static SDL_Surface *screen_; // " " to the screen
+   static Surface *screen_; // " " to the screen
    
    //stark base for invisible entities
-   static SDL_Surface *diagGreen_;
+   static Surface *diagGreen_;
 
    //a list of Entity pointers.  Pointers are copied
    //here when marked for deletion, but deleting would
@@ -54,7 +55,7 @@ protected: //everything should be a derived class
    //and indexing it if necessary
    //partial: whether the entity is only partially drawn
    //black: whether the entity should be darkened
-   void colorBlit(int color, SDL_Surface *screen,
+   void colorBlit(int color, Surface &screen,
                  SDL_Rect &srcLoc,
                  SDL_Rect &dstLoc,
                  bool partial = false) const;
@@ -88,7 +89,7 @@ public:
 
    //Draws the entity.  Should draw with colorBlit(), to
    //take advantage of surface indexing and entity masks
-   virtual void draw(SDL_Surface *screen = screen_) const;
+   virtual void draw(Surface &screen = *screen_) const;
    
    //Any changes that need to be made to the entity
    //by the game loop
@@ -100,8 +101,8 @@ public:
    //Initializes the class' static pointers
    static void init(const CoreData *core,
                     GameData *game = 0,
-                    SDL_Surface *screen = 0,
-                    SDL_Surface *diagGreen = 0);
+                    Surface *screen = 0,
+                    Surface *diagGreen = 0);
 
    //identitifes which entity subclass this is
    virtual EntityTypeID classID() const = 0;
@@ -124,7 +125,7 @@ public:
    }
 
    //calculates where to draw the selection indicator
-   SDL_Rect getSelectionDest(SDL_Surface *selection) const;
+   SDL_Rect getSelectionDest(Surface &selection) const;
 
    //whether the entity's location is valid
    bool isLocationOK() const;

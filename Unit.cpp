@@ -46,7 +46,7 @@ const EntityType &Unit::type() const{
 }
 
 
-void Unit::draw(SDL_Surface *screen) const{
+void Unit::draw(Surface &screen) const{
    const UnitType &thisType = (const UnitType &)(type());
    SDL_Rect drawLoc = loc_ + thisType.drawRect_;
    SDL_Rect srcLoc;
@@ -82,10 +82,10 @@ void Unit::draw(SDL_Surface *screen) const{
    //debug("health / max = ", 1.0f * health_ / thisType.maxHealth_);
 
    if (DEBUG)
-      SDL_FillRect(screen, &makeRect(target_.x + game_->map.x - 2,
-                                     target_.y + game_->map.y - 2,
-                                     5, 5),
-                   getEntityColor(*game_, getColor()));
+      screen.fill(getEntityColor(*game_, getColor()),
+                  &makeRect(target_.x + game_->map.x - 2,
+                            target_.y + game_->map.y - 2,
+                            5, 5));
 }
 
 void Unit::tick(double delta){

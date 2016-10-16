@@ -11,48 +11,48 @@ struct GameData;
 struct SDL_Surface;
 
 //Draws the loading screen
-void renderLoadingScreen(SDL_Surface *screen, SDL_Surface *loading);
+void renderLoadingScreen(Surface &screen, const Surface &loading);
 
 //Draws everything to the screen
-void render(SDL_Surface *screen, SDL_Surface *selection,
-            SDL_Surface *diagGreen, SDL_Surface *diagRed,
-            SDL_Surface *map, SDL_Surface *darkMap,
-            SDL_Surface *cursor, SDL_Surface *cursorShadow,
-            SDL_Surface *cursorPause, SDL_Surface *cursorColor,
-            SDL_Surface *selRectImage,
-            SDL_Surface **cursorIndex,
+void render(Surface &screen, Surface &selection,
+            Surface &diagGreen, Surface &diagRed,
+            Surface &map, Surface &darkMap,
+            Surface &cursor, Surface &cursorShadow,
+            Surface &cursorPause, Surface &cursorColor,
+            Surface &selRectImage,
+            Surface *cursorIndex,
             const CoreData &core, const GameData &game,
             const UIBars_t &bars, const messageBoxes_t &messageBoxes,
-            SDL_Surface *outcomeMessage = 0);
+            Surface outcomeMessage = Surface(SUR_UNINIT));
 
 //Draws the cursor
-void renderCursor (SDL_Surface *screen, const GameData &game,
-                   SDL_Surface *cursor, SDL_Surface *shadow,
-                   SDL_Surface *pause, SDL_Surface *color,
-                   SDL_Surface **cursorIndex);
+void renderCursor (Surface &screen, const GameData &game,
+                   Surface &cursor, Surface &shadow,
+                   Surface &pause, Surface &color,
+                   Surface *cursorIndex);
 
 //Draws the terrain and border tiles
-void renderMap(SDL_Surface *screen, const GameData &game,
-               SDL_Surface *map, SDL_Surface *border);
+void renderMap(Surface &screen, const GameData &game,
+               Surface &map, Surface &border);
 
 //Draws markers at the locations of selected entities
-void renderSelection(SDL_Surface *screen, const GameData &game,
-                     SDL_Surface *selection);
+void renderSelection(Surface &screen, const GameData &game,
+                     Surface &selection);
 
 //Draws a building footprint at the cursor
-void renderFootprint(SDL_Surface *screen,
+void renderFootprint(Surface &screen,
                      const CoreData &core, const GameData &game,
-                     SDL_Surface *goodImage, SDL_Surface *badImage);
+                     Surface &goodImage, Surface &badImage);
 
 //Draws all decoration entities
-void renderDecorations(SDL_Surface *screen, const GameData &game);
+void renderDecorations(Surface &screen, const GameData &game);
 
 //Draws all entities except decorations
-void renderEntities(SDL_Surface *screen, const GameData &game);
+void renderEntities(Surface &screen, const GameData &game);
 
 //Draws the selection rectangle
-void renderSelectionRect(SDL_Surface *screen, const GameData &game,
-                         SDL_Surface *selRectImage);
+void renderSelectionRect(Surface &screen, const GameData &game,
+                         Surface &selRectImage);
 
 //Draws all UIBars
 void renderInterface(const UIBars_t &bars);
@@ -61,7 +61,7 @@ void renderInterface(const UIBars_t &bars);
 void renderParticles(const GameData &game);
 
 //Draws all message boxes
-void renderMessageBoxes(SDL_Surface *screen,
+void renderMessageBoxes(Surface &screen,
                         const messageBoxes_t messageBoxes);
 
 #endif

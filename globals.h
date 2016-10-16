@@ -60,10 +60,13 @@ const Uint32 MAGENTA_UINT = 0xff00ff;
 const Uint32 YELLOW_UINT  = 0xffff00;
 const Uint32 WHITE_UINT   = 0xffffff;
 
+//aritrary dummy value
+const SDL_Color NO_COLOR = {0xde, 0xca, 0xfb, 0xad};
+
 const SDL_Color ENTITY_BACKGROUND   = GREEN;
-const Uint32 ENTITY_BACKGROUND_UINT = GREEN_UINT;
+//const Uint32 ENTITY_BACKGROUND_UINT = GREEN_UINT;
 const SDL_Color ENTITY_MASK         = MAGENTA;
-const Uint32 ENTITY_MASK_UINT       = MAGENTA_UINT;
+//const Uint32 ENTITY_MASK_UINT       = MAGENTA_UINT;
 
 //const Uint32 FOOTPRINT_COLOR_GOOD = 0x008800; //dark green
 //const Uint32 FOOTPRINT_COLOR_BAD  = 0x880000; //dark red

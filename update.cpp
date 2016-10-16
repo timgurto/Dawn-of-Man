@@ -22,7 +22,7 @@ const Uint8 MOUSE_BUTTON_SCROLL_UP   = 4;
 const Uint8 MOUSE_BUTTON_SCROLL_DOWN = 5;
 
 void updateState(double delta, const CoreData &core, GameData &game,
-                 SDL_Surface *screen, UIBars_t &bars,
+                 Surface &screen, UIBars_t &bars,
                  MessageBox &contextHelp,
                  MessageBox &resourcesBox, MessageBox &fpsDisplay){
 
@@ -76,7 +76,7 @@ void updateState(double delta, const CoreData &core, GameData &game,
 }
 
 void handleEvents(const CoreData &core, GameData &game,
-                  SDL_Surface *screen, UIBars_t &bars,
+                  Surface &screen, UIBars_t &bars,
                   MessageBox &contextHelp, MessageBox &fpsDisplay){
    SDL_Event event;
    while (SDL_PollEvent(&event)){
@@ -150,7 +150,7 @@ void handleEvents(const CoreData &core, GameData &game,
                   { //new scope for os
                      std::ostringstream os;
                      os << SCREENSHOTS_PATH << "shot" << time(0) << ".bmp";
-                     SDL_SaveBMP(screen, os.str().c_str());
+                     screen.saveToBitmap(os.str());
                   }
                   break;
 

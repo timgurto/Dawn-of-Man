@@ -30,54 +30,6 @@ extern bool WINDOWED_MODE;
 //========SDL=========
 
 
-//Loads an image file into an SDL_Surface, with optional transparent
-//background color.  Increments surfacesLoaded.
-SDL_Surface *loadImage(const char* fileName,bool alpha){
-   debug("loading surface: ", fileName);
-   //SDL_WM_SetCaption( fileName, NULL );
-   SDL_Surface *load, *opt;
-   load = IMG_Load(fileName);
-   assert(load);
-   opt = alpha ?
-      SDL_DisplayFormatAlpha(load) :
-      SDL_DisplayFormat(load);
-   assert(opt);
-   SDL_FreeSurface(load);
-   ++surfacesLoaded;
-
-   return opt;
-}
-
-SDL_Surface *loadImage(const char* fileName,
-                       const SDL_Color &background,
-                       bool alpha){
-   SDL_Surface *img = loadImage(fileName, alpha);
-   SDL_SetColorKey(img, SDL_SRCCOLORKEY,
-                   SDL_MapRGB(img->format,
-                              background.r,
-                              background.g,
-                              background.b));
-   return img;
-}
-
-SDL_Surface *loadImage(const std::string fileName,
-                       bool alpha){
-   return loadImage(fileName.c_str(), alpha);
-}
-
-SDL_Surface *loadImage(const std::string fileName,
-                       const SDL_Color &background,
-                       bool alpha){
-   return loadImage(fileName.c_str(), background, alpha);
-}
-
-//Creates a surface, and increments surfacesLoaded
-SDL_Surface *createSurface(int width, int height){
-   ++surfacesLoaded;
-   return SDL_CreateRGBSurface(SDL_HWSURFACE, width, height,
-                               SCREEN_BPP, 0, 0, 0, 0);
-}
-
 //Loads a sound, and registers it with soundsLoaded
 SDL_Sound *loadSound(const std::string &fileName){
    if (fileName == "" || fileName == SOUND_PATH)
@@ -120,27 +72,12 @@ SDL_Color makeColor(Uint32 c){
    return col;
 }
 
-//Initializes a surface with screen settings
-SDL_Surface *setScreen(){
-   SDL_Surface *screen = SDL_SetVideoMode(SCREEN_WIDTH,
-                                          SCREEN_HEIGHT,
-                                          SCREEN_BPP,
-                                          SDL_HWSURFACE |
-                                          (WINDOWED_MODE ?
-                                             0 :
-                                             SDL_FULLSCREEN));
-   SDL_WM_SetCaption( "Dawn of Man", NULL );
-   return screen;
-}
-
-//Frees a surface.  Decrements surfacesLoaded.
-void freeSurface(SDL_Surface *&p){
-   if (p){
-      //debug("Unloading surface");
-      SDL_FreeSurface(p);
-      p = 0;
-      --surfacesLoaded;
-   }
+//SDL_Color -> Uint32
+//note: .unused is ignored
+Uint32 colorToUInt(const SDL_Color &color){
+   return (color.r << 16) |
+          (color.g <<  8) |
+          (color.b      );
 }
 
 //Free a sound, and update soundsLoaded
@@ -150,16 +87,6 @@ void freeSound(SDL_Sound *&p){
       p = 0;
       --soundsLoaded;
    }
-}
-
-//Deep-copies a surface from one pointer to another.
-SDL_Surface *copySurface(SDL_Surface* src){
-   if (!src)
-      return 0;
-   ++surfacesLoaded;
-   return SDL_ConvertSurface(src,
-                             src->format,
-                             SDL_SWSURFACE);
 }
 
 //returns a rectangle with equal dimensions, but co-ordinates
@@ -189,6 +116,14 @@ SDL_Rect &operator-=(SDL_Rect &lhs, const SDL_Rect &rhs){
    return lhs;
 }
 
+//SDL_Color != SDL_Color
+bool operator!=(const SDL_Color &lhs, const SDL_Color &rhs){
+   return lhs.r != rhs.r ||
+          lhs.g != rhs.g ||
+          lhs.b != rhs.b ||
+          lhs.unused != rhs.unused;
+}
+
 //plays a sound
 void playSound(SDL_Sound *p){
    if (!DEBUG)
@@ -199,7 +134,6 @@ void playSound(SDL_Sound *p){
 //synthesizes most args of SDL_SetColorKey
 void setColorKey(SDL_Surface *surface, const SDL_Color &color){
    assert(surface);
-   assert (surface);
    SDL_SetColorKey(surface, SDL_SRCCOLORKEY,
                    SDL_MapRGB(surface->format,
                               color.r,

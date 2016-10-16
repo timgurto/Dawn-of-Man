@@ -276,6 +276,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Surface.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Tech.h"
 				>
 			</File>
@@ -401,6 +405,10 @@
 			</File>
 			<File
 				RelativePath=".\Resources.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Surface.cpp"
 				>
 			</File>
 			<File

@@ -12,13 +12,14 @@
 #include "Player.h"
 #include "Point.h"
 #include "MouseButton.h"
+#include "Surface.h"
 
 class Building;
 struct CoreData;
 
 typedef std::vector<Player> players_t;
 typedef std::list<Particle> particles_t;
-typedef SDL_Surface *surfaceIndex_t
+typedef Surface surfaceIndex_t
                         //number of colors
         //[0] - [MAX_PLAYERS-1] = each player's color
                         [CLR_MAX]

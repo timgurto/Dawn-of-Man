@@ -53,7 +53,7 @@ public:
 
    //Inherited from Entity
    virtual const EntityType &Unit::type() const;
-   virtual void draw(SDL_Surface *screen) const;
+   virtual void draw(Surface &screen = *screen_) const;
    virtual void tick(double delta);
    virtual EntityTypeID classID() const;
    virtual bool selectable() const;

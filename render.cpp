@@ -7,30 +7,29 @@
 #include "GameData.h"
 #include "Debug.h"
 #include "MessageBox.h"
+#include "Surface.h"
 #include "misc.h"
 
 extern Debug debug, deltaLog;
 
-void renderLoadingScreen(SDL_Surface *screen, SDL_Surface *loading){
-   SDL_FillRect(screen, 0, 0);
-   SDL_BlitSurface(loading, 0,
-                   screen, &makeRect((screen->w - loading->w) / 2,
-                                     (screen->h - loading->h) / 2));
-   bool test = SDL_Flip(screen) == 0;
-   assert(test);
+void renderLoadingScreen(Surface &screen, const Surface &loading){
+   screen.fill(BLACK);
+   loading.draw(screen, &makeRect((screen->w - loading->w) / 2,
+                                  (screen->h - loading->h) / 2));
+   screen.flip();
 
 }
 
-void render(SDL_Surface *screen, SDL_Surface *selection,
-            SDL_Surface *diagGreen, SDL_Surface *diagRed,
-            SDL_Surface *map, SDL_Surface *darkMap,
-            SDL_Surface *cursor, SDL_Surface *cursorShadow,
-            SDL_Surface *cursorPause, SDL_Surface *cursorColor,
-            SDL_Surface *selRectImage,
-            SDL_Surface **cursorIndex,
+void render(Surface &screen, Surface &selection,
+            Surface &diagGreen, Surface &diagRed,
+            Surface &map, Surface &darkMap,
+            Surface &cursor, Surface &cursorShadow,
+            Surface &cursorPause, Surface &cursorColor,
+            Surface &selRectImage,
+            Surface *cursorIndex,
             const CoreData &core, const GameData &game,
             const UIBars_t &bars, const messageBoxes_t &messageBoxes,
-            SDL_Surface *outcomeMessage){
+            Surface outcomeMessage){
 
    assert (screen);
 
@@ -48,23 +47,19 @@ void render(SDL_Surface *screen, SDL_Surface *selection,
    renderParticles(game);
 
    if (game.paused){
-      SDL_Surface *darkCover = createSurface();
-      SDL_FillRect(darkCover, &darkCover->clip_rect, BLACK_UINT);
-      SDL_SetAlpha(darkCover, SDL_SRCALPHA, SHADOW_ALPHA);
-      SDL_BlitSurface(darkCover, 0, screen, 0);
-      freeSurface(darkCover);
+      Surface darkCover(SUR_BLANK);
+      darkCover.fill(BLACK);
+      darkCover.setAlpha(SHADOW_ALPHA);
+      darkCover.draw(screen);
    }
 
    if (outcomeMessage){
       pixels_t
          x = (screen->w - outcomeMessage->w) / 2,
          y = (screen->h - outcomeMessage->h) / 2;
-      SDL_FillRect(screen,
-                   &makeRect(x, y,
-                             outcomeMessage->w, outcomeMessage->h),
-                             game.players[HUMAN_PLAYER].getColor());
-      SDL_BlitSurface(outcomeMessage, 0,
-                      screen, &makeRect(x, y));                                        
+      screen.fill(game.players[HUMAN_PLAYER].getColor(),
+                  &makeRect(x, y, outcomeMessage->w, outcomeMessage->h));
+      outcomeMessage.draw(screen, &makeRect(x, y));                                     
    }
 
    //Debug text
@@ -72,20 +67,19 @@ void render(SDL_Surface *screen, SDL_Surface *selection,
    //deltaLog.display();
 
    //Finalize
-   bool test = SDL_Flip(screen) == 0;
-   assert(test);
+   screen.flip();
 }
 
-void renderCursor (SDL_Surface *screen, const GameData &game,
-                   SDL_Surface *cursor, SDL_Surface *shadow,
-                   SDL_Surface *pause, SDL_Surface *color,
-                   SDL_Surface **cursorIndex){
+void renderCursor (Surface &screen, const GameData &game,
+                   Surface &cursor, Surface &shadow,
+                   Surface &pause, Surface &color,
+                   Surface *cursorIndex){
    Point
       cursorPos = game.mousePos + CURSOR_OFFSET,
       shadowPos = cursorPos;
 
    if (game.paused)
-      SDL_BlitSurface(pause, 0, screen, &makeRect(cursorPos));
+      pause.draw(screen, &makeRect(cursorPos));
 
    //cursor might appear 'raised' from the wall
    bool raised = game.rightMouse.dragging;
@@ -94,8 +88,8 @@ void renderCursor (SDL_Surface *screen, const GameData &game,
       shadowPos += CURSOR_RAISED;
    }
 
-   SDL_BlitSurface(shadow, 0, screen, &makeRect(shadowPos)); //shadow
-   SDL_BlitSurface(cursor, 0, screen, &makeRect(cursorPos)); //cursor
+   shadow.draw(screen, &makeRect(shadowPos)); //cursor shadow
+   cursor.draw(screen, &makeRect(cursorPos)); //cursor
 
    //color
    int colorIndex = game.cursorColor;
@@ -103,27 +97,27 @@ void renderCursor (SDL_Surface *screen, const GameData &game,
       //same technique as with coloring entities
       assert (colorIndex < CLR_MAX);
       assert (cursorIndex);
-      SDL_Surface *&index = cursorIndex[colorIndex];
+      
+
+      Surface &index = cursorIndex[colorIndex];
       
       //create colored surface if it doesn't exist
       if (!index){
          assert (color);
-         index = createSurface(color->w, color->h);
-         setColorKey(index);
-         SDL_FillRect(index, 0, getEntityColor(game, colorIndex));
-         SDL_BlitSurface(color, 0, index, 0);
+         index = Surface(SUR_BLANK, color->w, color->h, ENTITY_BACKGROUND);
+         index.fill(getEntityColor(game, colorIndex));
+         index.draw(color);
       }
 
       //colored index definitely exists now
-      SDL_BlitSurface(index, 0, screen, &makeRect(cursorPos));
-
+      index.draw(screen, &makeRect(cursorPos));
 
    }
 }
 
 //Draws the terrain and border tiles
-void renderMap(SDL_Surface *screen, const GameData &game,
-               SDL_Surface *map, SDL_Surface *border){
+void renderMap(Surface &screen, const GameData &game,
+               Surface &map, Surface &border){
    assert (screen);
    for (int x = -1; x != game.mapX + 1; ++x)
       for (int y = -1; y != game.mapY + 1; ++y){
@@ -134,55 +128,53 @@ void renderMap(SDL_Surface *screen, const GameData &game,
          //if tile is inside the screen
          if (collision(tileRect, screen->clip_rect)){
 
-            //which image to blit
-            SDL_Surface *tile = map;
-            if (x == -1 || x == game.mapX ||
-                y == -1 || y == game.mapY)
-               //outside the map
-               tile = border;
+            //which image to blit?
+            Surface tile((x == -1 || x == game.mapX ||
+                          y == -1 || y == game.mapY) ?
+                             border : //outside map
+                             map);    //inside map
+            
+            tile.draw(map, &tileRect);
 
-            SDL_BlitSurface(tile, 0, screen, &tileRect);
          } //if collision
       } //for y
 }
 
 //Draws markers at the locations of selected entities
-void renderSelection(SDL_Surface *screen, const GameData &game,
-                     SDL_Surface *selection){
+void renderSelection(Surface &screen, const GameData &game,
+                     Surface &selection){
    for (entities_t::const_iterator it = game.entities.begin();
         it != game.entities.end(); ++it)
       if ((*it)->selected && (*it)->onScreen()){
          SDL_Rect dest = (*it)->getSelectionDest(selection);
-         SDL_BlitSurface(selection, 0, screen, &dest);
+         selection.draw(screen, &dest);
       }
 }
 
 //Draws a building footprint at the cursor
-void renderFootprint(SDL_Surface *screen,
+void renderFootprint(Surface &screen,
                      const CoreData &core, const GameData &game,
-                     SDL_Surface *goodImage, SDL_Surface *badImage){
+                     Surface &goodImage, Surface &badImage){
    SDL_Rect baseRect = game.mousePos +
                        core.buildingTypes[game.toBuild].getBaseRect();
    if (game.buildLocationOK &&
        game.players[HUMAN_PLAYER].
           sufficientResources(core.buildingTypes[game.toBuild].getCost()))
-      SDL_BlitSurface(goodImage, &dimRect(baseRect),
-                      screen, &SDL_Rect(baseRect));
+      goodImage.draw(screen, &SDL_Rect(baseRect), &dimRect(baseRect));
    else
-      SDL_BlitSurface(badImage, &dimRect(baseRect),
-                      screen, &SDL_Rect(baseRect));
+      badImage .draw(screen, &SDL_Rect(baseRect), &dimRect(baseRect));
 }
 
 //Draws decoration entities
-void renderDecorations(SDL_Surface *screen, const GameData &game){
+void renderDecorations(Surface &screen, const GameData &game){
    for (entities_t::const_iterator it = game.entities.begin();
         it != game.entities.end(); ++it)
       if ((*it)->classID() == ENT_DECORATION && (*it)->onScreen())
-         (*it)->draw(screen);
+         (*it)->draw();
 }
 
 //Draws all entities, except decorations
-void renderEntities(SDL_Surface *screen, const GameData &game){
+void renderEntities(Surface &screen, const GameData &game){
 
    //Masks on: draws entities onto an intermediate surface, along
    //with filled key-color backgrounds, to create cleaner looking
@@ -191,20 +183,16 @@ void renderEntities(SDL_Surface *screen, const GameData &game){
    //along with the regular sprite drawing
    if (ENTITY_MASKS){
       //intermediate surface
-      SDL_Surface *entitiesTemp = createSurface();
-      SDL_SetColorKey(entitiesTemp, SDL_SRCCOLORKEY,
-                      SDL_MapRGB(entitiesTemp->format,
-                                 ENTITY_BACKGROUND.r,
-                                 ENTITY_BACKGROUND.g,
-                                 ENTITY_BACKGROUND.b));
-      SDL_FillRect(entitiesTemp, 0, ENTITY_BACKGROUND_UINT);
+      Surface entitiesTemp(SUR_BLANK, SCREEN_WIDTH, SCREEN_HEIGHT,
+                           ENTITY_BACKGROUND);
+      entitiesTemp.fill(ENTITY_BACKGROUND);
+
       for (entities_t::const_iterator it = game.entities.begin();
            it != game.entities.end(); ++it)
          //only draw entities that are on-screen
-         if (/*(*it)->classID() != ENT_DECORATION &&*/ (*it)->onScreen())
+         if ((*it)->onScreen())
             (*it)->draw(entitiesTemp);
-      SDL_BlitSurface(entitiesTemp, 0, screen, 0);
-      freeSurface(entitiesTemp);
+      entitiesTemp.draw(screen);
 
    //Masks off: draws entities straight to the screen.
    //Considerably faster.
@@ -217,8 +205,8 @@ void renderEntities(SDL_Surface *screen, const GameData &game){
 }
 
 //Draws the selection rectangle
-void renderSelectionRect(SDL_Surface *screen, const GameData &game,
-                         SDL_Surface *selRectImage){
+void renderSelectionRect(Surface &screen, const GameData &game,
+                         Surface &selRectImage){
    //Get rectangle
    SDL_Rect selRect = getSelectionRect(game);
 
@@ -233,9 +221,10 @@ void renderSelectionRect(SDL_Surface *screen, const GameData &game,
       selRect.y = 0;
    }else if ((selRect.y + selRect.h) > SCREEN_WIDTH)
       selRect.h = SCREEN_WIDTH - selRect.y;
-   
-   SDL_BlitSurface(selRectImage, &makeRect(0, 0, selRect.w, selRect.h),
-                   screen, &selRect);
+
+   selRectImage.draw(screen, &selRect, &makeRect(0, 0,
+                                                 selRect.w,
+                                                 selRect.h));
 }
 
 //Draws all UIBars
@@ -253,7 +242,7 @@ void renderParticles(const GameData &game){
       it->draw(game);
 }
 
-void renderMessageBoxes(SDL_Surface *screen,
+void renderMessageBoxes(Surface &screen,
                         const messageBoxes_t messageBoxes){
    for (messageBoxes_t::const_iterator it = messageBoxes.begin();
         it != messageBoxes.end(); ++it)

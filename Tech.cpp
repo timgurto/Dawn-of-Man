@@ -3,6 +3,8 @@
 #include "Tech.h"
 #include "misc.h"
 
+class Surface;
+
 Tech::Tech(typeNum_t index,
       const std::string &name,
       const std::string &description,
@@ -18,12 +20,9 @@ bonuses_(bonuses),
 originBuilding_(originBuilding),
 cost_(cost),
 prereqTech1_(prereqTech1),
-prereqTech2_(prereqTech2){
-   icon_ = loadImage(makePath(ENT_TECH,
-                             index_,
-                             IMG_ICON),
-                    ENTITY_BACKGROUND);
-}
+prereqTech2_(prereqTech2),
+icon_(makePath(ENT_TECH, index, IMG_ICON),
+      ENTITY_BACKGROUND){}
 
 Tech::Tech (const Tech &original):
 index_(original.index_),
@@ -34,11 +33,7 @@ originBuilding_(original.originBuilding_),
 cost_(original.cost_),
 prereqTech1_(original.prereqTech1_),
 prereqTech2_(original.prereqTech2_),
-icon_(copySurface(original.icon_)){}
-
-Tech::~Tech(){
-   freeSurface(icon_);
-}
+icon_(original.icon_){}
 
 const TechBonuses &Tech::getBonuses() const{
    return bonuses_;
@@ -52,7 +47,7 @@ typeNum_t Tech::getIndex() const{
    return index_;
 }
 
-SDL_Surface *Tech::getIcon() const{
+const Surface &Tech::getIcon() const{
    return icon_;
 }
 

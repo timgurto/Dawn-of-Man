@@ -12,6 +12,8 @@
 #include "misc.h"
 #include "types.h"
 
+class Surface;
+
 //In Release, these objects have zero functionality.
 //The methods are macro'd to be empty, and calls are
 //hopefully optimized away by the compiler.
@@ -28,11 +30,12 @@ class Debug{
    //maximum number of messages to show at once
    unsigned short count_;
    std::queue<std::string> messages; //the messages
-   SDL_Surface *screen_; //The surface used to display
    int height_; //the height of each line of text
 
    //debug objects that exist
    static int debugCount_;
+
+   static Surface *screen_; //The surface used to display
 
 public:
    Debug(SDL_Color color, pixels_t x, pixels_t y,
@@ -40,7 +43,7 @@ public:
    ~Debug();
 
    //Initializes static pointers
-   void initScreen(SDL_Surface *screen);
+   void initScreen(Surface *screen);
 
    //Initializes font info
    void initFont(std::string name, int size);

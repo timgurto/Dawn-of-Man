@@ -7,6 +7,7 @@
 #include "globals.h"
 #include "TechBonuses.h"
 #include "Resources.h"
+#include "Surface.h"
 
 //An improvement each player can employ once,
 //at a cost, to yield defined permanent bonuses
@@ -16,7 +17,7 @@ class Tech{
    typeNum_t index_;
    std::string name_;
    std::string description_;
-   SDL_Surface *icon_;
+   Surface icon_;
 
    //What bonuses this tech grants
    TechBonuses bonuses_;
@@ -42,13 +43,12 @@ public:
         typeNum_t prereqTech1 = NO_TYPE,
         typeNum_t prereqTech2 = NO_TYPE);
    Tech (const Tech &rhs);
-   ~Tech();
 
    //get
    const TechBonuses &getBonuses() const;
    typeNum_t getOriginBuilding()const;
    typeNum_t getIndex() const;
-   SDL_Surface *getIcon() const;
+   const Surface &getIcon() const;
    const Resources &getCost() const;
    std::string getCostString() const;
    std::string getName() const;

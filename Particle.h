@@ -8,6 +8,7 @@
 #include "misc.h"
 
 struct GameData;
+class Surface;
 
 //Describes a particle.  At this point the images and
 //trajectories used are static, and so each object
@@ -20,7 +21,7 @@ class Particle{
    double offset_; //lateral displacement, for shadow
 
    //static pointers to surfaces
-   static SDL_Surface
+   static Surface
       *screen_, //the screen
       *image_, //the particle image
       *shadow_; //the particle shadow image
@@ -58,9 +59,9 @@ public:
    bool expired() const;
 
    //initializes static pointers
-   static void init(SDL_Surface *screen,
-                    SDL_Surface *image,
-                    SDL_Surface *shadow);
+   static void init(Surface *screen,
+                    Surface *image,
+                    Surface *shadow);
 };
 
 #endif

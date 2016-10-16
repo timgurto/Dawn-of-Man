@@ -133,18 +133,18 @@ typeNum_t getValidTech(const CoreData &core, const GameData &game,
 //UIBar::surfaceFun_
 //Returns the icon surface for the specified index
 
-   SDL_Surface *getBuildingTypeIcons(typeNum_t i, const CoreData &core,
-                                     const GameData &game){
+   const Surface &getBuildingTypeIcons(typeNum_t i, const CoreData &core,
+                                       const GameData &game){
       return core.buildingTypes[getValidBuilding(core, game, i)].getIcon();
    }
 
-   SDL_Surface *getUnitTypeIcons(typeNum_t i, const CoreData &core,
-                                 const GameData &game){
+   const Surface &getUnitTypeIcons(typeNum_t i, const CoreData &core,
+                                   const GameData &game){
       return core.unitTypes[getValidUnit(core, game, i)].getIcon();
    }
 
-   SDL_Surface *getTechIcons(typeNum_t i, const CoreData &core,
-                             const GameData &game){
+   const Surface &getTechIcons(typeNum_t i, const CoreData &core,
+                               const GameData &game){
       return core.techs[getValidTech(core, game, i)].getIcon();
    }
 

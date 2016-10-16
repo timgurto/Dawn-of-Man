@@ -12,7 +12,7 @@ const int Particle::PARTICLE_COUNT = 8;
 const double Particle::VELOCITY_RANGE = 2;
 const int Particle::DECAY = 6;
 
-SDL_Surface
+Surface
    *Particle::screen_ = 0,
    *Particle::image_ = 0,
    *Particle::shadow_ = 0;
@@ -39,20 +39,19 @@ void Particle::draw(const GameData &game) const{
 
    //shadow
    SDL_Rect disp = makeRect(int(dest.x - offset_), int(dest.y + offset_));
-   SDL_BlitSurface(shadow_, 0, screen_, &disp);
+   shadow_->draw(*screen_, &disp);
 
    //particle
    if (PARTICLE_FADE)
-      SDL_SetAlpha(image_, SDL_SRCALPHA, Uint8(age_));
-   SDL_BlitSurface(image_, 0, screen_, &dest);
+      image_->setAlpha(Uint8(age_));
+   image_->draw(*screen_, &dest);
 }
 
 bool Particle::expired() const{
    return (age_ <= 0);
 }
 
-void Particle::init(SDL_Surface *screen, SDL_Surface *image,
-                    SDL_Surface *shadow){
+void Particle::init(Surface *screen, Surface *image, Surface *shadow){
    image_ = image;
    screen_ = screen;
    shadow_ = shadow;

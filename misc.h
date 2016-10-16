@@ -22,22 +22,6 @@ extern pixels_t SCREEN_WIDTH, SCREEN_HEIGHT;
 
 //===SDL===
 
-//Loads an image file into an SDL_Surface, with optional transparent
-//background color.  Increments surfacesLoaded.
-SDL_Surface *loadImage(const char* fileName,
-                       bool alpha = false);
-SDL_Surface *loadImage(const char* fileName,
-                       const SDL_Color &background,
-                       bool alpha = false);
-SDL_Surface *loadImage(const std::string fileName,
-                       bool alpha = false);
-SDL_Surface *loadImage(const std::string fileName,
-                       const SDL_Color &background,
-                       bool alpha = false);
-
-//Creates a surface, and increments surfacesLoaded
-SDL_Surface *createSurface(int width = SCREEN_WIDTH, int height = SCREEN_HEIGHT);
-
 //Loads a sound, and registers it with soundsLoaded
 SDL_Sound *loadSound(const std::string &fileName);
 
@@ -49,14 +33,11 @@ SDL_Rect makeRect(const Point &point);
 SDL_Color makeColor(Uint8 r, Uint8 g, Uint8 b);
 SDL_Color makeColor(Uint32 c);
 
+//SDL_Color -> Uint32
+Uint32 colorToUInt(const SDL_Color &color);
+
 //Initializes a surface with screen settings
 SDL_Surface *setScreen();
-
-//Frees a surface.  Decrements surfacesLoaded.
-void freeSurface(SDL_Surface *&p);
-
-//Deep-copies a surface from one pointer to another.
-SDL_Surface *copySurface(SDL_Surface* src);
 
 //Free a sound, and update soundsLoaded
 void freeSound(SDL_Sound *&p);
@@ -78,12 +59,11 @@ bool isKeyPressed(SDLKey key);
 //SDL_Rect -= SDL_Rect
 SDL_Rect &operator-=(SDL_Rect &lhs, const SDL_Rect &rhs);
 
+//SDL_Color != SDL_Color
+bool operator!=(const SDL_Color &lhs, const SDL_Color &rhs);
+
 //plays a sound
 void playSound(SDL_Sound *p);
-
-//synthesizes most args of SDL_SetColorKey
-void setColorKey(SDL_Surface *surface,
-                 const SDL_Color &color = ENTITY_BACKGROUND);
 
 //push a mouse-move event onto the queue, to refresh the
 //calculations handled there

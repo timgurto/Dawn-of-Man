@@ -10,6 +10,7 @@
 
 struct Point;
 struct GameData;
+class Surface;
 
 //A bar of icons, which can be drawn on-screen and identify
 //which of its buttons is clicked
@@ -40,8 +41,8 @@ class UIBar{
    //static pointers to access game data and bar backgrounds
    static GameData *game_;
    static const CoreData *core_;
-   static SDL_Surface *screen_;
-   static SDL_Surface *barSurface_;
+   static Surface *screen_;
+   static Surface *barSurface_;
    static SDL_Sound *click_;
 
 public:
@@ -55,8 +56,8 @@ public:
    //Initializes static pointers
    static void init(const CoreData *core,
                     GameData *game,
-                    SDL_Surface *screen,
-                    SDL_Surface *barSurface,
+                    Surface *screen,
+                    Surface *barSurface,
                     SDL_Sound *click);
 
    //determines the number of icons on the bar, and

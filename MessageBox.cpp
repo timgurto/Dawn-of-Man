@@ -4,11 +4,12 @@
 #include "MessageBox.h"
 #include "globals.h"
 #include "misc.h"
+#include "Surface.h"
 
 MessageBox::MessageBox(SDL_Color color,
                        pixels_t x, pixels_t y,
                        pixels_t margin,
-                       SDL_Surface *background,
+                       Surface &background,
                        const std::string &fontName,
                        int fontSize,
                        bool accountForHeight,
@@ -28,35 +29,30 @@ font_(TTF_OpenFont(fontName.c_str(), fontSize)){
       y_ -= fontHeight;
 }
 
-void MessageBox::display(SDL_Surface *screen) const{
+void MessageBox::display(Surface &screen) const{
    if (visible_)
       if (message_ != ""){
          assert (screen);
 
          //message surface
-         SDL_Surface *text = TTF_RenderText_Solid(font_,
-                                                  message_.c_str(),
-                                                  color_);
+         Surface text(font_, message_, color_);
          pixels_t width = text->clip_rect.w + margin_;
 
          //background
          if (background_){
-            SDL_FillRect(screen,
-                         &makeRect(x_ - margin_, y_ - margin_,
-                         width + 1, height_ + 1),
-                         ENGRAVE_DARK_UINT);
-            SDL_FillRect(screen,
-                         &makeRect(x_ - margin_ - 1, y_ - margin_ - 1,
-                                   width + 1, height_ + 1),
-                         ENGRAVE_LIGHT_UINT);
-            SDL_BlitSurface(background_, &makeRect(0, 0, width, height_),
-                            screen, &makeRect(x_ - margin_, y_ - margin_));
+            screen.fill(ENGRAVE_DARK,
+                        &makeRect(x_ - margin_, y_ - margin_,
+                                  width + 1, height_ + 1));
+            screen.fill(ENGRAVE_LIGHT_UINT,
+                        &makeRect(x_ - margin_ - 1, y_ - margin_ - 1,
+                                  width + 1, height_ + 1));
+            background_.draw(screen,
+                             &makeRect(x_ - margin_, y_ - margin_),
+                             &makeRect(0, 0, width, height_));
          }
 
          //message
-         SDL_BlitSurface(text, 0,
-                         screen, &makeRect(x_ + margin_, y_ + margin_));
-         SDL_FreeSurface(text);
+         text.draw(screen, &makeRect(x_ + margin_, y_ + margin_));
       }
 }
 

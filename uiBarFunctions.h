@@ -12,6 +12,7 @@
 struct SDL_Surface;
 struct GameData;
 struct CoreData;
+class Surface;
 
 //whether the given item is available for the human player
 bool validBuilding(const CoreData &core, const GameData &game,
@@ -48,8 +49,8 @@ typedef iconCountFun *iconCountFunPtr;
 
 
 //surfaceFun_
-typedef SDL_Surface *surfaceFun(typeNum_t index, const CoreData &data,
-                                const GameData &game);
+typedef const Surface &surfaceFun(typeNum_t index, const CoreData &data,
+                                  const GameData &game);
 typedef surfaceFun *surfaceFunPtr;
    
    //Buildings bar: BuildingType icons

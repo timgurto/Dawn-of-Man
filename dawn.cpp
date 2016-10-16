@@ -25,12 +25,6 @@ bool WINDOWED_MODE = DEBUG;
 //general debug messages
 Debug debug(YELLOW, 0, 0, 59);
 
-//the number of surfaces loaded
-// - increases with loadImage()
-// - increases with createSurface()
-// - decreases with freeSurface()
-int surfacesLoaded = 0;
-
 //the number of sounds loaded
 // - increases with loadSound()
 // - decreases with freeSound()
@@ -69,7 +63,7 @@ int main(int argc, char **argv){
    //TTF_Quit() happens at debug dtor
    Mix_CloseAudio(); 
    SDL_Quit();
-   assert (surfacesLoaded == 0);
+   Surface::quit();
    assert (soundsLoaded == 0);
    return 0;
 }

@@ -36,12 +36,6 @@ recalcBars(false),
 selectionChanged(false),
 buildingSelected(0),
 outcome(IN_PROGRESS){
-   for (typeNum_t i = 0; i != CLR_MAX; ++i)
-      for (typeNum_t j = 0; j != MAX_TYPES; ++j)
-         for (typeNum_t k = 0; k != ENT_MAX; ++k){
-            surfaceIndex[i][j][k] = 0;
-            surfaceIndexShadowed[i][j][k] = 0;
-         }
    //map
    Uint16 w = mapX * MAP_TILE_SIZE;
    Uint16 h = mapY * MAP_TILE_SIZE;
@@ -263,13 +257,6 @@ GameData::~GameData(){
       delete(*it);
    }
 
-   //surface index (SDL_FreeSurface)
-   for (typeNum_t i = 0; i != CLR_MAX; ++i)
-      for (typeNum_t j = 0; j != MAX_TYPES; ++j)
-         for (typeNum_t k = 0; k != ENT_MAX; ++k){
-            freeSurface(surfaceIndex[i][j][k]);
-            freeSurface(surfaceIndexShadowed[i][j][k]);
-         }
 }
 
 void GameData::init(const CoreData *core){

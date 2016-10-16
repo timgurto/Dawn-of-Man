@@ -6,6 +6,7 @@
 #include <string>
 #include "SDL.h"
 #include "Point.h"
+#include "Surface.h"
 #include "globals.h"
 
 //A category of entities, differing by attributes,
@@ -32,10 +33,10 @@ class EntityType{
    //Which decoration this entity becomes when it dies
    typeNum_t decorationAtDeath_;
 
-   SDL_Surface
-      *surface_, //main image
-      *icon_, //icon, for UIBars
-      *mask_; //green and magenta background mask
+   Surface
+      surface_, //main image
+      icon_, //icon, for UIBars
+      mask_; //green and magenta background mask
 
    //these are for copying, since it's a messier
    //process than for surfaces, and thus easier
@@ -68,7 +69,7 @@ public:
    //get
    const SDL_Rect &getBaseRect() const;
    const SDL_Rect &getDrawRect() const;
-   SDL_Surface *getIcon() const;
+   const Surface &getIcon() const;
    const std::string &getName() const;
    typeNum_t getIndex() const;
    SDL_Sound *getSound() const;

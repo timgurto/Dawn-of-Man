@@ -7,6 +7,7 @@
 #include <string>
 #include <sstream>
 #include "SDL_ttf.h"
+#include "Surface.h"
 #include "types.h"
 
 //Text that appears on the screen
@@ -18,19 +19,19 @@ class MessageBox{
    pixels_t height_; //height of the box
    pixels_t margin_; //padding around the text
    std::string message_; //the message
-   SDL_Surface *background_; //the background image
+   Surface background_; //the background image
    bool visible_; //whether the box is drawn
 
 public:
    MessageBox(SDL_Color color, pixels_t x, pixels_t y,
               pixels_t margin,
-              SDL_Surface *background,
+              Surface &background,
               const std::string &fontName, int fontSize,
               bool accountForHeight = false,
               bool visible = true);
 
    //Draws messages to the screen
-   void display(SDL_Surface *screen) const;
+   void display(Surface &screen) const;
 
    void clear();
 

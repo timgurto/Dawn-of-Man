@@ -34,6 +34,7 @@
 #include "Tech.h"
 #include "TechBonuses.h"
 #include "CoreData.h"
+#include "Surface.h"
 
 extern Debug debug;
 //extern Debug deltaLog;
@@ -54,14 +55,15 @@ const timer_t END_MESSAGE_TIMER = 1250;
 GameOutcome gameMode(std::string fileName){
 
    //initialize screen and debug objects
-   SDL_Surface *screen = setScreen();
+   Surface screen(SUR_SCREEN);
 
    //loading screen
-   SDL_Surface *loading = loadImage(MISC_IMAGE_PATH + "loading.PNG");
-   renderLoadingScreen(screen, loading);
-   freeSurface(loading);
+   {
+      Surface loading(MISC_IMAGE_PATH + "loading.PNG");
+      renderLoadingScreen(screen, loading);
+   }
 
-   debug.initScreen(screen);
+   debug.initScreen(&screen);
 
    //seed random generator
    srand(unsigned(time(0)));
@@ -75,40 +77,33 @@ GameOutcome gameMode(std::string fileName){
    Player::init(&core);
 
    //load surfaces
-   SDL_Surface
-      *map = loadImage(MISC_IMAGE_PATH + "back.png"),
-      *darkMap = loadImage(MISC_IMAGE_PATH + "dark.png"),
-      *cursor = loadImage(MISC_IMAGE_PATH + "cursor.png", GREEN),
-      *cursorShadow = loadImage(MISC_IMAGE_PATH +
-                                "cursorShadow.PNG", GREEN),
-      *cursorPause = loadImage(MISC_IMAGE_PATH +
-                               "cursorPause.PNG", GREEN),
-      *cursorColor = loadImage(MISC_IMAGE_PATH +
-                               "cursorColor.PNG", MAGENTA),
-      *diagGreen = loadImage(MISC_IMAGE_PATH + "diagGreen.PNG", GREEN),
-      *diagRed = loadImage(MISC_IMAGE_PATH + "diagRed.PNG", GREEN),
-      *particle = loadImage(MISC_IMAGE_PATH + "particle.PNG", GREEN),
-      *particleShadow = loadImage(MISC_IMAGE_PATH +
-                                  "particleShadow.PNG", GREEN),
-      *entitiesTemp = createSurface(),
-      *glow = loadImage(MISC_IMAGE_PATH + "glow.PNG", true),
-      *selRectImage = createSurface(),
-      *victory = loadImage(MISC_IMAGE_PATH + "victory.PNG", GREEN),
-      *loss = loadImage(MISC_IMAGE_PATH + "loss.PNG", GREEN);
-   setColorKey(entitiesTemp);
+   Surface
+      map           (MISC_IMAGE_PATH + "back.PNG"),
+      darkMap       (MISC_IMAGE_PATH + "dark.PNG"),
+      cursor        (MISC_IMAGE_PATH + "cursor.PNG",         GREEN),
+      cursorShadow  (MISC_IMAGE_PATH + "cursorShadow.PNG",   GREEN),
+      cursorPause   (MISC_IMAGE_PATH + "cursorPause.PNG",    GREEN),
+      cursorColor   (MISC_IMAGE_PATH + "cursorColor.PNG",    MAGENTA),
+      diagGreen     (MISC_IMAGE_PATH + "diagGreen.PNG",      GREEN),
+      diagRed       (MISC_IMAGE_PATH + "diagRed.PNG",        GREEN),
+      particle      (MISC_IMAGE_PATH + "particle.PNG",       GREEN),
+      particleShadow(MISC_IMAGE_PATH + "particleShadow.PNG", GREEN),
+      victory       (MISC_IMAGE_PATH + "victory.PNG"),
+      loss          (MISC_IMAGE_PATH + "loss.PNG"),
+      glow          (MISC_IMAGE_PATH + "glow.PNG", true),
+      entitiesTemp  (SUR_BLANK, SCREEN_WIDTH, SCREEN_HEIGHT, ENTITY_BACKGROUND),
+      selRectImage  (SUR_BLANK);
 
    //colored cursors, generated as they're used
-   SDL_Surface *cursorIndex[CLR_MAX];
-   for (int i = 0; i != CLR_MAX; ++i)
-      cursorIndex[i] = 0;
+   Surface cursorIndex[CLR_MAX];
 
    //shadows' alpha
-   SDL_SetAlpha(particleShadow, SDL_SRCALPHA, SHADOW_ALPHA);
-   SDL_SetAlpha(cursorShadow, SDL_SRCALPHA, SHADOW_ALPHA);
-
+   particleShadow.setAlpha(SHADOW_ALPHA);
+   cursorShadow.setAlpha(SHADOW_ALPHA);
+   
    //selection rectangle: translucent white
-   SDL_FillRect(selRectImage, 0, WHITE_UINT);
-   SDL_SetAlpha(selRectImage, SDL_SRCALPHA, SELECTION_RECT_ALPHA);
+   selRectImage.fill(WHITE);
+   selRectImage.setAlpha(SELECTION_RECT_ALPHA);
 
    std::string musicPath = SOUND_PATH + "music.wav";
    Mix_Music *music = Mix_LoadMUS(musicPath.c_str());
@@ -123,12 +118,12 @@ GameOutcome gameMode(std::string fileName){
    GameData game(DATA_PATH + fileName);
    
    //more init
-   Particle::init(screen, particle, particleShadow);
-   Entity::init(&core, &game, screen, diagGreen);
+   Particle::init(&screen, &particle, &particleShadow);
+   Entity::init(&core, &game, &screen, &diagGreen);
 
    //UI Bars
    UIBars_t bars;
-   UIBar::init(&core, &game, screen, darkMap, click);
+   UIBar::init(&core, &game, &screen, &darkMap, click);
    UIBar buildingsBar(BOTTOM_LEFT, HORIZONTAL,
                       &getNumBuildingIcons,
                       &getBuildingTypeIcons,
@@ -224,29 +219,9 @@ GameOutcome gameMode(std::string fileName){
       oldTicks = SDL_GetTicks();
       while (SDL_GetTicks() - oldTicks < END_MESSAGE_TIMER);
    }
-   
 
    //Clean up
    SDL_ShowCursor(SDL_ENABLE);
-
-   freeSurface(map);
-   freeSurface(darkMap);
-   freeSurface(cursor);
-   freeSurface(cursorShadow);
-   freeSurface(cursorPause);
-   freeSurface(cursorColor);
-   freeSurface(particle);
-   freeSurface(particleShadow);
-   freeSurface(diagGreen);
-   freeSurface(diagRed);
-   freeSurface(entitiesTemp);
-   freeSurface(glow);
-   freeSurface(selRectImage);
-   freeSurface(victory);
-   freeSurface(loss);
-
-   for (int i = 0; i != CLR_MAX; ++i)
-      freeSurface(cursorIndex[i]);
 
    freeSound(click);
 

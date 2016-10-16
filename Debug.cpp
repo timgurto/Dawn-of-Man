@@ -11,8 +11,10 @@
 #include "misc.h"
 #include "types.h"
 #include "Debug.h"
+#include "Surface.h"
 
 int Debug::debugCount_ = 0;
+Surface *Debug::screen_ = 0;
 
 Debug::Debug(SDL_Color color, pixels_t x, pixels_t y,
              unsigned short count):
@@ -31,7 +33,7 @@ Debug::~Debug(){
       TTF_Quit();
 }
 
-void Debug::initScreen(SDL_Surface *screen){
+void Debug::initScreen(Surface *screen){
    screen_ = screen;
 }
 
@@ -55,19 +57,13 @@ void Debug::display() const{
          std::string message = copy.front();
          copy.pop();
          //draw text
-         SDL_Surface *blackSurface = TTF_RenderText_Solid(font_,
-                                                          message.c_str(),
-                                                          BLACK);
-         SDL_BlitSurface(blackSurface, 0, screen_, &makeRect(x_+1, y_+1 + lat));
+         Surface blackSurface(font_, message, BLACK);
+         blackSurface.draw(*screen_, &makeRect(x_+1, y_+1 + lat));
          
          //draw shadow
-         SDL_Surface *surface = TTF_RenderText_Solid(font_,
-                                                     message.c_str(),
-                                                     color_);
-         SDL_BlitSurface(surface, 0, screen_, &makeRect(x_, y_ + lat));
-         
-         SDL_FreeSurface(surface);
-         SDL_FreeSurface(blackSurface);
+         Surface surface(font_, message, color_);
+         surface.draw(*screen_, &makeRect(x_, y_ + lat));
+
          lat += height_;
       }
    }
