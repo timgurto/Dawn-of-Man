@@ -17,6 +17,8 @@
 
 extern Debug debug;
 
+const pixels_t Unit::PATH_GRID_SIZE = 50;
+
 Unit::Unit(typeNum_t type, const Point &loc,
            typeNum_t player, progress_t progress):
 Entity(type, loc),
@@ -340,18 +342,102 @@ bool Unit::isPathClear(const Point &start,
 void Unit::findPath(){
    debug("finding path");
    emptyQueue(path_);
-path_.push(loc_ - Point(50, 25));
-path_.push(loc_ + Point(0, 100));
    //if clear path, go straight there
-   if (isPathClear(loc_, target_))
+   if (false)//(isPathClear(loc_, target_))
       path_.push(target_);
+
 
    //path needs to be found
    else{
-      //path_.push(sub-target);
+
+      //set up GRID for breadth-first search
+      //exploit integer division to keep nodes in-bounds
+      int gridWidth = loc_.x / PATH_GRID_SIZE +
+                      (game_->map.w - loc_.x) / PATH_GRID_SIZE;
+      int gridHeight = loc_.y / PATH_GRID_SIZE +
+                      (game_->map.h - loc_.y) / PATH_GRID_SIZE;
+      pixels_t gridLeft = loc_.x -
+                          (loc_.x / PATH_GRID_SIZE) *
+                          PATH_GRID_SIZE;
+      pixels_t gridTop = loc_.y -
+                         (loc_.y / PATH_GRID_SIZE) *
+                         PATH_GRID_SIZE;
+
+      bool **explored = (bool **)malloc(sizeof(bool *) * gridWidth);
+      for (int i = 0; i != gridWidth; ++i){
+         explored[i] = (bool *)malloc(sizeof(bool) * gridHeight);
+         for (int j = 0; j != gridHeight; ++j)
+            explored[i][j] = false;
+      }
+      int //location of this unit
+         startX = loc_.x / PATH_GRID_SIZE,
+         startY = loc_.y / PATH_GRID_SIZE;
+
+      //set up QUEUE of queues to store branching paths
+      typedef std::queue<Point> path_t;
+      path_t start;
+      start.push(loc_);
+      explored[startX][startY] = true;
+      std::queue<path_t> paths;
+      paths.push(start);
+
+      do{
+         for (int dir = DIR_UP; dir != DIR_MAX; ++dir){
+            path_t temp(paths.front());
+            Point next = temp.back(); // = current
+            switch (dir){
+            case DIR_UP:
+               next.y -= PATH_GRID_SIZE;
+               break;
+            case DIR_DOWN:
+               next.y += PATH_GRID_SIZE;
+               break;
+            case DIR_LEFT:
+               next.x -= PATH_GRID_SIZE;
+               break;
+            case DIR_RIGHT:
+               next.x += PATH_GRID_SIZE;
+               break;
+            }
+            //TODO replace these divisions
+            //check proposed node is okay
+            pixels_t
+               xIndex = (next.x - gridLeft) / PATH_GRID_SIZE,
+               yIndex = (next.y - gridTop) / PATH_GRID_SIZE;
+            if (xIndex < 0 || xIndex >= gridWidth)
+               continue;
+            if (yIndex < 0 || yIndex >= gridHeight)
+               continue;
+            if (explored[xIndex][yIndex])
+               continue;
+            explored[xIndex][yIndex] = true;
+            if (noCollision(*game_, type(), next, this, targetEntity_)){
+
+               //is this the node we're looking for?
+               temp.push(next);
+               if (distance(next, target_) <= PATH_GRID_SIZE){
+                  temp.push(target_);
+                  path_ = temp;
+                  emptyQueue(paths);
+                  break;
+               }else
+                  paths.push(temp);
+            }
+
+         }//for each direction
+         if (!paths.empty())
+            paths.pop();
+
+      }while (!paths.empty());
+
+      for (int i = 0; i != gridWidth; ++i)
+         free(explored[i]);
+      free(explored);
    }
 
    moving_ = true;
+
+
 }
 
 void Unit::updateTarget(){

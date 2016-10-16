@@ -34,8 +34,10 @@ class Unit : public Entity{
    //the current points in the unit's animation cycles
    double frameCounter_;
    double combatFrameCounter_;
-
    int frame_; //which frame to draw for this unit
+
+   //smaller = finer, more accurate, slower pathfinding
+   static const pixels_t PATH_GRID_SIZE;
 
 public:
    Unit(typeNum_t type, const Point &loc,

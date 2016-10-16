@@ -211,7 +211,6 @@ buildingSelected(0){
    }
    data.close();
 
-   //TODO check data
    for (entities_t::const_iterator it = entities.begin();
         it != entities.end(); ++it){
 
