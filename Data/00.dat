@@ -42,28 +42,21 @@ decoration{
 
 # human starting caveman; random location
 unit{
-   type = 1;
+   type = 0;
    player = 1;
    random = 10;
 }
 
-unit{
-   type = 3;
-   player = 1;
-   random = 1;
-   centerMap = true;
-}
-
 # computer player: a bunch of warriors
 unit{
-   type = 0;
+   type = 1;
    player = 2;
-   random = 0;#3;
+   random = 3;
 }
 
 # some deer
 unit{
-   type = 2;
+   type = 5;
    random = 2;
 }
 

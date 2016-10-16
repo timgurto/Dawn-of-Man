@@ -3,12 +3,14 @@
 //TODO copy comments at declarations to definitions
 
 #include <cassert>
+#include <fstream>
 
 #include "SDL.h"
 #include "SDL_ttf.h"
 #include "SDL_mixer.h"
 #include "dawn.h"
 #include "game.h"
+#include "globals.h"
 #include "Debug.h"
 
 //Default screen resolutions, 16:10 and 4:3
@@ -50,9 +52,20 @@ int main(int argc, char **argv){
 
    setScreenResolution(argc, argv);
 
-//while(true)
-   //New game
-   GameOutcome outcome = gameMode();
+   //campaign: go through each level
+   int levels;
+   for (levels = 0;
+        std::ifstream((DATA_PATH + format2(levels) + ".dat").c_str());
+        ++levels);
+   //levels = number of levels in the campaign
+
+   for (int i = 0; i != levels; ++i){
+      GameOutcome outcome;
+      //repeat each level if lost
+      while ((outcome = gameMode(format2(i) + ".dat")) == LOSS);
+      if (outcome == QUIT)
+         break;
+   }
 
    //Quit
    //TTF_Quit() happens at debug dtor

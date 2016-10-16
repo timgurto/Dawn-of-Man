@@ -11,6 +11,7 @@ GameData *UIBar::game_ = 0;
 const CoreData *UIBar::core_ = 0;
 SDL_Surface *UIBar::screen_ = 0;
 SDL_Surface *UIBar::barSurface_ = 0;
+SDL_Sound *UIBar::click_ = 0;
 
 UIBar::UIBar(Corner corner,
              Orientation orientation,
@@ -131,11 +132,13 @@ bool UIBar::isActive(){
 void UIBar::init(const CoreData *core,
                  GameData *game,
                  SDL_Surface *screen,
-                 SDL_Surface *barSurface){
+                 SDL_Surface *barSurface,
+                 SDL_Sound *click){
    core_ = core;
    game_ = game;
    screen_ = screen;
    barSurface_ = barSurface;
+   click_ = click;
 }
 
 void UIBar::click(typeNum_t index){
@@ -151,4 +154,8 @@ std::string UIBar::helpText(typeNum_t index){
 
 typeNum_t UIBar::size() const{
    return iconCountFun_(*core_, *game_);
+}
+
+void UIBar::clickSound(){
+   playSound(click_);
 }

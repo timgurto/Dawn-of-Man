@@ -10,6 +10,9 @@ struct CoreData;
 struct GameData;
 struct SDL_Surface;
 
+//Draws the loading screen
+void renderLoadingScreen(SDL_Surface *screen, SDL_Surface *loading);
+
 //Draws everything to the screen
 void render(SDL_Surface *screen, SDL_Surface *selection,
             SDL_Surface *diagGreen, SDL_Surface *diagRed,
@@ -19,7 +22,8 @@ void render(SDL_Surface *screen, SDL_Surface *selection,
             SDL_Surface *selRectImage,
             SDL_Surface **cursorIndex,
             const CoreData &core, const GameData &game,
-            const UIBars_t &bars, const messageBoxes_t &messageBoxes);
+            const UIBars_t &bars, const messageBoxes_t &messageBoxes,
+            SDL_Surface *outcomeMessage = 0);
 
 //Draws the cursor
 void renderCursor (SDL_Surface *screen, const GameData &game,

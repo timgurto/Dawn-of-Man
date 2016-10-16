@@ -10,6 +10,7 @@
 #include "Point.h"
 #include "Unit.h"
 #include "CoreData.h"
+#include "UIBar.h"
 
 extern Debug debug;
 
@@ -155,6 +156,8 @@ typeNum_t getValidTech(const CoreData &core, const GameData &game,
 
    void selectBuilding(typeNum_t index, const CoreData &core,
                        GameData &game){
+      
+      UIBar::clickSound();
       game.toBuild = getValidBuilding(core, game, index);
       game.mode = MODE_CONSTRUCTION;
    }
@@ -226,6 +229,7 @@ typeNum_t getValidTech(const CoreData &core, const GameData &game,
 
          if (tries != NUM_PLACEMENT_TRIES){
             //place unit
+            UIBar::clickSound();
             Unit *unit = new Unit(typeIndex, loc);
             addEntity(game, unit);
             game.players[HUMAN_PLAYER].
@@ -248,6 +252,7 @@ typeNum_t getValidTech(const CoreData &core, const GameData &game,
       if (human.sufficientResources(tech.getCost())){
 
          //research tech
+         UIBar::clickSound();
          human.subtractResources(tech.getCost());
          human.researchTech(techIndex);
 
@@ -282,5 +287,6 @@ typeNum_t getValidTech(const CoreData &core, const GameData &game,
       const Tech &tech = core.techs[getValidTech(core, game, index)];
       return
          "Research " + tech.getName() +
-         ": " + tech.getCostString();
+         ": " + tech.getCostString() +
+         ": " + tech.getDescription();
    }

@@ -15,6 +15,7 @@ class Tech{
 
    typeNum_t index_;
    std::string name_;
+   std::string description_;
    SDL_Surface *icon_;
 
    //What bonuses this tech grants
@@ -34,6 +35,7 @@ class Tech{
 public:
    Tech(typeNum_t index,
         const std::string &name,
+        const std::string &description,
         const TechBonuses &bonuses,
         typeNum_t originBuilding,
         const Resources &cost,
@@ -52,6 +54,7 @@ public:
    std::string getName() const;
    typeNum_t getPrereqTech1() const;
    typeNum_t getPrereqTech2() const;
+   std::string getDescription() const;
 };
 
 #endif

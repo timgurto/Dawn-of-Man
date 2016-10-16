@@ -162,11 +162,6 @@ void handleEvents(const CoreData &core, GameData &game,
                   break;
 
                case SDLK_ESCAPE:
-                  //HACK remove this exit
-                  game.loop = false;
-                  return;
-                  //---------------------
-
                   switch(game.mode){
                   //unselect all
                   case MODE_BUILDING:
@@ -207,10 +202,25 @@ void handleEvents(const CoreData &core, GameData &game,
                   fpsDisplay.toggleVisibility();
                   break;
 
+               case SDLK_F9:
+                  //F9: restart
+                  game.loop = false;
+                  game.outcome = LOSS;
+                  return;
+                  break;
+
+               case SDLK_F10:
+                  //F10: quit
+                  game.loop = false;
+                  game.outcome = QUIT;
+                  return;
+                  break;
+
                case SDLK_F4:
                   //Alt+F4 = quit
                   if (isKeyPressed(SDLK_LALT) || isKeyPressed(SDLK_RALT)){
                      game.loop = false;
+                     game.outcome = QUIT;
                      return;
                   }
                   break;

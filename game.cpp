@@ -48,10 +48,19 @@ const int DELTA_CUTOFF = 100;
 //Alpha of the selection rectangle
 const Uint8 SELECTION_RECT_ALPHA = 0x66;
 
-GameOutcome gameMode(){
+//How long the victory/loss message is displayed
+const timer_t END_MESSAGE_TIMER = 1250;
+
+GameOutcome gameMode(std::string fileName){
 
    //initialize screen and debug objects
    SDL_Surface *screen = setScreen();
+
+   //loading screen
+   SDL_Surface *loading = loadImage(MISC_IMAGE_PATH + "loading.PNG");
+   renderLoadingScreen(screen, loading);
+   freeSurface(loading);
+
    debug.initScreen(screen);
 
    //seed random generator
@@ -83,7 +92,9 @@ GameOutcome gameMode(){
                                   "particleShadow.PNG", GREEN),
       *entitiesTemp = createSurface(),
       *glow = loadImage(MISC_IMAGE_PATH + "glow.PNG", true),
-      *selRectImage = createSurface();
+      *selRectImage = createSurface(),
+      *victory = loadImage(MISC_IMAGE_PATH + "victory.PNG", GREEN),
+      *loss = loadImage(MISC_IMAGE_PATH + "loss.PNG", GREEN);
    setColorKey(entitiesTemp);
 
    //colored cursors, generated as they're used
@@ -99,15 +110,17 @@ GameOutcome gameMode(){
    SDL_FillRect(selRectImage, 0, WHITE_UINT);
    SDL_SetAlpha(selRectImage, SDL_SRCALPHA, SELECTION_RECT_ALPHA);
 
-   std::string musicPath = SOUND_PATH + "twoSteps.wav";
+   std::string musicPath = SOUND_PATH + "music.wav";
    Mix_Music *music = Mix_LoadMUS(musicPath.c_str());
    if (!DEBUG)
       Mix_PlayMusic(music, -1);
 
+   SDL_Sound *click = loadSound(SOUND_PATH + "interfaceClick.wav");
+
    SDL_ShowCursor(SDL_DISABLE);
 
    //create game data object, and load data from file
-   GameData game(DATA_PATH + "game.dat");
+   GameData game(DATA_PATH + fileName);
    
    //more init
    Particle::init(screen, particle, particleShadow);
@@ -115,7 +128,7 @@ GameOutcome gameMode(){
 
    //UI Bars
    UIBars_t bars;
-   UIBar::init(&core, &game, screen, darkMap);
+   UIBar::init(&core, &game, screen, darkMap, click);
    UIBar buildingsBar(BOTTOM_LEFT, HORIZONTAL,
                       &getNumBuildingIcons,
                       &getBuildingTypeIcons,
@@ -196,6 +209,23 @@ GameOutcome gameMode(){
       }
    }
 
+   //game over; display victory/loss message
+   game.paused = true; //darken map
+   game.mousePos = Point(screen->w, screen->h); //hide cursor
+   render(screen, glow, diagGreen, diagRed, map, darkMap, cursor,
+          cursorShadow, cursorPause, cursorColor, selRectImage,
+          cursorIndex, core,
+          game, bars, messageBoxes,
+          game.outcome == VICTORY ? //QUIT treated as loss
+             victory :
+             loss);
+   //wait
+   if (!DEBUG){
+      oldTicks = SDL_GetTicks();
+      while (SDL_GetTicks() - oldTicks < END_MESSAGE_TIMER);
+   }
+   
+
    //Clean up
    SDL_ShowCursor(SDL_ENABLE);
 
@@ -212,9 +242,13 @@ GameOutcome gameMode(){
    freeSurface(entitiesTemp);
    freeSurface(glow);
    freeSurface(selRectImage);
+   freeSurface(victory);
+   freeSurface(loss);
 
    for (int i = 0; i != CLR_MAX; ++i)
       freeSurface(cursorIndex[i]);
+
+   freeSound(click);
 
    Mix_HaltMusic(); 
    Mix_FreeMusic(music);

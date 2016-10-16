@@ -160,6 +160,9 @@ T max(T a, T b){
 //Adds a leading zero if x < 100
 std::string format3(double x);
 
+//Adds a leading zero if x < 10
+std::string format2(int x);
+
 //Parse the next token from a data file
 std::string parseToken(std::ifstream &data);
 

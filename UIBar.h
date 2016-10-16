@@ -42,6 +42,7 @@ class UIBar{
    static const CoreData *core_;
    static SDL_Surface *screen_;
    static SDL_Surface *barSurface_;
+   static SDL_Sound *click_;
 
 public:
    UIBar(Corner corner, Orientation orientation,
@@ -55,7 +56,8 @@ public:
    static void init(const CoreData *core,
                     GameData *game,
                     SDL_Surface *screen,
-                    SDL_Surface *barSurface);
+                    SDL_Surface *barSurface,
+                    SDL_Sound *click);
 
    //determines the number of icons on the bar, and
    //calculates the rectangle for drawing it
@@ -79,6 +81,8 @@ public:
    std::string helpText(typeNum_t index);
 
    typeNum_t size() const;
+
+   static void clickSound();
 };
 
 //So that all bars can be dealt with at the same time

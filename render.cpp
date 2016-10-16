@@ -11,6 +11,16 @@
 
 extern Debug debug, deltaLog;
 
+void renderLoadingScreen(SDL_Surface *screen, SDL_Surface *loading){
+   SDL_FillRect(screen, 0, 0);
+   SDL_BlitSurface(loading, 0,
+                   screen, &makeRect((screen->w - loading->w) / 2,
+                                     (screen->h - loading->h) / 2));
+   bool test = SDL_Flip(screen) == 0;
+   assert(test);
+
+}
+
 void render(SDL_Surface *screen, SDL_Surface *selection,
             SDL_Surface *diagGreen, SDL_Surface *diagRed,
             SDL_Surface *map, SDL_Surface *darkMap,
@@ -19,7 +29,8 @@ void render(SDL_Surface *screen, SDL_Surface *selection,
             SDL_Surface *selRectImage,
             SDL_Surface **cursorIndex,
             const CoreData &core, const GameData &game,
-            const UIBars_t &bars, const messageBoxes_t &messageBoxes){
+            const UIBars_t &bars, const messageBoxes_t &messageBoxes,
+            SDL_Surface *outcomeMessage){
 
    assert (screen);
 
@@ -43,6 +54,18 @@ void render(SDL_Surface *screen, SDL_Surface *selection,
       SDL_SetAlpha(darkCover, SDL_SRCALPHA, SHADOW_ALPHA);
       SDL_BlitSurface(darkCover, 0, screen, 0);
       freeSurface(darkCover);
+   }
+
+   if (outcomeMessage){
+      pixels_t
+         x = (screen->w - outcomeMessage->w) / 2,
+         y = (screen->h - outcomeMessage->h) / 2;
+      SDL_FillRect(screen,
+                   &makeRect(x, y,
+                             outcomeMessage->w, outcomeMessage->h),
+                             game.players[HUMAN_PLAYER].getColor());
+      SDL_BlitSurface(outcomeMessage, 0,
+                      screen, &makeRect(x, y));                                        
    }
 
    //Debug text

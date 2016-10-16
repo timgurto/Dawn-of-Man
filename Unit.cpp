@@ -120,6 +120,9 @@ void Unit::tick(double delta){
             setTarget(findNearbyEnemy());
       }
 
+      if (targetEntity_ && path_.empty())
+         findPath();
+
       //movement stuff
       if (moving_){
          const Point &targetPoint = path_.front();

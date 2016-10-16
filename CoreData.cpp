@@ -25,7 +25,8 @@ CoreData::CoreData(std::string filename){
          name = "",
          soundFile = "",
          deathSoundFile = "",
-         hitSoundFile = "";
+         hitSoundFile = "",
+         description = "";
       bool
          collides = false, //decorations
          builder = false, //units - default: military
@@ -109,6 +110,8 @@ CoreData::CoreData(std::string filename){
             deathSoundFile = val;
          else if (attr == "hitSoundFile")
             hitSoundFile = val;
+         else if (attr == "description")
+            description = val;
          else if (attr == "collides")
             collides = val == "true;";
          else if (attr == "builder")
@@ -259,8 +262,8 @@ CoreData::CoreData(std::string filename){
          resourceNodeTypes.push_back(temp);
 
       }else if (object == "technology"){
-         Tech temp(index, name, bonus, originBuilding, cost, prereqTech,
-                   prereqTech2);
+         Tech temp(index, name, description, bonus, originBuilding,
+                   cost, prereqTech, prereqTech2);
          techs.push_back(temp);
       }
 

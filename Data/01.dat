@@ -1,0 +1,69 @@
+# map size; must be before any random entities,
+# if specified
+map{
+   x = 3;
+   y = 2;
+}
+
+# players; indices MUST increment, and there MUST be
+# at least two players: nature (0) and human (1).
+player{
+   index = 0;           # 0 = nature
+   color = 0x765e3e;
+}
+player{
+   index = 1;           # 1 = human player
+   color = 0xca6500;
+   resources.wood = 12;
+}
+player{
+   index = 2;           # 2 = computer
+   color = 0x882222;
+}
+
+
+
+# entities; added in the order specified here.
+
+# enemy building
+building{
+   type = 1;
+   player = 2;
+   
+   location.x = 1000;
+   location.y = 1000;
+}
+
+# rocks
+decoration{
+   type = 0;
+   random = 7;  # place 70 rocks
+}
+
+# human starting caveman; random location
+unit{
+   type = 0;
+   player = 1;
+   random = 10;
+}
+
+# computer player: a bunch of warriors
+unit{
+   type = 1;
+   player = 2;
+   random = 3;
+}
+
+# some deer
+unit{
+   type = 5;
+   random = 2;
+}
+
+# trees
+resourceNode{
+   type = 0;
+   random = 10;
+}
+
+;   any text below is ignored

@@ -202,9 +202,10 @@ enum ControlGroup{
 };
 
 enum GameOutcome{
+   IN_PROGRESS,
    VICTORY,
    LOSS,
-   IN_PROGRESS
+   QUIT //user-ordered quit
 };
 
 #endif

@@ -442,6 +442,15 @@ std::string format3(double x){
    return oss.str();
 }
 
+std::string format2(int x){
+   std::ostringstream oss;
+   if (x < 10)
+      oss << '0';
+   oss << x;
+   debug (oss.str());
+   return oss.str();
+}
+
 std::string parseToken(std::ifstream &data){
    std::ostringstream os;
    while (data){

@@ -5,6 +5,7 @@
 
 Tech::Tech(typeNum_t index,
       const std::string &name,
+      const std::string &description,
       const TechBonuses &bonuses,
       typeNum_t originBuilding,
       const Resources &cost,
@@ -12,6 +13,7 @@ Tech::Tech(typeNum_t index,
       typeNum_t prereqTech2):
 index_(index),
 name_(name),
+description_(description),
 bonuses_(bonuses),
 originBuilding_(originBuilding),
 cost_(cost),
@@ -26,6 +28,7 @@ prereqTech2_(prereqTech2){
 Tech::Tech (const Tech &original):
 index_(original.index_),
 name_(original.name_),
+description_(original.description_),
 bonuses_(original.bonuses_),
 originBuilding_(original.originBuilding_),
 cost_(original.cost_),
@@ -71,4 +74,8 @@ typeNum_t Tech::getPrereqTech1() const{
 
 typeNum_t Tech::getPrereqTech2() const{
    return prereqTech2_;
+}
+
+std::string Tech::getDescription() const{
+   return description_;
 }

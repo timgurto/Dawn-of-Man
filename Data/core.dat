@@ -21,6 +21,9 @@ buildingType{
    
    selectionCenter.x = 15;
    selectionCenter.y = -16;
+   
+   soundFile = "cave.wav";
+   deathSoundFile = "";
 }
 buildingType{
    name = "Armory";
@@ -38,6 +41,9 @@ buildingType{
    
    selectionCenter.x = -1;
    selectionCenter.y = -16;
+   
+   soundFile = "armory.wav";
+   deathSoundFile = "";
 }
 buildingType{
    name = "Storage";
@@ -52,6 +58,9 @@ buildingType{
    baseRect.y = -52;
    baseRect.w = 104;
    baseRect.h = 104;
+   
+   soundFile = "storage.wav";
+   deathSoundFile = "";
 }
 buildingType{
    name = "Training Grounds";
@@ -68,6 +77,9 @@ buildingType{
    baseRect.h = 48;
 
    selectionCenter.y = -25;
+   
+   soundFile = "trainingGrounds.wav";
+   deathSoundFile = "";
 }
 buildingType{
    name = "Shrine";
@@ -91,6 +103,8 @@ buildingType{
    maxHealth = 1000;
    progressCost = 1750;
    prereqBuilding = 0;
+   soundFile = "shrine.wav";
+   deathSoundFile = "";
 }
 buildingType{
    name = "Campfire";
@@ -113,7 +127,9 @@ buildingType{
 
    maxHealth = 500;
    progressCost = 1250;
-   soundFile = "PLACBLDG.wav";
+   
+   soundFile = "fire.wav";
+   deathSoundFile = "";
 }
 
 decorationType{
@@ -150,56 +166,21 @@ decorationType{
 }
 
 unitType{
-   name = "Warrior";
+   name = "Caveman";
    index = 0;
    
    drawRect.x = -22;
-   drawRect.y = -107;
-   drawRect.w = 70;
-   drawRect.h = 113;
+   drawRect.y = -124;
+   drawRect.w = 105;
+   drawRect.h = 133;
 
-   baseRect.x = -22;
-   baseRect.y = -6;
-   baseRect.w = 53;
-   baseRect.h = 11;
-
-   selectionCenter.x = 3;
-   selectionCenter.y = -55;
-
-   cost.wood = 5;
-
-   speed = 8;
-   maxFrameCounter = 25;
-   frameCount = 8;
-   maxCombatFrameCounter = 10;
-   combatFrameCount = 4;
-   combatWait = 25;
-   maxHealth = 50;
-   attack = 10;
-   armor = 2;
-   originBuilding = 1;
-   progressCost = 1000;
-   decorationAtDeath = 1;
-   soundFile = "SKING1.WAV";
-   deathSoundFile = "manDeath0.wav";
-   hitSoundFile = "clubman.wav";
-}
-unitType{
-   name = "Caveman";
-   index = 1;
-   
-   drawRect.x = -22;
-   drawRect.y = -107;
-   drawRect.w = 70;
-   drawRect.h = 113;
-
-   baseRect.x = -22;
-   baseRect.y = -6;
-   baseRect.w = 53;
-   baseRect.h = 11;
+   baseRect.x = -20;
+   baseRect.y = -8;
+   baseRect.w = 48;
+   baseRect.h = 15;
 
    selectionCenter.x = 3;
-   selectionCenter.y = -55;
+   selectionCenter.y = -50;
 
    cost.wood = 8;
 
@@ -217,13 +198,153 @@ unitType{
    progressCost = 1000;
    autoAttack = false;
    decorationAtDeath = 1;
-   soundFile = "abadacus.WAV";
-   deathSoundFile = "manDeath0.wav";
-   hitSoundFile = "clubman.wav";
+   soundFile = "cavemanSelect.wav";
+   deathSoundFile = "";
+   hitSoundFile = "cavemanAttack.wav";
+}
+unitType{
+   name = "Warrior";
+   index = 1;
+   
+   drawRect.x = -22;
+   drawRect.y = -124;
+   drawRect.w = 105;
+   drawRect.h = 133;
+
+   baseRect.x = -20;
+   baseRect.y = -8;
+   baseRect.w = 48;
+   baseRect.h = 15;
+
+   selectionCenter.x = 3;
+   selectionCenter.y = -50;
+
+   cost.wood = 5;
+
+   speed = 8;
+   maxFrameCounter = 25;
+   frameCount = 8;
+   maxCombatFrameCounter = 10;
+   combatFrameCount = 4;
+   combatWait = 25;
+   maxHealth = 50;
+   attack = 10;
+   armor = 2;
+   originBuilding = 1;
+   progressCost = 1000;
+   decorationAtDeath = 1;
+   soundFile = "warriorSelect.wav";
+   deathSoundFile = "";
+   hitSoundFile = "warriorAttack.wav";
+}
+unitType{
+   name = "Clubman";
+   index = 2;
+   
+   drawRect.x = -22;
+   drawRect.y = -124;
+   drawRect.w = 105;
+   drawRect.h = 133;
+
+   baseRect.x = -20;
+   baseRect.y = -8;
+   baseRect.w = 48;
+   baseRect.h = 15;
+
+   selectionCenter.x = 3;
+   selectionCenter.y = -50;
+
+   cost.wood = 5;
+
+   speed = 8;
+   maxFrameCounter = 25;
+   frameCount = 8;
+   maxCombatFrameCounter = 10;
+   combatFrameCount = 4;
+   combatWait = 25;
+   maxHealth = 50;
+   attack = 10;
+   armor = 2;
+   originBuilding = 1;
+   progressCost = 1000;
+   decorationAtDeath = 1;
+   soundFile = "warriorSelect.wav";
+   deathSoundFile = "";
+   hitSoundFile = "clubmanAttack.wav";
+}
+unitType{
+   name = "Axeman";
+   index = 3;
+   
+   drawRect.x = -22;
+   drawRect.y = -124;
+   drawRect.w = 105;
+   drawRect.h = 133;
+
+   baseRect.x = -20;
+   baseRect.y = -8;
+   baseRect.w = 48;
+   baseRect.h = 15;
+
+   selectionCenter.x = 3;
+   selectionCenter.y = -50;
+
+   cost.wood = 5;
+
+   speed = 8;
+   maxFrameCounter = 25;
+   frameCount = 8;
+   maxCombatFrameCounter = 10;
+   combatFrameCount = 4;
+   combatWait = 25;
+   maxHealth = 50;
+   attack = 10;
+   armor = 2;
+   originBuilding = 1;
+   progressCost = 1000;
+   decorationAtDeath = 1;
+   soundFile = "warriorSelect.wav";
+   deathSoundFile = "";
+   hitSoundFile = "clubmanAttack.wav";
+}
+unitType{
+   name = "Swordsman";
+   index = 4;
+   
+   drawRect.x = -22;
+   drawRect.y = -124;
+   drawRect.w = 105;
+   drawRect.h = 133;
+
+   baseRect.x = -20;
+   baseRect.y = -8;
+   baseRect.w = 48;
+   baseRect.h = 15;
+
+   selectionCenter.x = 3;
+   selectionCenter.y = -50;
+
+   cost.wood = 5;
+
+   speed = 8;
+   maxFrameCounter = 25;
+   frameCount = 8;
+   maxCombatFrameCounter = 10;
+   combatFrameCount = 4;
+   combatWait = 25;
+   maxHealth = 50;
+   attack = 10;
+   armor = 2;
+   originBuilding = 1;
+   progressCost = 1000;
+   decorationAtDeath = 1;
+   soundFile = "warriorSelect.wav";
+   deathSoundFile = "";
+   hitSoundFile = "swordAttack.wav";
 }
 unitType{
    name = "Deer";
-   index = 2;
+   index = 5;
    
    drawRect.x = -132;
    drawRect.y = -155;
@@ -248,34 +369,8 @@ unitType{
    attack = 8;
    resourceAtDeath = 1;
    autoAttack = false;
-}
-unitType{
-   name = "Stick";
-   index = 3;
-   
-   drawRect.x = -22;
-   drawRect.y = -124;
-   drawRect.w = 105;
-   drawRect.h = 133;
-
-   baseRect.x = -20;
-   baseRect.y = -8;
-   baseRect.w = 48;
-   baseRect.h = 15;
-
-   selectionCenter.x = 3;
-   selectionCenter.y = -50;
-
-   speed = 14;
-   maxFrameCounter = 17;
-   frameCount = 8;
-   maxCombatFrameCounter = 13;
-   combatFrameCount = 4;
-   combatWait = 5;
-   maxHealth = 20;
-   attack = 8;
-   resourceAtDeath = 1;
-   autoAttack = false;
+   deathSoundFile = "deerDeath.wav";
+   hitSoundFile = "deerAttack.wav";
 }
 resourceNodeType{
    name = "Tree";
@@ -322,8 +417,9 @@ resourceNodeType{
    color = 6;
 }
 technology{
-   name = "Fire Armor (stone)";
+   name = "Fire Armor";
    index = 0;
+   description = "+5 armor";
    bonus.unitArmor = 5;
    originBuilding = 0;
    cost.stone = 20;

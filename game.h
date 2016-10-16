@@ -8,6 +8,6 @@
 class Entity;
 
 //Main game functionality
-GameOutcome gameMode();
+GameOutcome gameMode(std::string fileName);
 
 #endif
