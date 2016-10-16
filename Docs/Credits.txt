@@ -1,0 +1,19 @@
+          Dawn of Man
+    (C) 2009-2010 Tim Gurto
+       Sydney, Australia
+
+     Created by Tim Gurto
+     
+   Lead Tester: Alex Poms
+ Other Testers: Tim Veizer
+                Jeremy Gurto
+               
+Special Thanks: Drew Banyai
+
+ Created using: Microsoft Visual Studio 2008
+                Simple DirectMedia Layer
+                TortoiseSVN
+                Goanna Static Analysis
+                Microsoft Paint
+                Audacity
+                Finale Notepad 2008

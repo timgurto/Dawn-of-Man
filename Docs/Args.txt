@@ -1,0 +1,8 @@
+Command line arguments, to dicate screen size:
+
+-win         Run in windowed mode
+       
+-retain      Keep current screen resolution
+    
+-width=800   Custom resolution
+-height=600
