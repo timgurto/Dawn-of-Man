@@ -191,6 +191,12 @@ const Uint8 BLACK_ENTITY_ALPHA = 0x3b; //0x44;
 //The health percentage, below which the sprite is blackened
 const double ENTITY_BLACK_HEALTH = 0.5;
 
+//Layout of credits screen
+const int CREDITS_OFFSET = -210; //initial y offset
+const int CREDITS_INCREMENT = 25;
+const int CREDITS_GAP = 23;
+const SDL_Color CREDITS_HEADING_COLOR = {0xff, 0x66, 0x66};
+
 //For re-sorting after movement
 enum VerticalMovement{
    VM_UP,

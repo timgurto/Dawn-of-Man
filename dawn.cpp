@@ -145,49 +145,45 @@ void buildScreens(Screen &mainMenu,
    credits.addElement(ScreenElement
       (ELEM_BUTTON, "Back", ANCHOR_BOTTOM_RIGHT, Point(-30, -30), BUTTON_QUIT));
 
-   int
-      yOffset = -210,
-      inc = 25,
-      gap = 23;
-   SDL_Color headingColor = makeColor(0xff6666);
+   int yPos = CREDITS_OFFSET;
 
-#define ADD_TITLE(text) \
-   do{ \
-      credits.addElement(ScreenElement(ELEM_LABEL, (text), ANCHOR_CENTER, \
-                                       Point(0, yOffset), ScreenElement::NO_ID, \
-                                       0, 0, 0, headingColor)); \
-      yOffset += inc; \
-   }while(0)
+   addCreditTitle(credits, yPos, "Dawn of Man");
+   addCredit     (credits, yPos, "(C) 2009-2010 Tim Gurto");
+   addCredit     (credits, yPos, "Sydney, Australia");
+   addCreditGap(yPos);
 
-#define ADD_CREDIT(text) \
-   do{ \
-      credits.addElement(ScreenElement(ELEM_LABEL, (text), ANCHOR_CENTER, \
-                                       Point(0, yOffset))); \
-      yOffset += inc; \
-   }while(0)
+   addCreditTitle(credits, yPos, "Created by");
+   addCredit     (credits, yPos, "Tim Gurto");
+   addCreditGap(yPos);
 
-#define ADD_GAP (yOffset += gap)
+   addCreditTitle(credits, yPos, "Lead Tester");
+   addCredit     (credits, yPos, "Alex Poms");
+   addCreditGap(yPos);
 
-   ADD_TITLE("Dawn of Man");
-   ADD_CREDIT("(C) 2009-2010 Tim Gurto");
-   ADD_CREDIT("Sydney, Australia");
-   ADD_GAP;
-   ADD_TITLE("Created by");
-   ADD_CREDIT("Tim Gurto");
-   ADD_GAP;
-   ADD_TITLE("Lead Tester");
-   ADD_CREDIT("Alex Poms");
-   ADD_GAP;
-   ADD_TITLE("Other Testers");
-   ADD_CREDIT("Tim Veizer");
-   ADD_CREDIT("Jeremy Gurto");
-   ADD_GAP;
-   ADD_TITLE("Special Thanks");
-   ADD_CREDIT("Evan Pipho");
-   ADD_CREDIT("Drew Banyai");
+   addCreditTitle(credits, yPos, "Other Testers");
+   addCredit     (credits, yPos, "Tim Veizer");
+   addCredit     (credits, yPos, "Jeremy Gurto");
+   addCreditGap(yPos);
 
-#undef ADD_TITLE
-#undef ADD_CREDIT
-#undef ADD_GAP
+   addCreditTitle(credits, yPos, "Special Thanks");
+   addCredit     (credits, yPos, "Evan Pipho");
+   addCredit     (credits, yPos, "Drew Banyai");
 
+}
+
+void addCreditTitle(Screen &creditsScreen, int &yPos, std::string text){
+   creditsScreen.addElement(ScreenElement(ELEM_LABEL, text, ANCHOR_CENTER,
+                                          Point(0, yPos), ScreenElement::NO_ID,
+                                          0, 0, 0, CREDITS_HEADING_COLOR));
+   yPos += CREDITS_INCREMENT;
+}
+
+void addCredit(Screen &creditsScreen, int &yPos, std::string text){
+   creditsScreen.addElement(ScreenElement(ELEM_LABEL, text, ANCHOR_CENTER,
+                                          Point(0, yPos)));
+   yPos += CREDITS_INCREMENT;
+}
+
+void addCreditGap(int &yPos){
+   yPos += CREDITS_GAP;
 }
