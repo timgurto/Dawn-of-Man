@@ -68,8 +68,8 @@ int main(int argc, char **argv){
       //Other surfaces needed for Screens
       Surface
          background    (MISC_IMAGE_PATH + "dark.PNG"),
-         cursor        (MISC_IMAGE_PATH + "cursor.PNG",         GREEN),
-         cursorShadow  (MISC_IMAGE_PATH + "cursorShadow.PNG",   GREEN);
+         cursor        (MISC_IMAGE_PATH + "cursor.PNG",       GREEN),
+         cursorShadow  (MISC_IMAGE_PATH + "cursorShadow.PNG", GREEN);
       cursorShadow.setAlpha(SHADOW_ALPHA);
 
       //init with surfaces
@@ -168,7 +168,6 @@ void buildScreens(Screen &mainMenu,
    addCreditTitle(credits, yPos, "Special Thanks");
    addCredit     (credits, yPos, "Evan Pipho");
    addCredit     (credits, yPos, "Drew Banyai");
-
 }
 
 void addCreditTitle(Screen &creditsScreen, int &yPos, std::string text){

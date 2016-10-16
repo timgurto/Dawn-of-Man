@@ -89,6 +89,17 @@ bool operator==(const SDL_Color &lhs, const SDL_Color &rhs){
       lhs.unused == rhs.unused;
 }
 
+//SDL_Color / int
+SDL_Color operator/(const SDL_Color &lhs, int rhs){
+   SDL_Color c = lhs;
+   if (rhs > 0){
+      c.r /= rhs;
+      c.g /= rhs;
+      c.b /= rhs;
+   }
+   return c;
+}
+
 //Free a sound, and update soundsLoaded
 void freeSound(SDL_Sound *&p){
    if (p){

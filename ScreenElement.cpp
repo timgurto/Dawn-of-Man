@@ -28,9 +28,6 @@ type_(type),
 text_(text),
 id_(id){
 
-   //image_
-   //TODO engraving... even though it's game-specific.
-
    //handle default values
    if (fontSize == 0)
       fontSize = defaultFontSize_;
@@ -39,17 +36,29 @@ id_(id){
                   defaultLabelColor_ :
                   defaultButtonColor_;
 
+
+   //text surfaces
    TTF_Font *font = TTF_OpenFont(fontName.c_str(), fontSize);
    Surface textSurface(font, text, fontColor);
+   Surface textLight(font, text, ENGRAVE_LIGHT / 2);
+   Surface textDark (font, text, ENGRAVE_DARK / 2);   
+   TTF_CloseFont(font);
+
+   //fix default dimensions
    if (dim == Point(0, 0))
       dim = Point(textSurface->w, textSurface->h);
-   image_ = Surface(SUR_BLANK, dim.x, dim.y);
-   if (background){
-      image_ << *background << textSurface;
-   }else
-      image_ = textSurface;
 
-   TTF_CloseFont(font);
+   image_ = Surface(SUR_BLANK, dim.x + 2, dim.y + 2);
+   image_.setColorKey(GREEN);
+   image_.fill(GREEN);
+
+   if (background)
+      image_ << *background;
+   textLight  .draw(image_, &makeRect(2, 2));
+   textDark   .draw(image_);
+   textSurface.draw(image_, &makeRect(1, 1));
+   //image_ = textSurface;
+
 
 
    //loc_

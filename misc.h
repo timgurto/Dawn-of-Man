@@ -42,6 +42,9 @@ bool operator==(const SDL_Color &lhs, const SDL_Color &rhs);
 //SDL_Color -> Uint32
 Uint32 colorToUInt(const SDL_Color &color);
 
+//SDL_Color / int
+SDL_Color operator/(const SDL_Color &lhs, int rhs);
+
 //Free a sound, and update soundsLoaded
 void freeSound(SDL_Sound *&p);
 
