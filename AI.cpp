@@ -314,6 +314,7 @@ void AI::dispatchUnit(Unit *unit, const ResourceNode *ignore){
                return;
             }
          }
+   //fall-through to gathering if nothing to build
 
    //1. gatherers --> resource sites
    if (unit->isGatherer()){
@@ -324,9 +325,31 @@ void AI::dispatchUnit(Unit *unit, const ResourceNode *ignore){
       return;
    }
 
-   //2. military --> surround base
-   //if execution gets here, it's a military unit
-   
+   //2. military --> attack nearest enemy
+   //TODO surround base
+   Entity *target = 0;
+   double dist = -1;
+   ITERATE(entities_t::const_iterator, game_->entities, it){
+      EntityTypeID classID = (*it)->classID();
+      if (classID == ENT_UNIT){
+         const Unit &enemy = (const Unit &)(**it);
+         if (enemy.getPlayer() == player_)
+            continue;
+      }else if (classID == ENT_BUILDING){
+         const Building &enemy = (const Building &)(**it);
+         if (enemy.getPlayer() == player_)
+            continue;
+      }else
+         continue; //not a unit or building
+      //enemy unit: find shortest
+      double tempDist = distance(unit->getLoc(), (*it)->getLoc());
+      if (dist == -1 || tempDist < dist){
+         dist = tempDist;
+         target = *it;
+      }
+   }
+   if (target)
+      unit->setTarget(target);
 }
 
 void AI::dispatchAllUnits(){
