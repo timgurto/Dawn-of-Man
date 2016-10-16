@@ -130,69 +130,63 @@ void buildScreens(Screen &mainMenu,
                   Screen &credits){
    
    //Main menu
-   mainMenu.addElement(ScreenElement(ELEM_LABEL,
-                                     "Dawn of Man",
-                                     ANCHOR_TOP,
-                                     Point(0, 40),
-                                     ScreenElement::NO_ID,
-                                     0, 0,
-                                     75));
-   mainMenu.addElement(ScreenElement(ELEM_BUTTON,
-                                     "Begin",
-                                     ANCHOR_CENTER,
-                                     Point(0, -60),
-                                     BUTTON_NEW));
-   mainMenu.addElement(ScreenElement(ELEM_BUTTON,
-                                     "Credits",
-                                     ANCHOR_CENTER,
-                                     0,
-                                     BUTTON_CREDITS));
-   mainMenu.addElement(ScreenElement(ELEM_BUTTON,
-                                     "Quit",
-                                     ANCHOR_CENTER,
-                                     Point(0, 60),
-                                     BUTTON_QUIT));
+   mainMenu.addElement(ScreenElement
+      (ELEM_LABEL, "Dawn of Man", ANCHOR_TOP,    Point(0, 40),  ScreenElement::NO_ID,
+       0, 0, 75));
+   mainMenu.addElement(ScreenElement
+      (ELEM_BUTTON, "Begin",      ANCHOR_CENTER, Point(0, -60), BUTTON_NEW));
+   mainMenu.addElement(ScreenElement
+      (ELEM_BUTTON, "Credits",    ANCHOR_CENTER, 0,             BUTTON_CREDITS));
+   mainMenu.addElement(ScreenElement
+      (ELEM_BUTTON, "Quit",       ANCHOR_CENTER, Point(0, 60),  BUTTON_QUIT));
+
 
    //Credits
-   credits.addElement(ScreenElement(ELEM_BUTTON,
-                                    "Back",
-                                    ANCHOR_BOTTOM_RIGHT,
-                                    Point(-30, -30),
-                                    BUTTON_QUIT));
+   credits.addElement(ScreenElement
+      (ELEM_BUTTON, "Back", ANCHOR_BOTTOM_RIGHT, Point(-30, -30), BUTTON_QUIT));
+
    int
-      yOffset = -225,
+      yOffset = -210,
       inc = 25,
       gap = 23;
+   SDL_Color headingColor = makeColor(0xff6666);
 
-#define ADD_CREDIT(xOffset, text) \
+#define ADD_TITLE(text) \
    do{ \
-   credits.addElement(ScreenElement(ELEM_LABEL, (text), ANCHOR_CENTER, \
-                                    Point((xOffset), yOffset))); \
-   yOffset += inc; \
-   } while(0)
+      credits.addElement(ScreenElement(ELEM_LABEL, (text), ANCHOR_CENTER, \
+                                       Point(0, yOffset), ScreenElement::NO_ID, \
+                                       0, 0, 0, headingColor)); \
+      yOffset += inc; \
+   }while(0)
+
+#define ADD_CREDIT(text) \
+   do{ \
+      credits.addElement(ScreenElement(ELEM_LABEL, (text), ANCHOR_CENTER, \
+                                       Point(0, yOffset))); \
+      yOffset += inc; \
+   }while(0)
 
 #define ADD_GAP (yOffset += gap)
 
-   ADD_CREDIT(0, "Dawn of Man");
-   ADD_CREDIT(0, "(C) 2009-2010 Tim Gurto");
+   ADD_TITLE("Dawn of Man");
+   ADD_CREDIT("(C) 2009-2010 Tim Gurto");
+   ADD_CREDIT("Sydney, Australia");
    ADD_GAP;
-   ADD_CREDIT(0, "Created by Tim Gurto");
+   ADD_TITLE("Created by");
+   ADD_CREDIT("Tim Gurto");
    ADD_GAP;
-   ADD_CREDIT(0, "Lead Tester: Alex Poms");
-   ADD_CREDIT(0, "Other Testers: Tim Veizer");
-   ADD_CREDIT(0, "Jeremy Gurto");
+   ADD_TITLE("Lead Tester");
+   ADD_CREDIT("Alex Poms");
    ADD_GAP;
-   ADD_CREDIT(0, "Special Thanks: Evan Pipho");
-   ADD_CREDIT(0, "Drew Banyai");
+   ADD_TITLE("Other Testers");
+   ADD_CREDIT("Tim Veizer");
+   ADD_CREDIT("Jeremy Gurto");
    ADD_GAP;
-   ADD_CREDIT(0, "Created using: Microsoft Visual Studio 2008");
-   ADD_CREDIT(0, "Simple DirectMedia Layer");
-   ADD_CREDIT(0, "TortoiseSVN");
-   ADD_CREDIT(0, "Goanna Static Analyzer");
-   ADD_CREDIT(0, "Microsoft Paint");
-   ADD_CREDIT(0, "Audacity");
-   ADD_CREDIT(0, "Finale Notepad 2008");
+   ADD_TITLE("Special Thanks");
+   ADD_CREDIT("Evan Pipho");
+   ADD_CREDIT("Drew Banyai");
 
+#undef ADD_TITLE
 #undef ADD_CREDIT
 #undef ADD_GAP
 
