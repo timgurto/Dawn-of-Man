@@ -4,10 +4,7 @@
 #include <cmath>
 #include "util.h"
 #include "Debug.h"
-
-//TODO remove once Sound class is made
-#include "globals.h"
-extern int soundsLoaded;
+#include "Point.h"
 
 extern Debug debug;
 

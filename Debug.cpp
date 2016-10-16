@@ -17,7 +17,6 @@ extern Surface screenBuf;
 
 int Debug::debugCount_ = 0;
 
-//TODO size based on screen
 Debug::Debug(SDL_Color color, pixels_t x, pixels_t y,
              unsigned short count):
 color_(color),

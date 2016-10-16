@@ -325,7 +325,7 @@ void handleEvents(const CoreData &core, GameData &game,
          break;
 
 
-      //TODO clicking on a useless entity (eg. tree) = try next one
+      //TODO * clicking on a useless entity (eg. tree) = try next one
       //A mouse button is pressed
       case SDL_MOUSEBUTTONDOWN:
          debug("Mouse down: ", int(event.button.button));
@@ -650,7 +650,7 @@ void reSort(entities_t &entities, entities_t::iterator it,
             VerticalMovement verticalMovement){
    entities_t::iterator old = it;
    switch(verticalMovement){
-   case DIR_UP: //TODO use reverse iterators
+   case DIR_UP:
       if (it != entities.begin()){
          entities_t::iterator next = it;
          --next;
