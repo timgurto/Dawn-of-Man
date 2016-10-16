@@ -14,7 +14,7 @@ struct SDL_Surface;
 void renderLoadingScreen(Surface &screen, const Surface &loading);
 
 //Draws everything to the screen
-void render(Surface &screen, Surface &selection,
+void render(Surface &selection,
             Surface &diagGreen, Surface &diagRed,
             Surface &map, Surface &darkMap,
             Surface &cursor, Surface &cursorShadow,
@@ -26,32 +26,31 @@ void render(Surface &screen, Surface &selection,
             Surface outcomeMessage = Surface(SUR_UNINIT));
 
 //Draws the cursor
-void renderCursor (Surface &screen, const GameData &game,
+void renderCursor (const GameData &game,
                    Surface &cursor, Surface &shadow,
                    Surface &pause, Surface &color,
                    Surface *cursorIndex);
 
 //Draws the terrain and border tiles
-void renderMap(Surface &screen, const GameData &game,
+void renderMap(const GameData &game,
                Surface &map, Surface &border);
 
 //Draws markers at the locations of selected entities
-void renderSelection(Surface &screen, const GameData &game,
+void renderSelection(const GameData &game,
                      Surface &selection);
 
 //Draws a building footprint at the cursor
-void renderFootprint(Surface &screen,
-                     const CoreData &core, const GameData &game,
+void renderFootprint(const CoreData &core, const GameData &game,
                      Surface &goodImage, Surface &badImage);
 
 //Draws all decoration entities
-void renderDecorations(Surface &screen, const GameData &game);
+void renderDecorations(const GameData &game);
 
 //Draws all entities except decorations
-void renderEntities(Surface &screen, const GameData &game);
+void renderEntities(const GameData &game);
 
 //Draws the selection rectangle
-void renderSelectionRect(Surface &screen, const GameData &game,
+void renderSelectionRect(const GameData &game,
                          Surface &selRectImage);
 
 //Draws all UIBars
@@ -61,7 +60,6 @@ void renderInterface(const UIBars_t &bars);
 void renderParticles(const GameData &game);
 
 //Draws all message boxes
-void renderMessageBoxes(Surface &screen,
-                        const messageBoxes_t messageBoxes);
+void renderMessageBoxes(const messageBoxes_t messageBoxes);
 
 #endif

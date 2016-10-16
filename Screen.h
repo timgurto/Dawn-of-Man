@@ -8,30 +8,43 @@
 class Surface;
 
 class Screen{
+
+   typedef unsigned GoFun(Screen &thisScreen, const void *data);
+
+   //What the screen does
+   //Default: goDefault
+   GoFun *go_;
+
+   //whether to continue looping
+   bool loop_;
    
    static Surface
       *background_, //the background image for all screens
-      *screen_,     //the screen buffer.  Confusing name...
       *cursor_;     //the cursor image
 
-   static Point mousePos;
+   static Point mousePos_;
 
-public:
-   
-   //display the screen, trap execution and handle input
-   //until a button is pushed
-   void go();
+   //Default screen functionality.  Accepts input and renders
+   //until a button is pushed.
+   static GoFun goDefault;
 
    //inspect SDL's event queue and deal accordingly
-   void handleEvents();
+   //used by goDefault
+   void handleEventsDefault();
 
    //draw the screen
-   void draw();
+   //used by goDefault
+   void drawDefault() const;
+
+public:
+
+   Screen(GoFun *go = &goDefault);
 
    //initialize static pointers
    static void init(Surface *background,
-                    Surface *screen,
                     Surface *cursor);
+
+   void operator()(const void *data = 0);
 };
 
 #endif

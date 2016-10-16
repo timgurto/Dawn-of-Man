@@ -1,8 +1,6 @@
 // (C) 2009-2010 Tim Gurto
 
 #include <cassert>
-#include <cstdlib>
-#include <ctime>
 #include <map>
 #include <string>
 
@@ -50,19 +48,14 @@ const Uint8 SELECTION_RECT_ALPHA = 0x66;
 //How long the victory/loss message is displayed
 const timer_t END_MESSAGE_TIMER = 1250;
 
-GameOutcome gameMode(std::string fileName){
-
-   //seed random generator
-   srand(unsigned(time(0)));
-
-   //initialize screen and debug objects
-   Surface screen(SUR_SCREEN);
+GameOutcome gameMode(Screen &thisScreen, const std::string *fileName){
 
    //loading screen
    Surface loading(MISC_IMAGE_PATH + "loading.PNG");
-   renderLoadingScreen(screen, loading);
+   renderLoadingScreen(screenBuf, loading);
 
-   debug.initScreen(&screen);
+   //TODO move screen inits to dawn.cpp
+   
 
    //load core data (must be done after screen is initialized)
    CoreData core(DATA_PATH + "core.dat");
@@ -73,6 +66,8 @@ GameOutcome gameMode(std::string fileName){
    Player::init(&core);
 
    //load surfaces
+   //redone for each game screen.  Slower loading each time, but not
+   //that bad, and it's clearer this way
    Surface
       map           (MISC_IMAGE_PATH + "back.PNG"),
       darkMap       (MISC_IMAGE_PATH + "dark.PNG"),
@@ -111,16 +106,15 @@ GameOutcome gameMode(std::string fileName){
    SDL_ShowCursor(SDL_DISABLE);
 
    //create game data object, and load data from file
-   GameData game(DATA_PATH + fileName);
+   GameData game(DATA_PATH + *fileName);
 
    //more init
-   Particle::init(&screen, &particle, &particleShadow);
-   Entity::init(&core, &game, &screen, &diagGreen);
-   Screen::init(&darkMap, &screen, &cursor);
+   Particle::init(&particle, &particleShadow);
+   Entity::init(&core, &game, &diagGreen);
 
    //UI Bars
    UIBars_t bars;
-   UIBar::init(&core, &game, &screen, &darkMap, click);
+   UIBar::init(&core, &game, &darkMap, click);
    UIBar buildingsBar(BOTTOM_LEFT, HORIZONTAL,
                       &getNumBuildingIcons,
                       &getBuildingTypeIcons,
@@ -168,10 +162,6 @@ GameOutcome gameMode(std::string fileName){
    messageBoxes.push_back(&resourcesBox);
    messageBoxes.push_back(&fpsDisplay);
 
-   //Screens
-   Screen mainMenu;
-   mainMenu.go();
-
    timer_t oldTicks = SDL_GetTicks();
    game.loop = true;
    while (game.loop){
@@ -194,11 +184,11 @@ GameOutcome gameMode(std::string fileName){
          pushMouseMove(game);
 
          //update state
-         updateState(deltaMod, core, game, screen, bars,
+         updateState(deltaMod, core, game, bars,
                      contextHelp, resourcesBox, fpsDisplay);
 
          //render
-         render(screen, glow, diagGreen, diagRed, map, darkMap, cursor,
+         render(glow, diagGreen, diagRed, map, darkMap, cursor,
                 cursorShadow, cursorPause, cursorColor, selRectImage,
                 cursorIndex, core,
                 game, bars, messageBoxes);
@@ -207,8 +197,8 @@ GameOutcome gameMode(std::string fileName){
 
    //game over; display victory/loss message
    game.paused = true; //darken map
-   game.mousePos = Point(screen->w, screen->h); //hide cursor
-   render(screen, glow, diagGreen, diagRed, map, darkMap, cursor,
+   game.mousePos = Point(screenBuf->w, screenBuf->h); //hide cursor
+   render(glow, diagGreen, diagRed, map, darkMap, cursor,
           cursorShadow, cursorPause, cursorColor, selRectImage,
           cursorIndex, core,
           game, bars, messageBoxes,

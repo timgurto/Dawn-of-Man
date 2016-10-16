@@ -9,7 +9,6 @@
 
 GameData *UIBar::game_ = 0;
 const CoreData *UIBar::core_ = 0;
-Surface *UIBar::screen_ = 0;
 Surface *UIBar::barSurface_ = 0;
 SDL_Sound *UIBar::click_ = 0;
 
@@ -81,15 +80,14 @@ void UIBar::draw() const{
    if (game_->mode == requiredMode_){
 
       Surface
-         &screen = *screen_,
          &barSurface = *barSurface_;
 
       //shadow
-      screen.fill(ENGRAVE_LIGHT,
-                  &SDL_Rect(rect_ - Point(1, 1)));
-      screen.fill(ENGRAVE_DARK,
-                  &SDL_Rect(rect_ + Point(1, 1)));
-      barSurface.draw(screen,
+      screenBuf.fill(ENGRAVE_LIGHT,
+                     &SDL_Rect(rect_ - Point(1, 1)));
+      screenBuf.fill(ENGRAVE_DARK,
+                     &SDL_Rect(rect_ + Point(1, 1)));
+      barSurface.draw(screenBuf,
                       &SDL_Rect(rect_),
                       &makeRect(0, 0, rect_.w, rect_.h));
       
@@ -98,7 +96,7 @@ void UIBar::draw() const{
       for (typeNum_t i = 0; i != iconCount_; ++i){
          //draw
          surfaceFun_(i, *core_, *game_)
-            .draw(screen, &makeRect(x, y));
+            .draw(screenBuf, &makeRect(x, y));
 
          //iterate
          if (orientation_ == HORIZONTAL)
@@ -135,12 +133,10 @@ bool UIBar::isActive(){
 
 void UIBar::init(const CoreData *core,
                  GameData *game,
-                 Surface *screen,
                  Surface *barSurface,
                  SDL_Sound *click){
    core_ = core;
    game_ = game;
-   screen_ = screen;
    barSurface_ = barSurface;
    click_ = click;
 }

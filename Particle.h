@@ -21,7 +21,6 @@ class Particle{
 
    //static pointers to surfaces
    static Surface
-      *screen_, //the screen
       *image_, //the particle image
       *shadow_; //the particle shadow image
 
@@ -58,8 +57,7 @@ public:
    bool expired() const;
 
    //initializes static pointers
-   static void init(Surface *screen,
-                    Surface *image,
+   static void init(Surface *image,
                     Surface *shadow);
 };
 

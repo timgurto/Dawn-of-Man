@@ -12,8 +12,9 @@
 #include "Debug.h"
 #include "Surface.h"
 
+extern Surface screenBuf;
+
 int Debug::debugCount_ = 0;
-Surface *Debug::screen_ = 0;
 
 Debug::Debug(SDL_Color color, pixels_t x, pixels_t y,
              unsigned short count):
@@ -34,10 +35,6 @@ Debug::~Debug(){
       TTF_Quit();
 }
 
-void Debug::initScreen(Surface *screen){
-   screen_ = screen;
-}
-
 void Debug::initFont(std::string name, int size){
    font_ = TTF_OpenFont(name.c_str(), size);
    assert (font_);
@@ -51,23 +48,21 @@ void Debug::add(std::string message){
 }
 
 void Debug::display() const{
-   if (screen_){
-      std::queue<std::string> copy(messages);
-      int lat = 0;
-      while (copy.size() != 0){
-         std::string message = copy.front();
-         copy.pop();
-         //draw text
-         {
-         Surface blackSurface(font_, message, BLACK);
-         blackSurface.draw(*screen_, &makeRect(x_+1, y_+1 + lat));
-         }
-         //draw shadow
-         Surface surface(font_, message, color_);
-         surface.draw(*screen_, &makeRect(x_, y_ + lat));
-
-         lat += height_;
+   std::queue<std::string> copy(messages);
+   int lat = 0;
+   while (copy.size() != 0){
+      std::string message = copy.front();
+      copy.pop();
+      //draw text
+      {
+      Surface blackSurface(font_, message, BLACK);
+      blackSurface.draw(screenBuf, &makeRect(x_+1, y_+1 + lat));
       }
+      //draw shadow
+      Surface surface(font_, message, color_);
+      surface.draw(screenBuf, &makeRect(x_, y_ + lat));
+
+      lat += height_;
    }
 }
 

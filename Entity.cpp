@@ -23,7 +23,6 @@ extern Debug debug;
 const progress_t Entity::PROGRESS_PER_CALC = 4;
 GameData *Entity::game_ = 0;
 const CoreData *Entity::core_ = 0;
-Surface *Entity::screen_ = 0;
 Surface *Entity::diagGreen_ = 0;
 entities_t Entity::trashCan_;
 
@@ -45,7 +44,7 @@ void Entity::draw(Surface &screen) const{
    SDL_Rect srcLoc = makeRect(0, 0,
                               thisType.drawRect_.w,
                               thisType.drawRect_.h);
-   colorBlit(getColor(), screen, srcLoc, drawLoc);
+   colorBlit(getColor(), screenBuf, srcLoc, drawLoc);
 }
 
 SDL_Rect Entity::getBaseRect() const{
@@ -61,14 +60,13 @@ void Entity::tick(double /*delta*/){} //default: do nothing
 
 bool Entity::onScreen() const{
    return collision(loc_ + type().drawRect_ + locRect(game_->map),
-                    (*screen_)->clip_rect);
+                    (screenBuf)->clip_rect);
 }
 
 void Entity::init(const CoreData *core, GameData *game,
-                  Surface *screen, Surface *diagGreen){
+                  Surface *diagGreen){
    core_ = core;
    game_ = game;
-   screen_ = screen;
    diagGreen_ = diagGreen;
 }
 
@@ -178,7 +176,7 @@ void Entity::colorBlit(int color, Surface &screen,
    //blit mask, hiding anything that would otherwise
    //show through the gaps in the sprite
    if (ENTITY_MASKS && classID() != ENT_DECORATION)
-      thisType.mask_.draw(*screen_, &SDL_Rect(dest), &srcLoc);
+      thisType.mask_.draw(screenBuf, &SDL_Rect(dest), &srcLoc);
    //note: the "SDL_Rect(dest)" above avoids SDL_Blit
    //messing with the draw location
 

@@ -12,7 +12,7 @@
 extern bool WINDOWED_MODE;
 
 int Surface::surfacesLoaded_ = 0;
-bool Surface::screenSet_ = false;
+int Surface::screensSet_ = 0;
 
 Surface::Surface(const std::string fileName, bool alpha):
 isScreen_(false){
@@ -34,7 +34,7 @@ surface_(0){
    switch(special){
 
    case SUR_SCREEN:
-      if (screenSet_) //don't make duplicate screen buffers
+      if (screensSet_ != 0) //don't make duplicate screen buffers
          break;
 
       surface_ = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP,
@@ -43,8 +43,8 @@ surface_(0){
                                   SDL_FULLSCREEN));
       SDL_WM_SetCaption("Dawn of Man", 0);
       isScreen_ = true;
-      assert (!screenSet_);
-      screenSet_ = true;
+      assert (screensSet_ == 0);
+      screensSet_ = 1;
       break;
 
    case SUR_BLANK:
@@ -66,18 +66,28 @@ isScreen_(false){
 }
 
 Surface::Surface(const Surface &original):
-isScreen_(false), //copy = not screen buffer
-surface_(SDL_ConvertSurface(original.surface_,
-                            original.surface_->format,
-                            SDL_HWSURFACE)){
-   if (surface_)
-      ++surfacesLoaded_;
+surface_(0),
+isScreen_(false){
+   if (!original)
+      return;
+
+   else
+      if (original.isScreen_){
+         surface_ = original.surface_;
+         isScreen_ = true;
+         ++screensSet_;
+      }else{
+         surface_ = SDL_ConvertSurface(original.surface_,
+                                       original.surface_->format,
+                                       SDL_HWSURFACE);
+         ++surfacesLoaded_;
+      }
 }
 
 Surface::~Surface(){
    if (surface_){
       if (isScreen_)
-         screenSet_ = false;
+         --screensSet_;
       else{
          SDL_FreeSurface(surface_);
          --surfacesLoaded_;
@@ -88,21 +98,29 @@ Surface::~Surface(){
 Surface &Surface::operator=(const Surface &rhs){
    if (this == &rhs)
       return *this;
+
    if (surface_){
       SDL_FreeSurface(surface_);
       --surfacesLoaded_;
    }
    
-   surface_ = SDL_ConvertSurface(rhs.surface_,
-                                 rhs.surface_->format,
-                                 SDL_HWSURFACE);
-   ++surfacesLoaded_;
+   if (rhs.isScreen_){
+      surface_ = rhs.surface_;
+      isScreen_ = true;
+      ++screensSet_;
+   }else{
+      surface_ = SDL_ConvertSurface(rhs.surface_,
+                                    rhs.surface_->format,
+                                    SDL_HWSURFACE);
+      ++surfacesLoaded_;
+   }
    return *this;
 }
 
 Surface::operator bool() const{
    //return surface_;
-   return surface_ ? //to suppress performance warning, ironically
+   //use ternary operator to suppress performance warning, ironically
+   return surface_ ?
              true :
              false;
 }

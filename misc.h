@@ -19,6 +19,12 @@ struct GameData;
 
 extern pixels_t SCREEN_WIDTH, SCREEN_HEIGHT;
 
+const Uint8 MOUSE_BUTTON_LEFT        = 1;
+const Uint8 MOUSE_BUTTON_MIDDLE      = 2;
+const Uint8 MOUSE_BUTTON_RIGHT       = 3;
+const Uint8 MOUSE_BUTTON_SCROLL_UP   = 4;
+const Uint8 MOUSE_BUTTON_SCROLL_DOWN = 5;
+
 //===SDL===
 
 //Loads a sound, and registers it with soundsLoaded

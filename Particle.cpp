@@ -6,14 +6,13 @@
 #include "Particle.h"
 #include "GameData.h"
 
-const bool Particle::PARTICLE_FADE = false;
+const bool   Particle::PARTICLE_FADE = false;
 const double Particle::GRAVITY = 1.6;
-const int Particle::PARTICLE_COUNT = 8;
+const int    Particle::PARTICLE_COUNT = 8;
 const double Particle::VELOCITY_RANGE = 2;
-const int Particle::DECAY = 6;
+const int    Particle::DECAY = 6;
 
 Surface
-   *Particle::screen_ = 0,
    *Particle::image_ = 0,
    *Particle::shadow_ = 0;
 
@@ -39,20 +38,19 @@ void Particle::draw(const GameData &game) const{
 
    //shadow
    SDL_Rect disp = makeRect(int(dest.x - offset_), int(dest.y + offset_));
-   shadow_->draw(*screen_, &disp);
+   shadow_->draw(screenBuf, &disp);
 
    //particle
    if (PARTICLE_FADE)
       image_->setAlpha(Uint8(age_));
-   image_->draw(*screen_, &dest);
+   image_->draw(screenBuf, &dest);
 }
 
 bool Particle::expired() const{
    return (age_ <= 0);
 }
 
-void Particle::init(Surface *screen, Surface *image, Surface *shadow){
+void Particle::init(Surface *image, Surface *shadow){
    image_ = image;
-   screen_ = screen;
    shadow_ = shadow;
 }

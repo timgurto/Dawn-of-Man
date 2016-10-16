@@ -11,6 +11,9 @@
 
 extern pixels_t SCREEN_WIDTH, SCREEN_HEIGHT;
 
+class Surface;
+extern Surface screenBuf;
+
 enum SpecialSurface{
    SUR_UNINIT, //not yet a surface; needs to be set later with =
    SUR_SCREEN, //the screen buffer
@@ -30,7 +33,7 @@ class Surface{
    static int surfacesLoaded_;
 
    //whether there is a screen buffer
-   static bool screenSet_;
+   static int screensSet_;
 
 public:
 
@@ -65,7 +68,7 @@ public:
    void fill(Uint32 color = BLACK_UINT, SDL_Rect *rect = 0);
 
    //draw onto another surface
-   void draw(Surface &dst,
+   void draw(Surface &dst = screenBuf,
              SDL_Rect *dstRect = 0, SDL_Rect *srcRect = 0) const;
    friend void operator<<(Surface &dst, const Surface &src);
 

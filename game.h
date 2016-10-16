@@ -6,8 +6,9 @@
 #include "GameData.h"
 
 class Entity;
+class Screen;
 
 //Main game functionality
-GameOutcome gameMode(std::string fileName);
+GameOutcome gameMode(Screen &thisScreen, const std::string *data);
 
 #endif

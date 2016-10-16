@@ -2,6 +2,8 @@
 
 #include <cassert>
 #include <fstream>
+#include <ctime>
+#include <cstdlib>
 
 #include "SDL.h"
 #include "SDL_ttf.h"
@@ -10,14 +12,20 @@
 #include "game.h"
 #include "globals.h"
 #include "Debug.h"
+#include "Screen.h"
+#include "Surface.h"
 
-//TODO: try replace get()s with const refs, or reaffirm why it can't be done
+//TODO: try to replace get()s with const refs, or reaffirm why it can't be done
 
+//TODO replace with ranked priorities, including 16:9
 //Default screen resolutions, 16:10 and 4:3
 const pixels_t DEFAULT_W_SCREEN_WIDTH = 1280;
 const pixels_t DEFAULT_W_SCREEN_HEIGHT = 800;
 const pixels_t DEFAULT_SCREEN_WIDTH = 1024;
 const pixels_t DEFAULT_SCREEN_HEIGHT = 768;
+
+//global screen buffer
+Surface screenBuf; //uninitialized
 
 pixels_t
    SCREEN_WIDTH = DEFAULT_SCREEN_WIDTH,
@@ -34,6 +42,9 @@ int soundsLoaded = 0;
 
 int main(int argc, char **argv){
 
+   //seed random generator
+   srand(unsigned(time(0)));
+
    //SDL initialization
    int sdlInit(SDL_Init(SDL_INIT_VIDEO));
    assert (sdlInit == 0);
@@ -46,20 +57,43 @@ int main(int argc, char **argv){
 
    setScreenResolution(argc, argv);
 
-   //campaign: go through each level
-   int levels;
-   for (levels = 0;
-        std::ifstream((DATA_PATH + format2(levels) + ".dat").c_str());
-        ++levels);
-   //levels = number of levels in the campaign
+   //initialize screen buffer
+   screenBuf = Surface(SUR_SCREEN);
+   
+   {//new scope for surfaces
 
-   for (int i = 0; i != levels; ++i){
-      GameOutcome outcome;
-      //repeat each level if lost
-      while ((outcome = gameMode(format2(i) + ".dat")) == LOSS)
-         ;
-      if (outcome == QUIT)
-         break;
+      //Other surfaces needed for Screens
+      Surface
+         background       (MISC_IMAGE_PATH + "dark.PNG"),
+         cursor        (MISC_IMAGE_PATH + "cursor.PNG",         GREEN),
+         cursorShadow  (MISC_IMAGE_PATH + "cursorShadow.PNG",   GREEN);
+      cursorShadow.setAlpha(SHADOW_ALPHA);
+
+      //init with surfaces
+      Screen::init(&background, &cursor);
+
+      Screen mainMenu;
+      //mainMenu();
+
+      Screen game;
+      game();
+
+      //campaign: go through each level
+      int levels;
+      for (levels = 0;
+           std::ifstream((DATA_PATH + format2(levels) + ".dat").c_str());
+           ++levels);
+      //levels = number of levels in the campaign
+
+      for (int i = 0; i != levels; ++i){
+         GameOutcome outcome;
+         //repeat each level if lost
+         while ((outcome = gameMode(game, &(format2(i) + ".dat"))) == LOSS)
+            ;
+         if (outcome == QUIT)
+            break;
+      }
+
    }
 
    //Quit

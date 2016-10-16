@@ -29,10 +29,10 @@ font_(TTF_OpenFont(fontName.c_str(), fontSize)){
       y_ -= fontHeight;
 }
 
-void MessageBox::display(Surface &screen) const{
+void MessageBox::draw() const{
    if (visible_)
       if (message_ != ""){
-         assert (screen);
+         assert (screenBuf);
 
          //message surface
          Surface text(font_, message_, color_);
@@ -40,19 +40,19 @@ void MessageBox::display(Surface &screen) const{
 
          //background
          if (background_){
-            screen.fill(ENGRAVE_DARK,
-                        &makeRect(x_ - margin_, y_ - margin_,
-                                  width + 1, height_ + 1));
-            screen.fill(ENGRAVE_LIGHT_UINT,
-                        &makeRect(x_ - margin_ - 1, y_ - margin_ - 1,
-                                  width + 1, height_ + 1));
-            background_.draw(screen,
+            screenBuf.fill(ENGRAVE_DARK,
+                           &makeRect(x_ - margin_, y_ - margin_,
+                                     width + 1, height_ + 1));
+            screenBuf.fill(ENGRAVE_LIGHT_UINT,
+                           &makeRect(x_ - margin_ - 1, y_ - margin_ - 1,
+                                     width + 1, height_ + 1));
+            background_.draw(screenBuf,
                              &makeRect(x_ - margin_, y_ - margin_),
                              &makeRect(0, 0, width, height_));
          }
 
          //message
-         text.draw(screen, &makeRect(x_ + margin_, y_ + margin_));
+         text.draw(screenBuf, &makeRect(x_ + margin_, y_ + margin_));
       }
 }
 

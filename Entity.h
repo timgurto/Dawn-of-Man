@@ -6,14 +6,16 @@
 #include <list>
 #include "globals.h"
 #include "Point.h"
+#include "Surface.h"
 
 struct GameData;
 struct CoreData;
 class EntityType;
-class Surface;
 
 class Entity;
 typedef std::list<Entity *> entities_t;
+
+extern Surface screenBuf;
 
 //An "instance" of an EntityType.  Basically, each entity
 //is an on-screen, in-game element.
@@ -39,7 +41,6 @@ protected: //everything should be a derived class
    Point loc_; //location
    static GameData *game_; //static pointer to game
    static const CoreData *core_; //static pointer to core data
-   static Surface *screen_; // " " to the screen
    
    //stark base for invisible entities
    static Surface *diagGreen_;
@@ -88,7 +89,7 @@ public:
 
    //Draws the entity.  Should draw with colorBlit(), to
    //take advantage of surface indexing and entity masks
-   virtual void draw(Surface &screen = *screen_) const;
+   virtual void draw(Surface &screen= screenBuf) const;
    
    //Any changes that need to be made to the entity
    //by the game loop
@@ -100,7 +101,6 @@ public:
    //Initializes the class' static pointers
    static void init(const CoreData *core,
                     GameData *game = 0,
-                    Surface *screen = 0,
                     Surface *diagGreen = 0);
 
    //identitifes which entity subclass this is

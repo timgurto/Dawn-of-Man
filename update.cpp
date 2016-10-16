@@ -14,19 +14,12 @@
 
 extern Debug debug;
 
-const Uint8 MOUSE_BUTTON_LEFT        = 1;
-const Uint8 MOUSE_BUTTON_MIDDLE      = 2;
-const Uint8 MOUSE_BUTTON_RIGHT       = 3;
-const Uint8 MOUSE_BUTTON_SCROLL_UP   = 4;
-const Uint8 MOUSE_BUTTON_SCROLL_DOWN = 5;
-
 void updateState(double delta, const CoreData &core, GameData &game,
-                 Surface &screen, UIBars_t &bars,
-                 MessageBox &contextHelp,
+                 UIBars_t &bars, MessageBox &contextHelp,
                  MessageBox &resourcesBox, MessageBox &fpsDisplay){
 
    //Interface stuff
-   handleEvents(core, game, screen, bars, contextHelp, fpsDisplay);
+   handleEvents(core, game, bars, contextHelp, fpsDisplay);
    scrollMap(game, delta);
 
    if (game.selectionChanged)
@@ -75,7 +68,7 @@ void updateState(double delta, const CoreData &core, GameData &game,
 }
 
 void handleEvents(const CoreData &core, GameData &game,
-                  Surface &screen, UIBars_t &bars,
+                  UIBars_t &bars,
                   MessageBox &contextHelp, MessageBox &fpsDisplay){
    SDL_Event event;
    while (SDL_PollEvent(&event)){
@@ -149,7 +142,7 @@ void handleEvents(const CoreData &core, GameData &game,
                   { //new scope for os
                      std::ostringstream os;
                      os << SCREENSHOTS_PATH << "shot" << time(0) << ".bmp";
-                     screen.saveToBitmap(os.str());
+                     screenBuf.saveToBitmap(os.str());
                   }
                   break;
 

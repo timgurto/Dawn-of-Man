@@ -70,8 +70,8 @@ void Building::draw(Surface &screen) const{
                         thisType.drawRect_.w,
                         thisType.drawRect_.h);
    
-   colorBlit(getColor(), screen, srcLoc, drawLoc,
-         !finished_); //partial
+   colorBlit(getColor(), screenBuf,
+             srcLoc, drawLoc, !finished_); //partial
 }
 
 double Building::getDrawPercent() const{

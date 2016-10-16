@@ -31,7 +31,7 @@ public:
               bool visible = true);
 
    //Draws messages to the screen
-   void display(Surface &screen) const;
+   void draw() const;
 
    void clear();
 

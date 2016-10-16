@@ -33,7 +33,7 @@ public:
 
    //Inherited from Entity
    virtual const EntityType &Building::type() const;
-   virtual void draw(Surface &screen = *screen_) const;
+   virtual void draw(Surface &screen = screenBuf) const;
    virtual EntityTypeID classID() const;
    virtual bool selectable() const;
    virtual bool targetable() const;

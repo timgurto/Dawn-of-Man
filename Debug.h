@@ -34,8 +34,6 @@ class Debug{
    //debug objects that exist
    static int debugCount_;
 
-   static Surface *screen_; //The surface used to display
-
 public:
    Debug(SDL_Color color, pixels_t x, pixels_t y,
          unsigned short count);

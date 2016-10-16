@@ -11,13 +11,12 @@ struct SDL_Surface;
 
 //Any processing within the game loop
 void updateState(double delta, const CoreData &core, GameData &game,
-                 Surface &screen, UIBars_t &bars,
-                 MessageBox &contextHelp,
+                 UIBars_t &bars, MessageBox &contextHelp,
                  MessageBox &resourcesBox, MessageBox &fpsDisplay);
 
 //Handles events and changes game data accordingly
 void handleEvents(const CoreData &core, GameData &game,
-                  Surface &screen, UIBars_t &bars,
+                  UIBars_t &bars,
                   MessageBox &contextHelp, MessageBox &fpsDisplay);
 
 //Scrolls the map, based on keyboard/mouse states
