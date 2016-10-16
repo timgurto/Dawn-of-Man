@@ -14,6 +14,9 @@ player{
 player{
    index = 1;           # 1 = human player
    color = 0xca6500;
+   resources.food = 20;
+   resources.wood = 20;
+   resource.stone = 5;
 }
 player{
    index = 2;           # 2 = computer

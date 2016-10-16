@@ -87,6 +87,7 @@ void handleEvents(const CoreData &core, GameData &game,
       //Window is exited
       case SDL_QUIT:
          game.loop = false;
+         game.outcome = QUIT;
          break;
 
 

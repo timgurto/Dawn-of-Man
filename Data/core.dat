@@ -572,7 +572,7 @@ technology{
    index = 5;
    description = "Faster building construction";
    bonus.buildingSpeed = 40;
-   originBuilding = 1;
+   originBuilding = 2;
    cost.stone = 20;
    prereqTech = 4;
 }
@@ -584,7 +584,7 @@ technology{
    bonus.gathering.wood = 2;
    bonus.gathering.stone = 2;
    bonus.gathering.metal = 2;
-   originBuilding = 1;
+   originBuilding = 2;
    cost.stone = 30;
    prereqTech = 5;
 }
@@ -593,7 +593,7 @@ technology{
    index = 7;
    description = "Faster unit training";
    bonus.trainingSpeed = 4;
-   originBuilding = 1;
+   originBuilding = 2;
    cost.metal = 10;
    prereqTech = 6;
    prereqTech2 = 15;
@@ -612,7 +612,7 @@ technology{
    index = 9;
    description = "Higher unit armor";
    bonus.unitArmor = 2;
-   originBuilding = 1;
+   originBuilding = 2;
    cost.food = 30;
    prereqTech = 8;
 }
@@ -621,7 +621,7 @@ technology{
    index = 10;
    description = "Higher buiding armor";
    bonus.buildingArmor = 4;
-   originBuilding = 1;
+   originBuilding = 2;
    cost.wood = 30;
    cost.stone = 40;
    prereqTech = 5;

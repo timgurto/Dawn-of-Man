@@ -32,6 +32,45 @@ building{
    location.x = 1000;
    location.y = 1000;
 }
+unit{
+   type = 4;
+   location.x = 1100;
+   location.y = 900;
+}
+unit{
+   type = 4;
+   location.x = 1100;
+   location.y = 1100;
+}
+decoration{
+   type = 1;
+   location.x = 1050;
+   location.y = 1050;
+}
+decoration{
+   type = 1;
+   location.x = 1070;
+   location.y = 950;
+}
+decoration{
+   type = 1;
+   location.x = 980;
+   location.y = 1100;
+}
+decoration{
+   type = 1;
+   location.x = 1000;
+   location.y = 1020;
+}
+decoration{
+   type = 1;
+   location.x = 1140;
+   location.y = 940;
+}
+decoration{
+   type = 1;
+   random = 20;
+}
 
 
 # human starting cave
