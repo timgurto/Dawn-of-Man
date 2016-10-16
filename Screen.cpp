@@ -25,7 +25,7 @@ const Point Screen::defaultRes_[] = {
 
 Surface *Screen::background_ = 0;
 Surface *Screen::cursor_ = 0;
-Point Screen::screenRes_(defaultRes_[0]);
+Point Screen::screenRes_ = defaultRes_[0];
 Point Screen::mousePos = screenRes_ / 2;
 bool Screen::windowedMode_ = DEBUG;
 

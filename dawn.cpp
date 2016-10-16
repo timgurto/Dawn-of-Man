@@ -17,8 +17,6 @@
 #include "ScreenElement.h"
 #include "dawn.h"
 
-//TODO try to replace get()s with const refs, or reaffirm why it can't be done
-
 //global screen buffer
 Surface screenBuf; //uninitialized
 
@@ -53,11 +51,8 @@ int main(int argc, char **argv){
    int mixInit(Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 256));//256));
    assert (mixInit >= 0);
 
-   //TODO const font names
-   debug.initFont("Dina.fon", 0);
-
+   debug.initFont(FONT_DEBUG, 0);
    Screen::setScreenResolution(argc, argv);
-
    SDL_ShowCursor(SDL_DISABLE);
 
    //initialize screen buffer

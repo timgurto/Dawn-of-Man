@@ -104,6 +104,11 @@ const std::string SOUND_PATH = "Sounds/";
 const std::string DATA_PATH = "Data/";
 const std::string SCREENSHOTS_PATH = "Screenshots/";
 
+//font filenames
+const std::string FONT_DEBUG = "Dina.fon";
+const std::string FONT_GAME = "Thor.ttf";
+
+
 enum Direction{
    DIR_UP,
    DIR_DOWN,

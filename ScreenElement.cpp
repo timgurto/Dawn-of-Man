@@ -11,7 +11,7 @@
 SDL_Color      ScreenElement::defaultLabelColor_ = WHITE;
 SDL_Color      ScreenElement::defaultButtonColor_ = YELLOW;
 int            ScreenElement::defaultFontSize_ = 30;
-std::string    ScreenElement::defaultFontName_ = "Thor.ttf";
+std::string    ScreenElement::defaultFontName_ = FONT_GAME;
 const int      ScreenElement::NO_ID = -1;
 
 ScreenElement::ScreenElement(ScreenElementType type,
@@ -57,8 +57,6 @@ id_(id){
    textLight  .draw(image_, &makeRect(2, 2));
    textDark   .draw(image_);
    textSurface.draw(image_, &makeRect(1, 1));
-   //image_ = textSurface;
-
 
 
    //loc_

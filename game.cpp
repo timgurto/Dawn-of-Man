@@ -145,7 +145,7 @@ unsigned gameMode(Screen &thisScreen, const void *data){
                           2, Screen::getScreenRes().y - ICON_SIZE - 1,
                           1,
                           darkMap,
-                          "Thor.ttf", 18,
+                          FONT_GAME, 18,
                           true);
    MessageBox resourcesBox(WHITE,
                            2, 2, 1,
@@ -155,7 +155,7 @@ unsigned gameMode(Screen &thisScreen, const void *data){
                          Screen::getScreenRes().x / 2 - 40, 2,
                          1,
                          darkMap,
-                         "Dina.fon", 0,
+                         FONT_DEBUG, 0,
                          false, DEBUG);
    messageBoxes.push_back(&contextHelp);
    messageBoxes.push_back(&resourcesBox);
@@ -210,7 +210,7 @@ unsigned gameMode(Screen &thisScreen, const void *data){
       while (SDL_GetTicks() - oldTicks < END_MESSAGE_TIMER);
    }
 
-   //Screen::mousePos = Screen::screenRes / 2;
+   //Screen::mousePos = Screen::getScreenRes() / 2;
 
    //Clean up
    freeSound(click);
