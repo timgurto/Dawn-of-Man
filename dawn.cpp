@@ -1,7 +1,5 @@
 // (C) 2009-2010 Tim Gurto
 
-//TODO copy comments at declarations to definitions
-
 #include <cassert>
 #include <fstream>
 

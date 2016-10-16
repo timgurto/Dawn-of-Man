@@ -63,29 +63,32 @@ bool validTech(const CoreData &core,
 
 typeNum_t getValidBuilding(const CoreData &core, const GameData &game,
                            typeNum_t i){
+   ++i;
    typeNum_t index;
    for (index = 0; i != 0; ++index)
       if (validBuilding(core, game, index))
          --i;
-   return index;
+   return index - 1;
 }
 
 typeNum_t getValidUnit(const CoreData &core, const GameData &game,
                        typeNum_t i){
+   ++i;
    typeNum_t index;
    for (index = 0; i != 0; ++index)
       if (validUnit(core, game, index))
          --i;
-   return index;
+   return index -1 ;
 }
 
 typeNum_t getValidTech(const CoreData &core, const GameData &game,
                        typeNum_t i){
+   ++i;
    typeNum_t index;
    for (index = 0; i != 0; ++index)
       if (validTech(core, game, index))
          --i;
-   return index;
+   return index - 1;
 }
 
 
@@ -119,12 +122,8 @@ typeNum_t getValidTech(const CoreData &core, const GameData &game,
       if (!game.buildingSelected)
          return 0;
       typeNum_t count = 0;
-      for (techs_t::const_iterator it = core.techs.begin();
-           it != core.techs.end(); ++it)
-         //if tech comes from this building,
-         if (it->getOriginBuilding() == game.buildingSelected->getTypeIndex() &&
-             //and hasn't been researched yet
-             !game.players[HUMAN_PLAYER].hasTech(it->getIndex()))
+      for (typeNum_t index = 0; index != core.techs.size(); ++index)
+         if (validTech(core, game, index))
             ++count;
       return count;
    }

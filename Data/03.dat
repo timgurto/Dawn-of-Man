@@ -1,8 +1,8 @@
 # map size; must be before any random entities,
 # if specified
 map{
-   x = 2;
-   y = 1;
+   x = 6;
+   y = 6;
 }
 
 # players; indices MUST increment, and there MUST be
@@ -14,6 +14,7 @@ player{
 player{
    index = 1;           # 1 = human player
    color = 0xca6500;
+   resources.food = 20;
 }
 player{
    index = 2;           # 2 = computer
@@ -24,32 +25,51 @@ player{
 
 # entities; added in the order specified here.
 
-# rocks
-decoration{
-   type = 0;
-   random = 5;  # place 5 rocks
-}
-
-unit{
-   type = 1;
-   player = 1;
-   location.x = 220;
-   location.y = 150;
-   centerMap = true;
-}
-
-unit{
+# enemy building
+building{
    type = 0;
    player = 2;
-   location.x = 950;
-   location.y = 350;
+   location.x = 1000;
+   location.y = 1000;
 }
 
+
+# human starting cave
+building{
+   type = 0;
+   player = 1;
+   location.x = 2850;
+   location.y = 2950;
+}
+
+# some deer
+unit{
+   type = 5;
+   random = 20;
+}
 
 # trees
 resourceNode{
    type = 0;
-   random = 5;
+   random = 80;
+}
+resourceNode{
+   type = 2;
+   random = 80;
+}
+resourceNode{
+   type = 3;
+   random = 30;
+}
+resourceNode{
+   type = 4;
+   random = 8;
+}
+
+# rocks
+decoration{
+   type = 0;
+   random = 7;  # place 70 rocks
 }
 
 ;   any text below is ignored

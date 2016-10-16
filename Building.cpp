@@ -102,6 +102,8 @@ typeNum_t Building::getPlayer() const{
    return player_;
 }
 
+//progresses the building's construction when a builder
+//hits it
 void Building::progressConstruction(){
    const BuildingType &thisType =
       (const BuildingType &) type();

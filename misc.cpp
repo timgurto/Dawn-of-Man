@@ -30,6 +30,8 @@ extern bool WINDOWED_MODE;
 //========SDL=========
 
 
+//Loads an image file into an SDL_Surface, with optional transparent
+//background color.  Increments surfacesLoaded.
 SDL_Surface *loadImage(const char* fileName,bool alpha){
    debug("loading surface: ", fileName);
    //SDL_WM_SetCaption( fileName, NULL );
@@ -69,12 +71,14 @@ SDL_Surface *loadImage(const std::string fileName,
    return loadImage(fileName.c_str(), background, alpha);
 }
 
+//Creates a surface, and increments surfacesLoaded
 SDL_Surface *createSurface(int width, int height){
    ++surfacesLoaded;
    return SDL_CreateRGBSurface(SDL_HWSURFACE, width, height,
                                SCREEN_BPP, 0, 0, 0, 0);
 }
 
+//Loads a sound, and registers it with soundsLoaded
 SDL_Sound *loadSound(const std::string &fileName){
    if (fileName == "" || fileName == SOUND_PATH)
       return 0;
@@ -84,6 +88,7 @@ SDL_Sound *loadSound(const std::string &fileName){
    return p;
 }
 
+//Fake constructor
 SDL_Rect makeRect(Sint16 x, Sint16 y, Uint16 w, Uint16 h){
    SDL_Rect r;
    r.x = x;
@@ -93,10 +98,12 @@ SDL_Rect makeRect(Sint16 x, Sint16 y, Uint16 w, Uint16 h){
    return r;
 }
 
+//Fake copy constructor
 SDL_Rect makeRect(const Point &point){
    return makeRect(point.x, point.y, 0, 0);
 }
 
+//Fake constructors
 SDL_Color makeColor(Uint8 r, Uint8 g, Uint8 b){
    SDL_Color c;
    c.r = r;
@@ -113,6 +120,7 @@ SDL_Color makeColor(Uint32 c){
    return col;
 }
 
+//Initializes a surface with screen settings
 SDL_Surface *setScreen(){
    SDL_Surface *screen = SDL_SetVideoMode(SCREEN_WIDTH,
                                           SCREEN_HEIGHT,
@@ -125,6 +133,7 @@ SDL_Surface *setScreen(){
    return screen;
 }
 
+//Frees a surface.  Decrements surfacesLoaded.
 void freeSurface(SDL_Surface *&p){
    if (p){
       //debug("Unloading surface");
@@ -134,6 +143,7 @@ void freeSurface(SDL_Surface *&p){
    }
 }
 
+//Free a sound, and update soundsLoaded
 void freeSound(SDL_Sound *&p){
    if (p){
       Mix_FreeChunk(p);
@@ -142,6 +152,7 @@ void freeSound(SDL_Sound *&p){
    }
 }
 
+//Deep-copies a surface from one pointer to another.
 SDL_Surface *copySurface(SDL_Surface* src){
    if (!src)
       return 0;
@@ -151,19 +162,25 @@ SDL_Surface *copySurface(SDL_Surface* src){
                              SDL_SWSURFACE);
 }
 
+//returns a rectangle with equal dimensions, but co-ordinates
+// of zero.
 SDL_Rect dimRect(const SDL_Rect &original){
    return makeRect(0, 0, original.w, original.h);
 }
 
+//returns a rectangle with equal co-ordinates, but dimensions
+// of zero.
 SDL_Rect locRect(const SDL_Rect &original){
    return makeRect(original.x, original.y);
 }
 
+//Whether the specified key is currently down
 bool isKeyPressed(SDLKey key){
    static Uint8 *keyStates = SDL_GetKeyState(0);
    return keyStates[key] != 0;
 }
 
+//SDL_Rect -= SDL_Rect
 SDL_Rect &operator-=(SDL_Rect &lhs, const SDL_Rect &rhs){
    lhs.x -= rhs.x;
    lhs.y -= rhs.y;
@@ -172,12 +189,14 @@ SDL_Rect &operator-=(SDL_Rect &lhs, const SDL_Rect &rhs){
    return lhs;
 }
 
+//plays a sound
 void playSound(SDL_Sound *p){
    if (!DEBUG)
       if (p)
          Mix_PlayChannel(-1, p, 0);
 }
 
+//synthesizes most args of SDL_SetColorKey
 void setColorKey(SDL_Surface *surface, const SDL_Color &color){
    assert(surface);
    assert (surface);
@@ -188,6 +207,8 @@ void setColorKey(SDL_Surface *surface, const SDL_Color &color){
                               color.b));
 }
 
+//push a mouse-move event onto the queue, to refresh the
+//calculations handled there
 void pushMouseMove(const GameData &game){
    SDL_Event fakeMouseMove;
    fakeMouseMove.type = SDL_MOUSEMOTION;
@@ -200,6 +221,7 @@ void pushMouseMove(const GameData &game){
 //========misc=========
 
 
+//Constructs a file path to load graphics for entities
 std::string makePath(EntityTypeID type, typeNum_t imageNumber,
                      ImageModifier modifier){
    std::ostringstream path;
@@ -241,12 +263,17 @@ std::string makePath(EntityTypeID type, typeNum_t imageNumber,
    return path.str();
 }
 
+//Dereferences Entity pointers and performs <
+//(used in sorting the Entities list)
 bool dereferenceLessThan(Entity *p1, Entity *p2){
    assert (p1);
    assert (p2);
    return *p1 < *p2;
 }
 
+//Checks for collisions against every entity in the game:
+//a potential entity, of given type and location
+//ignore: an entity to skip checking, i.e. the current unit
 bool noCollision(const GameData &game, const EntityType &type,
                  const Point &loc, const Entity *ignore1,
                  const Entity *ignore2){
@@ -269,6 +296,7 @@ bool noCollision(const GameData &game, const EntityType &type,
    return true;
 }
 
+//Checks for a collision between two SDL_Rects
 bool collision(const SDL_Rect &r1, const SDL_Rect &r2){
    if (r1.x > r2.x + r2.w)
       return false;
@@ -281,6 +309,7 @@ bool collision(const SDL_Rect &r1, const SDL_Rect &r2){
    return true;
 }
 
+//Whether a Point lies in an SDL_Rect
 bool collision(const Point &point, const SDL_Rect &rect){
    if (point.x < rect.x) return false;
    if (point.y < rect.y) return false;
@@ -293,6 +322,7 @@ bool collision(const SDL_Rect &rect, const Point &point){
    return collision(point, rect);
 }
 
+//looks up the relevant color based on index input
 Uint32 getEntityColor(const GameData &game, int color){
    //if a player color
    if (color < MAX_PLAYERS)
@@ -306,6 +336,10 @@ Uint32 getEntityColor(const GameData &game, int color){
       return RESOURCE_WOOD_COLOR;
    case CLR_RESOURCE_FOOD:
       return RESOURCE_FOOD_COLOR;
+   case CLR_RESOURCE_STONE:
+      return RESOURCE_STONE_COLOR;
+   case CLR_RESOURCE_METAL:
+      return RESOURCE_METAL_COLOR;
    case CLR_DECORATION:
       return DECORATION_COLOR;
    case CLR_CORPSE:
@@ -316,7 +350,7 @@ Uint32 getEntityColor(const GameData &game, int color){
    }
 }
 
-//whether a is inside b
+//whether rect A is completely inside rect B
 bool inside(const SDL_Rect &a, const SDL_Rect &b){
    if (a.x < b.x)
       return false;
@@ -330,6 +364,7 @@ bool inside(const SDL_Rect &a, const SDL_Rect &b){
    return true;
 }
 
+//Whether an argument exists
 bool isArg(std::string arg, int argc, char* argv[]){
    assert (argv);
    for (int i = 1; i != argc; ++i){
@@ -343,6 +378,8 @@ bool isArg(std::string arg, int argc, char* argv[]){
    return false;
 }
 
+//The numeric value associated with an argument
+// arg=???
 int whatIsArg(std::string arg, int argc, char* argv[]){
    assert (argv);
    assert(isArg(arg, argc, argv));
@@ -361,16 +398,19 @@ int whatIsArg(std::string arg, int argc, char* argv[]){
    return -1;
 }
 
+//The one-dimensional distance between two points
 pixels_t distance(pixels_t a, pixels_t b){
    return abs(a - b);
 }
 
+//The two-dimensional distance between two points
 pixels_t distance(Point a, Point b){
    double ssqr = square(a.x - b.x) +
                  square(a.y - b.y);
    return pixels_t(sqrt(ssqr));
 }
 
+//double % int, preserves fraction
 double modulo(double a, int b){
    if (a < b)
       return a;
@@ -378,11 +418,16 @@ double modulo(double a, int b){
    return aInt % b + a - aInt;
 }
 
+//Centers the map on the provided co-ordinates.
+//Map edges are taken into account automatically
 void centerMap(GameData &game, const Point &center){
    game.map.x = SCREEN_WIDTH / 2 - center.x;
    game.map.y = SCREEN_HEIGHT / 2 - center.y;
 }
 
+//Determines whether the specified entity is
+//able to move freely in a straight line to
+//its target, without hitting anything
 bool isPathClear(const Point &start,
                  const Point &end,
                  const GameData &game,
@@ -434,6 +479,7 @@ bool isPathClear(const Point &start,
    return true;
 }
 
+//Adds a leading zero if x < 100 (fps display)
 std::string format3(double x){
    std::ostringstream oss;
    if (x < 100)
@@ -442,6 +488,7 @@ std::string format3(double x){
    return oss.str();
 }
 
+//Adds a leading zero if x < 10 (game file names)
 std::string format2(int x){
    std::ostringstream oss;
    if (x < 10)
@@ -451,6 +498,7 @@ std::string format2(int x){
    return oss.str();
 }
 
+//Parse the next token from a data file
 std::string parseToken(std::ifstream &data){
    std::ostringstream os;
    while (data){
@@ -495,10 +543,12 @@ std::string parseToken(std::ifstream &data){
    return ret;
 }
 
+//removes the last character of a string
 void removeLast(std::string &str){
    str = str.substr(0, str.size() - 1);
 }
 
+//transform a string to a double
 double atod(std::string s){
    std::istringstream is(s);
    if (s.substr(0, 2) == "0x"){
@@ -512,6 +562,8 @@ double atod(std::string s){
    return d;
 }
 
+//if an index is invalid, set it to NO_TYPE
+//so that nothing breaks
 void checkTypeIndex(typeNum_t &i, size_t max){
    if (i != NO_TYPE && (i < 0 ||
                         i >= max))

@@ -22,6 +22,11 @@ buildingType{
    selectionCenter.x = 15;
    selectionCenter.y = -16;
    
+   cost.stone = 50;
+   
+   prereqTech = 17;
+   maxHealth = 2000;
+   progressCost = 4000;
    soundFile = "cave.wav";
    deathSoundFile = "";
 }
@@ -42,6 +47,10 @@ buildingType{
    selectionCenter.x = -1;
    selectionCenter.y = -16;
    
+   cost.wood = 30;
+   
+   maxHealth = 1000;
+   progressCost = 1750;
    soundFile = "armory.wav";
    deathSoundFile = "";
 }
@@ -59,6 +68,11 @@ buildingType{
    baseRect.w = 104;
    baseRect.h = 104;
    
+   cost.wood = 20;
+   cost.food = 10;
+   
+   maxHealth = 1000;
+   progressCost = 1750;
    soundFile = "storage.wav";
    deathSoundFile = "";
 }
@@ -78,6 +92,12 @@ buildingType{
 
    selectionCenter.y = -25;
    
+   cost.wood = 20;
+   cost.food = 30;
+   
+   maxHealth = 1000;
+   progressCost = 1750;
+   prereqBuilding = 1;
    soundFile = "trainingGrounds.wav";
    deathSoundFile = "";
 }
@@ -98,10 +118,12 @@ buildingType{
    selectionCenter.x = 1;
    selectionCenter.y = -20;
 
-   cost.wood = 18;
+   cost.wood = 20;
+   cost.stone = 40;
 
+   prereqTech = 5;
    maxHealth = 1000;
-   progressCost = 1750;
+   progressCost = 3500;
    prereqBuilding = 0;
    soundFile = "shrine.wav";
    deathSoundFile = "";
@@ -123,11 +145,12 @@ buildingType{
    selectionCenter.x = 2;
    selectionCenter.y = -37;
 
-   cost.wood = 10;
+   cost.wood = 20;
+   cost.stone = 10;
 
-   maxHealth = 500;
-   progressCost = 1250;
-   
+   prereqTech = 14;
+   maxHealth = 2500;
+   progressCost = 1750;
    soundFile = "fire.wav";
    deathSoundFile = "";
 }
@@ -182,7 +205,7 @@ unitType{
    selectionCenter.x = 3;
    selectionCenter.y = -50;
 
-   cost.wood = 8;
+   cost.food = 10;
 
    speed = 8;
    maxFrameCounter = 25;
@@ -194,7 +217,7 @@ unitType{
    attack = 5;
    builder = true;
    gatherer = true;
-   originBuilding = 1;
+   originBuilding = 0;
    progressCost = 1000;
    autoAttack = false;
    decorationAtDeath = 1;
@@ -219,6 +242,7 @@ unitType{
    selectionCenter.x = 3;
    selectionCenter.y = -50;
 
+   cost.food = 10;
    cost.wood = 5;
 
    speed = 8;
@@ -226,12 +250,12 @@ unitType{
    frameCount = 8;
    maxCombatFrameCounter = 10;
    combatFrameCount = 4;
-   combatWait = 25;
-   maxHealth = 50;
+   combatWait = 21;
+   maxHealth = 40;
    attack = 10;
-   armor = 2;
-   originBuilding = 1;
-   progressCost = 1000;
+   originBuilding = 3;
+   prereqTech = 0;
+   progressCost = 1200;
    decorationAtDeath = 1;
    soundFile = "warriorSelect.wav";
    deathSoundFile = "";
@@ -254,19 +278,21 @@ unitType{
    selectionCenter.x = 3;
    selectionCenter.y = -50;
 
-   cost.wood = 5;
+   cost.food = 15;
+   cost.wood = 10;
 
    speed = 8;
    maxFrameCounter = 25;
    frameCount = 8;
    maxCombatFrameCounter = 10;
    combatFrameCount = 4;
-   combatWait = 25;
+   combatWait = 17;
    maxHealth = 50;
-   attack = 10;
+   attack = 12;
    armor = 2;
-   originBuilding = 1;
-   progressCost = 1000;
+   originBuilding = 3;
+   prereqTech = 1;
+   progressCost = 1400;
    decorationAtDeath = 1;
    soundFile = "warriorSelect.wav";
    deathSoundFile = "";
@@ -289,19 +315,21 @@ unitType{
    selectionCenter.x = 3;
    selectionCenter.y = -50;
 
-   cost.wood = 5;
+   cost.food = 20;
+   cost.stone = 10;
 
    speed = 8;
    maxFrameCounter = 25;
    frameCount = 8;
    maxCombatFrameCounter = 10;
    combatFrameCount = 4;
-   combatWait = 25;
-   maxHealth = 50;
-   attack = 10;
-   armor = 2;
-   originBuilding = 1;
-   progressCost = 1000;
+   combatWait = 13;
+   maxHealth = 60;
+   attack = 15;
+   armor = 4;
+   originBuilding = 3;
+   prereqTech = 2;
+   progressCost = 1600;
    decorationAtDeath = 1;
    soundFile = "warriorSelect.wav";
    deathSoundFile = "";
@@ -324,19 +352,21 @@ unitType{
    selectionCenter.x = 3;
    selectionCenter.y = -50;
 
-   cost.wood = 5;
+   cost.food = 20;
+   cost.netal = 5;
 
    speed = 8;
    maxFrameCounter = 25;
    frameCount = 8;
    maxCombatFrameCounter = 10;
    combatFrameCount = 4;
-   combatWait = 25;
-   maxHealth = 50;
-   attack = 10;
-   armor = 2;
-   originBuilding = 1;
-   progressCost = 1000;
+   combatWait = 9;
+   maxHealth = 75;
+   attack = 20;
+   armor = 8;
+   originBuilding = 3;
+   prereqTech = 3;
+   progressCost = 2500;
    decorationAtDeath = 1;
    soundFile = "warriorSelect.wav";
    deathSoundFile = "";
@@ -365,8 +395,8 @@ unitType{
    maxCombatFrameCounter = 13;
    combatFrameCount = 4;
    combatWait = 5;
-   maxHealth = 20;
-   attack = 8;
+   maxHealth = 40;
+   attack = 15;
    resourceAtDeath = 1;
    autoAttack = false;
    deathSoundFile = "deerDeath.wav";
@@ -390,7 +420,7 @@ resourceNodeType{
    selectionCenter.y = -78;
 
    maxResources.wood = 50;
-   yield.wood = 1;
+   yield.wood = 3;
    
    color = 7;
 }
@@ -411,23 +441,254 @@ resourceNodeType{
    selectionCenter.x = -19;
    selectionCenter.y = -32;
 
-   maxResources.wood = 50;
-   yield.wood = 2;
+   maxResources.food = 80;
+   yield.food = 3;
    
    color = 6;
 }
+resourceNodeType{
+   name = "Forage Bush";
+   index = 2;
+
+   drawRect.x = -16;
+   drawRect.y = -24;
+   drawRect.w = 33;
+   drawRect.h = 26;
+
+   baseRect.x = -10;
+   baseRect.y = -4;
+   baseRect.w = 20;
+   baseRect.h = 8;
+
+   selectionCenter.y = -14;
+
+   maxResources.wood = 5;
+   maxResources.food = 15;
+   yield.wood = 1;
+   yield.food = 1;
+   
+   color = 7;
+}
+resourceNodeType{
+   name = "Stone Pile";
+   index = 3;
+
+   drawRect.x = -33;
+   drawRect.y = -46;
+   drawRect.w = 69;
+   drawRect.h = 55;
+
+   baseRect.x = -33;
+   baseRect.y = -8;
+   baseRect.w = 69;
+   baseRect.h = 16;
+
+   selectionCenter.x = -3;
+   selectionCenter.y = -18;
+
+   maxResources.stone = 40;
+   maxResources.metal = 2;
+   yield.stone = 3;
+   yield.metal = 1;
+   
+   color = 8;
+}
+resourceNodeType{
+   name = "Copper Deposit";
+   index = 4;
+
+   drawRect.x = -33;
+   drawRect.y = -46;
+   drawRect.w = 69;
+   drawRect.h = 55;
+
+   baseRect.x = -33;
+   baseRect.y = -8;
+   baseRect.w = 69;
+   baseRect.h = 16;
+
+   selectionCenter.x = -3;
+   selectionCenter.y = -18;
+
+   maxResources.metal = 20;
+   maxResources.stone = 10;
+   yield.stone = 1;
+   yield.metal = 2;
+   
+   color = 9;
+}
 technology{
-   name = "Fire Armor";
+   name = "Weapons";
    index = 0;
-   description = "+5 armor";
-   bonus.unitArmor = 5;
-   originBuilding = 0;
+   description = "Higher unit attack";
+   bonus.unitAttack = 1;
+   originBuilding = 1;
+   cost.wood = 20;
+}
+technology{
+   name = "Heavy Weapons";
+   index = 1;
+   description = "Higher unit attack";
+   bonus.unitAttack = 2;
+   originBuilding = 1;
+   cost.stone = 10;
+   cost.wood = 25;
+   prereqTech = 0;
+}
+technology{
+   name = "Sharp Weapons";
+   index = 2;
+   description = "Higher unit attack";
+   bonus.unitAttack = 4;
+   originBuilding = 1;
+   cost.stone = 40;
+   cost.wood = 25;
+   prereqTech = 1;
+}
+technology{
+   name = "Copper Weapons";
+   index = 3;
+   description = "Higher unit attack";
+   bonus.unitAttack = 8;
+   originBuilding = 1;
+   cost.wood = 25;
+   cost.metal = 10;
+   prereqTech = 2;
+   prereqTech2 = 15;
+}
+technology{
+   name = "Wooden Tools";
+   index = 4;
+   description = "Faster gathering";
+   bonus.gathering.food = 1;
+   bonus.gathering.wood = 1;
+   bonus.gathering.stone = 1;
+   bonus.gathering.metal = 1;
+   originBuilding = 2;
+   cost.wood = 20;
+}
+technology{
+   name = "Stone Tools";
+   index = 5;
+   description = "Faster building construction";
+   bonus.buildingSpeed = 40;
+   originBuilding = 1;
    cost.stone = 20;
+   prereqTech = 4;
+}
+technology{
+   name = "Sharpened Stones";
+   index = 6;
+   description = "Faster gathering";
+   bonus.gathering.food = 2;
+   bonus.gathering.wood = 2;
+   bonus.gathering.stone = 2;
+   bonus.gathering.metal = 2;
+   originBuilding = 1;
+   cost.stone = 30;
+   prereqTech = 5;
+}
+technology{
+   name = "Copper Tools";
+   index = 7;
+   description = "Faster unit training";
+   bonus.trainingSpeed = 4;
+   originBuilding = 1;
+   cost.metal = 10;
+   prereqTech = 6;
+   prereqTech2 = 15;
+}
+technology{
+   name = "Salt";
+   index = 8;
+   description = "Better food gathering";
+   bonus.gathering.food = 2;
+   originBuilding = 2;
+   cost.food = 20;
+   cost.stone = 5;
+}
+technology{
+   name = "Leather";
+   index = 9;
+   description = "Higher unit armor";
+   bonus.unitArmor = 2;
+   originBuilding = 1;
+   cost.food = 30;
+   prereqTech = 8;
+}
+technology{
+   name = "Masonry";
+   index = 10;
+   description = "Higher buiding armor";
+   bonus.buildingArmor = 4;
+   originBuilding = 1;
+   cost.wood = 30;
+   cost.stone = 40;
+   prereqTech = 5;
+}
+technology{
+   name = "Faith";
+   index = 11;
+   description = "Higher unit health";
+   bonus.unitHealth = 25;
+   originBuilding = 4;
+   cost.food = 20;
+}
+technology{
+   name = "Fervor";
+   index = 12;
+   description = "Faster units";
+   bonus.unitSpeed = 5;
+   originBuilding = 4;
+   cost.food = 30;
+   cost.metal = 5;
+   prereqTech = 11;
+}
+technology{
+   name = "Nature Worship";
+   index = 13;
+   description = "Better wood gathering";
+   bonus.gatehring.wood = 2;
+   originBuilding = 4;
+   cost.wood = 30;
+}
+technology{
+   name = "Fire";
+   index = 14;
+   description = "Higher unit health";
+   bonus.unitHealth = 25;
+   originBuilding = 4;
+   cost.stone = 5;
+   cost.wood = 50;
+   prereqTech = 13;
+}
+technology{
+   name = "Smelting";
+   index = 15;
+   description = "Allows copper technologies";
+   originBuilding = 5;
+   cost.wood = 50;
+   cost.metal = 20;
+}
+technology{
+   name = "Cooking";
+   index = 16;
+   description = "Higher unit health";
+   bonus.unitHealth = 50;
+   originBuilding = 5;
+   cost.wood = 30;
+   cost.food = 20;
+}
+technology{
+   name = "Expansion";
+   index = 17;
+   description = "Allows cave construction";
+   originBuilding = 5;
+   cost.food = 40;
+   cost.metal = 10;
 }
 
 ;   any text below is ignored
-
-Do something better about resource colors
 
 0: default
 1: dark shadow
@@ -437,3 +698,5 @@ Do something better about resource colors
 5: corpse
 6: food
 7: wood
+8: stone
+9: metal

@@ -35,6 +35,7 @@ SDL_Surface *loadImage(const std::string fileName,
                        const SDL_Color &background,
                        bool alpha = false);
 
+//Creates a surface, and increments surfacesLoaded
 SDL_Surface *createSurface(int width = SCREEN_WIDTH, int height = SCREEN_HEIGHT);
 
 //Loads a sound, and registers it with soundsLoaded
@@ -183,6 +184,9 @@ void emptyQueue(std::queue<T> &q){
       q.pop();
 }
 
+//Determines whether the specified entity is
+//able to move freely in a straight line to
+//its target, without hitting anything
 bool isPathClear(const Point &start,
                  const Point &end,
                  const GameData &game,

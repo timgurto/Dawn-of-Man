@@ -248,13 +248,18 @@ void handleEvents(const CoreData &core, GameData &game,
                          isKeyPressed(SDLK_RCTRL)){
                          for (entities_t::iterator it = game.entities.begin();
                               it != game.entities.end(); ++it)
-                            if ((*it)->classID() == ENT_UNIT &&
-                                (*it)->selected)
-                               ((Unit &)(**it)).controlGroup = ControlGroup(key);
+                            if ((*it)->classID() == ENT_UNIT){
+                               Unit &unit = (Unit &)(**it);
+                               if (unit.controlGroup == key)
+                                  unit.controlGroup = CONTROL_NONE;
+                               if ((*it)->selected)
+                                  unit.controlGroup = ControlGroup(key);
+                            }
                      
                      //No Ctrl: select control group
                      }else{
                         if (key != CONTROL_NONE){ //0 nothing to select
+                           SDL_Sound *sound = 0; //selection sound to play
                            for (entities_t::iterator it = game.entities.begin();
                                 it != game.entities.end(); ++it){
 
@@ -266,11 +271,15 @@ void handleEvents(const CoreData &core, GameData &game,
                               //select if right control group
                               if ((*it)->classID() == ENT_UNIT){
                                  Unit &unit = (Unit &)(**it);
-                                 if (unit.controlGroup == key)
+                                 if (unit.controlGroup == key){
                                     unit.selected = true;
+                                    if (!sound)
+                                       sound = unit.type().getSound();
+                                 }
                               }
                            }
                            game.selectionChanged = true;
+                           playSound(sound);
                         }
                      }
 

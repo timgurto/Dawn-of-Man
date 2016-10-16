@@ -34,6 +34,7 @@ direction_(Direction(rand() % DIR_MAX)),
 selected(false),
 verticalMovement_(VM_NONE){}
 
+//less than; compares y co-ordinates
 bool Entity::operator<(const Entity &rhs) const{
    return (loc_.y < rhs.loc_.y);
 }

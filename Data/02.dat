@@ -1,8 +1,8 @@
 # map size; must be before any random entities,
 # if specified
 map{
-   x = 3;
-   y = 2;
+   x = 4;
+   y = 4;
 }
 
 # players; indices MUST increment, and there MUST be
@@ -14,44 +14,53 @@ player{
 player{
    index = 1;           # 1 = human player
    color = 0xca6500;
-   resources.food = 5;
 }
 player{
    index = 2;           # 2 = computer
    color = 0x882222;
 }
 
+
+
 # entities; added in the order specified here.
 
-#friendly cave
 building{
    type = 0;
    player = 1;
-   location.x = 200;
-   location.y = 400;
+   location.x = 1800;
+   location.y = 1500;
    centerMap = true;
 }
-
-#caveman
 unit{
    type = 0;
    player = 1;
-   location.x = 120;
-   location.y = 350;
-}
-unit{
-   type = 1; #warrior
-   player = 1;
-   location.x = 250;
-   location.y = 325;
+   location.x = 1750;
+   location.y = 1600;
 }
 
-# computer player: a clubman
-unit{
-   type = 2;
+building{
+   type = 1;
    player = 2;
-   location.x = 1200;
-   location.y = 500;
+   location.x = 300;
+   location.y = 1000;
+}
+unit{
+   type = 3;
+   player = 2;
+   location.x = 300;
+   location.y = 850;
+}
+unit{
+   type = 3;
+   player = 2;
+   location.x = 300;
+   location.y = 1150;
+}
+
+# some deer
+unit{
+   type = 5;
+   random = 3;
 }
 
 # trees
@@ -61,13 +70,17 @@ resourceNode{
 }
 resourceNode{
    type = 2;
-   random = 10;
+   random = 15;
+}
+resourceNode{
+   type = 3;
+   random = 3;
 }
 
 # rocks
 decoration{
    type = 0;
-   random = 20;
+   random = 70;  # place 70 rocks
 }
 
 ;   any text below is ignored

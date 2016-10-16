@@ -124,6 +124,10 @@ CoreData::CoreData(std::string filename){
             index = typeNum_t(numVal);
          else if (attr == "prereqBuilding")
             prereqBuilding = typeNum_t(numVal);
+         else if (attr == "prereqTech")
+            prereqTech = typeNum_t(numVal);
+         else if (attr == "prereqTech2")
+            prereqTech2 = typeNum_t(numVal);
          else if (attr == "originBuilding")
             originBuilding = typeNum_t(numVal);
          else if (attr == "resourceAtDeath")
@@ -181,7 +185,7 @@ CoreData::CoreData(std::string filename){
          }else if (attr.substr(0, 16) == "bonus.gathering."){
             typeNum_t i = resourceIndices[attr.substr(16)];
             //ensure gathering bonus is big enough
-            while (bonus.gathering.size() < i)
+            while (bonus.gathering.size() <= i)
                bonus.gathering.push_back(0);
             bonus.gathering[i] = resource_t(numVal);
          }else if (attr.substr(0, 6) == "bonus."){

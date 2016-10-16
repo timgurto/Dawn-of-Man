@@ -167,6 +167,8 @@ enum EntityColor{
    CLR_CORPSE,
    CLR_RESOURCE_FOOD,
    CLR_RESOURCE_WOOD,
+   CLR_RESOURCE_STONE,
+   CLR_RESOURCE_METAL,
 
    CLR_MAX //for array sizes
 };
@@ -179,6 +181,8 @@ const Uint32 ENGRAVE_LIGHT_UINT   = 0xbbbbbb; //0xdddddd;
 
 const Uint32 RESOURCE_WOOD_COLOR  = 0x406040;
 const Uint32 RESOURCE_FOOD_COLOR  = 0xd75757;
+const Uint32 RESOURCE_STONE_COLOR = 0x85866c;
+const Uint32 RESOURCE_METAL_COLOR = 0xa48a26;
 
 const Uint32 DECORATION_COLOR     = 0x666666;
 const Uint32 CORPSE_COLOR         = 0xb3b3a2;
