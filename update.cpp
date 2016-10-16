@@ -76,7 +76,7 @@ void handleEvents(const CoreData &core, GameData &game,
                   UIBars_t &bars,
                   MessageBox &contextHelp, MessageBox &fpsDisplay){
    SDL_Event event;
-   while (SDL_PollEvent(&event)){
+   while (SDL_PollEvent(&event))
       switch (event.type){
 
 
@@ -281,6 +281,7 @@ void handleEvents(const CoreData &core, GameData &game,
                               }
                            }
                            game.selectionChanged = true;
+                           assert(sound);
                            sound->play();
                         }
                      }
@@ -328,6 +329,7 @@ void handleEvents(const CoreData &core, GameData &game,
          break;
 
 
+
       //TODO * clicking on a useless entity (eg. tree) = try next one
       //A mouse button is pressed
       case SDL_MOUSEBUTTONDOWN:
@@ -354,7 +356,7 @@ void handleEvents(const CoreData &core, GameData &game,
             game.rightMouse.mouseDown(Screen::mousePos);
             break;
          }// switch mouse button
-         pushMouseMove(game);
+         pushMouseMove();
          break;
 
 
@@ -426,10 +428,9 @@ void handleEvents(const CoreData &core, GameData &game,
             game.leftMouse.mouseUp();
             break;
          }
-         pushMouseMove(game);
+         pushMouseMove();
          break;
-      } //event switch
-   } //event while
+      } //switch event
 }
 
 void scrollMap(GameData &game, double delta){
@@ -501,7 +502,7 @@ void scrollMap(GameData &game, double delta){
    }
 
    if (scrolling)
-      pushMouseMove(game);
+      pushMouseMove();
 }
 
 SDL_Rect getSelectionRect(const GameData &game){

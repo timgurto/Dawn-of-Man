@@ -50,12 +50,6 @@ std::string format2(int x);
 //Parse the next token from a data file
 std::string parseToken(std::ifstream &data);
 
-//removes the last character of a string
-void removeLast(std::string &str);
-
-//transform a string to a double
-double atod(std::string s);
-
 //if an index is invalid, set it to NO_TYPE
 //so that nothing breaks
 void checkTypeIndex(typeNum_t &i, size_t max);
@@ -77,6 +71,6 @@ bool isPathClear(const Point &start,
 
 //push a mouse-move event onto the queue, to refresh the
 //calculations handled there
-void pushMouseMove(const GameData &game);
+void pushMouseMove();
 
 #endif

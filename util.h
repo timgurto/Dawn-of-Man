@@ -84,4 +84,10 @@ T max(T a, T b){
 //logical XOR
 bool lXor(bool a, bool b);
 
+//removes the last character of a string
+void removeLast(std::string &str);
+
+//transform a string to a double
+double atod(std::string s);
+
 #endif

@@ -41,6 +41,7 @@ class Player{
    //which buildings have been constructed
    checklist_t buildingsBuilt_;
 
+   //AI - bookkeeping and controlling
    AI ai_;
 
    static GameData *game_;
@@ -51,7 +52,8 @@ public:
    Player(Uint32 color,
           const Resources &resources,
           const checklist_t &techsResearched,
-          const checklist_t buildingsBuilt);
+          const checklist_t &buildingsBuilt,
+          const typeNum_t playerID);
 
    //whether or not the player has any remaining buildings or units
    bool alive;
@@ -59,9 +61,6 @@ public:
    //initialize static pointers
    static void init(const CoreData *core = 0, GameData *game = 0,
                     UIBar *buildingsBar = 0);
-
-   //initialize player ID
-   void initID(typeNum_t playerID);
 
    //add or remove the player's resources
    void addResources(const Resources &r);

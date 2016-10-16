@@ -19,7 +19,7 @@ Sound::~Sound(){
    unloadSound(sound_);
 }
 
-const Sound &Sound::operator=(const Sound &rhs){
+Sound &Sound::operator=(const Sound &rhs){
    if (this != &rhs){
       unloadSound(sound_);
       fileName_ = rhs.fileName_;

@@ -27,7 +27,9 @@ iconCountFun_(iconCountFun),
 surfaceFun_(surfaceFun),
 clickFun_(clickFun),
 helpFun_(helpFun),
-requiredMode_(requiredMode){
+requiredMode_(requiredMode),
+iconCount_(0),
+rect_(makeRect()){
    calculateRect();
 }
 
@@ -147,7 +149,7 @@ void UIBar::click(typeNum_t index){
    if (index == NO_TYPE)
       index = mouseIndex();
    if (index < iconCountFun_(*core_, *game_)){
-      clickFun_(index, *core_, *game_);
+      clickFun_(index, *game_);
       calculateRect();
    }
 }

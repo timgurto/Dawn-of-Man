@@ -15,8 +15,7 @@
 
 extern Debug debug;
 
-typeNum_t getValidBuilding(const CoreData &core, const GameData &game,
-                           typeNum_t i){
+typeNum_t getValidBuilding(const GameData &game, typeNum_t i){
    ++i;
    typeNum_t index;
    for (index = 0; i != 0; ++index)
@@ -25,8 +24,7 @@ typeNum_t getValidBuilding(const CoreData &core, const GameData &game,
    return index - 1;
 }
 
-typeNum_t getValidUnit(const CoreData &core, const GameData &game,
-                       typeNum_t i){
+typeNum_t getValidUnit(const GameData &game, typeNum_t i){
    ++i;
    typeNum_t index;
    for (index = 0; i != 0; ++index)
@@ -36,8 +34,7 @@ typeNum_t getValidUnit(const CoreData &core, const GameData &game,
    return index -1 ;
 }
 
-typeNum_t getValidTech(const CoreData &core, const GameData &game,
-                       typeNum_t i){
+typeNum_t getValidTech(const GameData &game, typeNum_t i){
    ++i;
    typeNum_t index;
    for (index = 0; i != 0; ++index)
@@ -93,17 +90,17 @@ typeNum_t getValidTech(const CoreData &core, const GameData &game,
 
    const Surface &getBuildingTypeIcons(typeNum_t i, const CoreData &core,
                                        const GameData &game){
-      return core.buildingTypes[getValidBuilding(core, game, i)].getIcon();
+      return core.buildingTypes[getValidBuilding(game, i)].getIcon();
    }
 
    const Surface &getUnitTypeIcons(typeNum_t i, const CoreData &core,
                                    const GameData &game){
-      return core.unitTypes[getValidUnit(core, game, i)].getIcon();
+      return core.unitTypes[getValidUnit(game, i)].getIcon();
    }
 
    const Surface &getTechIcons(typeNum_t i, const CoreData &core,
                                const GameData &game){
-      return core.techs[getValidTech(core, game, i)].getIcon();
+      return core.techs[getValidTech(game, i)].getIcon();
    }
 
 
@@ -111,24 +108,21 @@ typeNum_t getValidTech(const CoreData &core, const GameData &game,
 //UIBar::clickFun_
 //Executes the click on the specified button
 
-   void selectBuilding(typeNum_t index, const CoreData &core,
-                       GameData &game){
+   void selectBuilding(typeNum_t index, GameData &game){
       
       UIBar::clickSound();
-      game.toBuild = getValidBuilding(core, game, index);
+      game.toBuild = getValidBuilding(game, index);
       game.mode = MODE_CONSTRUCTION;
    }
 
-   void trainUnit(typeNum_t index, const CoreData &core,
-                  GameData &game){
-      game.trainUnit(getValidUnit(core, game, index),
+   void trainUnit(typeNum_t index, GameData &game){
+      game.trainUnit(getValidUnit(game, index),
                      *game.buildingSelected,
                      HUMAN_PLAYER);
    }
 
-   void researchTech(typeNum_t index, const CoreData &core,
-                     GameData &game){
-      game.researchTech(getValidTech(core, game, index), HUMAN_PLAYER);
+   void researchTech(typeNum_t index, GameData &game){
+      game.researchTech(getValidTech(game, index), HUMAN_PLAYER);
    }
 
 //UIBar::helpFun_
@@ -137,7 +131,7 @@ typeNum_t getValidTech(const CoreData &core, const GameData &game,
    std::string buildingHelp(typeNum_t index, const CoreData &core,
                             GameData &game){
       const BuildingType &type =
-         core.buildingTypes[getValidBuilding(core, game, index)];
+         core.buildingTypes[getValidBuilding(game, index)];
       return
          "Build " + type.getName() +
          ": " + type.getCostString();
@@ -146,7 +140,7 @@ typeNum_t getValidTech(const CoreData &core, const GameData &game,
    std::string unitHelp(typeNum_t index, const CoreData &core,
                         GameData &game){
       const UnitType &type =
-         core.unitTypes[getValidUnit(core, game, index)];
+         core.unitTypes[getValidUnit(game, index)];
       return
          "Train " + type.getName() +
          ": " + type.getCostString();
@@ -155,7 +149,7 @@ typeNum_t getValidTech(const CoreData &core, const GameData &game,
 
    std::string techHelp(typeNum_t index, const CoreData &core,
                         GameData &game){
-      const Tech &tech = core.techs[getValidTech(core, game, index)];
+      const Tech &tech = core.techs[getValidTech(game, index)];
       return
          "Research " + tech.getName() +
          ": " + tech.getCostString() +

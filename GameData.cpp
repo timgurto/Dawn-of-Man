@@ -38,7 +38,9 @@ cursorColor(CLR_MAX), //no color
 recalcBars(false),
 selectionChanged(false),
 buildingSelected(0),
-outcome(IN_PROGRESS){
+outcome(IN_PROGRESS),
+loop(true),
+buildLocationOK(false){
    //map
    Uint16 w = mapX * MAP_TILE_SIZE;
    Uint16 h = mapY * MAP_TILE_SIZE;
@@ -211,15 +213,11 @@ outcome(IN_PROGRESS){
       }else if (object == "player"){
          assert (index != NO_TYPE); //an index must be specified
          players.push_back(Player(color, resources, techsResearched,
-                                  buildingsBuilt));
+                                  buildingsBuilt, players.size()));
       }
 
    }
    data.close();
-
-   //initialize AI player IDs
-   for (typeNum_t playerID = 0; playerID != players.size(); ++playerID)
-      players[playerID].initID(playerID);
 
    for (entities_t::const_iterator it = entities.begin();
         it != entities.end(); ++it){
@@ -274,7 +272,7 @@ void GameData::init(const CoreData *core){
    core_ = core;
 }
 
-void GameData::trainUnit(typeNum_t index,
+bool GameData::trainUnit(typeNum_t index,
                          const Building &sourceBuilding,
                          typeNum_t playerID){
 
@@ -282,7 +280,7 @@ void GameData::trainUnit(typeNum_t index,
    Player &player = players[playerID];
 
    //check player's resources
-   if (player. sufficientResources(unitType.getCost())){
+   if (player.sufficientResources(unitType.getCost())){
 
       //find location
       Point loc;
@@ -344,13 +342,15 @@ void GameData::trainUnit(typeNum_t index,
          //TODO move addEntity to GameData
          addEntity(*this, unit);
          player.subtractResources(unitType.getCost());
+         return true;
       }else
          debug("Unable to place unit");
    }else //insufficient resources
       debug("Insufficient resources to train unit");
+   return false;
 }
 
-void GameData::researchTech(typeNum_t index, typeNum_t playerID){
+bool GameData::researchTech(typeNum_t index, typeNum_t playerID){
 
    Player &player = players[playerID];
    const Tech &tech = core_->techs[index];
@@ -362,12 +362,14 @@ void GameData::researchTech(typeNum_t index, typeNum_t playerID){
       UIBar::clickSound();
       player.subtractResources(tech.getCost());
       player.researchTech(index);
-
-   }else //insufficient resources
-      debug("Insufficient resources to research tech");
+      return true;
+   }
+   //insufficient resources
+   debug("Insufficient resources to research tech");
+   return false;
 }
 
-void GameData::constructBuilding(typeNum_t index, const Point &loc,
+bool GameData::constructBuilding(typeNum_t index, const Point &loc,
                                  typeNum_t playerID){
 
    const BuildingType &buildingType = core_->buildingTypes[index];
@@ -393,9 +395,11 @@ void GameData::constructBuilding(typeNum_t index, const Point &loc,
                if (unitP->selected && unitP->isBuilder())
                      unitP->setTarget(newBuilding);
             }
-   }else{ //not enough resources
-      debug("Insufficient resources to construct building");
+      return true;
    }
+   //not enough resources
+   debug("Insufficient resources to construct building");
+   return false;
 
 }
 

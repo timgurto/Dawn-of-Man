@@ -27,7 +27,7 @@ public:
    Sound(const Sound &original);
    ~Sound();
 
-   const Sound &operator=(const Sound &rhs);
+   Sound &operator=(const Sound &rhs);
 
    //play the sound
    void play() const;

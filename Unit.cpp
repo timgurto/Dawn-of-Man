@@ -362,9 +362,6 @@ bool Unit::isAtTarget() const{
          return true;
       return false;
    }
-
-   assert(false);
-   return false;
 }
 
 //Whether the unit would have a clear path between
@@ -607,9 +604,11 @@ bool Unit::targetable() const{
 }
 
 bool Unit::drawBlack() const{
+   damage_t bonus = game_->players[player_]
+               .getBonuses().unitHealth;
    return
-      1.0 * health_ /
-      core_->unitTypes[typeIndex_].maxHealth_ <
+      1.0 *  (health_ + bonus) /
+      (core_->unitTypes[typeIndex_].maxHealth_ + bonus)<
       ENTITY_BLACK_HEALTH;
 }
 

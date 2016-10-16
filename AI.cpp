@@ -18,7 +18,11 @@ extern Debug debug;
 
 GameData *AI::game_ = 0;
 const CoreData *AI::core_ = 0;
-const double AI::allocationRatio_ = 1; //x:1 expansion:military
+const double AI::allocationRatio_ = 3; //x:1 expansion:military
+
+AI::AI():
+militaryBuilding_(0),
+player_(NO_TYPE){}
 
 void AI::init(const CoreData *core, GameData *game){
    core_ = core;
@@ -98,6 +102,12 @@ void AI::allocateIncome(const Resources &income){
    debug("Military: ", militarySupply_, "    Expansion: ", expansionSupply_);
 }
 
+void AI::update(){
+   checkExpansion();
+   checkMilitary();
+   buildPossible();
+}
+
 void AI::checkExpansion(){
    
 }
@@ -106,25 +116,29 @@ void AI::checkMilitary(){
    //assumption: largest index is the best military unit
    //assumption: one type of military building, one instance of building
    //if these assumptions are wrong, the AI will be less effective.
+   //TODO maintain vector of military buildings, possibly of multiple types, instead
 
    Player &player = game_->players[player_];
    
-   //find training grounds
-   const Building *militaryBuilding = 0;
-   for (entities_t::const_iterator it = game_->entities.begin();
-        it != game_->entities.end(); ++it){
-      if ((*it)->classID() == ENT_BUILDING){
-         militaryBuilding = (const Building *)(*it);
-         if (militaryBuilding->getPlayer() == player_)
-            if (militaryBuilding->isMilitary()){
-               break;
-            }
+   //find training grounds (only necessary once)
+   //TODO set to 0 if the building is destroyed
+   if (!militaryBuilding_)
+      for (entities_t::const_iterator it = game_->entities.begin();
+           it != game_->entities.end(); ++it){
+         if ((*it)->classID() == ENT_BUILDING){
+            militaryBuilding_ = (const Building *)(*it);
+            if (militaryBuilding_->getPlayer() == player_)
+               if (militaryBuilding_->isMilitary())
+                  if (militaryBuilding_->isFinished())
+                     break;
+         }
+         militaryBuilding_ = 0;
       }
-   }
-   if (!militaryBuilding){
+   if (!militaryBuilding_){
       debug("No military building found");
       return;
    }
+   typeNum_t militaryBuildingType = militaryBuilding_->getTypeIndex();
 
    //check affordable military units
    //as many highest-level units as possible, then as many of the next level, etc.
@@ -132,20 +146,37 @@ void AI::checkMilitary(){
         it != core_->unitTypes.rend(); ++it){
       typeNum_t index = it->getIndex();
       //valid for this player
-      if (game_->validUnit(player_, index, militaryBuilding->getTypeIndex()))
+      if (game_->validUnit(player_, index, militaryBuildingType))
          //created at the military building found above
-         if (it->getOriginBuilding() == militaryBuilding->getTypeIndex())
+         if (it->getOriginBuilding() == militaryBuildingType)
             //military unit
             if (!(it->isBuilder() || it->isGatherer())){
                //while affordable
                const Resources &cost = it->getCost();
-               while (player.sufficientResources(cost)){
+               while (militarySupply_ >= cost){
                   //pay for and queue up the unit
-                  buildQueue_.push(AnyEntityType(ENT_UNIT, index));
+                  militaryQueue_.push(index);
                   player.subtractResources(cost);
+                  militarySupply_ -= cost;
+                  debug("Player ", player_, "'s AI is training a ", it->getName());
                }
-            }
-                  
-            
+            }//if military unit        
+   }//for unitTypes
+}
+
+//build anything in the buildQueue which can be built
+void AI::buildPossible(){
+
+   //military units
+   while (!militaryQueue_.empty()){
+      bool trained = game_->trainUnit(militaryQueue_.front(),
+                                      *militaryBuilding_,
+                                      player_);
+      if (trained){
+         militarySupply_ -= core_->unitTypes
+                               [militaryQueue_.front()].getCost();
+         militaryQueue_.pop();
+      }else
+         break;
    }
 }

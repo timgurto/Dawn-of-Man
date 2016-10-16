@@ -7,6 +7,7 @@
 #include "GameData.h"
 #include "CoreData.h"
 #include "UIBar.h"
+#include "TechBonuses.h"
 
 extern Debug debug;
 
@@ -17,7 +18,9 @@ UIBar *Player::buildingsBar_ = 0;
 Player::Player(Uint32 color,
                const Resources &resources,
                const checklist_t &techsResearched,
-               const checklist_t buildingsBuilt):
+               const checklist_t &buildingsBuilt,
+               typeNum_t playerID):
+id_(playerID),
 color_(color),
 bonuses_(),
 resources_(resources),
@@ -25,22 +28,20 @@ techsResearched_(techsResearched),
 buildingsBuilt_(buildingsBuilt),
 alive(true),
 resourcesString_(resources_.str()){
+   ai_.initPlayer(playerID);
+      ai_.allocateIncome(resources_);
    for (size_t i = 0; i != techsResearched.size(); ++i)
       if (techsResearched_[i])
          bonuses_ += core_->techs[i].getBonuses();
+   if (game_)
+      ai_.update();
 }
 
 void Player::init(const CoreData *core, GameData *game,
                   UIBar *buildingsBar){
    core_ = core;
    game_ = game;
-   buildingsBar_ = buildingsBar;   
-}
-
-//initialize player ID
-void Player::initID(typeNum_t playerID){
-   id_ = playerID;
-   ai_.initPlayer(playerID);
+   buildingsBar_ = buildingsBar;
 }
 
 void Player::addResources(const Resources &r){
@@ -49,9 +50,7 @@ void Player::addResources(const Resources &r){
 
    //Give to AI bookkeeper
    ai_.allocateIncome(r);
-   //can we afford anything new?
-   ai_.checkExpansion();
-   ai_.checkMilitary();
+   ai_.update();
 }
 
 void Player::subtractResources(const Resources &r){
@@ -91,12 +90,14 @@ void Player::researchTech(typeNum_t index){
    assert(!techsResearched_[index]);
    techsResearched_[index] = true;
    bonuses_ += core_->techs[index].getBonuses();
+   ai_.update();
 }
 
 void Player::buildBuilding(typeNum_t index, bool recalc){
    buildingsBuilt_[index] = true;
    if (recalc)
       buildingsBar_->calculateRect();
+   ai_.update();
 }
 
 void Player::godMode(){

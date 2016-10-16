@@ -252,25 +252,6 @@ std::string parseToken(std::ifstream &data){
    return ret;
 }
 
-//removes the last character of a string
-void removeLast(std::string &str){
-   str = str.substr(0, str.size() - 1);
-}
-
-//transform a string to a double
-double atod(std::string s){
-   std::istringstream is(s);
-   if (s.substr(0, 2) == "0x"){
-      s = s.substr(2);
-      long l;
-      is >> std::hex >> l;
-      return l;
-   }
-   double d;
-   is >> d;
-   return d;
-}
-
 //if an index is invalid, set it to NO_TYPE
 //so that nothing breaks
 void checkTypeIndex(typeNum_t &i, size_t max){
@@ -281,7 +262,7 @@ void checkTypeIndex(typeNum_t &i, size_t max){
 
 //push a mouse-move event onto the queue, to refresh the
 //calculations handled there
-void pushMouseMove(const GameData &game){
+void pushMouseMove(){
    SDL_Event fakeMouseMove;
    fakeMouseMove.type = SDL_MOUSEMOTION;
    fakeMouseMove.motion.x = Screen::mousePos.x;

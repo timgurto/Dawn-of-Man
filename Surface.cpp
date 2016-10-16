@@ -14,13 +14,15 @@ int Surface::surfacesLoaded_ = 0;
 int Surface::screensSet_ = 0;
 
 Surface::Surface(const std::string fileName, bool alpha):
-isScreen_(false){
+isScreen_(false),
+surface_(0){
    loadImage(fileName, alpha);
    ++surfacesLoaded_;
 }
 
 Surface::Surface(const std::string fileName, const SDL_Color &background, bool alpha):
-isScreen_(false){
+isScreen_(false),
+surface_(0){
    loadImage(fileName, alpha);
    setColorKey(background);
    ++surfacesLoaded_;

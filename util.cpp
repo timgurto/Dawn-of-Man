@@ -194,3 +194,24 @@ bool lXor(bool a, bool b){
    return
       (a && b) || !(a || b);
 }
+
+
+
+//removes the last character of a string
+void removeLast(std::string &str){
+   str = str.substr(0, str.size() - 1);
+}
+
+//transform a string to a double
+double atod(std::string s){
+   std::istringstream is(s);
+   if (s.substr(0, 2) == "0x"){
+      s = s.substr(2);
+      long l;
+      is >> std::hex >> l;
+      return l;
+   }
+   double d;
+   is >> d;
+   return d;
+}

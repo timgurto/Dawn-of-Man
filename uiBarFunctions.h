@@ -15,12 +15,9 @@ struct CoreData;
 class Surface;
 
 //fetches the ith valid item's (see above) index
-typeNum_t getValidBuilding(const CoreData &core, const GameData &game,
-                           typeNum_t i);
-typeNum_t getValidUnit(const CoreData &core, const GameData &game,
-                       typeNum_t i);
-typeNum_t getValidTech(const CoreData &core, const GameData &game,
-                       typeNum_t i);
+typeNum_t getValidBuilding(const GameData &game, typeNum_t i);
+typeNum_t getValidUnit(const GameData &game, typeNum_t i);
+typeNum_t getValidTech(const GameData &game, typeNum_t i);
 
 
 
@@ -56,8 +53,7 @@ typedef surfaceFun *surfaceFunPtr;
 
 
 //clickFun_
-typedef void clickFun(typeNum_t index, const CoreData &data,
-                      GameData &game);
+typedef void clickFun(typeNum_t index, GameData &game);
 typedef clickFun *clickFunPtr;
 
    //Buildings bar: Selects a building to construct

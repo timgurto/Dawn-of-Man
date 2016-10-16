@@ -6,6 +6,7 @@
 #include "types.h"
 #include "globals.h"
 #include "Resources.h"
+#include "Building.h"
 
 struct GameData;
 struct CoreData;
@@ -13,7 +14,7 @@ struct CoreData;
 //EntityType, and type index
 typedef std::pair<EntityTypeID, typeNum_t> AnyEntityType;
 typedef std::vector<AnyEntityType> wishlist_t;
-typedef std::queue<AnyEntityType> buildQueue_t;
+typedef std::queue<typeNum_t> buildQueue_t;
 
 //Handles an individual player's AI
 class AI{
@@ -37,7 +38,12 @@ class AI{
    wishlist_t wishlist_;
 
    //items which have had resources allocated, in order of preference
-   buildQueue_t buildQueue_;
+   buildQueue_t buildingsQueue_; //buildings
+   buildQueue_t militaryQueue_; //military units
+   buildQueue_t economyQueue_; //other units
+
+   //the military building which will train units
+   const Building *militaryBuilding_;
 
    //x:1 expansion:military
    static const double allocationRatio_;
@@ -46,6 +52,8 @@ class AI{
    static const CoreData *core_;
 
 public:
+
+   AI();
 
    static void init(const CoreData *core, GameData *game);
 
@@ -58,11 +66,17 @@ public:
    //allocates income into stockpiles
    void allocateIncome(const Resources &income);
 
+   //check for and execute any newly available actions
+   void update();
+
    //pay for any available expansion items
    void checkExpansion();
 
    //pay for any available military items
    void checkMilitary();
+
+   //build stuff in the buildQueue
+   void buildPossible();
 };
 
 #endif

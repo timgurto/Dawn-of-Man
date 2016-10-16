@@ -50,7 +50,7 @@ const Uint8 SELECTION_RECT_ALPHA = 0x66;
 //How long the victory/loss message is displayed
 const timer_t END_MESSAGE_TIMER = 1250;
 
-unsigned gameMode(Screen &thisScreen, const void *data){
+unsigned gameMode(Screen &/*thisScreen*/, const void *data){
    assert(data);
    const std::string &fileName = *((std::string*)data);
 
@@ -189,7 +189,7 @@ unsigned gameMode(Screen &thisScreen, const void *data){
          fpsDisplay(format3(fps), "fps  |  ", delta, "ms ");
 
          //force interface refresh
-         pushMouseMove(game);
+         pushMouseMove();
 
          //update state
          updateState(deltaMod, core, game, bars,

@@ -109,6 +109,10 @@ struct GameData{
 private:
    //core data
    const static CoreData *core_;
+
+   //no assignment or copying allowed
+   GameData(const GameData &original){}
+   GameData &operator=(const GameData &rhs){return *this;}
    
 public:
 
@@ -121,13 +125,13 @@ public:
 
    static void init(const CoreData *core);
 
-   void trainUnit(typeNum_t index,
+   bool trainUnit(typeNum_t index,
                   const Building &sourceBuilding,
                   typeNum_t playerID);
 
-   void researchTech(typeNum_t index, typeNum_t playerID);
+   bool researchTech(typeNum_t index, typeNum_t playerID);
 
-   void constructBuilding(typeNum_t index, const Point &loc,
+   bool constructBuilding(typeNum_t index, const Point &loc,
                           typeNum_t playerID);
 
    //whether the given item is available for the player
