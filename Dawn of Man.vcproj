@@ -200,6 +200,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\dawn.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Debug.h"
 				>
 			</File>

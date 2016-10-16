@@ -4,6 +4,7 @@
 #define SCREEN_H
 
 #include <string>
+#include <vector>
 #include "SDL_ttf.h"
 #include "Point.h"
 #include "ScreenElement.h"
@@ -25,7 +26,7 @@ private:
    bool loop_;
 
    //the on-screen elements
-   ScreenElement element_;
+   std::vector<ScreenElement> elements_;
 
    //Default screen resolutions - 16:10 16:9 and 4:3
    static const Point defaultRes_[];
@@ -56,6 +57,8 @@ public:
    Screen(GoFun *go = &goDefault_);
 
    int operator()(const void *data = 0);
+
+   void addElement(const ScreenElement &element);
 
    //initialize static pointers
    static void init(Surface *background,

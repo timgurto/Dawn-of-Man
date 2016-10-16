@@ -323,7 +323,7 @@ void handleEvents(const CoreData &core, GameData &game,
          break;
 
 
-//TODO clicking on a useless entity (eg. tree) = ground click
+      //TODO clicking on a useless entity (eg. tree) = try next one
       //A mouse button is pressed
       case SDL_MOUSEBUTTONDOWN:
          debug("Mouse down: ", int(event.button.button));

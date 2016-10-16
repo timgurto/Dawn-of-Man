@@ -15,6 +15,7 @@
 #include "Surface.h"
 #include "Point.h"
 #include "ScreenElement.h"
+#include "dawn.h"
 
 //TODO try to replace get()s with const refs, or reaffirm why it can't be done
 
@@ -31,6 +32,14 @@ Debug debug(YELLOW, 0, 0, 59);
 // - decreases with freeSound()
 int soundsLoaded = 0;
 
+//can be reused for whichever screens; the useful bit is the name
+enum ButtonID{
+   //ScreenElement::NO_ID = -1
+   BUTTON_QUIT,
+   BUTTON_NEW,
+   BUTTON_CREDITS
+};
+
 int main(int argc, char **argv){
 
    //seed random generator
@@ -44,6 +53,7 @@ int main(int argc, char **argv){
    int mixInit(Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 256));//256));
    assert (mixInit >= 0);
 
+   //TODO const font names
    debug.initFont("Dina.fon", 0);
 
    Screen::setScreenResolution(argc, argv);
@@ -61,13 +71,13 @@ int main(int argc, char **argv){
       cursorShadow.setAlpha(SHADOW_ALPHA);
 
       //init with surfaces
-      //TODO const font names
       Screen::init(&background, &cursor);
+      Screen
+         mainMenu,
+         game(&gameMode);
+      buildScreens(mainMenu, game);
 
-      Screen mainMenu;
       mainMenu();
-
-      Screen game(&gameMode);
 
       //campaign: go through each level
       int levels;
@@ -96,4 +106,32 @@ int main(int argc, char **argv){
    Surface::quit();
    assert (soundsLoaded == 0);
    return 0;
+}
+
+void buildScreens(Screen &mainMenu,
+                  Screen &game){
+   
+   //Main menu
+   mainMenu.addElement(ScreenElement(ELEM_LABEL,
+                                     "Dawn of Man",
+                                     ANCHOR_TOP,
+                                     Point(0, 40),
+                                     ScreenElement::NO_ID,
+                                     0, 0,
+                                     75));
+   mainMenu.addElement(ScreenElement(ELEM_BUTTON,
+                                     "Begin",
+                                     ANCHOR_CENTER,
+                                     Point(0, -60),
+                                     BUTTON_NEW));
+   mainMenu.addElement(ScreenElement(ELEM_BUTTON,
+                                     "Credits",
+                                     ANCHOR_CENTER,
+                                     0,
+                                     BUTTON_CREDITS));
+   mainMenu.addElement(ScreenElement(ELEM_BUTTON,
+                                     "Quit",
+                                     ANCHOR_CENTER,
+                                     Point(0, 60),
+                                     BUTTON_QUIT));
 }

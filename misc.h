@@ -36,6 +36,9 @@ SDL_Rect makeRect(const Point &point);
 SDL_Color makeColor(Uint8 r, Uint8 g, Uint8 b);
 SDL_Color makeColor(Uint32 c);
 
+//equality of colors
+bool operator==(const SDL_Color &lhs, const SDL_Color &rhs);
+
 //SDL_Color -> Uint32
 Uint32 colorToUInt(const SDL_Color &color);
 

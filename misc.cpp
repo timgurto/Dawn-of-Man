@@ -74,9 +74,19 @@ SDL_Color makeColor(Uint32 c){
 //SDL_Color -> Uint32
 //note: .unused is ignored
 Uint32 colorToUInt(const SDL_Color &color){
-   return (color.r << 16) |
-          (color.g <<  8) |
-          (color.b      );
+   return 
+      (color.r << 16) |
+      (color.g <<  8) |
+      (color.b      );
+}
+
+//equality of colors
+bool operator==(const SDL_Color &lhs, const SDL_Color &rhs){
+   return
+      lhs.r == rhs.r &&
+      lhs.g == rhs.g &&
+      lhs.b == rhs.b &&
+      lhs.unused == rhs.unused;
 }
 
 //Free a sound, and update soundsLoaded

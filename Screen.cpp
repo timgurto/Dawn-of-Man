@@ -3,6 +3,7 @@
 #include <cassert>
 #include <sstream>
 #include <ctime>
+#include <vector>
 #include "Screen.h"
 #include "Surface.h"
 #include "Debug.h"
@@ -118,7 +119,9 @@ void Screen::drawDefault_() const{
          background_->draw(screenBuf, &makeRect(x * MAP_TILE_SIZE,
                                                 y * MAP_TILE_SIZE));
 
-   element_.draw();
+   for (std::vector<ScreenElement>::const_iterator it = elements_.begin();
+        it != elements_.end(); ++it)
+      it->draw();
 
    //flip buffer
    screenBuf.flip();
@@ -132,8 +135,7 @@ void Screen::init(Surface *background,
 
 Screen::Screen(GoFun go):
 go_(go),
-loop_(true),
-element_(ELEM_BUTTON, "test button", ANCHOR_CENTER, 0, 1, 0){}
+loop_(true){}
 
 int Screen::operator()(const void *data){
    //make sure there are no events on the queue
@@ -142,6 +144,10 @@ int Screen::operator()(const void *data){
 
    //empty queue?
    return (*go_)(*this, data);
+}
+
+void Screen::addElement(const ScreenElement &element){
+   elements_.push_back(element);
 }
 
 void Screen::setScreenResolution(int argc, char **argv){

@@ -181,8 +181,9 @@ void Surface::draw(Surface &dst,
    SDL_BlitSurface(surface_, srcRect, dst.surface_, dstRect);
 }
 
-void operator<<(Surface &dst, const Surface &src){
+Surface &operator<<(Surface &dst, const Surface &src){
    src.draw(dst);
+   return dst;
 }
 
 void Surface::setAlpha(Uint8 alpha){
