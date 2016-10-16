@@ -141,6 +141,11 @@ public:
    bool validBuilding(typeNum_t playerID, typeNum_t i) const;
    bool validUnit(typeNum_t playerID, typeNum_t i, typeNum_t buildingType) const;
    bool validTech(typeNum_t playerID, typeNum_t i, typeNum_t buildingType) const;
+   
+   //Adds an entity to the list, signing it up for
+   //garbage collection upon removal
+   //Entity must have been allocated with new
+   void addEntity(Entity *entity);
 };
 
 #endif

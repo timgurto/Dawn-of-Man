@@ -357,7 +357,7 @@ void Entity::kill(){
    typeNum_t decorationType = type().getDecorationAtDeath();
    if (decorationType != NO_TYPE){
       Decoration *decoration = new Decoration(decorationType, loc_);
-      addEntity(*game_, decoration);
+      game_->addEntity(decoration);
    }
 
    //unit that turns into resource?
@@ -366,7 +366,7 @@ void Entity::kill(){
          core_->unitTypes[typeIndex_].getDeathResource();
       if (resourceType != NO_TYPE){
          node = new ResourceNode(resourceType, loc_);
-         addEntity(*game_, node);
+         game_->addEntity(node);
       }
    }
 

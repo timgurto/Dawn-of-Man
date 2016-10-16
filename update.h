@@ -46,9 +46,4 @@ void setModeFromSelection(GameData &game, UIBars_t &bars);
 //the human player won or lost.
 void checkVictory(GameData &game);
 
-//Adds an entity to the list, signing it up for
-//garbage collection upon removal
-//Entity must have been allocated with new
-void addEntity(GameData &game, Entity *entity);
-
 #endif

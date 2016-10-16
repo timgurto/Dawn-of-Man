@@ -152,11 +152,11 @@ scrollLockY(false){
                   loc.x = rand() % map.w;
                   loc.y = rand() % map.h;
                }while (!noCollision(*this, core_->buildingTypes[type], loc));
-               addEntity(*this, new Building(type, loc, player, progress));
+               addEntity(new Building(type, loc, player, progress));
                buildingsBuilt[type] = true;
             }
          else{
-            addEntity(*this, new Building(type, loc, player, progress));
+            addEntity(new Building(type, loc, player, progress));
             buildingsBuilt[type] = true;
          }
          if (centerScreen)
@@ -170,10 +170,10 @@ scrollLockY(false){
                   loc.x = rand() % map.w;
                   loc.y = rand() % map.h;
                }while (!noCollision(*this, core_->decorationTypes[type], loc));
-               addEntity(*this, new Decoration(type, loc));
+               addEntity(new Decoration(type, loc));
             }
          else
-            addEntity(*this, new Decoration(type, loc));
+            addEntity(new Decoration(type, loc));
          if (centerScreen)
             centerMap(*this, loc);
 
@@ -186,10 +186,10 @@ scrollLockY(false){
                   loc.x = rand() % map.w;
                   loc.y = rand() % map.h;
                }while (!noCollision(*this, core_->unitTypes[type], loc));
-               addEntity(*this, new Unit(type, loc, player, progress));
+               addEntity(new Unit(type, loc, player, progress));
             }
          else
-            addEntity(*this, new Unit(type, loc, player, progress));
+            addEntity(new Unit(type, loc, player, progress));
          if (centerScreen)
             centerMap(*this, loc);
       }else if (object == "resourceNode"){
@@ -199,10 +199,10 @@ scrollLockY(false){
                   loc.x = rand() % map.w;
                   loc.y = rand() % map.h;
                }while (!noCollision(*this, core_->resourceNodeTypes[type], loc));
-               addEntity(*this, new ResourceNode(type, loc));
+               addEntity(new ResourceNode(type, loc));
             }
          else
-            addEntity(*this, new ResourceNode(type, loc));
+            addEntity(new ResourceNode(type, loc));
          if (centerScreen)
             centerMap(*this, loc);
       }else if (object == "player"){
@@ -333,9 +333,7 @@ bool GameData::trainUnit(typeNum_t index,
       if (tries != NUM_PLACEMENT_TRIES){
          //place unit
          UIBar::clickSound();
-         Unit *unit = new Unit(index, loc, playerID);
-         //TODO move addEntity to GameData
-         addEntity(*this, unit);
+         addEntity(new Unit(index, loc, playerID));
          player.subtractResources(unitType.getCost());
          return true;
       }else
@@ -379,7 +377,7 @@ bool GameData::constructBuilding(typeNum_t index, const Point &loc,
       //create new building
       Building *newBuilding =
          new Building(index, loc, playerID);
-      addEntity(*this, newBuilding);
+      addEntity(newBuilding);
 
       //assign selected builders to the construction
       if (playerID == HUMAN_PLAYER)
@@ -438,4 +436,11 @@ bool GameData::validTech(typeNum_t playerID, typeNum_t i,
       player.hasTech(tech.getPrereqTech2()) &&
       //player hasn't researched it yet
       !player.hasTech(techIndex);
+}
+
+void GameData::addEntity(Entity *entity){
+   entities.insert(std::lower_bound(entities.begin(),
+                                    entities.end(), entity,
+                                    dereferenceLessThan),
+                   entity);
 }

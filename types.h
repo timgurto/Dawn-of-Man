@@ -10,7 +10,7 @@
 //indexes for entity types, players, etc.
 typedef unsigned short typeNum_t;
 
-//TODO look at switching to double
+//TODO consider switching to double
 //screen locations and distances
 typedef Sint32 pixels_t;
 

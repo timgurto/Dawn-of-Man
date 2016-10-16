@@ -97,7 +97,6 @@ int Screen::handleEventsDefault_(){
                }
                break;
 
-            //TODO defaults for Esc and Ret
             case SDLK_ESCAPE:
                if (returnEscape_ != ScreenElement::NO_ID)
                   return returnEscape_;

@@ -753,10 +753,3 @@ void checkVictory(GameData &game){
       game.loop = false;
    }
 }
-
-void addEntity(GameData &game, Entity *entity){
-   game.entities.insert(std::lower_bound(game.entities.begin(),
-                                         game.entities.end(), entity,
-                                         dereferenceLessThan),
-                        entity);
-}
