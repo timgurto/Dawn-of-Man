@@ -5,7 +5,7 @@
 
 #include "misc.h"
 #include "types.h"
-#include "game.h"
+#include "update.h"
 #include "globals.h"
 #include "SDL.h"
 #include "Debug.h"
@@ -350,7 +350,8 @@ void Entity::kill(){
    game_->selectionChanged = true;
    const EntityType &thisType = type();
    playSound(thisType.deathSound_);
-   typeNum_t resourceType; //resource this turns into
+   //resource this turns into
+   typeNum_t resourceType;
    ResourceNode *node = 0;
 
    //turns into decoration?
@@ -376,25 +377,14 @@ void Entity::kill(){
       if ((*it)->classID() == ENT_UNIT){
          Unit &unit = (Unit &)(**it);
          if (unit.targetEntity_ == this){
-            if (unit.isGatherer()){
-               unit.setTarget(node, unit.loc_);
-               unit.combat_ = true;
-            }else{
+            if (node && unit.isGatherer())
+               unit.targetEntity_ = node;
+            else
                unit.setTarget(0, unit.loc_);
-               unit.combat_ = false;
-            }
          }
       }
 
    trashCan_.push_back(this);
-   //TODO handle builders like buildings, and fix building corner case -
-   //separate function to set mode based on whats selected. Run this
-   //at selection-time too.
-   if ((Entity *)(game_->buildingSelected) == this){
-      game_->buildingSelected = 0;
-      game_->mode = MODE_NORMAL;
-   }
-
    entities_t::iterator itToErase;
    for (entities_t::iterator it = game_->entities.begin();
         it != game_->entities.end(); ++it){
@@ -402,6 +392,7 @@ void Entity::kill(){
          itToErase = it;
    }
    game_->entities.erase(itToErase);
+   checkVictory(*game_);
 }
 
 void Entity::emptyTrash(){

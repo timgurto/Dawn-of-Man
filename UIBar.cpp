@@ -138,11 +138,17 @@ void UIBar::init(const CoreData *core,
    barSurface_ = barSurface;
 }
 
-void UIBar::click(){
-   clickFun_(mouseIndex(), *core_, *game_);
+void UIBar::click(typeNum_t index){
+   if (index == NO_TYPE)
+      index = mouseIndex();
+   clickFun_(index, *core_, *game_);
    calculateRect();
 }
 
 std::string UIBar::helpText(typeNum_t index){
    return helpFun_(index, *core_, *game_);
+}
+
+typeNum_t UIBar::size() const{
+   return iconCountFun_(*core_, *game_);
 }

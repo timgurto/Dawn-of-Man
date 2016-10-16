@@ -78,7 +78,7 @@ const bool ENTITY_MASKS = true;
 const double FULL  = 1;
 const double EMPTY = 0;
 
-const double PATH_CHECK_DISTANCE = 4;
+const double PATH_CHECK_DISTANCE = 6;
 const pixels_t MAP_TILE_SIZE = 512;
 const pixels_t SCROLL_AMOUNT = 40;
 const pixels_t SCROLL_MARGIN = 100;
@@ -199,6 +199,12 @@ enum ControlGroup{
    CONTROL_MIN = SDLK_1,
    CONTROL_MAX = SDLK_9,
    CONTROL_NONE = SDLK_0
+};
+
+enum GameOutcome{
+   VICTORY,
+   LOSS,
+   IN_PROGRESS
 };
 
 #endif

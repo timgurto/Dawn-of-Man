@@ -216,7 +216,7 @@ void Unit::tick(double delta){
       //   return;
 
       //progress frame
-      if (combat_){
+      if (targetEntity_ && combat_){
          //debug("in combat");
          combatFrameCounter_ += delta;
 
@@ -252,8 +252,9 @@ void Unit::tick(double delta){
                      target.kill();
                   else{
                      target.removeHealth(damage);
-                     if (!target.targetEntity_ &&
-                         !target.moving_)
+                     if (!(target.targetEntity_ ||
+                           target.moving_ ||
+                           target.combat_))
                         target.setTarget(this);
                   }
                   break;
@@ -314,13 +315,14 @@ void Unit::setTarget(Entity *targetEntity, Point loc){
    }else
       updateTarget();
    moving_ = !isAtTarget();
-   if (moving_ && !targetEntity){
+   if (moving_){
       findPath();
    }
 }
 
 bool Unit::isAtTarget() const{
-   pixels_t margin = getSpeed();
+   SDL_Rect baseRect = getBaseRect();
+   pixels_t margin = max(baseRect.w, baseRect.h) / 2; //1.5 * getSpeed();
    Point target = path_.size() > 1 ?
                      path_.front() :
                      target_;
@@ -330,13 +332,12 @@ bool Unit::isAtTarget() const{
    
    //target is an entity
    else{
-      SDL_Rect baseRect = getBaseRect();
       SDL_Rect targetRect = targetEntity_->getBaseRect();
       //check whether diagonal distance is close enough
       if (collision(targetRect, baseRect +
                                 Point(margin, margin)))
          return true;
-      pixels_t negMargin = -1 * margin;
+      pixels_t negMargin = -margin;
       if (collision(targetRect, baseRect +
                                 Point(margin, negMargin)))
          return true;
@@ -402,7 +403,16 @@ bool Unit::isPathClear(const Point &start,
 
 void Unit::findPath(pixels_t gridSize){
    debug("finding path");
+
+   //if already there
+   if (isAtTarget()){
+      moving_ = false;
+      combat_ = true;
+      return;
+   }
+
    emptyQueue(path_);
+   
    //if clear path, go straight there
    if (isPathClear(loc_, target_)){
       path_.push(target_);
@@ -412,7 +422,8 @@ void Unit::findPath(pixels_t gridSize){
    }
 
    //target is surrounded
-   if (!noCollision(*game_, type(), target_, this, targetEntity_)){
+   if (!targetEntity_ &&
+       !noCollision(*game_, type(), target_, this, targetEntity_)){
       moving_ = false;
       path_.push(target_);
       target_ = loc_;
@@ -493,11 +504,11 @@ void Unit::findPath(pixels_t gridSize){
 void Unit::updateTarget(){
    if (targetEntity_){
       target_ = targetEntity_->getLoc();
-      findPath();
+      //findPath();
    }else
       combat_ = false;
-
-   moving_ = !path_.empty();
+   //moving_ = !path_.empty();
+   moving_ = !isAtTarget();
 }
 
 void Unit::removeHealth(damage_t damage){
@@ -597,6 +608,9 @@ std::string Unit::getHelp() const{
    if (health_ < thisType.maxHealth_)
       os << " remaining";
    if (DEBUG)
-      os << " | Control group: " << controlGroup;
+      os << " | group: " << controlGroup - CONTROL_NONE
+         << " | moving: " << moving_
+         << " | combat: " << combat_
+         << " | target entity: " << targetEntity_;
    return os.str();
 }

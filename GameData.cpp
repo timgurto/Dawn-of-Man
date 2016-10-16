@@ -5,7 +5,7 @@
 #include <string>
 #include <map>
 #include "types.h"
-#include "game.h"
+#include "update.h"
 #include "misc.h"
 #include "GameData.h"
 #include "Debug.h"
@@ -34,7 +34,8 @@ mode(MODE_NORMAL),
 cursorColor(CLR_MAX), //no color
 recalcBars(false),
 selectionChanged(false),
-buildingSelected(0){
+buildingSelected(0),
+outcome(IN_PROGRESS){
    for (typeNum_t i = 0; i != CLR_MAX; ++i)
       for (typeNum_t j = 0; j != MAX_TYPES; ++j)
          for (typeNum_t k = 0; k != ENT_MAX; ++k){

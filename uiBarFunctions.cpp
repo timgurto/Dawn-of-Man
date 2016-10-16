@@ -2,7 +2,7 @@
 
 #include <cassert>
 #include "uiBarFunctions.h"
-#include "game.h"
+#include "update.h"
 #include "GameData.h"
 #include "Debug.h"
 #include "BuildingType.h"

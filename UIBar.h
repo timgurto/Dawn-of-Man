@@ -73,10 +73,12 @@ public:
 
    //executes the relevant action when the user clicks on
    //the bar; calls clickFun_
-   void click();
+   void click(typeNum_t index = NO_TYPE);
 
    //returns the relevant context help text for the button
    std::string helpText(typeNum_t index);
+
+   typeNum_t size() const;
 };
 
 //So that all bars can be dealt with at the same time

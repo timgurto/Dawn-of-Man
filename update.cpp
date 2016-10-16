@@ -243,7 +243,7 @@ void handleEvents(const CoreData &core, GameData &game,
                                ((Unit &)(**it)).controlGroup = ControlGroup(key);
                      
                      //No Ctrl: select control group
-                     }else
+                     }else{
                         if (key != CONTROL_NONE){ //0 nothing to select
                            for (entities_t::iterator it = game.entities.begin();
                                 it != game.entities.end(); ++it){
@@ -262,8 +262,48 @@ void handleEvents(const CoreData &core, GameData &game,
                            }
                            game.selectionChanged = true;
                         }
+                     }
+
+                  //asdfghjkl - click equivalent UI bar button
+                  else if (key == SDLK_a ||
+                           key == SDLK_s ||
+                           key == SDLK_d ||
+                           key == SDLK_f ||
+                           key == SDLK_g ||
+                           key == SDLK_h ||
+                           key == SDLK_j ||
+                           key == SDLK_k ||
+                           key == SDLK_l){
+                     typeNum_t index = NO_TYPE;
+                     switch (key){
+                     case SDLK_a:
+                        index = 0; break;
+                     case SDLK_s:
+                        index = 1; break;
+                     case SDLK_d:
+                        index = 2; break;
+                     case SDLK_f:
+                        index = 3; break;
+                     case SDLK_g:
+                        index = 4; break;
+                     case SDLK_h:
+                        index = 5; break;
+                     case SDLK_j:
+                        index = 6; break;
+                     case SDLK_k:
+                        index = 7; break;
+                     case SDLK_l:
+                        index = 8; break;
+                     }
+                     for (UIBars_t::iterator it = bars.begin();
+                          it != bars.end(); ++it)
+                        if ((*it)->isActive() &&
+                            (*it)->size() > 0)
+                           (*it)->click(index);
+                  }
+
+               }
             }
-         }
          break;
 
 
@@ -602,7 +642,7 @@ void reSort(entities_t &entities, entities_t::iterator it,
             --next;
          }
       }
-   break;
+      break;
 
    case DIR_DOWN:
       entities_t::iterator next = it;
@@ -671,4 +711,41 @@ void setModeFromSelection(GameData &game, UIBars_t &bars){
 
    for (UIBars_t::iterator it = bars.begin(); it != bars.end(); ++it)
       (*it)->calculateRect();
+}
+
+void checkVictory(GameData &game){
+   //set each player initially to dead
+   for (players_t::iterator it = game.players.begin();
+        it != game.players.end(); ++it)
+      it->alive = false;
+   
+   //change players based on which entities exist
+   for (entities_t::const_iterator it = game.entities.begin();
+        it != game.entities.end(); ++it){
+      typeNum_t player = (*it)->getPlayer();
+      if (player != NO_TYPE)
+         game.players[player].alive = true;
+   }
+
+   //determine victory/loss
+   bool enemiesAlive = false;
+   for (typeNum_t i = 0; i != game.players.size(); ++i)
+      if (i != HUMAN_PLAYER &&
+          i != NATURE_PLAYER &&
+          game.players[i].alive)
+         enemiesAlive = true; //not a victory
+   if (!enemiesAlive){
+      game.outcome = VICTORY;
+      game.loop = false;
+   }else if (!game.players[HUMAN_PLAYER].alive){
+      game.outcome = LOSS;
+      game.loop = false;
+   }
+}
+
+void addEntity(GameData &game, Entity *entity){
+   game.entities.insert(std::lower_bound(game.entities.begin(),
+                                         game.entities.end(), entity,
+                                         dereferenceLessThan),
+                        entity);
 }

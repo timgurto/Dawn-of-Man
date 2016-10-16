@@ -52,8 +52,7 @@ int main(int argc, char **argv){
 
 //while(true)
    //New game
-   gameMode();
-
+   GameOutcome outcome = gameMode();
 
    //Quit
    //TTF_Quit() happens at debug dtor

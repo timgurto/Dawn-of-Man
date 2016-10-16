@@ -114,6 +114,9 @@ struct GameData{
    //warranting updates in the game mode and UI bar displays
    bool selectionChanged;
 
+   //The outcome/state of the game
+   GameOutcome outcome;
+
 private:
    const static CoreData *core_;
 };

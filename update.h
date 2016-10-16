@@ -43,4 +43,13 @@ Entity *findEntity(GameData &game, bool onlyTargetable = true);
 //sets game mode based on what's selected
 void setModeFromSelection(GameData &game, UIBars_t &bars);
 
+//determines whether any player should be eliminated, and whether
+//the human player won or lost.
+void checkVictory(GameData &game);
+
+//Adds an entity to the list, signing it up for
+//garbage collection upon removal
+//Entity must have been allocated with new
+void addEntity(GameData &game, Entity *entity);
+
 #endif

@@ -45,6 +45,12 @@ unit{
    type = 1;
    player = 1;
    random = 10;
+}
+
+unit{
+   type = 3;
+   player = 1;
+   random = 1;
    centerMap = true;
 }
 
@@ -52,7 +58,7 @@ unit{
 unit{
    type = 0;
    player = 2;
-   random = 3;
+   random = 0;#3;
 }
 
 # some deer

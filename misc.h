@@ -151,6 +151,12 @@ T min(T a, T b){
    return a < b ? a : b;
 }
 
+//returns the maximum of two values
+template<typename T>
+T max(T a, T b){
+   return a < b ? b : a;
+}
+
 //Adds a leading zero if x < 100
 std::string format3(double x);
 

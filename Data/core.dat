@@ -249,6 +249,34 @@ unitType{
    resourceAtDeath = 1;
    autoAttack = false;
 }
+unitType{
+   name = "Stick";
+   index = 3;
+   
+   drawRect.x = -22;
+   drawRect.y = -124;
+   drawRect.w = 105;
+   drawRect.h = 133;
+
+   baseRect.x = -20;
+   baseRect.y = -8;
+   baseRect.w = 48;
+   baseRect.h = 15;
+
+   selectionCenter.x = 3;
+   selectionCenter.y = -50;
+
+   speed = 14;
+   maxFrameCounter = 17;
+   frameCount = 8;
+   maxCombatFrameCounter = 13;
+   combatFrameCount = 4;
+   combatWait = 5;
+   maxHealth = 20;
+   attack = 8;
+   resourceAtDeath = 1;
+   autoAttack = false;
+}
 resourceNodeType{
    name = "Tree";
    index = 0;

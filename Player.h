@@ -44,6 +44,9 @@ public:
           const resources_t &resources,
           const checklist_t &techsResearched);
 
+   //whether or not the player has any remaining buildings or units
+   bool alive;
+
    //initialize static pointers
    static void init(const CoreData *core = 0, GameData *game = 0,
                     UIBar *buildingsBar = 0);

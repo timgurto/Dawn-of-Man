@@ -48,7 +48,7 @@ const int DELTA_CUTOFF = 100;
 //Alpha of the selection rectangle
 const Uint8 SELECTION_RECT_ALPHA = 0x66;
 
-void gameMode(){
+GameOutcome gameMode(){
 
    //initialize screen and debug objects
    SDL_Surface *screen = setScreen();
@@ -219,11 +219,5 @@ void gameMode(){
    Mix_HaltMusic(); 
    Mix_FreeMusic(music);
 
-}
-
-void addEntity(GameData &game, Entity *entity){
-   game.entities.insert(std::lower_bound(game.entities.begin(),
-                                         game.entities.end(), entity,
-                                         dereferenceLessThan),
-                        entity);
+   return game.outcome;
 }

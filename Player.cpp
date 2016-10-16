@@ -20,6 +20,7 @@ color_(color),
 bonuses_(),
 resources_(resources),
 techsResearched_(techsResearched),
+alive(true),
 buildingsBuilt_(core_->buildingTypes.size(), false){
    resourcesString_ = resources_.str();
    for (size_t i = 0; i != techsResearched.size(); ++i)
