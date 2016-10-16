@@ -198,10 +198,20 @@ void Entity::colorBlit(int color, SDL_Surface *screen,
 
 void Entity::addParticles(int count) const{
    for (int i = 0; i != count; ++i){
-      //calculate initial co-ords
-      pixels_t x = 0, y = 0;
       double drawPercent = getDrawPercent();
-      const SDL_Rect &drawRect = type().drawRect_;
+      pixels_t x = 0, y = 0;
+      SDL_Rect drawRect = type().drawRect_;
+
+      //avoid div/0
+      if (drawRect.w == 0)
+         drawRect.w = 1;
+      if (drawRect.h == 0)
+         drawRect.h = 1;
+
+      assert (drawRect.w != 0);
+      assert (drawRect.h != 0);
+
+      //calculate initial co-ords
       switch(direction_){
       case DIR_UP:
          x = loc_.x + 

@@ -76,7 +76,7 @@ const Uint8 SHADOW_ALPHA = 0x44;
 
 //This has a substantial effect on performance
 //anything behind each entity is cleared
-const bool ENTITY_MASKS = true;
+const bool ENTITY_MASKS = false;
 
 const double FULL  = 1;
 const double EMPTY = 0;
@@ -85,11 +85,11 @@ const double PATH_CHECK_DISTANCE = 4;
 const pixels_t MAP_TILE_SIZE = 512;
 const pixels_t SCROLL_AMOUNT = 40;
 const pixels_t SCROLL_MARGIN = 100;
-const pixels_t EDGE_SCROLL_MARGIN = 4;
+const pixels_t EDGE_SCROLL_MARGIN = 2;
 
 const double RMB_SCROLL_MULTIPLIER = 0.3;
 
-const pixels_t ICON_SIZE = 48;
+const pixels_t ICON_SIZE = 56;
 const std::string IMAGE_SUFFIX = ".png";
 const std::string IMAGE_PATH = "Images/";
 const std::string MISC_IMAGE_PATH

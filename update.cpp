@@ -117,7 +117,6 @@ void handleEvents(const CoreData &core, GameData &game,
             if (!overBar){
                Entity *entityP = findEntity(game, false);
                if (entityP){
-                  //TODO virtual getHelp() fun for entities
                   contextHelp(entityP->getHelp());
                   game.cursorColor = entityP->getColor();
                }else

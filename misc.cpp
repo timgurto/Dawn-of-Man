@@ -32,6 +32,7 @@ extern bool WINDOWED_MODE;
 
 SDL_Surface *loadImage(const char* fileName,bool alpha){
    debug("loading surface: ", fileName);
+   SDL_WM_SetCaption( fileName, NULL );
    SDL_Surface *load, *opt;
    load = IMG_Load(fileName);
    assert(load);
@@ -158,7 +159,6 @@ SDL_Rect locRect(const SDL_Rect &original){
    return makeRect(original.x, original.y);
 }
 
-//TODO might be slow to repeat
 bool isKeyPressed(SDLKey key){
    static Uint8 *keyStates = SDL_GetKeyState(0);
    return keyStates[key] != 0;

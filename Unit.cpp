@@ -19,7 +19,7 @@
 
 extern Debug debug;
 
-const pixels_t Unit::PATH_GRID_SIZE = 50;
+const pixels_t Unit::PATH_GRID_SIZE = 35;
 
 Unit::Unit(typeNum_t type, const Point &loc,
            typeNum_t player, progress_t progress):
@@ -370,7 +370,7 @@ bool Unit::isPathClear(const Point &start,
    return true;
 }
 
-void Unit::findPath(){
+void Unit::findPath(pixels_t gridSize){
    debug("finding path");
    emptyQueue(path_);
    //if clear path, go straight there
@@ -402,19 +402,19 @@ void Unit::findPath(){
          Point next = temp.back(); // = current
          switch (dir){
          case DIR_UP:
-            next.y -= PATH_GRID_SIZE;
+            next.y -= gridSize;
             if (next.y < 0) continue;
             break;
          case DIR_DOWN:
-            next.y += PATH_GRID_SIZE;
+            next.y += gridSize;
             if (next.y > game_->map.h) continue;
             break;
          case DIR_LEFT:
-            next.x -= PATH_GRID_SIZE;
+            next.x -= gridSize;
             if (next.x < 0) continue;
             break;
          case DIR_RIGHT:
-            next.x += PATH_GRID_SIZE;
+            next.x += gridSize;
             if (next.x > game_->map.w) continue;
             break;
          }
@@ -424,12 +424,11 @@ void Unit::findPath(){
             continue;
          explored[next] = true;
 
-
          if (noCollision(*game_, type(), next, this, targetEntity_)){
 
             //is this the node we're looking for?
             temp.push(next);
-            if (distance(next, target_) <= PATH_GRID_SIZE){
+            if (distance(next, target_) <= gridSize){
                temp.push(target_);
                temp.pop(); //first node is the current location
                path_ = temp;
@@ -544,7 +543,8 @@ std::string Unit::getHelp() const{
    if (player_ != HUMAN_PLAYER)
       os << "Enemy ";
    os << thisType.name_;
+   os << " - " << health_ << " health";
    if (health_ < thisType.maxHealth_)
-      os << " - " << health_ << " health remaining";
+      os << " remaining";
    return os.str();
 }

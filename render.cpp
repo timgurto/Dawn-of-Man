@@ -56,7 +56,6 @@ void render(SDL_Surface *screen, SDL_Surface *selection,
    assert(test);
 }
 
-//TODO different cursor for attacking, maybe for gathering
 void renderCursor (SDL_Surface *screen, const GameData &game,
                    SDL_Surface *cursor, SDL_Surface *shadow,
                    SDL_Surface *pause, SDL_Surface *color,
@@ -197,11 +196,22 @@ void renderEntities(SDL_Surface *screen, const GameData &game){
             (*it)->draw(screen);
 }
 
-//TODO only draw what's in the screen
 //Draws the selection rectangle
 void renderSelectionRect(SDL_Surface *screen, const GameData &game){
    //Get rectangle
    SDL_Rect selRect = getSelectionRect(game);
+
+   //only draw what's on the screen
+   if (selRect.x < 0){
+      selRect.w += selRect.x;
+      selRect.x = 0;
+   }else if ((selRect.x + selRect.w) > SCREEN_WIDTH)
+      selRect.w = SCREEN_WIDTH - selRect.x;
+   if (selRect.y < 0){
+      selRect.h += selRect.y;
+      selRect.y = 0;
+   }else if ((selRect.y + selRect.h) > SCREEN_WIDTH)
+      selRect.h = SCREEN_WIDTH - selRect.y;
    
    //Draw rectangle
    SDL_Surface *temp = createSurface(selRect.w, selRect.h);

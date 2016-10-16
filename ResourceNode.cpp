@@ -58,6 +58,8 @@ std::string ResourceNode::getHelp() const{
    const ResourceNodeType &thisType = (const ResourceNodeType &)type();
    std::ostringstream os;
    os << thisType.name_;
-   os << " - " << resources_.str() << " remaining";
+   os << " - " << resources_.str();
+   if (resources_.sum() < thisType.maxResources_.sum())
+      os  << " remaining";
    return os.str();
 }

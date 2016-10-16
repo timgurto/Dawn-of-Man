@@ -104,7 +104,7 @@ void gameMode(){
 
    //UI Bars
    UIBars_t bars;
-   UIBar::init(&core, &game, screen, vBar, hBar);
+   UIBar::init(&core, &game, screen, darkMap);
    UIBar buildingsBar(BOTTOM_LEFT, HORIZONTAL,
                       &getNumBuildingIcons,
                       &getBuildingTypeIcons,

@@ -77,7 +77,7 @@ public:
 
    //calculates a path to the target, and fills the path_
    //with 
-   void findPath();
+   void findPath(pixels_t gridSize = PATH_GRID_SIZE);
 
    //removes health, due to an attack
    void removeHealth(damage_t damage);

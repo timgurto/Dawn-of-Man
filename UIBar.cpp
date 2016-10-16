@@ -10,8 +10,7 @@
 GameData *UIBar::game_ = 0;
 const CoreData *UIBar::core_ = 0;
 SDL_Surface *UIBar::screen_ = 0;
-SDL_Surface *UIBar::hBarSurface_ = 0;
-SDL_Surface *UIBar::vBarSurface_ = 0;
+SDL_Surface *UIBar::barSurface_ = 0;
 
 UIBar::UIBar(Corner corner, Orientation orientation,
              iconCountFunPtr iconCountFun,
@@ -29,7 +28,6 @@ requiredMode_(requiredMode){
    calculateRect();
 }
 
-//TODO fix, so that the edge inside the screen has a border
 void UIBar::calculateRect(){
    iconCount_ = iconCountFun_(*core_, *game_);
    if (orientation_ == VERTICAL){
@@ -80,12 +78,13 @@ void UIBar::calculateRect(){
 void UIBar::draw() const{
    if (game_->mode == requiredMode_){
 
-      //blit background
-      SDL_Surface *src = orientation_ == HORIZONTAL ?
-                            hBarSurface_ :
-                            vBarSurface_;
+      //shadow
+      SDL_FillRect(screen_, &SDL_Rect(rect_ - Point(1, 1)),
+                   ENGRAVE_LIGHT_UINT);
+      SDL_FillRect(screen_, &SDL_Rect(rect_ + Point(1, 1)),
+                   ENGRAVE_DARK_UINT);
 
-      SDL_BlitSurface(src, &makeRect(0, 0, rect_.w, rect_.h),
+      SDL_BlitSurface(barSurface_, &makeRect(0, 0, rect_.w, rect_.h),
                       screen_, &SDL_Rect(rect_));
       
       //blit icons
@@ -127,13 +126,11 @@ bool UIBar::isActive(){
 void UIBar::init(const CoreData *core,
                  GameData *game,
                  SDL_Surface *screen,
-                 SDL_Surface *vBarSurface,
-                 SDL_Surface *hBarSurface){
+                 SDL_Surface *barSurface){
    core_ = core;
    game_ = game;
    screen_ = screen;
-   vBarSurface_ = vBarSurface;
-   hBarSurface_ = hBarSurface;
+   barSurface_ = barSurface;
 }
 
 void UIBar::click(){

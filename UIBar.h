@@ -41,7 +41,7 @@ class UIBar{
    static GameData *game_;
    static const CoreData *core_;
    static SDL_Surface *screen_;
-   static SDL_Surface *hBarSurface_, *vBarSurface_;
+   static SDL_Surface *barSurface_;
 
 public:
    UIBar(Corner corner, Orientation orientation,
@@ -55,8 +55,7 @@ public:
    static void init(const CoreData *core,
                     GameData *game,
                     SDL_Surface *screen,
-                    SDL_Surface *vBarSurface,
-                    SDL_Surface *hBarSurface);
+                    SDL_Surface *barSurface);
 
    //determines the number of icons on the bar, and
    //calculates the rectangle for drawing it

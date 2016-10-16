@@ -6,31 +6,72 @@ resource{name = "metal";}
 #entity types; index numbers MUST increment for each type.
 
 buildingType{
-   name = "Campfire";
+   name = "Cave";
    index = 0;
+   
+   drawRect.x = -72;
+   drawRect.y = -54;
+   drawRect.w = 140;
+   drawRect.h = 70;
+   
+   baseRect.x = -72;
+   baseRect.y = -14;
+   baseRect.w = 140;
+   baseRect.h = 20;
+   
+   selectionCenter.x = 15;
+   selectionCenter.y = -16;
+}
+buildingType{
+   name = "Armory";
+   index = 1;
+   
+   drawRect.x = -56;
+   drawRect.y = -52;
+   drawRect.w = 115;
+   drawRect.h = 60;
+   
+   baseRect.x = -56;
+   baseRect.y = -9;
+   baseRect.w = 115;
+   baseRect.h = 17;
+   
+   selectionCenter.x = -1;
+   selectionCenter.y = -16;
+}
+buildingType{
+   name = "Storage";
+   index = 2;
+   
+   drawRect.x = -52;
+   drawRect.y = -52;
+   drawRect.w = 104;
+   drawRect.h = 104;
+   
+   baseRect.x = -52;
+   baseRect.y = -52;
+   baseRect.w = 104;
+   baseRect.h = 104;
+}
+buildingType{
+   name = "Training Grounds";
+   index = 3;
+   
+   drawRect.x = -80;
+   drawRect.y = -83;
+   drawRect.w = 163;
+   drawRect.h = 107;
+   
+   baseRect.x = -80;
+   baseRect.y = -24;
+   baseRect.w = 163;
+   baseRect.h = 48;
 
-   drawRect.x = -41;
-   drawRect.y = -91;
-   drawRect.w = 79;
-   drawRect.h = 111;
-
-   baseRect.x = -42;
-   baseRect.y = -23;
-   baseRect.w = 81;
-   baseRect.h = 42;
-
-   selectionCenter.x = 2;
-   selectionCenter.y = -37;
-
-   cost.wood = 10;
-
-   maxHealth = 500;
-   progressCost = 1250;
-   soundFile = "PLACBLDG.wav";
+   selectionCenter.y = -25;
 }
 buildingType{
    name = "Shrine";
-   index = 1;
+   index = 4;
 
    drawRect.x = -75;
    drawRect.y = -67;
@@ -51,6 +92,30 @@ buildingType{
    progressCost = 1750;
    prereqBuilding = 0;
 }
+buildingType{
+   name = "Campfire";
+   index = 5;
+
+   drawRect.x = -41;
+   drawRect.y = -91;
+   drawRect.w = 79;
+   drawRect.h = 111;
+
+   baseRect.x = -42;
+   baseRect.y = -23;
+   baseRect.w = 81;
+   baseRect.h = 42;
+
+   selectionCenter.x = 2;
+   selectionCenter.y = -37;
+
+   cost.wood = 10;
+
+   maxHealth = 500;
+   progressCost = 1250;
+   soundFile = "PLACBLDG.wav";
+}
+
 decorationType{
    name = "Rock";
    index = 0;
@@ -83,6 +148,7 @@ decorationType{
    
    color = 5;
 }
+
 unitType{
    name = "Warrior";
    index = 0;
