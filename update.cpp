@@ -657,7 +657,7 @@ void reSort(entities_t &entities, entities_t::iterator it,
             VerticalMovement verticalMovement){
    entities_t::iterator old = it;
    switch(verticalMovement){
-   case DIR_UP:
+   case DIR_UP: //TODO use reverse iterators
       if (it != entities.begin()){
          entities_t::iterator next = it;
          --next;
