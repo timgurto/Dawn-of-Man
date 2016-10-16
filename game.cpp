@@ -48,7 +48,9 @@ const Uint8 SELECTION_RECT_ALPHA = 0x66;
 //How long the victory/loss message is displayed
 const timer_t END_MESSAGE_TIMER = 1250;
 
-GameOutcome gameMode(Screen &thisScreen, const std::string *fileName){
+unsigned gameMode(Screen &thisScreen, const void *data){
+   assert(data);
+   const std::string &fileName = *((std::string*)data);
 
    //loading screen
    Surface loading(MISC_IMAGE_PATH + "loading.PNG");
@@ -106,7 +108,7 @@ GameOutcome gameMode(Screen &thisScreen, const std::string *fileName){
    SDL_ShowCursor(SDL_DISABLE);
 
    //create game data object, and load data from file
-   GameData game(DATA_PATH + *fileName);
+   GameData game(DATA_PATH + fileName);
 
    //more init
    Particle::init(&particle, &particleShadow);

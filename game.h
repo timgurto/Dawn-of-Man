@@ -4,11 +4,11 @@
 #define GAME_H
 
 #include "GameData.h"
+#include "Screen.h"
 
 class Entity;
-class Screen;
 
 //Main game functionality
-GameOutcome gameMode(Screen &thisScreen, const std::string *data);
+Screen::GoFun gameMode;
 
 #endif

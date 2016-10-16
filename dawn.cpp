@@ -75,8 +75,8 @@ int main(int argc, char **argv){
       Screen mainMenu;
       //mainMenu();
 
-      Screen game;
-      game();
+      Screen game(&gameMode);
+      //game();
 
       //campaign: go through each level
       int levels;
@@ -86,9 +86,9 @@ int main(int argc, char **argv){
       //levels = number of levels in the campaign
 
       for (int i = 0; i != levels; ++i){
-         GameOutcome outcome;
+         unsigned outcome;
          //repeat each level if lost
-         while ((outcome = gameMode(game, &(format2(i) + ".dat"))) == LOSS)
+         while ((outcome = game(&(format2(i) + ".dat"))) == LOSS)
             ;
          if (outcome == QUIT)
             break;

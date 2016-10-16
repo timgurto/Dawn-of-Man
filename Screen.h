@@ -9,7 +9,10 @@ class Surface;
 
 class Screen{
 
+public:
    typedef unsigned GoFun(Screen &thisScreen, const void *data);
+
+private:
 
    //What the screen does
    //Default: goDefault
@@ -44,7 +47,7 @@ public:
    static void init(Surface *background,
                     Surface *cursor);
 
-   void operator()(const void *data = 0);
+   int operator()(const void *data = 0);
 };
 
 #endif

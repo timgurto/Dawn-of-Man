@@ -109,9 +109,9 @@ Screen::Screen(GoFun go):
 go_(go),
 loop_(true){}
 
-void Screen::operator()(const void *data){
+int Screen::operator()(const void *data){
    //make sure there are no events on the queue
    SDL_Event event;
    //TODO assert(!SDL_PollEvent(&event));
-   (*go_)(*this, data);
+   return (*go_)(*this, data);
 }
