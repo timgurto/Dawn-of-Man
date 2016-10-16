@@ -26,9 +26,10 @@ UnitType::UnitType(typeNum_t index,
                    typeNum_t originBuilding,
                    progress_t maxProgress,
                    typeNum_t resourceAtDeath,
+                   typeNum_t prereqTech,
                    const std::string &soundFile,
-                   const std::string &hitSoundFile,
-                   const std::string &deathSoundFile):
+                   const std::string &deathSoundFile,
+                   const std::string &hitSoundFile):
 EntityType(index,
            ENT_UNIT,
            name,
@@ -36,8 +37,8 @@ EntityType(index,
            baseRect,
            selectionCenter,
            soundFile,
-           hitSoundFile,
-           deathSoundFile),
+           deathSoundFile,
+           hitSoundFile),
 speed_(speed),
 maxFrameCounter_(maxFrameCounter),
 frameCount_(frameCount),
@@ -51,8 +52,9 @@ builder_(builder),
 gatherer_(gatherer),
 originBuilding_(originBuilding),
 maxProgress_(maxProgress),
-cost_(cost),
-resourceAtDeath_(resourceAtDeath){}
+resourceAtDeath_(resourceAtDeath),
+prereqTech_(prereqTech),
+cost_(cost){}
 
 typeNum_t UnitType::getOriginBuilding() const{
    return originBuilding_;
@@ -68,4 +70,8 @@ std::string UnitType::getCostString() const{
 
 typeNum_t UnitType::getDeathResource() const{
    return resourceAtDeath_;
+}
+
+typeNum_t UnitType::getPrereqTech() const{
+   return prereqTech_;
 }

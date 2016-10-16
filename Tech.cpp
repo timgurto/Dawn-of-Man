@@ -8,13 +8,15 @@ Tech::Tech(typeNum_t index,
       const TechBonuses &bonuses,
       typeNum_t originBuilding,
       const Resources &cost,
-      typeNum_t prereqTech):
+      typeNum_t prereqTech1,
+      typeNum_t prereqTech2):
 index_(index),
 name_(name),
 bonuses_(bonuses),
 originBuilding_(originBuilding),
 cost_(cost),
-prereqTech_(prereqTech){
+prereqTech1_(prereqTech1),
+prereqTech2_(prereqTech2){
    icon_ = loadImage(makePath(ENT_TECH,
                              index_,
                              IMG_ICON),
@@ -27,7 +29,8 @@ name_(original.name_),
 bonuses_(original.bonuses_),
 originBuilding_(original.originBuilding_),
 cost_(original.cost_),
-prereqTech_(original.prereqTech_),
+prereqTech1_(original.prereqTech1_),
+prereqTech2_(original.prereqTech2_),
 icon_(copySurface(original.icon_)){}
 
 Tech::~Tech(){
@@ -60,4 +63,12 @@ std::string Tech::getCostString() const{
 
 std::string Tech::getName() const{
    return name_;
+}
+
+typeNum_t Tech::getPrereqTech1() const{
+   return prereqTech1_;
+}
+
+typeNum_t Tech::getPrereqTech2() const{
+   return prereqTech2_;
 }

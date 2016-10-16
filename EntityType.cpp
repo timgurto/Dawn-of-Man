@@ -10,8 +10,8 @@ EntityType::EntityType(typeNum_t index, EntityTypeID type,
                        const SDL_Rect &baseRect,
                        const Point &selectionCenter,
                        const std::string &soundFile,
-                       const std::string &hitSoundFile,
-                       const std::string &deathSoundFile):
+                       const std::string &deathSoundFile,
+                       const std::string &hitSoundFile):
 index_(index),
 name_(name),
 drawRect_(drawRect),
@@ -21,11 +21,11 @@ surface_(loadImage(makePath(type, index_), ENTITY_MASK)),
 icon_(loadImage(makePath(type, index_, IMG_ICON), ENTITY_BACKGROUND)),
 mask_(loadImage(makePath(type, index_, IMG_MASK), ENTITY_MASK)),
 soundFile_(soundFile),
-hitSoundFile_(hitSoundFile),
 deathSoundFile_(deathSoundFile),
+hitSoundFile_(hitSoundFile),
 sound_(loadSound(SOUND_PATH + soundFile)),
-hitSound_(loadSound(SOUND_PATH + hitSoundFile)),
-deathSound_(loadSound(SOUND_PATH + deathSoundFile)){}
+deathSound_(loadSound(SOUND_PATH + deathSoundFile)),
+hitSound_(loadSound(SOUND_PATH + hitSoundFile)){}
 
 EntityType::EntityType(const EntityType &original):
 index_(original.index_),
@@ -36,20 +36,20 @@ selectionCenter_(original.selectionCenter_),
 surface_(copySurface(original.surface_)),
 icon_(copySurface(original.icon_)),
 mask_(copySurface(original.mask_)),
-sound_(loadSound(SOUND_PATH + soundFile_)),
-hitSound_(loadSound(SOUND_PATH + hitSoundFile_)),
-deathSound_(loadSound(SOUND_PATH + deathSoundFile_)),
 soundFile_(original.soundFile_),
+deathSoundFile_(original.deathSoundFile_),
 hitSoundFile_(original.hitSoundFile_),
-deathSoundFile_(original.deathSoundFile_){}
+sound_(loadSound(SOUND_PATH + soundFile_)),
+deathSound_(loadSound(SOUND_PATH + deathSoundFile_)),
+hitSound_(loadSound(SOUND_PATH + hitSoundFile_)){}
 
 EntityType::~EntityType(){
    freeSurface(surface_);
    freeSurface(icon_);
    freeSurface(mask_);
    freeSound(sound_);
-   freeSound(hitSound_);
    freeSound(deathSound_);
+   freeSound(hitSound_);
 }
 
 const SDL_Rect &EntityType::getBaseRect() const{

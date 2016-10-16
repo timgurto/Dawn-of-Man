@@ -3,6 +3,8 @@
 #include <cassert>
 #include <cstdlib>
 #include <ctime>
+#include <map>
+#include <string>
 
 #include "SDL.h"
 #include "SDL_mixer.h"
@@ -69,17 +71,14 @@ void gameMode(){
                                   "particleShadow.PNG", GREEN),
       *entitiesTemp = createSurface(),
       *glow = loadImage(MISC_IMAGE_PATH + "glow.PNG", true);
-   SDL_SetColorKey(entitiesTemp, SDL_SRCCOLORKEY,
-                   SDL_MapRGB(entitiesTemp->format,
-                              ENTITY_BACKGROUND.r,
-                              ENTITY_BACKGROUND.g,
-                              ENTITY_BACKGROUND.b));
+   setColorKey(entitiesTemp);
    SDL_SetAlpha(particleShadow, SDL_SRCALPHA, SHADOW_ALPHA);
    SDL_SetAlpha(cursorShadow, SDL_SRCALPHA, SHADOW_ALPHA);
 
-   std::string musicPath = SOUND_PATH + "tristram.mp3";
-   Mix_Music *music = Mix_LoadMUS(musicPath.c_str()); 
-   Mix_PlayMusic(music, -1);
+   std::string musicPath = SOUND_PATH + "greensleeves.wav";
+   Mix_Music *music = Mix_LoadMUS(musicPath.c_str());
+   if (!DEBUG)
+      Mix_PlayMusic(music, -1);
 
    SDL_ShowCursor(SDL_DISABLE);
 
@@ -113,6 +112,9 @@ void gameMode(){
    bars.push_back(&unitsBar);
    bars.push_back(&techsBar);
 
+   //more init
+   Player::init(&game, &buildingsBar);
+
    //Message Boxes
    messageBoxes_t messageBoxes;
    MessageBox contextHelp(WHITE,
@@ -137,64 +139,23 @@ void gameMode(){
 
    //TODO load from files
    //=================================================
-   std::vector<std::string> resourceNames;
-   resourceNames.push_back("Wood");
-   Resources::init(1, resourceNames);
-   Player::init(&game);
+   initializeData("Data/dawn.dat", game);
 
-   //building types
-   resources_t campfireCost; campfireCost.push_back(100);
-   BuildingType campfire(0, "Campfire",
-                         makeRect(-41, -91, 79, 111),
-                         makeRect(-42, -23, 81, 42),
-                         Point(2, -37), campfireCost, 1250,
-                         "PLACBLDG.wav");
-   resources_t shrineCost; shrineCost.push_back(180);
-   BuildingType shrine(1, "Shrine",
-                       makeRect(-75, -67, 152, 77),
-                       makeRect(-76, -17, 154, 28),
-                       Point(1, -20), shrineCost, 1750);
-   game.buildingTypes.push_back(campfire);
-   game.buildingTypes.push_back(shrine);
-   for (typeNum_t i = 0; i != game.buildingTypes.size(); ++i)
-      assert (game.buildingTypes[i].getIndex() == i);
-
-   //decoration types
-   DecorationType rock(0, "Rock",
-                  makeRect(-11, -8, 22, 16),
-                  makeRect(-11, -8, 22, 16),
-                  Point(0, 0),
-                  CLR_DECORATION);
-   game.decorationTypes.push_back(rock);
-   for (typeNum_t i = 0; i != game.decorationTypes.size(); ++i)
-      assert (game.decorationTypes[i].getIndex() == i);
+   //starting enemy shrine
+   Building *enemyShrine = new Building(1, makeRect(1000, 1000),
+                                        2, 1750);
+   addEntity(game, enemyShrine);
 
    //starting rocks
-   for (int i = 0; i != 15; ++i)
+   for (int i = 0; i != 70; ++i)
       addEntity(game, new Decoration(0, Point(
                                 rand() % game.map.w,
                                 rand() % game.map.h)));
 
    //unit types
-   resources_t genericCost; genericCost.push_back(50);
-   UnitType generic(0, "Warrior",
-                  makeRect(-22, -107, 70, 113),
-                  makeRect(-22,-6, 53, 11),
-                  Point(3, -55),
-                  genericCost,
-                  8, //speed
-                  25, 8, //frames
-                  10, 4, 25, //combat frames
-                  50, 10, 2, //combat details
-                  false, //builder
-                  false, //gatherer
-                  1, //origin building
-                  1000, //progress cost
-                  NO_TYPE,
-                  "SKING1.WAV",
-                  "clubman.wav",
-                  "taubr07.wav");
-   resources_t gruntCost; gruntCost.push_back(30);
+
+
+   resources_t gruntCost(4, 0); gruntCost[0] = 80;
    UnitType grunt(1, "Caveman",
                   makeRect(-22, -107, 70, 113),
                   makeRect(-22,-6, 53, 11),
@@ -209,11 +170,11 @@ void gameMode(){
                   0, //origin building
                   1000, //progress cost
                   NO_TYPE,
+                  NO_TYPE,
                   "abadacus.wav",
-                  "clubman.wav",
-                  "taubr07.wav");
-
-   resources_t deerCost; gruntCost.push_back(5);
+                  "mandeath0.wav",
+                  "clubman.wav");
+   resources_t deerCost(4, 0);
    UnitType deer(2, "Deer",
                  makeRect(-132, -155, 235, 165),
                  makeRect(-67, -52, 139, 82),
@@ -228,7 +189,6 @@ void gameMode(){
                  NO_TYPE, //origin building
                  1000, //progress cost
                  1); //resource at death
-   game.unitTypes.push_back(generic);
    game.unitTypes.push_back(grunt);
    game.unitTypes.push_back(deer);
    for (typeNum_t i = 0; i != game.unitTypes.size(); ++i)
@@ -300,13 +260,12 @@ void gameMode(){
    }
 
    //techs
-   resources_t fireShieldCost;
-   fireShieldCost.push_back(200);
+   resources_t fireShieldCost(4, 0); fireShieldCost[0] = 200;
    TechBonuses fireShieldBonuses(5);
-   Tech fireArmor(0, "Fire Armor", fireShieldBonuses, 0, fireShieldCost, NO_TYPE);
+   Tech fireArmor(0, "Fire Armor", fireShieldBonuses, 0, fireShieldCost);
    game.techs.push_back(fireArmor);
 
-   techsResearched_t noneResearched(game.techs.size(), false);
+   checklist_t noneResearched(game.techs.size(), false);
    game.players.push_back(Player(0x735e3e, noneResearched)); //0: nature
    game.players.push_back(Player(0xca6500, noneResearched)); //1: human
    game.players.push_back(Player(0x882222, noneResearched));
@@ -329,8 +288,7 @@ void gameMode(){
 
       //update state
       updateState(deltaMod, game, screen, bars,
-                  contextHelp, resourcesBox, fpsDisplay,
-                  music);
+                  contextHelp, resourcesBox, fpsDisplay);
 
       //render
       render(screen, glow, diagGreen, diagRed, map, darkMap, cursor,
@@ -366,3 +324,183 @@ void addEntity(GameData &game, Entity *entity){
                                          dereferenceLessThan),
                         entity);
 }
+
+void initializeData(char *filename, GameData &game){
+   std::ifstream data(filename);
+
+   typeNum_t resourceCount = 0;
+   std::map<std::string, typeNum_t> resourceIndices;
+   std::vector<std::string> resourceNames;
+
+   debug("");
+   while (data){
+      
+      //initialize synthesized data
+      std::string
+         name = "",
+         soundFile = "",
+         deathSoundFile = "";
+      bool
+         collides = false;
+      typeNum_t
+         index = NO_TYPE,
+         prereqBuilding = NO_TYPE,
+         prereqTech = NO_TYPE;
+      damage_t
+         maxHealth = 1,
+         armor = 0;
+      pixels_t
+         speed = 8;
+      progress_t
+         progressCost = 0;
+      int
+         maxFrameCounter = 0;
+      SDL_Rect
+         drawRect = makeRect(),
+         baseRect = makeRect();
+      Point
+         selectionCenter = Point();
+      resources_t
+         cost(resourceCount, 0);
+
+      std::string object = parseToken(data);
+      if (object == ";")
+         break;
+      assert (object[object.size() - 1] == '{');
+      removeLast(object);
+      debug(object + ":");
+      while (data){
+         std::string attr = parseToken(data);
+         if (attr == "}")
+            break;
+         assert (attr[attr.size()-1] == '=');
+         removeLast(attr);
+         std::string val = parseToken(data);
+         if (val[val.size() - 1] == ',')
+            removeLast(val);
+         double numVal = 0;
+         bool isNum = val[0] != '\"';
+         if (isNum)
+            numVal = atod(val);
+         else
+            val = val.substr(1, val.length()-3);
+
+         if (isNum)
+            debug(attr + " = #", numVal);
+         else
+            debug(attr + " = " +  val);
+
+         //special case: keeping track of resources
+         if (object == "resource" && attr == "name"){
+            resourceIndices[val] = resourceCount;
+            ++resourceCount;
+         }
+
+         //read attribute into relevant var
+         if (attr == "name"){
+            name = val;
+         }else if (attr == "collides"){
+            collides = numVal != 0;
+         }else if (attr == "index"){
+            index = typeNum_t(numVal);
+         }else if (attr == "prereqBuilding"){
+            prereqBuilding = typeNum_t(numVal);
+         }else if (attr == "maxHealth"){
+            maxHealth = damage_t(numVal);
+         }else if (attr == "armor"){
+            armor = damage_t(numVal);
+         }else if (attr == "speed"){
+            speed = pixels_t(numVal);
+         }else if (attr == "progressCost"){
+            progressCost = progress_t(numVal);
+         }else if (attr.substr(0, 9) == "drawRect."){
+            char c = attr[9];
+            if (c == 'x')
+               drawRect.x = pixels_t(numVal);
+            else if (c == 'y')
+               drawRect.y = pixels_t(numVal);
+            else if (c == 'w')
+               drawRect.w = pixels_t(numVal);
+            else if (c == 'h')
+               drawRect.h = pixels_t(numVal);
+         }else if (attr.substr(0, 9) == "baseRect."){
+            char c = attr[9];
+            if (c == 'x')
+               baseRect.x = pixels_t(numVal);
+            else if (c == 'y')
+               baseRect.y = pixels_t(numVal);
+            else if (c == 'w')
+               baseRect.w = pixels_t(numVal);
+            else if (c == 'h')
+               baseRect.h = pixels_t(numVal);
+         }else if (attr.substr(0, 16) == "selectionCenter."){
+            char c = attr[16];
+            if (c == 'x')
+               selectionCenter.x = pixels_t(numVal);
+            else if (c == 'y')
+               selectionCenter.y = pixels_t(numVal);
+         }else if (attr.substr(0, 5) == "cost."){
+            typeNum_t i = resourceIndices[attr.substr(5)];
+            //ensure cost is big enough
+            while (i >= cost.size())
+               cost.push_back(0);
+            cost[i] = resource_t(numVal);
+         }
+
+      }
+      debug("");
+
+      //initialize objects
+      if (object == "resource"){
+         resourceNames.push_back(name);
+      while (cost.size() < resourceNames.size())
+         cost.push_back(0);
+      }else if (object == "buildingType"){
+         BuildingType temp(index, name, drawRect, baseRect,
+                           selectionCenter, cost, maxHealth,
+                           armor, progressCost,
+                           prereqBuilding, prereqTech,
+                           soundFile, deathSoundFile);
+         game.buildingTypes.push_back(temp);
+      }else if (object == "decorationType"){
+         DecorationType temp(index, name, drawRect, baseRect, collides);
+         game.decorationTypes.push_back(temp);
+      }
+
+   }
+   data.close();
+
+   Resources::init(resourceNames);
+
+   //check data
+   //indices are ordered
+   for (typeNum_t i = 0; i != game.buildingTypes.size(); ++i)
+      assert (game.buildingTypes[i].getIndex() == i);
+   for (typeNum_t i = 0; i != game.decorationTypes.size(); ++i)
+      assert (game.decorationTypes[i].getIndex() == i);
+   
+   
+//TODO check all prereqs, originBuildings etc. are in-bounds or NO_TYPE
+}
+
+   //resources_t genericCost(4, 0); genericCost[0] = 50;
+   //UnitType generic(0, "Warrior",
+   //               makeRect(-22, -107, 70, 113),
+   //               makeRect(-22,-6, 53, 11),
+   //               Point(3, -55),
+   //               genericCost,
+   //               8, //speed
+   //               25, 8, //frames
+   //               10, 4, 25, //combat frames
+   //               50, 10, 2, //combat details
+   //               false, //builder
+   //               false, //gatherer
+   //               1, //origin building
+   //               1000, //progress cost
+   //               NO_TYPE,
+   //               NO_TYPE,
+   //               "SKING1.WAV",
+   //               "mandeath0.wav",
+   //               "clubman.wav");
+
+   //game.unitTypes.push_back(generic);

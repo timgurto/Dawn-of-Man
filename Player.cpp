@@ -5,24 +5,28 @@
 #include "Player.h"
 #include "Debug.h"
 #include "GameData.h"
+#include "UIBar.h"
 
 extern Debug debug;
 
 GameData *Player::game_ = 0;
+UIBar *Player::buildingsBar_ = 0;
 
 Player::Player(Uint32 color,
-               const techsResearched_t &techsResearched):
+               const checklist_t &techsResearched):
 color_(color),
 bonuses_(),
-techsResearched_(techsResearched){
+techsResearched_(techsResearched),
+buildingsBuilt_(game_->buildingTypes.size(), false){
    resourcesString_ = resources_.str();
    for (size_t i = 0; i != techsResearched.size(); ++i)
       if (techsResearched_[i])
          bonuses_ += game_->techs[i].getBonuses();
 }
 
-void Player::init(GameData *game){
+void Player::init(GameData *game, UIBar *buildingsBar){
    game_ = game;
+   buildingsBar_ = buildingsBar;
 }
 
 void Player::addResources(const Resources &r){
@@ -51,11 +55,24 @@ const TechBonuses &Player::getBonuses() const{
    return bonuses_;
 }
 
-bool Player::isTechResearched(typeNum_t i) const{
+bool Player::hasTech(typeNum_t i) const{
+   if (i == NO_TYPE)
+      return true;
    return techsResearched_[i];
+}
+
+bool Player::hasBuilding(typeNum_t i) const{
+   if (i == NO_TYPE)
+      return true;
+   return buildingsBuilt_[i];
 }
 
 void Player::researchTech(typeNum_t index){
    assert(!techsResearched_[index]);
    techsResearched_[index] = true;
+}
+
+void Player::buildBuilding(typeNum_t index){
+   buildingsBuilt_[index] = true;
+   buildingsBar_->calculateRect();
 }

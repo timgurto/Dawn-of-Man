@@ -36,8 +36,7 @@ public:
 
    bool isEmpty() const;
 
-   static void init(size_t resourceCount,
-                    std::vector <std::string> &names);
+   static void init(std::vector <std::string> &names);
 
    //equivalent to no resources
    static Resources empty();

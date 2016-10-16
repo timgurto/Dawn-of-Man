@@ -57,6 +57,12 @@ class UnitType: public EntityType{
    //Which resource site this unit becomes when it dies
    typeNum_t resourceAtDeath_;
 
+   //prerequisites
+   typeNum_t prereqTech_;
+
+   //The sound played when the unit attacks, gathers etc.
+   SDL_Sound *hitSound_;
+
 public:
 
    UnitType(typeNum_t index,
@@ -79,15 +85,17 @@ public:
             typeNum_t originBuilding = NO_TYPE,
             progress_t maxProgress = 0,
             typeNum_t resourceAtDeath = NO_TYPE,
+            typeNum_t prereqTech = NO_TYPE,
             const std::string &soundFile = "",
-            const std::string &hitSoundFile = "",
-            const std::string &deathSoundFile = "");
+            const std::string &deathSoundFile = "",
+            const std::string &hitSoundFile = "");
 
    //get
    typeNum_t getOriginBuilding() const;
    const Resources &getCost() const;
    std::string getCostString() const;
    typeNum_t getDeathResource() const;
+   typeNum_t getPrereqTech() const;
 };
 
 #endif

@@ -91,7 +91,7 @@ void UIBar::draw() const{
       pixels_t x = rect_.x, y = rect_.y;
       for (typeNum_t i = 0; i != iconCount_; ++i){
          //draw
-         SDL_BlitSurface(surfaceFun_(i, iconCount_, *game_), 0,
+         SDL_BlitSurface(surfaceFun_(i, *game_), 0,
                          screen_, &makeRect(x, y));
 
          //iterate

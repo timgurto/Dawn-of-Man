@@ -1,7 +1,12 @@
 // (C) 2010 Tim Gurto
 
+#include <fstream>
+#include <cassert>
 #include "types.h"
 #include "GameData.h"
+#include "Debug.h"
+
+extern Debug debug;
 
 GameData::GameData(int mapSizeX, int mapSizeY):
 rightMouse(),

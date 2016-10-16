@@ -10,9 +10,12 @@ BuildingType::BuildingType(typeNum_t index,
                            const SDL_Rect &baseRect,
                            const Point &selectionCenter,
                            const Resources &cost,
+                           damage_t maxHealth,
+                           damage_t armor,
                            progress_t maxProgress,
+                           typeNum_t prereqBuilding,
+                           typeNum_t prereqTech,
                            const std::string &soundFile,
-                           const std::string &hitSoundFile,
                            const std::string &deathSoundFile):
 EntityType(index,
            ENT_BUILDING,
@@ -21,10 +24,13 @@ EntityType(index,
            baseRect,
            selectionCenter,
            soundFile,
-           hitSoundFile,
            deathSoundFile),
 maxProgress_(maxProgress),
-cost_(cost){}
+maxHealth_(maxHealth),
+armor_(armor),
+cost_(cost),
+prereqBuilding_(prereqBuilding),
+prereqTech_(prereqTech){}
 
 const Resources &BuildingType::getCost() const{
    return cost_;
@@ -32,4 +38,12 @@ const Resources &BuildingType::getCost() const{
 
 std::string BuildingType::getCostString() const{
    return cost_.str();
+}
+
+typeNum_t BuildingType::getPrereqTech() const{
+   return prereqTech_;
+}
+
+typeNum_t BuildingType::getPrereqBuilding() const{
+   return prereqBuilding_;
 }

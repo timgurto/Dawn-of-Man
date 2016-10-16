@@ -47,6 +47,8 @@ struct GameData{
    //free entities and surfaces pointed to
    ~GameData();
 
+   void init(char *filename);
+
    //Entity types
    //vectors:
    // - contiguous for index access

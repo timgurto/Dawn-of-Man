@@ -16,24 +16,86 @@ const int NUM_PLACEMENT_TRIES = 40;
 const pixels_t PLACEMENT_MARGIN = 1;
 
 
+bool validBuilding(const GameData &game, typeNum_t i){
+   const BuildingType &type = game.buildingTypes[i];
+   const Player &human = game.players[HUMAN_PLAYER];
+   return
+      //prerequisites
+      human.hasTech(type.getPrereqTech()) &&
+      human.hasBuilding(type.getPrereqBuilding());
+}
+
+bool validUnit(const GameData &game, typeNum_t i){
+   const UnitType &type = game.unitTypes[i];
+   return
+      //unit comes from the selected building
+      game.buildingSelected != 0 &&
+      game.buildingSelected->getTypeIndex() == type.getOriginBuilding() &&
+      //prerequisites
+      game.players[HUMAN_PLAYER].hasTech(type.getPrereqTech());
+}
+
+bool validTech(const GameData &game, typeNum_t i){
+   typeNum_t techIndex = getValidTech(game, i);
+   const Tech &tech = game.techs[techIndex];
+   const Player &human = game.players[HUMAN_PLAYER];
+   return
+      //tech comes from the selected building
+      game.buildingSelected != 0 &&
+      game.buildingSelected->getTypeIndex() == tech.getOriginBuilding() &&
+      //prerequisites
+      human.hasTech(tech.getPrereqTech1()) &&
+      human.hasTech(tech.getPrereqTech2()) &&
+      //player hasn't researched it yet
+      !human.hasTech(techIndex);
+}
+
+typeNum_t getValidBuilding(const GameData &game, typeNum_t i){
+   typeNum_t index;
+   for (index = 0; i != 0; ++index)
+      if (validBuilding(game, index))
+         --i;
+   return index;
+}
+
+typeNum_t getValidUnit(const GameData &game, typeNum_t i){
+   typeNum_t index;
+   for (index = 0; i != 0; ++index)
+      if (validUnit(game, index))
+         --i;
+   return index;
+}
+
+typeNum_t getValidTech(const GameData &game, typeNum_t i){
+   typeNum_t index;
+   for (index = 0; i != 0; ++index)
+      if (validTech(game, index))
+         --i;
+   return index;
+}
+
 
 //UIBar::iconCountFun_
 //Returns the number of icons in the bar
    
    //Buildings bar: number of BuildingType icons
    typeNum_t getNumBuildingIcons(const GameData &game){
-      return game.buildingTypes.size();
+      if (game.mode != MODE_BUILDER)
+         return 0;
+      typeNum_t count = 0;
+      for (typeNum_t index = 0; index != game.buildingTypes.size(); ++index)
+         if (validBuilding(game, index))
+            ++count;
+      return count;
    }
 
    //Units bar: 
    typeNum_t getNumUnitIcons(const GameData &game){
-      if (game.buildingSelected == 0)
+      if (game.mode != MODE_BUILDING)
          return 0;
       typeNum_t count = 0;
-      for (unitTypes_t::const_iterator it = game.unitTypes.begin();
-           it != game.unitTypes.end(); ++it)
-         //if unit comes from this building
-         if (it->getOriginBuilding() == game.buildingSelected->getTypeIndex())
+      for (typeNum_t index = 0; index != game.unitTypes.size(); ++index)
+         if (validUnit(game, index))
             ++count;
       return count;
    }
@@ -48,7 +110,7 @@ const pixels_t PLACEMENT_MARGIN = 1;
          //if tech comes from this building,
          if (it->getOriginBuilding() == game.buildingSelected->getTypeIndex() &&
              //and hasn't been researched yet
-             !game.players[HUMAN_PLAYER].isTechResearched(it->getIndex()))
+             !game.players[HUMAN_PLAYER].hasTech(it->getIndex()))
             ++count;
       return count;
    }
@@ -58,47 +120,16 @@ const pixels_t PLACEMENT_MARGIN = 1;
 //UIBar::surfaceFun_
 //Returns the icon surface for the specified index
 
-   SDL_Surface *getBuildingTypeIcons(typeNum_t i,
-                                     typeNum_t size,
-                                     const GameData &game){
-      assert (i < size);
-      return game.buildingTypes[i].getIcon();
+   SDL_Surface *getBuildingTypeIcons(typeNum_t i, const GameData &game){
+      return game.buildingTypes[getValidBuilding(game, i)].getIcon();
    }
 
-   SDL_Surface *getUnitTypeIcons(typeNum_t i,
-                                 typeNum_t size,
-                                 const GameData &game){
-      assert (i < size);
-      Building &building = *game.buildingSelected;
-      int count = 0;
-      //find units that come from this building
-      for (typeNum_t loop = 0; loop != game.unitTypes.size(); ++loop)
-         if (game.unitTypes[loop].getOriginBuilding() ==
-             building.getTypeIndex()){
-            if (count == i)
-               return game.unitTypes[loop].getIcon();
-            ++count;
-         }
-      assert (false);
-      return 0;
+   SDL_Surface *getUnitTypeIcons(typeNum_t i, const GameData &game){
+      return game.unitTypes[getValidUnit(game, i)].getIcon();
    }
 
-   SDL_Surface *getTechIcons(typeNum_t i,
-                             typeNum_t size,
-                             const GameData &game){
-      assert (i < size);
-      Building &building = *game.buildingSelected;
-      int count = 0;
-      //find techs that come from this building
-      for (typeNum_t loop = 0; loop != game.techs.size(); ++loop)
-         if (game.techs[loop].getOriginBuilding() == building.getTypeIndex() &&
-             !game.players[HUMAN_PLAYER].isTechResearched(loop)){
-            if (count == i)
-               return game.techs[loop].getIcon();
-            ++count;
-         }
-      assert (false);
-      return 0;
+   SDL_Surface *getTechIcons(typeNum_t i, const GameData &game){
+      return game.techs[getValidTech(game, i)].getIcon();
    }
 
 
@@ -107,9 +138,7 @@ const pixels_t PLACEMENT_MARGIN = 1;
 //Executes the click on the specified button
 
    void selectBuilding(typeNum_t index, GameData &game){
-      game.toBuild = index;
-      debug("Building to construct: ",
-            game.buildingTypes[index].getName());
+      game.toBuild = getValidBuilding(game, index);
       game.mode = MODE_CONSTRUCTION;
    }
 
@@ -117,15 +146,7 @@ const pixels_t PLACEMENT_MARGIN = 1;
       Building &building = *game.buildingSelected;
 
       //get type
-      typeNum_t count = 0, typeIndex = 0;
-      for (typeIndex = 0; typeIndex != game.unitTypes.size(); ++typeIndex)
-         if (game.unitTypes[typeIndex].getOriginBuilding() ==
-             building.getTypeIndex()){
-            if (count == index)
-               break;
-            ++count;
-         }
-      
+      typeNum_t typeIndex = getValidUnit(game, index);      
       const UnitType &unitType = game.unitTypes[typeIndex];
 
       //check player's resources
@@ -197,27 +218,18 @@ const pixels_t PLACEMENT_MARGIN = 1;
    }
 
    void researchTech(typeNum_t index, GameData &game){
-      Building &building = *game.buildingSelected;
+      Player &human = game.players[HUMAN_PLAYER];
 
       //get type
-      typeNum_t count = 0, typeIndex = 0;
-      for (typeIndex = 0; typeIndex != game.techs.size(); ++typeIndex)
-         if (game.unitTypes[typeIndex].getOriginBuilding() == building.getTypeIndex() &&
-             !game.players[HUMAN_PLAYER].isTechResearched(typeIndex)){
-            if (count == index)
-               break;
-            ++count;
-         }
+      typeNum_t techIndex = getValidTech(game, index);
+      Tech &tech = game.techs[techIndex];
       
       //check player's resources
-      if (game.players[HUMAN_PLAYER].
-             sufficientResources(game.techs[typeIndex].getCost())){
+      if (human.sufficientResources(tech.getCost())){
 
          //research tech
-         game.players[HUMAN_PLAYER].
-            subtractResources(game.techs[typeIndex].getCost());
-         game.players[HUMAN_PLAYER].
-            researchTech(typeIndex);
+         human.subtractResources(tech.getCost());
+         human.researchTech(techIndex);
 
       }else //insufficient resources
          debug("Insufficient resources");
@@ -228,50 +240,25 @@ const pixels_t PLACEMENT_MARGIN = 1;
 
    std::string buildingHelp(typeNum_t index,
                             GameData &game){
+      const BuildingType &type = game.buildingTypes[getValidBuilding(game, index)];
       return
-         "Build " +
-         game.buildingTypes[index].getName() +
-         ": " +
-         game.buildingTypes[index].getCostString();
+         "Build " + type.getName() +
+         ": " + type.getCostString();
    }
 
    std::string unitHelp(typeNum_t index,
                         GameData &game){
-      const Building &building = *game.buildingSelected;
-      int count = 0;
-      //find units that come from this building
-      for (typeNum_t loop = 0; loop != game.unitTypes.size(); ++loop)
-         if (game.unitTypes[loop].getOriginBuilding() ==
-             building.getTypeIndex()){
-            if (count == index)
-               return
-                  "Train " +
-                  game.unitTypes[loop].getName() +
-                  ": " +
-                  game.unitTypes[loop].getCostString();
-            ++count;
-         }
-      assert(false);
+      const UnitType &type = game.unitTypes[getValidUnit(game, index)];
+      return
+         "Train " + type.getName() +
+         ": " + type.getCostString();
       return "";
    }
 
    std::string techHelp(typeNum_t index,
                         GameData &game){
-      const Building &building = *game.buildingSelected;
-      int count = 0;
-      //find units that come from this building
-      for (typeNum_t loop = 0; loop != game.techs.size(); ++loop)
-         if (game.techs[loop].getOriginBuilding() ==
-             building.getTypeIndex() &&
-             !game.players[HUMAN_PLAYER].isTechResearched(loop)){
-            if (count == index)
-               return
-                  "Research " +
-                  game.techs[loop].getName() +
-                  ": " +
-                  game.techs[loop].getCostString();
-            ++count;
-         }
-      assert(false);
-      return "";
+      const Tech &tech = game.techs[getValidTech(game, index)];
+      return
+         "Research " + tech.getName() +
+         ": " + tech.getCostString();
    }

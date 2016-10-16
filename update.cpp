@@ -25,12 +25,10 @@ void updateState(double delta, GameData &game,
                  SDL_Surface *screen, UIBars_t &bars,
                  MessageBox &contextHelp,
                  MessageBox &resourcesBox,
-                 MessageBox &fpsDisplay,
-                 Mix_Music *music){
+                 MessageBox &fpsDisplay){
 
    //Interface stuff
-   handleEvents(game, screen, bars, contextHelp, fpsDisplay,
-                music);
+   handleEvents(game, screen, bars, contextHelp, fpsDisplay);
    scrollMap(game, delta);
 
    //Actual updates
@@ -67,7 +65,7 @@ void updateState(double delta, GameData &game,
 
 void handleEvents(GameData &game, SDL_Surface *screen,
                   UIBars_t &bars, MessageBox &contextHelp,
-                  MessageBox &fpsDisplay, Mix_Music *music){
+                  MessageBox &fpsDisplay){
 
    SDL_Event event;
    while (SDL_PollEvent(&event)){
@@ -108,7 +106,7 @@ void handleEvents(GameData &game, SDL_Surface *screen,
                }
 
             if (!overBar){
-               Entity *entityP = findEntity(game);
+               Entity *entityP = findEntity(game, false);
                if (entityP != 0)
                   contextHelp(entityP->type().getName());
             }
@@ -139,7 +137,7 @@ void handleEvents(GameData &game, SDL_Surface *screen,
          case SDLK_KP_PLUS:
             //HACK remove this cheat
             {
-               resources_t cheatResources(1, 1337);
+               resources_t cheatResources(4, 1337);
                game.players[HUMAN_PLAYER].addResources(cheatResources);
             }
             break;
@@ -403,6 +401,7 @@ void select(GameData &game, UIBars_t &bars){
    bool
       entitySelected = false,
       builderSelected = false;
+   bool soundPlayed = false;
 
    //loop backwards, so objects in front have priority to be
    //selected
@@ -438,7 +437,10 @@ void select(GameData &game, UIBars_t &bars){
                   (*it)->selected = true; //No ctrl: select
                entitySelected = true;
                if ((*it)->selected)
-                  playSound((*it)->type().getSound());
+                  if (!soundPlayed){
+                     playSound((*it)->type().getSound());
+                     soundPlayed = true;
+                  }
                   //if building, set buildingSelected ptr and flag
                   if ((*it)->classID() == ENT_BUILDING)
                      game.buildingSelected = (Building *)(*it);
@@ -490,15 +492,17 @@ void setSelectedTargets(GameData &game){
             continue;
          }
 
-         //enemy unit
-         if (targetEntity->classID() == ENT_UNIT &&
+         EntityTypeID targetClass = targetEntity->classID();
+
+         //enemy unit or building
+         if ((targetClass == ENT_UNIT || targetClass == ENT_BUILDING) &&
              targetEntity->getPlayer() != unitP->getPlayer()){
             unitP->setTarget(targetEntity);
             continue;
          }
 
          //friendly, unfinished building
-         if (targetEntity->classID() == ENT_BUILDING &&
+         if (targetClass == ENT_BUILDING &&
              targetEntity->getPlayer() == unitP->getPlayer() &&
              unitP->isBuilder() &&
              !((Building *)(targetEntity))->isFinished()){
@@ -507,7 +511,7 @@ void setSelectedTargets(GameData &game){
          }
 
          //resource node
-         if (targetEntity->classID() == ENT_RESOURCE_NODE &&
+         if (targetClass == ENT_RESOURCE_NODE &&
              unitP->isGatherer())
             unitP->setTarget(targetEntity);
          continue;
@@ -543,14 +547,14 @@ void reSort(entities_t &entities, entities_t::iterator it,
    }
 }
 
-Entity *findEntity(GameData &game){
+Entity *findEntity(GameData &game, bool onlyTargetable){
    //loop backwards, so objects in front have priority
    for (entities_t::reverse_iterator it = game.entities.rbegin();
         it != game.entities.rend(); ++it){
 
       //filtering
       //only targetable entities
-      if (!(*it)->targetable())
+      if (onlyTargetable && !(*it)->targetable())
          continue;
 
       if (collision((*it)->getDrawRect(),

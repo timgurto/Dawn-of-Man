@@ -53,7 +53,7 @@ SDL_Rect Entity::getDrawRect() const{
 }
 
 //unnamed arg to suppress 'unused' warning
-void Entity::tick(double){} //default: do nothing
+void Entity::tick(double /*delta*/){} //default: do nothing
 
 bool Entity::onScreen() const{
    return collision(loc_ + type().drawRect_ + locRect(game_->map),
@@ -113,14 +113,10 @@ void Entity::colorBlit(int color, SDL_Surface *screen,
    if (index == 0){
 
       //1. create it
-      debug("Creating indexed surface");
+      //debug("Creating indexed surface");
       index = createSurface(thisType.surface_->w,
                             thisType.surface_->h);
-      SDL_SetColorKey(index, SDL_SRCCOLORKEY,
-                      SDL_MapRGB(index->format,
-                                 ENTITY_BACKGROUND.r,
-                                 ENTITY_BACKGROUND.g,
-                                 ENTITY_BACKGROUND.b));
+      setColorKey(index);
       
       //2. fill with color
       SDL_FillRect(index, 0,
@@ -135,22 +131,14 @@ void Entity::colorBlit(int color, SDL_Surface *screen,
    if (indexDark == 0){
       indexDark = createSurface(thisType.surface_->w,
                                 thisType.surface_->h);
-      SDL_SetColorKey(indexDark, SDL_SRCCOLORKEY,
-                      SDL_MapRGB(indexDark->format,
-                                 ENTITY_BACKGROUND.r,
-                                 ENTITY_BACKGROUND.g,
-                                 ENTITY_BACKGROUND.b));
+      setColorKey(indexDark);
       SDL_FillRect(indexDark, 0, ENGRAVE_DARK_UINT);
       SDL_BlitSurface(thisType.surface_, 0, indexDark, 0);
    }
    if (indexLight == 0){
       indexLight = createSurface(thisType.surface_->w,
                                 thisType.surface_->h);
-      SDL_SetColorKey(indexLight, SDL_SRCCOLORKEY,
-                      SDL_MapRGB(indexLight->format,
-                                 ENTITY_BACKGROUND.r,
-                                 ENTITY_BACKGROUND.g,
-                                 ENTITY_BACKGROUND.b));
+      setColorKey(indexLight);
       SDL_FillRect(indexLight, 0, ENGRAVE_LIGHT_UINT);
       SDL_BlitSurface(thisType.surface_, 0, indexLight, 0);
    }
@@ -158,11 +146,7 @@ void Entity::colorBlit(int color, SDL_Surface *screen,
       //Create colored, shadowed surface, as above
       indexShadowed = createSurface(thisType.surface_->w + 2,
                                     thisType.surface_->h + 2);
-      SDL_SetColorKey(indexShadowed, SDL_SRCCOLORKEY,
-                      SDL_MapRGB(indexShadowed->format,
-                                 ENTITY_BACKGROUND.r,
-                                 ENTITY_BACKGROUND.g,
-                                 ENTITY_BACKGROUND.b));
+      setColorKey(indexShadowed);
       SDL_FillRect(indexShadowed, 0, ENTITY_BACKGROUND_UINT);
       //Draw shadows, and sprite
       SDL_BlitSurface(indexLight, 0, indexShadowed, &makeRect(2, 2));
@@ -172,11 +156,7 @@ void Entity::colorBlit(int color, SDL_Surface *screen,
    if (drawBlack() && indexBlack == 0){
       indexBlack = createSurface(thisType.surface_->w,
                                  thisType.surface_->h);
-      SDL_SetColorKey(indexBlack, SDL_SRCCOLORKEY,
-                      SDL_MapRGB(indexBlack->format,
-                                 ENTITY_BACKGROUND.r,
-                                 ENTITY_BACKGROUND.g,
-                                 ENTITY_BACKGROUND.b));
+      setColorKey(indexBlack);
       SDL_FillRect(indexBlack, 0, BLACK_UINT);
       SDL_BlitSurface(thisType.surface_, 0, indexBlack, 0);
       if (BLACK_ENTITY_ALPHA < 0xff)
@@ -197,11 +177,6 @@ void Entity::colorBlit(int color, SDL_Surface *screen,
    //The indexed version definitely exists now.
    //If incomplete, blit individual pieces for better shadow
    if (partial){
-      SDL_Rect baseDest = loc_ +
-                          Point(game_->map) +
-                          locRect(getBaseRect());
-      SDL_BlitSurface(diagGreen_, &dimRect(getBaseRect()),
-                      screen, &baseDest);
       SDL_BlitSurface(indexLight, &srcLoc,
                       screen, &SDL_Rect(dest + Point(1, 1)));
       SDL_BlitSurface(indexDark, &srcLoc,

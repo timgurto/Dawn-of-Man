@@ -29,7 +29,7 @@ extern bool WINDOWED_MODE;
 
 
 SDL_Surface *loadImage(const char* fileName,bool alpha){
-   debug("Loading surface: ", fileName);
+   debug("loading surface: ", fileName);
    //std::string strFile(fileName);
    SDL_Surface *load, *opt;
    load = IMG_Load(fileName);
@@ -73,17 +73,13 @@ SDL_Surface *createSurface(int width, int height){
                                SCREEN_BPP, 0, 0, 0, 0);
 }
 
-SDL_Sound *loadSound(const char* fileName){
+SDL_Sound *loadSound(const std::string &fileName){
    if (fileName == "" || fileName == SOUND_PATH)
       return 0;
-   SDL_Sound *p = Mix_LoadWAV(fileName);
+   SDL_Sound *p = Mix_LoadWAV(fileName.c_str());
    checkP(p);
    ++soundsLoaded;
    return p;
-}
-
-SDL_Sound *loadSound(const std::string &fileName){
-   return loadSound(fileName.c_str());
 }
 
 SDL_Rect makeRect(Sint16 x, Sint16 y, Uint16 w, Uint16 h){
@@ -176,8 +172,20 @@ SDL_Rect &operator-=(SDL_Rect &lhs, const SDL_Rect &rhs){
 }
 
 void playSound(SDL_Sound *p){
-   if (p != 0)
-      Mix_PlayChannel(-1, p, 0);
+   if (!DEBUG)
+      if (p != 0)
+         Mix_PlayChannel(-1, p, 0);
+}
+
+void setColorKey(SDL_Surface *surface, const SDL_Color &color){
+   checkP(surface);
+   //TODO remove once Goanna has IPA
+   assert (surface != 0);
+   SDL_SetColorKey(surface, SDL_SRCCOLORKEY,
+                   SDL_MapRGB(surface->format,
+                              color.r,
+                              color.g,
+                              color.b));
 }
 
 
@@ -420,4 +428,45 @@ std::string format3(double x){
       oss << ' ';
    oss << x;
    return oss.str();
+}
+
+std::string parseToken(std::ifstream &data){
+   std::ostringstream os;
+   while (data){
+      char c;
+      data >> c;
+      //end if punctuation
+      if (c == '{' ||
+          c == '}' ||
+          c == '=' ||
+          c == ';'){
+         os << c;
+         break;
+      }
+      if (c == '\"'){
+         os << c;
+         do{
+            data >> c;
+            os << c;
+         }while(c != '\"');
+         data >> c;
+         os << c;
+         break;
+      }
+      os << c;
+   }
+   std::string ret = os.str();
+   //debug(ret);
+   return ret;
+}
+
+void removeLast(std::string &str){
+   str = str.substr(0, str.size() - 1);
+}
+
+double atod(std::string s){
+   std::istringstream is(s);
+   double d;
+   is >> d;
+   return d;
 }

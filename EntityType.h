@@ -32,17 +32,17 @@ class EntityType{
       *icon_, //icon, for UIBars
       *mask_; //green and magenta background mask
 
-   SDL_Sound
-      *sound_, //standard entity sound
-      *hitSound_, //sound when attacking or gathering
-      *deathSound_; //sound made upon death
-
    //these are for copying, since it's a messier
    //process than for surfaces
    std::string
       soundFile_,
-      hitSoundFile_,
-      deathSoundFile_;
+      deathSoundFile_,
+      hitSoundFile_;
+
+   SDL_Sound
+      *sound_, //standard entity sound
+      *hitSound_, //sound when attacking or gathering
+      *deathSound_; //sound made upon death
 
 public:
    //deep-copy, loading and allocating new surfaces
@@ -50,10 +50,10 @@ public:
               const std::string &name,
               const SDL_Rect &drawRect,
               const SDL_Rect &baseRect,
-              const Point &selectionCenter,
+              const Point &selectionCenter = Point(),
               const std::string &soundFile = "",
-              const std::string &hitSoundFile = "",
-              const std::string &deathSoundFile = "");
+              const std::string &deathSoundFile = "",
+              const std::string &hitSoundFile = "");
    EntityType(const EntityType &original);
 
    ~EntityType();

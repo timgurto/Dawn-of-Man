@@ -12,13 +12,12 @@ struct SDL_Surface;
 //Any processing within the game loop
 void updateState(double delta, GameData &game, SDL_Surface *screen,
                  UIBars_t &bars, MessageBox &contextHelp,
-                 MessageBox &resourcesBox, MessageBox &fpsDisplay,
-                 Mix_Music *music);
+                 MessageBox &resourcesBox, MessageBox &fpsDisplay);
 
 //Handles events and changes game data accordingly
 void handleEvents(GameData &game, SDL_Surface *screen,
                   UIBars_t &bars, MessageBox &contextHelp,
-                  MessageBox &fpsDisplay, Mix_Music *music);
+                  MessageBox &fpsDisplay);
 
 //Scrolls the map, based on keyboard/mouse states
 void scrollMap(GameData &game, double Delta);
@@ -38,6 +37,6 @@ void reSort(entities_t &entities, entities_t::iterator it,
             VerticalMovement verticalMovement);
 
 //Returns the address of the entity the mouse is currently over
-Entity *findEntity(GameData &game);
+Entity *findEntity(GameData &game, bool onlyTargetable = true);
 
 #endif

@@ -15,12 +15,9 @@ vals_(resources_t(resourceCount_, 100)){}
 Resources::Resources(const resources_t &v):
 vals_(v){}
 
-void Resources::init(size_t resourceCount,
-                     std::vector <std::string> &names){
-   resourceCount_ = resourceCount;
-   for (size_t i = 0; i != resourceCount_; ++i){
-      names_.push_back(names[i]);
-   }
+void Resources::init(std::vector <std::string> &names){
+   resourceCount_ = names.size();
+   names_ = names;
 }
 
 Resources Resources::empty(){
@@ -50,10 +47,15 @@ bool Resources::operator>=(const Resources rhs) const{
 
 std::ostream &operator<<(std::ostream &os,
                          const Resources &res){
+   bool blankDone = false;
    for (size_t i = 0; i != Resources::resourceCount_; ++i){
-      os << res.vals_[i] << " " << Resources::names_[i];
-      if (i != Resources::resourceCount_ - 1)
-         os << ", ";
+      if (res.vals_[i] > 0){
+         if (!blankDone)
+            blankDone = true;
+         else
+            os << ", ";
+         os << res.vals_[i] << " " << Resources::names_[i];
+      }
    }
    return os;
 }

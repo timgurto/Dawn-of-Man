@@ -9,6 +9,7 @@
 #include "Particle.h"
 #include "BuildingType.h"
 #include "Unit.h"
+#include "Player.h"
 
 extern Debug debug;
 
@@ -17,6 +18,7 @@ const progress_t Building::PROGRESS_PER_BUILDER_HIT = 100;
 Building::Building(typeNum_t type, const Point &loc,
                    typeNum_t player, progress_t progress):
 Entity(type, loc),
+health_(game_->buildingTypes[type].maxHealth_),
 progress_(progress),
 player_(player),
 finished_(progress >= game_->buildingTypes[type].maxProgress_),
@@ -50,6 +52,7 @@ void Building::draw(SDL_Surface *screen) const{
       drawLoc.y += thisType.drawRect_.h - partialH;
    }
 
+   //draw footprint if construction hasn't begun
    if (progress_ == 0){
       SDL_Rect altDrawLoc =
          loc_ +
@@ -81,7 +84,7 @@ bool Building::selectable() const{
 }
 
 bool Building::targetable() const{
-   return true;
+   return player_ != HUMAN_PLAYER || !finished_;
 }
 
 typeNum_t Building::getPlayer() const{
@@ -107,8 +110,8 @@ void Building::progressConstruction(){
    addParticles(particlesToDraw);
 
 
-   //remove builders' targets
-   if (finished_)
+   if (finished_){
+      //remove builders' targets
       for (entities_t::iterator it = game_->entities.begin();
            it != game_->entities.end(); ++it)
          if ((*it)->classID() == ENT_UNIT){
@@ -117,8 +120,24 @@ void Building::progressConstruction(){
                 unit.isBuilder())
                unit.setTarget(0, (*it)->getLoc());
          }
+      //register with player
+      game_->players[player_].buildBuilding(typeIndex_);
+   }
 }
 
 bool Building::isFinished() const{
    return finished_;
+}
+
+damage_t Building::getArmor() const{
+   return
+      game_->buildingTypes[typeIndex_].armor_;
+}
+
+damage_t Building::getHealth() const{
+   return health_;
+}
+
+void Building::removeHealth(damage_t damage){
+   health_ -= damage;
 }

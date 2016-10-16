@@ -3,6 +3,7 @@
 #ifndef MISC_H
 #define MISC_H
 
+#include <fstream>
 #include <string>
 #include <queue>
 
@@ -37,7 +38,6 @@ SDL_Surface *loadImage(const std::string fileName,
 SDL_Surface *createSurface(int width = SCREEN_WIDTH, int height = SCREEN_HEIGHT);
 
 //Loads a sound, and registers it with soundsLoaded
-SDL_Sound *loadSound(const char* fileName);
 SDL_Sound *loadSound(const std::string &fileName);
 
 //Fake constructor and copy constructor for SDL_Rect
@@ -79,6 +79,10 @@ SDL_Rect &operator-=(SDL_Rect &lhs, const SDL_Rect &rhs);
 
 //plays a sound
 void playSound(SDL_Sound *p);
+
+//synthesizes most args of SDL_SetColorKey
+void setColorKey(SDL_Surface *surface,
+                 const SDL_Color &color = ENTITY_BACKGROUND);
 
 //===misc===
 
@@ -157,5 +161,14 @@ bool isPathClear(const Point &start,
 
 //Adds a leading zero if x < 100
 std::string format3(double x);
+
+//Parse the next token from a data file
+std::string parseToken(std::ifstream &data);
+
+//removes the last character of a string
+void removeLast(std::string &str);
+
+//transform a string to a double
+double atod(std::string s);
 
 #endif

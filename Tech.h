@@ -4,6 +4,7 @@
 #define TECH_H
 
 #include <string>
+#include "globals.h"
 #include "TechBonuses.h"
 #include "Resources.h"
 
@@ -22,8 +23,10 @@ class Tech{
    //How much the tech costs
    Resources cost_;
 
-   //Any prerequisite tech
-   typeNum_t prereqTech_;
+   //prerequisites
+   typeNum_t
+      prereqTech1_,
+      prereqTech2_;
 
 public:
    Tech(typeNum_t index,
@@ -31,7 +34,8 @@ public:
         const TechBonuses &bonuses,
         typeNum_t originBuilding,
         const Resources &cost,
-        typeNum_t prereqTech);
+        typeNum_t prereqTech1 = NO_TYPE,
+        typeNum_t prereqTech2 = NO_TYPE);
    Tech (const Tech &rhs);
    ~Tech();
 
@@ -43,6 +47,8 @@ public:
    const Resources &getCost() const;
    std::string getCostString() const;
    std::string getName() const;
+   typeNum_t getPrereqTech1() const;
+   typeNum_t getPrereqTech2() const;
 };
 
 #endif

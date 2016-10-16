@@ -13,6 +13,17 @@ struct SDL_Surface;
 struct GameData;
 
 
+//whether the given item is available for the human player
+bool validBuilding(const GameData &game, typeNum_t i);
+bool validUnit(const GameData &game, typeNum_t i);
+bool validTech(const GameData &game, typeNum_t i);
+
+//fetches the ith valid item's (see above) index
+typeNum_t getValidBuilding(const GameData &game, typeNum_t i);
+typeNum_t getValidUnit(const GameData &game, typeNum_t i);
+typeNum_t getValidTech(const GameData &game, typeNum_t i);
+
+
 
 //iconCountFun_
 typedef typeNum_t iconCountFun(const GameData &game);
@@ -30,8 +41,7 @@ typedef iconCountFun *iconCountFunPtr;
 
 
 //surfaceFun_
-typedef SDL_Surface *surfaceFun(typeNum_t index, typeNum_t size,
-                                const GameData &game);
+typedef SDL_Surface *surfaceFun(typeNum_t index, const GameData &game);
 typedef surfaceFun *surfaceFunPtr;
    
    //Buildings bar: BuildingType icons
@@ -44,7 +54,7 @@ typedef surfaceFun *surfaceFunPtr;
    surfaceFun getTechIcons;
 
 
-
+//TODO enable for all players
 //clickFun_
 typedef void clickFun(typeNum_t index, GameData &game);
 typedef clickFun *clickFunPtr;

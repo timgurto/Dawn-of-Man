@@ -178,9 +178,16 @@ void Unit::tick(double delta){
                {//local scope for target
                   Building &target = (Building &)(*targetEntity_);
                   //friendly building: construction
-                  if (thisType.builder_ &&
-                      target.getPlayer() == player_){
+                  typeNum_t targetPlayer = target.getPlayer();
+                  if (thisType.builder_ && targetPlayer == player_){
                      target.progressConstruction();
+                  //enemy building: attack
+                  }else if(targetPlayer != player_){
+                     damage_t damage = thisType.attack_ - target.getArmor();
+                     if (damage > target.getHealth())
+                        target.kill();
+                     else
+                        target.removeHealth(damage);
                   }
                }
                break;
@@ -244,7 +251,7 @@ bool Unit::selectable() const{
 }
 
 bool Unit::targetable() const{
-   return true;
+   return player_ != HUMAN_PLAYER;
 }
 
 bool Unit::drawBlack() const{

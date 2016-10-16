@@ -19,10 +19,12 @@ class Building : public Entity{
    //with each builder's hit.
    static const progress_t PROGRESS_PER_BUILDER_HIT;
 
+   damage_t health_; //the building's remaining health
    progress_t progress_; //construction progress
    bool finished_; //whether construction is finished
    double drawPercent_; //value for partial drawing
    typeNum_t player_; //the building's controlling player
+
 
 public:
    Building(typeNum_t type, const Point &loc,
@@ -40,11 +42,16 @@ public:
    //hits it
    void progressConstruction();
 
+   //removes health, due to an attack
+   void removeHealth(damage_t damage);
+
    //get
    bool isFinished() const;
    virtual int getColor() const;
    virtual typeNum_t getPlayer() const;
    virtual double getDrawPercent() const;
+   damage_t getArmor() const;
+   damage_t getHealth() const;
 };
 
 #endif
