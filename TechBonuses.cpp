@@ -20,7 +20,10 @@ buildingArmor(buildingArmorArg),
 speed(speedArg),
 trainingSpeed(trainingSpeedArg),
 buildingSpeed(buildingSpeedArg),
-gathering(gatheringArg){}
+gathering(gatheringArg){
+   while (gathering.size() < Resources::getResourceCount())
+      gathering.push_back(0);
+}
 
 TechBonuses &TechBonuses::operator+=(const TechBonuses rhs){
    unitHealth += rhs.unitHealth;
@@ -31,7 +34,7 @@ TechBonuses &TechBonuses::operator+=(const TechBonuses rhs){
    speed += rhs.speed;
    trainingSpeed += rhs.trainingSpeed;
    buildingSpeed += rhs.buildingSpeed;
-   for (size_t i = 0; i != Resources::getResourceCount(); ++i){
+   for (size_t i = 0; i != rhs.gathering.size(); ++i){
       gathering[i] += rhs.gathering[i];
    }
    return *this;

@@ -23,20 +23,20 @@ Entity(type, loc),
 player_(player),
 moving_(false),
 combat_(false),
-frameCounter_(rand() % game_->unitTypes[type].maxFrameCounter_),
+frameCounter_(rand() % core_->unitTypes[type].maxFrameCounter_),
 combatFrameCounter_(0),
 frame_(0),
 targetEntity_(0),
-health_(game_->unitTypes[type].maxHealth_),
+health_(core_->unitTypes[type].maxHealth_),
 progress_(progress),
-finished_(progress >= game_->unitTypes[type].maxProgress_),
-drawPercent_(game_->unitTypes[type].maxProgress_ == 0 ?
+finished_(progress >= core_->unitTypes[type].maxProgress_),
+drawPercent_(core_->unitTypes[type].maxProgress_ == 0 ?
                 1.0 :
                 1.0 * progress_ /
-                game_->unitTypes[type].maxProgress_){}
+                core_->unitTypes[type].maxProgress_){}
 
 const EntityType &Unit::type() const{
-   return game_->unitTypes[typeIndex_];
+   return core_->unitTypes[typeIndex_];
 }
 
 
@@ -68,7 +68,7 @@ void Unit::draw(SDL_Surface *screen) const{
 }
 
 void Unit::tick(double delta){
-   const UnitType &thisType = game_->unitTypes[typeIndex_];
+   const UnitType &thisType = core_->unitTypes[typeIndex_];
 
    //training
    if (!finished_){
@@ -260,7 +260,7 @@ bool Unit::targetable() const{
 bool Unit::drawBlack() const{
    return
       1.0 * health_ /
-      game_->unitTypes[typeIndex_].maxHealth_ <
+      core_->unitTypes[typeIndex_].maxHealth_ <
       ENTITY_BLACK_HEALTH;
 }
 
@@ -317,11 +317,11 @@ void Unit::updateTarget(){
 }
 
 bool Unit::isBuilder() const{
-   return game_->unitTypes[typeIndex_].builder_;
+   return core_->unitTypes[typeIndex_].builder_;
 }
 
 bool Unit::isGatherer() const{
-   return game_->unitTypes[typeIndex_].gatherer_;
+   return core_->unitTypes[typeIndex_].gatherer_;
 }
 
 Entity *Unit::getTargetEntity() const{
@@ -330,7 +330,7 @@ Entity *Unit::getTargetEntity() const{
 
 damage_t Unit::getArmor() const{
    return
-      game_->unitTypes[typeIndex_].armor_ +
+      core_->unitTypes[typeIndex_].armor_ +
       game_->players[player_].getBonuses().unitArmor;
 }
 
@@ -342,12 +342,12 @@ damage_t Unit::getHealth() const{
 
 damage_t Unit::getAttack() const{
    return
-      game_->unitTypes[typeIndex_].attack_ +
+      core_->unitTypes[typeIndex_].attack_ +
       game_->players[player_].getBonuses().attack;
 }
 
 pixels_t Unit::getSpeed() const{
    return
-      game_->unitTypes[typeIndex_].speed_ +
+      core_->unitTypes[typeIndex_].speed_ +
       game_->players[player_].getBonuses().speed;
 }

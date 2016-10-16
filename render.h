@@ -6,6 +6,7 @@
 #include "UIBar.h"
 #include "MessageBox.h"
 
+struct CoreData;
 struct GameData;
 struct SDL_Surface;
 
@@ -14,7 +15,8 @@ void render(SDL_Surface *screen, SDL_Surface *selection,
             SDL_Surface *diagGreen, SDL_Surface *diagRed,
             SDL_Surface *map, SDL_Surface *darkMap,
             SDL_Surface *cursor, SDL_Surface *cursorShadow,
-            SDL_Surface *cursorPause, const GameData &game,
+            SDL_Surface *cursorPause,
+            const CoreData &core, const GameData &game,
             const UIBars_t &bars, const messageBoxes_t &messageBoxes);
 
 //Draws the cursor
@@ -31,7 +33,8 @@ void renderSelection(SDL_Surface *screen, const GameData &game,
                      SDL_Surface *selection);
 
 //Draws a building footprint at the cursor
-void renderFootprint(SDL_Surface *screen, const GameData &game,
+void renderFootprint(SDL_Surface *screen,
+                     const CoreData &core, const GameData &game,
                      SDL_Surface *goodImage, SDL_Surface *badImage);
 
 //Draws all entities

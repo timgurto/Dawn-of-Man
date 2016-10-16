@@ -6,6 +6,7 @@
 #include "SDL.h"
 #include "Resources.h"
 #include "TechBonuses.h"
+#include "CoreData.h"
 
 struct GameData;
 class UIBar;
@@ -35,6 +36,7 @@ class Player{
    checklist_t buildingsBuilt_;
 
    static GameData *game_;
+   static const CoreData *core_;
    static UIBar *buildingsBar_;
 
 public:
@@ -43,7 +45,8 @@ public:
           const checklist_t &techsResearched);
 
    //initialize static pointers
-   static void init(GameData *game, UIBar *buildingsBar);
+   static void init(const CoreData *core, GameData *game,
+                    UIBar *buildingsBar);
 
    //add or remove the player's resources
    void addResources(const Resources &r);

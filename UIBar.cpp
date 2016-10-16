@@ -8,6 +8,7 @@
 #include "UIBar.h"
 
 GameData *UIBar::game_ = 0;
+const CoreData *UIBar::core_ = 0;
 SDL_Surface *UIBar::screen_ = 0;
 SDL_Surface *UIBar::hBarSurface_ = 0;
 SDL_Surface *UIBar::vBarSurface_ = 0;
@@ -30,7 +31,7 @@ requiredMode_(requiredMode){
 
 //TODO fix, so that the edge inside the screen has a border
 void UIBar::calculateRect(){
-   iconCount_ = iconCountFun_(*game_);
+   iconCount_ = iconCountFun_(*core_, *game_);
    if (orientation_ == VERTICAL){
       switch (corner_){
       case TOP_LEFT:
@@ -91,7 +92,7 @@ void UIBar::draw() const{
       pixels_t x = rect_.x, y = rect_.y;
       for (typeNum_t i = 0; i != iconCount_; ++i){
          //draw
-         SDL_BlitSurface(surfaceFun_(i, *game_), 0,
+         SDL_BlitSurface(surfaceFun_(i, *core_, *game_), 0,
                          screen_, &makeRect(x, y));
 
          //iterate
@@ -123,10 +124,12 @@ bool UIBar::isActive(){
    return (game_->mode == requiredMode_);
 }
 
-void UIBar::init(GameData *game,
+void UIBar::init(const CoreData *core,
+                 GameData *game,
                  SDL_Surface *screen,
                  SDL_Surface *vBarSurface,
                  SDL_Surface *hBarSurface){
+   core_ = core;
    game_ = game;
    screen_ = screen;
    vBarSurface_ = vBarSurface;
@@ -134,10 +137,10 @@ void UIBar::init(GameData *game,
 }
 
 void UIBar::click(){
-   clickFun_(mouseIndex(), *game_);
+   clickFun_(mouseIndex(), *core_, *game_);
    calculateRect();
 }
 
 std::string UIBar::helpText(typeNum_t index){
-   return helpFun_(index, *game_);
+   return helpFun_(index, *core_, *game_);
 }

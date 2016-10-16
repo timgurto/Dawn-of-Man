@@ -5,6 +5,7 @@
 
 #include "misc.h"
 #include "types.h"
+#include "game.h"
 #include "globals.h"
 #include "SDL.h"
 #include "Debug.h"
@@ -14,12 +15,13 @@
 #include "GameData.h"
 #include "Unit.h"
 #include "ResourceNode.h"
-#include "game.h"
+#include "CoreData.h"
 
 extern Debug debug;
 
 const progress_t Entity::PROGRESS_PER_CALC = 4;
 GameData *Entity::game_ = 0;
+const CoreData *Entity::core_ = 0;
 SDL_Surface *Entity::screen_ = 0;
 SDL_Surface *Entity::diagGreen_ = 0;
 entities_t Entity::trashCan_;
@@ -60,8 +62,9 @@ bool Entity::onScreen() const{
                     screen_->clip_rect);
 }
 
-void Entity::init(GameData *game, SDL_Surface *screen,
-                  SDL_Surface *diagGreen){
+void Entity::init(const CoreData *core, GameData *game,
+                  SDL_Surface *screen, SDL_Surface *diagGreen){
+   core_ = core;
    game_ = game;
    screen_ = screen;
    diagGreen_ = diagGreen;
@@ -339,7 +342,7 @@ void Entity::kill(){
    typeNum_t resourceType = NO_TYPE;
    if (this->classID() == ENT_UNIT){
       resourceType =
-         game_->unitTypes[thisType.getIndex()].getDeathResource();
+         core_->unitTypes[thisType.getIndex()].getDeathResource();
       if (resourceType != NO_TYPE){
          ResourceNode *node = new ResourceNode(resourceType, loc_);
          addEntity(*game_, node);

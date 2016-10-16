@@ -1,14 +1,14 @@
 // (C) 2009-2010 Tim Gurto
 
-#include "GameData.h"
 #include "Decoration.h"
 #include "DecorationType.h"
+#include "CoreData.h"
 
 Decoration::Decoration(typeNum_t type, const Point &loc):
 Entity(type, loc){}
 
 const EntityType &Decoration::type() const{
-   return game_->decorationTypes[typeIndex_];
+   return core_->decorationTypes[typeIndex_];
 }
 
 EntityTypeID Decoration::classID() const{
@@ -16,7 +16,7 @@ EntityTypeID Decoration::classID() const{
 }
 
 bool Decoration::collides() const{
-   return game_->decorationTypes[typeIndex_].collides_;
+   return core_->decorationTypes[typeIndex_].collides_;
 }
 
 int Decoration::getColor() const{

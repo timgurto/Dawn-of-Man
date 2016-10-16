@@ -6,10 +6,10 @@
 ResourceNode::ResourceNode(typeNum_t typeIndex,
                            const Point &loc):
 Entity(typeIndex, loc),
-resources_(game_->resourceNodeTypes[typeIndex].maxResources_){}
+resources_(core_->resourceNodeTypes[typeIndex].maxResources_){}
 
 const EntityType &ResourceNode::type() const{
-   return game_->resourceNodeTypes[typeIndex_];
+   return core_->resourceNodeTypes[typeIndex_];
 }
 
 EntityTypeID ResourceNode::classID() const{
@@ -23,13 +23,13 @@ bool ResourceNode::targetable() const{
 bool ResourceNode::drawBlack() const{
    return
       1.0 * resources_.sum() /
-      game_->resourceNodeTypes[typeIndex_].maxResources_.sum() <
+      core_->resourceNodeTypes[typeIndex_].maxResources_.sum() <
       ENTITY_BLACK_HEALTH;
 }
 
 Resources ResourceNode::harvest(Resources bonus){
    const ResourceNodeType &thisType =
-      game_->resourceNodeTypes[typeIndex_];
+      core_->resourceNodeTypes[typeIndex_];
    Resources yield = Resources::empty();
    Resources maxYield = thisType.yield_ + bonus;
    if (resources_ >= maxYield)
@@ -50,5 +50,5 @@ Resources ResourceNode::harvest(Resources bonus){
 }
 
 int ResourceNode::getColor() const{
-   return game_->resourceNodeTypes[typeIndex_].color_;
+   return core_->resourceNodeTypes[typeIndex_].color_;
 }

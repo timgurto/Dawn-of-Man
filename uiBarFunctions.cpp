@@ -2,13 +2,14 @@
 
 #include <cassert>
 #include "uiBarFunctions.h"
+#include "game.h"
 #include "GameData.h"
 #include "Debug.h"
 #include "BuildingType.h"
 #include "Building.h"
 #include "Point.h"
 #include "Unit.h"
-#include "game.h"
+#include "CoreData.h"
 
 extern Debug debug;
 
@@ -16,8 +17,9 @@ const int NUM_PLACEMENT_TRIES = 40;
 const pixels_t PLACEMENT_MARGIN = 1;
 
 
-bool validBuilding(const GameData &game, typeNum_t i){
-   const BuildingType &type = game.buildingTypes[i];
+bool validBuilding(const CoreData &core,
+                   const GameData &game, typeNum_t i){
+   const BuildingType &type = core.buildingTypes[i];
    const Player &human = game.players[HUMAN_PLAYER];
    return
       //prerequisites
@@ -25,8 +27,9 @@ bool validBuilding(const GameData &game, typeNum_t i){
       human.hasBuilding(type.getPrereqBuilding());
 }
 
-bool validUnit(const GameData &game, typeNum_t i){
-   const UnitType &type = game.unitTypes[i];
+bool validUnit(const CoreData &core,
+               const GameData &game, typeNum_t i){
+   const UnitType &type = core.unitTypes[i];
    return
       //unit comes from the selected building
       game.buildingSelected != 0 &&
@@ -35,9 +38,12 @@ bool validUnit(const GameData &game, typeNum_t i){
       game.players[HUMAN_PLAYER].hasTech(type.getPrereqTech());
 }
 
-bool validTech(const GameData &game, typeNum_t i){
-   typeNum_t techIndex = getValidTech(game, i);
-   const Tech &tech = game.techs[techIndex];
+bool validTech(const CoreData &core,
+               const GameData &game, typeNum_t i){
+   //TODO figure out what the hell is going on here
+   //typeNum_t techIndex = getValidTech(core, game, i);
+   typeNum_t techIndex = i;
+   const Tech &tech = core.techs[techIndex];
    const Player &human = game.players[HUMAN_PLAYER];
    return
       //tech comes from the selected building
@@ -50,26 +56,29 @@ bool validTech(const GameData &game, typeNum_t i){
       !human.hasTech(techIndex);
 }
 
-typeNum_t getValidBuilding(const GameData &game, typeNum_t i){
+typeNum_t getValidBuilding(const CoreData &core, const GameData &game,
+                           typeNum_t i){
    typeNum_t index;
    for (index = 0; i != 0; ++index)
-      if (validBuilding(game, index))
+      if (validBuilding(core, game, index))
          --i;
    return index;
 }
 
-typeNum_t getValidUnit(const GameData &game, typeNum_t i){
+typeNum_t getValidUnit(const CoreData &core, const GameData &game,
+                       typeNum_t i){
    typeNum_t index;
    for (index = 0; i != 0; ++index)
-      if (validUnit(game, index))
+      if (validUnit(core, game, index))
          --i;
    return index;
 }
 
-typeNum_t getValidTech(const GameData &game, typeNum_t i){
+typeNum_t getValidTech(const CoreData &core, const GameData &game,
+                       typeNum_t i){
    typeNum_t index;
    for (index = 0; i != 0; ++index)
-      if (validTech(game, index))
+      if (validTech(core, game, index))
          --i;
    return index;
 }
@@ -79,34 +88,34 @@ typeNum_t getValidTech(const GameData &game, typeNum_t i){
 //Returns the number of icons in the bar
    
    //Buildings bar: number of BuildingType icons
-   typeNum_t getNumBuildingIcons(const GameData &game){
+   typeNum_t getNumBuildingIcons(const CoreData &core, const GameData &game){
       if (game.mode != MODE_BUILDER)
          return 0;
       typeNum_t count = 0;
-      for (typeNum_t index = 0; index != game.buildingTypes.size(); ++index)
-         if (validBuilding(game, index))
+      for (typeNum_t index = 0; index != core.buildingTypes.size(); ++index)
+         if (validBuilding(core, game, index))
             ++count;
       return count;
    }
 
    //Units bar: 
-   typeNum_t getNumUnitIcons(const GameData &game){
+   typeNum_t getNumUnitIcons(const CoreData &core, const GameData &game){
       if (game.mode != MODE_BUILDING)
          return 0;
       typeNum_t count = 0;
-      for (typeNum_t index = 0; index != game.unitTypes.size(); ++index)
-         if (validUnit(game, index))
+      for (typeNum_t index = 0; index != core.unitTypes.size(); ++index)
+         if (validUnit(core, game, index))
             ++count;
       return count;
    }
 
    //Techs bar:
-   typeNum_t getNumTechIcons(const GameData &game){
+   typeNum_t getNumTechIcons(const CoreData &core, const GameData &game){
       if (game.buildingSelected  == 0)
          return 0;
       typeNum_t count = 0;
-      for (techs_t::const_iterator it = game.techs.begin();
-           it != game.techs.end(); ++it)
+      for (techs_t::const_iterator it = core.techs.begin();
+           it != core.techs.end(); ++it)
          //if tech comes from this building,
          if (it->getOriginBuilding() == game.buildingSelected->getTypeIndex() &&
              //and hasn't been researched yet
@@ -120,16 +129,19 @@ typeNum_t getValidTech(const GameData &game, typeNum_t i){
 //UIBar::surfaceFun_
 //Returns the icon surface for the specified index
 
-   SDL_Surface *getBuildingTypeIcons(typeNum_t i, const GameData &game){
-      return game.buildingTypes[getValidBuilding(game, i)].getIcon();
+   SDL_Surface *getBuildingTypeIcons(typeNum_t i, const CoreData &core,
+                                     const GameData &game){
+      return core.buildingTypes[getValidBuilding(core, game, i)].getIcon();
    }
 
-   SDL_Surface *getUnitTypeIcons(typeNum_t i, const GameData &game){
-      return game.unitTypes[getValidUnit(game, i)].getIcon();
+   SDL_Surface *getUnitTypeIcons(typeNum_t i, const CoreData &core,
+                                 const GameData &game){
+      return core.unitTypes[getValidUnit(core, game, i)].getIcon();
    }
 
-   SDL_Surface *getTechIcons(typeNum_t i, const GameData &game){
-      return game.techs[getValidTech(game, i)].getIcon();
+   SDL_Surface *getTechIcons(typeNum_t i, const CoreData &core,
+                             const GameData &game){
+      return core.techs[getValidTech(core, game, i)].getIcon();
    }
 
 
@@ -137,17 +149,19 @@ typeNum_t getValidTech(const GameData &game, typeNum_t i){
 //UIBar::clickFun_
 //Executes the click on the specified button
 
-   void selectBuilding(typeNum_t index, GameData &game){
-      game.toBuild = getValidBuilding(game, index);
+   void selectBuilding(typeNum_t index, const CoreData &core,
+                       GameData &game){
+      game.toBuild = getValidBuilding(core, game, index);
       game.mode = MODE_CONSTRUCTION;
    }
 
-   void trainUnit(typeNum_t index, GameData &game){
+   void trainUnit(typeNum_t index, const CoreData &core,
+                  GameData &game){
       Building &building = *game.buildingSelected;
 
       //get type
-      typeNum_t typeIndex = getValidUnit(game, index);      
-      const UnitType &unitType = game.unitTypes[typeIndex];
+      typeNum_t typeIndex = getValidUnit(core, game, index);      
+      const UnitType &unitType = core.unitTypes[typeIndex];
 
       //check player's resources
       if (game.players[HUMAN_PLAYER].
@@ -210,19 +224,20 @@ typeNum_t getValidTech(const GameData &game, typeNum_t i){
             Unit *unit = new Unit(typeIndex, loc);
             addEntity(game, unit);
             game.players[HUMAN_PLAYER].
-               subtractResources(game.unitTypes[typeIndex].getCost());
+               subtractResources(core.unitTypes[typeIndex].getCost());
          }else
             debug("Unable to place unit");
       }else //insufficient resources
          debug("Insufficient resources");
    }
 
-   void researchTech(typeNum_t index, GameData &game){
+   void researchTech(typeNum_t index, const CoreData &core,
+                     GameData &game){
       Player &human = game.players[HUMAN_PLAYER];
 
       //get type
-      typeNum_t techIndex = getValidTech(game, index);
-      Tech &tech = game.techs[techIndex];
+      typeNum_t techIndex = getValidTech(core, game, index);
+      const Tech &tech = core.techs[techIndex];
       
       //check player's resources
       if (human.sufficientResources(tech.getCost())){
@@ -238,26 +253,28 @@ typeNum_t getValidTech(const GameData &game, typeNum_t i){
 //UIBar::helpFun_
 //Returns relevant context help text for the specified button
 
-   std::string buildingHelp(typeNum_t index,
+   std::string buildingHelp(typeNum_t index, const CoreData &core,
                             GameData &game){
-      const BuildingType &type = game.buildingTypes[getValidBuilding(game, index)];
+      const BuildingType &type =
+         core.buildingTypes[getValidBuilding(core, game, index)];
       return
          "Build " + type.getName() +
          ": " + type.getCostString();
    }
 
-   std::string unitHelp(typeNum_t index,
+   std::string unitHelp(typeNum_t index, const CoreData &core,
                         GameData &game){
-      const UnitType &type = game.unitTypes[getValidUnit(game, index)];
+      const UnitType &type =
+         core.unitTypes[getValidUnit(core, game, index)];
       return
          "Train " + type.getName() +
          ": " + type.getCostString();
       return "";
    }
 
-   std::string techHelp(typeNum_t index,
+   std::string techHelp(typeNum_t index, const CoreData &core,
                         GameData &game){
-      const Tech &tech = game.techs[getValidTech(game, index)];
+      const Tech &tech = core.techs[getValidTech(core, game, index)];
       return
          "Research " + tech.getName() +
          ": " + tech.getCostString();

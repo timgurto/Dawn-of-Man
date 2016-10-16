@@ -18,7 +18,8 @@ void render(SDL_Surface *screen, SDL_Surface *selection,
             SDL_Surface *diagGreen, SDL_Surface *diagRed,
             SDL_Surface *map, SDL_Surface *darkMap,
             SDL_Surface *cursor, SDL_Surface *cursorShadow,
-            SDL_Surface *cursorPause, const GameData &game,
+            SDL_Surface *cursorPause,
+            const CoreData &core, const GameData &game,
             const UIBars_t &bars, const messageBoxes_t &messageBoxes){
 
    assert (screen != 0);
@@ -26,7 +27,7 @@ void render(SDL_Surface *screen, SDL_Surface *selection,
    renderMap(screen, game, map, darkMap);
    renderSelection(screen, game, selection);
    if (game.mode == MODE_CONSTRUCTION && !game.rightMouse.dragging)
-       renderFootprint(screen, game, diagGreen, diagRed);
+       renderFootprint(screen, core, game, diagGreen, diagRed);
    renderEntities(screen, game);
    if (game.mode != MODE_CONSTRUCTION && game.leftMouse.dragging)
       renderSelectionRect(screen, game);
@@ -112,13 +113,14 @@ void renderSelection(SDL_Surface *screen, const GameData &game,
 }
 
 //Draws a building footprint at the cursor
-void renderFootprint(SDL_Surface *screen, const GameData &game,
+void renderFootprint(SDL_Surface *screen,
+                     const CoreData &core, const GameData &game,
                      SDL_Surface *goodImage, SDL_Surface *badImage){
    SDL_Rect baseRect = game.mousePos +
-                       game.buildingTypes[game.toBuild].getBaseRect();
+                       core.buildingTypes[game.toBuild].getBaseRect();
    if (game.buildLocationOK &&
        game.players[HUMAN_PLAYER].
-          sufficientResources(game.buildingTypes[game.toBuild].getCost()))
+          sufficientResources(core.buildingTypes[game.toBuild].getCost()))
       SDL_BlitSurface(goodImage, &dimRect(baseRect),
                       screen, &SDL_Rect(baseRect));
    else

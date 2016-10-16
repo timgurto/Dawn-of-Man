@@ -17,6 +17,7 @@
 #include "Point.h"
 #include "GameData.h"
 #include "Debug.h"
+#include "EntityType.h"
 
 extern Debug debug;
 extern int
@@ -30,7 +31,6 @@ extern bool WINDOWED_MODE;
 
 SDL_Surface *loadImage(const char* fileName,bool alpha){
    debug("loading surface: ", fileName);
-   //std::string strFile(fileName);
    SDL_Surface *load, *opt;
    load = IMG_Load(fileName);
    checkP(load);

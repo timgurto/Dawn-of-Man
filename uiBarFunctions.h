@@ -11,22 +11,29 @@
 
 struct SDL_Surface;
 struct GameData;
-
+struct CoreData;
 
 //whether the given item is available for the human player
-bool validBuilding(const GameData &game, typeNum_t i);
-bool validUnit(const GameData &game, typeNum_t i);
-bool validTech(const GameData &game, typeNum_t i);
+bool validBuilding(const CoreData &core, const GameData &game,
+                   typeNum_t i);
+bool validUnit(const CoreData &core, const GameData &game,
+               typeNum_t i);
+bool validTech(const CoreData &core, const GameData &game,
+               typeNum_t i);
 
 //fetches the ith valid item's (see above) index
-typeNum_t getValidBuilding(const GameData &game, typeNum_t i);
-typeNum_t getValidUnit(const GameData &game, typeNum_t i);
-typeNum_t getValidTech(const GameData &game, typeNum_t i);
+typeNum_t getValidBuilding(const CoreData &core, const GameData &game,
+                           typeNum_t i);
+typeNum_t getValidUnit(const CoreData &core, const GameData &game,
+                       typeNum_t i);
+typeNum_t getValidTech(const CoreData &core, const GameData &game,
+                       typeNum_t i);
 
 
 
 //iconCountFun_
-typedef typeNum_t iconCountFun(const GameData &game);
+typedef typeNum_t iconCountFun(const CoreData &data,
+                               const GameData &game);
 typedef iconCountFun *iconCountFunPtr;
    
    //Buildings bar: number of BuildingType icons
@@ -41,7 +48,8 @@ typedef iconCountFun *iconCountFunPtr;
 
 
 //surfaceFun_
-typedef SDL_Surface *surfaceFun(typeNum_t index, const GameData &game);
+typedef SDL_Surface *surfaceFun(typeNum_t index, const CoreData &data,
+                                const GameData &game);
 typedef surfaceFun *surfaceFunPtr;
    
    //Buildings bar: BuildingType icons
@@ -56,7 +64,8 @@ typedef surfaceFun *surfaceFunPtr;
 
 //TODO enable for all players
 //clickFun_
-typedef void clickFun(typeNum_t index, GameData &game);
+typedef void clickFun(typeNum_t index, const CoreData &data,
+                      GameData &game);
 typedef clickFun *clickFunPtr;
 
    //Buildings bar: Selects a building to construct
@@ -71,7 +80,7 @@ typedef clickFun *clickFunPtr;
 
 
 //helpFun_
-   typedef std::string helpFun(typeNum_t index,
+   typedef std::string helpFun(typeNum_t index, const CoreData &data,
                                GameData &game);
    typedef helpFun *helpFunPtr;
 

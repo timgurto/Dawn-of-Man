@@ -21,14 +21,13 @@ const Uint8 MOUSE_BUTTON_RIGHT       = 3;
 const Uint8 MOUSE_BUTTON_SCROLL_UP   = 4;
 const Uint8 MOUSE_BUTTON_SCROLL_DOWN = 5;
 
-void updateState(double delta, GameData &game,
+void updateState(double delta, const CoreData &core, GameData &game,
                  SDL_Surface *screen, UIBars_t &bars,
                  MessageBox &contextHelp,
-                 MessageBox &resourcesBox,
-                 MessageBox &fpsDisplay){
+                 MessageBox &resourcesBox, MessageBox &fpsDisplay){
 
    //Interface stuff
-   handleEvents(game, screen, bars, contextHelp, fpsDisplay);
+   handleEvents(core, game, screen, bars, contextHelp, fpsDisplay);
    scrollMap(game, delta);
 
    //Actual updates
@@ -63,9 +62,9 @@ void updateState(double delta, GameData &game,
 
 }
 
-void handleEvents(GameData &game, SDL_Surface *screen,
-                  UIBars_t &bars, MessageBox &contextHelp,
-                  MessageBox &fpsDisplay){
+void handleEvents(const CoreData &core, GameData &game,
+                  SDL_Surface *screen, UIBars_t &bars,
+                  MessageBox &contextHelp, MessageBox &fpsDisplay){
 
    SDL_Event event;
    while (SDL_PollEvent(&event)){
@@ -114,7 +113,7 @@ void handleEvents(GameData &game, SDL_Surface *screen,
             switch(game.mode){
             case MODE_CONSTRUCTION:
                game.buildLocationOK =
-                  noCollision(game, game.buildingTypes[game.toBuild],
+                  noCollision(game, core.buildingTypes[game.toBuild],
                               game.mousePos - locRect(game.map));
                break;
             }
@@ -278,7 +277,7 @@ void handleEvents(GameData &game, SDL_Surface *screen,
                   //place new building
                   if (game.mode == MODE_CONSTRUCTION){
                      assert (game.toBuild != NO_TYPE);
-                     const BuildingType &buildingType = game.buildingTypes[game.toBuild];
+                     const BuildingType &buildingType = core.buildingTypes[game.toBuild];
                      if (game.players[HUMAN_PLAYER].
                         sufficientResources(buildingType.getCost()) &&
                          game.buildLocationOK){

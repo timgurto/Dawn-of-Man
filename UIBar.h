@@ -39,6 +39,7 @@ class UIBar{
 
    //static pointers to access game data and bar backgrounds
    static GameData *game_;
+   static const CoreData *core_;
    static SDL_Surface *screen_;
    static SDL_Surface *hBarSurface_, *vBarSurface_;
 
@@ -51,7 +52,8 @@ public:
          ControlMode requiredMode);
 
    //Initializes static pointers
-   static void init(GameData *game,
+   static void init(const CoreData *core,
+                    GameData *game,
                     SDL_Surface *screen,
                     SDL_Surface *vBarSurface,
                     SDL_Surface *hBarSurface);

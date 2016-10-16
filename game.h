@@ -16,6 +16,6 @@ void gameMode();
 void addEntity(GameData &game, Entity *entity);
 
 //Initializes the game's base data
-void initializeData(char *filename, GameData &game);
+void initializeGameData(char *filename, GameData &game);
 
 #endif

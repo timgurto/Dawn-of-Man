@@ -10,6 +10,7 @@
 #include "BuildingType.h"
 #include "Unit.h"
 #include "Player.h"
+#include "CoreData.h"
 
 extern Debug debug;
 
@@ -18,17 +19,17 @@ const progress_t Building::PROGRESS_PER_BUILDER_HIT = 100;
 Building::Building(typeNum_t type, const Point &loc,
                    typeNum_t player, progress_t progress):
 Entity(type, loc),
-health_(game_->buildingTypes[type].maxHealth_),
+health_(core_->buildingTypes[type].maxHealth_),
 progress_(progress),
 player_(player),
-finished_(progress >= game_->buildingTypes[type].maxProgress_),
-drawPercent_(game_->buildingTypes[type].maxProgress_ == 0 ?
+finished_(progress >= core_->buildingTypes[type].maxProgress_),
+drawPercent_(core_->buildingTypes[type].maxProgress_ == 0 ?
                 1.0 :
                 1.0f * progress_ /
-                game_->buildingTypes[type].maxProgress_){}
+                core_->buildingTypes[type].maxProgress_){}
 
 const EntityType &Building::type() const{
-   return game_->buildingTypes[typeIndex_];
+   return core_->buildingTypes[typeIndex_];
 }
 
 void Building::draw(SDL_Surface *screen) const{
@@ -132,7 +133,7 @@ bool Building::isFinished() const{
 
 damage_t Building::getArmor() const{
    return
-      game_->buildingTypes[typeIndex_].armor_ +
+      core_->buildingTypes[typeIndex_].armor_ +
       game_->players[player_].getBonuses().buildingArmor;
 }
 

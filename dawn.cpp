@@ -3,11 +3,13 @@
 //TODO copy comments at declarations to definitions
 
 #include <cassert>
+
 #include "SDL.h"
 #include "SDL_ttf.h"
 #include "SDL_mixer.h"
-#include "Debug.h"
+#include "dawn.h"
 #include "game.h"
+#include "Debug.h"
 
 //Default screen resolutions, 16:10 and 4:3
 const pixels_t DEFAULT_W_SCREEN_WIDTH = 1280;
@@ -37,9 +39,6 @@ int surfacesLoaded = 0;
 // - decreases with freeSound()
 int soundsLoaded = 0;
 
-//Set screen resolution, based on command line arguments
-void setScreenResolution(int argc, char **argv);
-
 int main(int argc, char **argv){
 
    //SDL initialization
@@ -54,8 +53,7 @@ int main(int argc, char **argv){
    deltaLog.initFont("Dina.fon", 0);
 
    setScreenResolution(argc, argv);
-
-
+//while(true)
    //New game
    gameMode();
 

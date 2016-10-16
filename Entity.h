@@ -9,6 +9,7 @@
 #include "Point.h"
 
 struct GameData;
+struct CoreData;
 class EntityType;
 
 class Entity;
@@ -35,6 +36,7 @@ protected: //everything should be a derived class
 
    Point loc_; //location
    static GameData *game_; //static pointer to game
+   static const CoreData *core_; //static pointer to core data
    static SDL_Surface *screen_; // " " to the screen
    
    //stark base for invisible entities
@@ -94,8 +96,8 @@ public:
    bool onScreen() const;
 
    //Initializes the class' static pointers
-   static void init(GameData *game, SDL_Surface *screen,
-                    SDL_Surface *diagGreen);
+   static void init(const CoreData *core, GameData *game,
+                    SDL_Surface *screen, SDL_Surface *diagGreen);
 
    //identitifes which entity subclass this is
    virtual EntityTypeID classID() const = 0;

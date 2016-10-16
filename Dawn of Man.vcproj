@@ -196,6 +196,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CoreData.h"
+				>
+			</File>
+			<File
+				RelativePath=".\dawn.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Debug.h"
 				>
 			</File>
@@ -205,6 +213,10 @@
 			</File>
 			<File
 				RelativePath=".\DecorationType.h"
+				>
+			</File>
+			<File
+				RelativePath=".\dwan.h"
 				>
 			</File>
 			<File
@@ -317,6 +329,10 @@
 			</File>
 			<File
 				RelativePath=".\BuildingType.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CoreData.cpp"
 				>
 			</File>
 			<File

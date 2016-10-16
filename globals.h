@@ -103,6 +103,7 @@ const std::string TECHS_IMAGE_PATH
 const std::string INTERFACE_IMAGE_PATH
    = IMAGE_PATH + "Interface/";
 const std::string SOUND_PATH = "Sounds/";
+const std::string DATA_PATH = "Data/";
 
 enum Direction{
    DIR_UP,
