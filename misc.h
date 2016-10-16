@@ -7,7 +7,6 @@
 #include <string>
 #include <queue>
 
-#include "SDL_mixer.h"
 #include "types.h"
 #include "globals.h"
 

@@ -6,6 +6,7 @@
 #include <vector>
 #include "globals.h"
 #include "uiBarFunctions.h"
+#include "Sound.h"
 
 struct Point;
 struct GameData;
@@ -42,7 +43,7 @@ class UIBar{
    static GameData *game_;
    static const CoreData *core_;
    static Surface *barSurface_;
-   static SDL_Sound *click_;
+   static Sound *click_;
 
 public:
    UIBar(Corner corner, Orientation orientation,
@@ -56,7 +57,7 @@ public:
    static void init(const CoreData *core,
                     GameData *game,
                     Surface *barSurface,
-                    SDL_Sound *click);
+                    Sound *click);
 
    //determines the number of icons on the bar, and
    //calculates the rectangle for drawing it

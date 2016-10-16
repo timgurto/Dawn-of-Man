@@ -7,7 +7,6 @@
 #include <cmath>
 #include <sstream>
 #include <queue>
-#include "SDL_mixer.h"
 #include "util.h"
 #include "globals.h"
 #include "misc.h"

@@ -284,6 +284,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Sound.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Surface.h"
 				>
 			</File>
@@ -425,6 +429,10 @@
 			</File>
 			<File
 				RelativePath=".\ScreenElement.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Sound.cpp"
 				>
 			</File>
 			<File

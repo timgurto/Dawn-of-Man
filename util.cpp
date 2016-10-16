@@ -11,16 +11,6 @@ extern int soundsLoaded;
 
 extern Debug debug;
 
-//Loads a sound, and registers it with soundsLoaded
-SDL_Sound *loadSound(const std::string &fileName){
-   if (fileName == "" || fileName == SOUND_PATH)
-      return 0;
-   SDL_Sound *p = Mix_LoadWAV(fileName.c_str());
-   assert(p);
-   ++soundsLoaded;
-   return p;
-}
-
 //Fake constructor
 SDL_Rect makeRect(Sint16 x, Sint16 y, Uint16 w, Uint16 h){
    SDL_Rect r;
@@ -82,15 +72,6 @@ SDL_Color operator/(const SDL_Color &lhs, int rhs){
    return c;
 }
 
-//Free a sound, and update soundsLoaded
-void freeSound(SDL_Sound *&p){
-   if (p){
-      Mix_FreeChunk(p);
-      p = 0;
-      --soundsLoaded;
-   }
-}
-
 //returns a rectangle with equal dimensions, but co-ordinates
 // of zero.
 SDL_Rect dimRect(const SDL_Rect &original){
@@ -124,13 +105,6 @@ bool operator!=(const SDL_Color &lhs, const SDL_Color &rhs){
           lhs.g != rhs.g ||
           lhs.b != rhs.b ||
           lhs.unused != rhs.unused;
-}
-
-//plays a sound
-void playSound(SDL_Sound *p){
-   if (!DEBUG)
-      if (p)
-         Mix_PlayChannel(-1, p, 0);
 }
 
 //Checks for a collision between two SDL_Rects

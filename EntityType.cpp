@@ -25,10 +25,10 @@ mask_(makePath(type, index_, IMG_MASK), ENTITY_MASK),
 soundFile_(soundFile),
 deathSoundFile_(deathSoundFile),
 hitSoundFile_(hitSoundFile),
-sound_(loadSound(SOUND_PATH + soundFile)),
-deathSound_(loadSound(SOUND_PATH + deathSoundFile)),
-hitSound_(loadSound(SOUND_PATH + hitSoundFile)){}
-
+sound_(SOUND_PATH + soundFile),
+deathSound_(SOUND_PATH + deathSoundFile),
+hitSound_(SOUND_PATH + hitSoundFile){}
+//TODO remove sound files
 EntityType::EntityType(const EntityType &original):
 index_(original.index_),
 name_(original.name_),
@@ -42,15 +42,11 @@ mask_(original.mask_),
 soundFile_(original.soundFile_),
 deathSoundFile_(original.deathSoundFile_),
 hitSoundFile_(original.hitSoundFile_),
-sound_(loadSound(SOUND_PATH + soundFile_)),
-deathSound_(loadSound(SOUND_PATH + deathSoundFile_)),
-hitSound_(loadSound(SOUND_PATH + hitSoundFile_)){}
+sound_(SOUND_PATH + soundFile_),
+deathSound_(SOUND_PATH + deathSoundFile_),
+hitSound_(SOUND_PATH + hitSoundFile_){}
 
-EntityType::~EntityType(){
-   freeSound(sound_);
-   freeSound(deathSound_);
-   freeSound(hitSound_);
-}
+EntityType::~EntityType(){}
 
 const SDL_Rect &EntityType::getBaseRect() const{
    return baseRect_;
@@ -72,11 +68,11 @@ typeNum_t EntityType::getIndex() const{
    return index_;
 }
 
-SDL_Sound *EntityType::getSound() const{
+const Sound &EntityType::getSound() const{
    return sound_;
 }
 
-SDL_Sound *EntityType::getHitSound() const{
+const Sound &EntityType::getHitSound() const{
    return hitSound_;
 }
 

@@ -7,11 +7,12 @@
 #include "UIBar.h"
 #include "Surface.h"
 #include "Screen.h"
+#include "Sound.h"
 
 GameData *UIBar::game_ = 0;
 const CoreData *UIBar::core_ = 0;
 Surface *UIBar::barSurface_ = 0;
-SDL_Sound *UIBar::click_ = 0;
+Sound *UIBar::click_ = 0;
 
 UIBar::UIBar(Corner corner,
              Orientation orientation,
@@ -135,7 +136,7 @@ bool UIBar::isActive(){
 void UIBar::init(const CoreData *core,
                  GameData *game,
                  Surface *barSurface,
-                 SDL_Sound *click){
+                 Sound *click){
    core_ = core;
    game_ = game;
    barSurface_ = barSurface;
@@ -160,5 +161,5 @@ typeNum_t UIBar::size() const{
 }
 
 void UIBar::clickSound(){
-   playSound(click_);
+   click_->play();
 }

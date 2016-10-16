@@ -7,9 +7,6 @@
 #include "SDL.h"
 #include "types.h"
 
-//Loads a sound, and registers it with soundsLoaded
-SDL_Sound *loadSound(const std::string &fileName);
-
 //Fake constructor and copy constructor for SDL_Rect
 SDL_Rect makeRect(Sint16 x = 0, Sint16 y = 0, Uint16 w = 0, Uint16 h = 0);
 SDL_Rect makeRect(const Point &point);
@@ -27,12 +24,6 @@ Uint32 colorToUInt(const SDL_Color &color);
 //SDL_Color / int
 SDL_Color operator/(const SDL_Color &lhs, int rhs);
 
-//Free a sound, and update soundsLoaded
-void freeSound(SDL_Sound *&p);
-
-//Deep-copies a sound from one pointer to another.
-SDL_Sound *copySound(SDL_Sound* src);
-
 //returns a rectangle with equal dimensions, but blank co-ordinates
 SDL_Rect dimRect(const SDL_Rect &original);
 
@@ -47,9 +38,6 @@ SDL_Rect &operator-=(SDL_Rect &lhs, const SDL_Rect &rhs);
 
 //SDL_Color != SDL_Color
 bool operator!=(const SDL_Color &lhs, const SDL_Color &rhs);
-
-//plays a sound
-void playSound(SDL_Sound *p);
 
 //Checks for a collision between two SDL_Rects
 bool collision(const SDL_Rect &r1, const SDL_Rect &r2);

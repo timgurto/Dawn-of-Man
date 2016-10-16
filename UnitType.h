@@ -66,7 +66,7 @@ class UnitType: public EntityType{
    typeNum_t prereqTech_;
 
    //The sound played when the unit attacks, gathers etc.
-   SDL_Sound *hitSound_;
+   Sound hitSound_;
 
 public:
 

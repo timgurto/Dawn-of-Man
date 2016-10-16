@@ -54,6 +54,7 @@ void Debug::display() const{
       std::string message = copy.front();
       copy.pop();
       //draw text
+      //TODO why are these braces here?
       {
       Surface blackSurface(font_, message, BLACK);
       blackSurface.draw(screenBuf, &makeRect(x_+1, y_+1 + lat));

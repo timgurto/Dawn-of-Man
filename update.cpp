@@ -258,7 +258,7 @@ void handleEvents(const CoreData &core, GameData &game,
                      //No Ctrl: select control group
                      }else{
                         if (key != CONTROL_NONE){ //0 nothing to select
-                           SDL_Sound *sound = 0; //selection sound to play
+                           const Sound *sound = 0; //selection sound to play
                            for (entities_t::iterator it = game.entities.begin();
                                 it != game.entities.end(); ++it){
 
@@ -273,12 +273,12 @@ void handleEvents(const CoreData &core, GameData &game,
                                  if (unit.controlGroup == key){
                                     unit.selected = true;
                                     if (!sound)
-                                       sound = unit.type().getSound();
+                                       sound = &unit.type().getSound();
                                  }
                               }
                            }
                            game.selectionChanged = true;
-                           playSound(sound);
+                           sound->play();
                         }
                      }
 
@@ -400,7 +400,7 @@ void handleEvents(const CoreData &core, GameData &game,
                         sufficientResources(buildingType.getCost()) &&
                          game.buildLocationOK){
 
-                        playSound(buildingType.getSound());
+                        buildingType.getSound().play();
 
                         //Subtract resource cost
                         game.players[HUMAN_PLAYER].
@@ -586,7 +586,7 @@ void select(GameData &game){
                entitySelected = true;
                if ((*it)->selected)
                   if (!soundPlayed){
-                     playSound((*it)->type().getSound());
+                     (*it)->type().getSound().play();
                      soundPlayed = true;
                   }
             }// if collides

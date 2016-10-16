@@ -27,11 +27,6 @@ bool WINDOWED_MODE = DEBUG;
 //general debug messages
 Debug debug(YELLOW, 0, 0, 59);
 
-//the number of sounds loaded
-// - increases with loadSound()
-// - decreases with freeSound()
-int soundsLoaded = 0;
-
 //can be reused for whichever screens; the useful bit is the name
 enum ButtonID{
    //ScreenElement::NO_ID = -1
@@ -119,7 +114,7 @@ int main(int argc, char **argv){
    Mix_CloseAudio();
    SDL_Quit();
    Surface::quit();
-   assert (soundsLoaded == 0);
+   Sound::quit();
    return 0;
 }
 

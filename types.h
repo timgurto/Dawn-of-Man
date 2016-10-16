@@ -1,7 +1,10 @@
 // (C) 2010 Tim Gurto
 
+#ifndef TYPES_H
+#define TYPES_H
+
+#include "SDL.h"
 #include <queue>
-#include "SDL_mixer.h"
 
 //indexes for entity types, players, etc.
 typedef unsigned short typeNum_t;
@@ -28,9 +31,8 @@ typedef unsigned resource_t;
 //dealing with animation frames
 typedef Uint8 frames_t;
 
-//Mix_Chunk is a stupid name
-typedef Mix_Chunk SDL_Sound;
-
 //a set of points on the way to a unit's target
 struct Point;
 typedef std::queue<Point> path_t;
+
+#endif

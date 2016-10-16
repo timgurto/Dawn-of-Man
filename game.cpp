@@ -103,7 +103,7 @@ unsigned gameMode(Screen &thisScreen, const void *data){
    if (!DEBUG)
       Mix_PlayMusic(music, -1);
 
-   SDL_Sound *click = loadSound(SOUND_PATH + "interfaceClick.wav");
+   Sound click(SOUND_PATH + "interfaceClick.wav");
 
    //create game data object, and load data from file
    GameData game(DATA_PATH + fileName);
@@ -114,7 +114,7 @@ unsigned gameMode(Screen &thisScreen, const void *data){
 
    //UI Bars
    UIBars_t bars;
-   UIBar::init(&core, &game, &darkMap, click);
+   UIBar::init(&core, &game, &darkMap, &click);
    UIBar buildingsBar(BOTTOM_LEFT, HORIZONTAL,
                       &getNumBuildingIcons,
                       &getBuildingTypeIcons,
@@ -214,8 +214,6 @@ unsigned gameMode(Screen &thisScreen, const void *data){
    //Screen::mousePos = Screen::getScreenRes() / 2;
 
    //Clean up
-   freeSound(click);
-
    Mix_HaltMusic(); 
    Mix_FreeMusic(music);
 

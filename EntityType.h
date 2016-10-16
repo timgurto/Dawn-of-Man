@@ -6,6 +6,7 @@
 #include <string>
 #include "Point.h"
 #include "Surface.h"
+#include "Sound.h"
 #include "globals.h"
 
 //A category of entities, differing by attributes,
@@ -45,10 +46,10 @@ class EntityType{
       deathSoundFile_,
       hitSoundFile_;
 
-   SDL_Sound
-      *sound_, //standard entity sound
-      *hitSound_, //sound when attacking or gathering
-      *deathSound_; //sound made upon death
+   Sound
+      sound_, //standard entity sound
+      hitSound_, //sound when attacking or gathering
+      deathSound_; //sound made upon death
 
 public:
    EntityType(typeNum_t index, EntityTypeID type,
@@ -71,8 +72,8 @@ public:
    const Surface &getIcon() const;
    const std::string &getName() const;
    typeNum_t getIndex() const;
-   SDL_Sound *getSound() const;
-   SDL_Sound *getHitSound() const;
+   const Sound &getSound() const;
+   const Sound &getHitSound() const;
    typeNum_t getDecorationAtDeath() const;
 };
 

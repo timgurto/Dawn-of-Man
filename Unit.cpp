@@ -5,7 +5,6 @@
 #include <map>
 #include <cassert>
 #include <sstream>
-#include "SDL_mixer.h"
 #include "misc.h"
 #include "util.h"
 #include "GameData.h"
@@ -17,6 +16,7 @@
 #include "ResourceNodeType.h"
 #include "TechBonuses.h"
 #include "Player.h"
+#include "Sound.h"
 
 extern Debug debug;
 
@@ -101,7 +101,7 @@ void Unit::tick(double delta){
       if (progress_ >= thisType.maxProgress_){
          finished_ = true;
          drawPercent_ = FULL;
-         playSound(thisType.sound_);
+         thisType.sound_.play();
       }else
          drawPercent_ = 1.0 * progress_ /
                         thisType.maxProgress_;
@@ -229,7 +229,7 @@ void Unit::tick(double delta){
          if (combatFrameCounter_ >= thisType.maxCombatFrameCounter_){
             combatFrameCounter_ -= (thisType.maxCombatFrameCounter_ +
                                     thisType.combatWait_);
-            playSound(thisType.getHitSound());
+            thisType.getHitSound().play();
             //debug("hit");
             switch (targetEntity_->classID()){
             case ENT_BUILDING:

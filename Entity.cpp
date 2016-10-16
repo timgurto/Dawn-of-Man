@@ -348,7 +348,7 @@ bool Entity::isLocationOK() const{
 void Entity::kill(){
    game_->selectionChanged = true;
    const EntityType &thisType = type();
-   playSound(thisType.deathSound_);
+   thisType.deathSound_.play();
    //resource this turns into
    typeNum_t resourceType;
    ResourceNode *node = 0;
