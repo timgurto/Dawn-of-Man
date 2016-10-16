@@ -382,10 +382,6 @@ void Entity::kill(){
             //unit that became resource: gather it
             if (node && unit.isGatherer())
                unit.setTarget(node);
-            //resource: find another resource to gather
-            else if (this->classID() == ENT_RESOURCE_NODE)
-               game_->players[unit.player_].
-                  idleGatherer(&unit, (const ResourceNode *)this);
             else
                unit.setTarget(0, unit.loc_);
          }

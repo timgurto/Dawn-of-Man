@@ -141,7 +141,6 @@ void AI::checkExpansion(){
          unitWishlist_.push_back(expansionUnitType_);
 
    //find expansion building
-   //TODO set to 0 if the building is destroyed
    if (!expansionBuilding_)
       ITERATE(entities_t::const_iterator, game_->entities, it){
          if ((*it)->classID() == ENT_BUILDING){
@@ -186,7 +185,6 @@ void AI::checkMilitary(){
    //TODO maintain vector of military buildings, possibly of multiple types, instead
    
    //find military building (only necessary once)
-   //TODO set to 0 if the building is destroyed
    if (!militaryBuilding_)
       ITERATE(entities_t::const_iterator, game_->entities, it){
          if ((*it)->classID() == ENT_BUILDING){

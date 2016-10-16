@@ -70,8 +70,7 @@ public:
    void addResources(const Resources &r);
    void subtractResources(const Resources &r);
 
-   //whether the player has at least the specified amount
-   //of resources
+   //whether the player has at least the specified amount of resources
    bool sufficientResources(const Resources &r) const;
 
    //registers the player researching a tech
@@ -88,9 +87,6 @@ public:
 
    //processing done every game tick
    void tick();
-
-   //a gatherer has become idle; AI should reallocate him
-   void idleGatherer(Unit *unit, const ResourceNode *ignore = 0);
 
    //clean up after an entity is destroyed
    void unregisterBuilding(const Building *building);
