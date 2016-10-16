@@ -14,6 +14,9 @@ public:
 
 private:
 
+   //Default screen resolutions - 16:10 16:9 and 4:3
+   static const Point defaultRes[];
+
    //What the screen does
    //Default: goDefault
    GoFun *go_;
@@ -43,12 +46,6 @@ public:
    static Point screenRes;
 
    static bool windowedMode;
-
-   //Default screen resolutions - 16:10 16:9 and 4:3
-   static const Point
-      DEFAULT_SCREEN_3,
-      DEFAULT_SCREEN_2,
-      DEFAULT_SCREEN_1;
    
    static std::vector<Point> preferredResolutions;
 

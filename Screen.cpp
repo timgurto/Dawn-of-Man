@@ -13,14 +13,16 @@
 extern Debug debug;
 
 //Default screen resolutions - 16:10 16:9 and 4:3
-//TODO array
-const Point Screen::DEFAULT_SCREEN_3(1280, 800);
-const Point Screen::DEFAULT_SCREEN_2(1280, 720);
-const Point Screen::DEFAULT_SCREEN_1(1024, 768);
+const Point Screen::defaultRes[] = {
+   Point(1280, 800),
+   Point(1280, 720),
+   Point(1024, 768),
+   Point() //sentinel
+};
 
 Surface *Screen::background_ = 0;
 Surface *Screen::cursor_ = 0;
-Point Screen::screenRes(DEFAULT_SCREEN_1);
+Point Screen::screenRes(defaultRes[0]);
 Point Screen::mousePos = screenRes / 2;
 std::vector<Point> Screen::preferredResolutions;
 bool Screen::windowedMode = DEBUG;
@@ -122,6 +124,7 @@ int Screen::operator()(const void *data){
    //make sure there are no events on the queue
    //SDL_Event event;
    //TODO assert(!SDL_PollEvent(&event));
+   //TODO don't deref FPs
    return (*go_)(*this, data);
 }
 
@@ -130,28 +133,27 @@ void Screen::setScreenResolution(int argc, char **argv){
    const SDL_VideoInfo *current = SDL_GetVideoInfo();
    debug("Current resolution: ", current->current_w, "x",
          current->current_h);
-   SDL_Rect** resolutions = SDL_ListModes(0, SDL_FULLSCREEN |
+   SDL_Rect **resolutions = SDL_ListModes(0, SDL_FULLSCREEN |
                                              SDL_HWSURFACE |
                                              SDL_DOUBLEBUF);
    assert (resolutions);
    debug("Available resolutions:");
    //whether the default screen size is available
-   bool defaultResOkay = false;
-   bool defaultWResOkay = false; //as above, for widescreen
-   unsigned resPriority = 0; //no preferred resolution available yet
-   while (*resolutions){
-      debug((*resolutions)->w, "x", (*resolutions)->h);
-      if (3 > resPriority &&
-          **resolutions == Screen::DEFAULT_SCREEN_3)
-         resPriority = 3;
-      else if (2 > resPriority &&
-          **resolutions == Screen::DEFAULT_SCREEN_2)
-         resPriority = 2;
-      else if (1 > resPriority &&
-          **resolutions == Screen::DEFAULT_SCREEN_1)
-         resPriority = 1;
-      ++resolutions;
+   bool defaultResFound = false;
+   const Point *defaultResCheck;
+   for (defaultResCheck = defaultRes; *defaultResCheck != Point();
+        ++defaultResCheck){
+      for (SDL_Rect **currentResCheck = resolutions; *currentResCheck;
+           ++currentResCheck){
+         if (**currentResCheck == *defaultResCheck){
+            defaultResFound = true;
+            break;
+         }
+      }
+      if (defaultResFound)
+         break;    
    }
+
    //Windowed
    windowedMode = DEBUG || isArg("-win", argc, argv);
    if (isArg("-width", argc, argv) &&
@@ -159,26 +161,16 @@ void Screen::setScreenResolution(int argc, char **argv){
       screenRes.x = whatIsArg("-width", argc, argv);
       screenRes.y = whatIsArg("-height", argc, argv);
    //Current resolution
-   }else if (isArg("-retain", argc, argv) ||
-             !defaultWResOkay && !defaultResOkay){
+   }else if (isArg("-retain", argc, argv) || !defaultResFound){
       screenRes.x = current->current_w;
       screenRes.y = current->current_h;
    //Default
    }else{
-      switch(resPriority){
-      case 1:
-         screenRes = DEFAULT_SCREEN_1;
-         break;
-      case 2:
-         screenRes = DEFAULT_SCREEN_2;
-         break;
-      case 3:
-         screenRes = DEFAULT_SCREEN_3;
-         break;
-      default:
-         //no valid resolution available
-         //(tentatively) use default 4:3
-         screenRes = DEFAULT_SCREEN_3;
-      }
+      if (defaultResFound)
+         screenRes = *defaultResCheck;
+      else
+         //default: retain current resolution
+         screenRes.x = current->current_w;
+         screenRes.y = current->current_h;
    }
 }

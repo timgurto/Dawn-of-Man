@@ -55,8 +55,6 @@ unsigned gameMode(Screen &thisScreen, const void *data){
    //loading screen
    Surface loading(MISC_IMAGE_PATH + "loading.PNG");
    renderLoadingScreen(screenBuf, loading);
-
-   //TODO move screen inits to dawn.cpp
    
 
    //load core data (must be done after screen is initialized)

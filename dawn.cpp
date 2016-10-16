@@ -15,7 +15,7 @@
 #include "Surface.h"
 #include "Point.h"
 
-//TODO: try to replace get()s with const refs, or reaffirm why it can't be done
+//TODO try to replace get()s with const refs, or reaffirm why it can't be done
 
 //global screen buffer
 Surface screenBuf; //uninitialized
@@ -63,7 +63,7 @@ int main(int argc, char **argv){
       Screen::init(&background, &cursor);
 
       Screen mainMenu;
-      //mainMenu();
+      mainMenu();
 
       Screen game(&gameMode);
 
