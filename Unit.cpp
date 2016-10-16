@@ -92,10 +92,7 @@ void Unit::tick(double delta){
 
    }else{
 
-      //updateTarget();
-
       if (moving_){
-
          const Point &targetPoint = path_.front();
 
          double angle;
@@ -164,7 +161,7 @@ void Unit::tick(double delta){
          if (isAtTarget())
             path_.pop();
       }else{
-         if (targetEntity_ != 0){
+         if (targetEntity_){
             combat_ = isAtTarget();
             moving_ = !combat_;
          }else if (isAtTarget())
@@ -242,39 +239,6 @@ void Unit::tick(double delta){
    }
 }
 
-double Unit::getDrawPercent() const{
-   return drawPercent_;
-}
-
-int Unit::getColor() const{
-   return player_;
-}
-
-EntityTypeID Unit::classID() const{
-   return ENT_UNIT;
-}
-
-bool Unit::selectable() const{
-   return
-      finished_ &&
-      player_ == HUMAN_PLAYER;
-}
-
-bool Unit::targetable() const{
-   return player_ != HUMAN_PLAYER;
-}
-
-bool Unit::drawBlack() const{
-   return
-      1.0 * health_ /
-      core_->unitTypes[typeIndex_].maxHealth_ <
-      ENTITY_BLACK_HEALTH;
-}
-
-typeNum_t Unit::getPlayer() const{
-   return player_;
-}
-
 void Unit::setTarget(Entity *targetEntity, Point loc){
    targetEntity_ = targetEntity;
    if (targetEntity == 0){
@@ -292,9 +256,13 @@ void Unit::setTarget(Entity *targetEntity, Point loc){
 
 bool Unit::isAtTarget() const{
    pixels_t margin = getSpeed();
-   if (path_.size() > 1 || targetEntity_ == 0)
-      //straight distance to a point
-      return (distance(loc_, target_) < margin);
+   Point target = path_.size() > 1 ?
+                  path_.front() :
+                  target_;
+   //straight distance to a point
+   if (path_.size() > 1 || !targetEntity_)
+      return (distance(loc_, target) < margin);
+   
    else{
       SDL_Rect baseRect = getBaseRect();
       SDL_Rect targetRect = targetEntity_->getBaseRect();
@@ -370,13 +338,20 @@ bool Unit::isPathClear(const Point &start,
 }
 
 void Unit::findPath(){
+   debug("finding path");
    emptyQueue(path_);
-
+path_.push(loc_ - Point(50, 25));
+path_.push(loc_ + Point(0, 100));
    //if clear path, go straight there
    if (isPathClear(loc_, target_))
       path_.push(target_);
 
-   moving_ = !path_.empty();
+   //path needs to be found
+   else{
+      //path_.push(sub-target);
+   }
+
+   moving_ = true;
 }
 
 void Unit::updateTarget(){
@@ -423,4 +398,37 @@ pixels_t Unit::getSpeed() const{
    return
       core_->unitTypes[typeIndex_].speed_ +
       game_->players[player_].getBonuses().speed;
+}
+
+double Unit::getDrawPercent() const{
+   return drawPercent_;
+}
+
+int Unit::getColor() const{
+   return player_;
+}
+
+EntityTypeID Unit::classID() const{
+   return ENT_UNIT;
+}
+
+bool Unit::selectable() const{
+   return
+      finished_ &&
+      player_ == HUMAN_PLAYER;
+}
+
+bool Unit::targetable() const{
+   return player_ != HUMAN_PLAYER;
+}
+
+bool Unit::drawBlack() const{
+   return
+      1.0 * health_ /
+      core_->unitTypes[typeIndex_].maxHealth_ <
+      ENTITY_BLACK_HEALTH;
+}
+
+typeNum_t Unit::getPlayer() const{
+   return player_;
 }

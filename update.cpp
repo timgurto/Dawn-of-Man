@@ -310,17 +310,14 @@ void handleEvents(const CoreData &core, GameData &game,
                                     unitP->setTarget(newBuilding);
                            }
 
-                        //Shift key doesn't allow multiple constructions, as
-                        //placed buildings are initially invisible and thus
-                        //would be impossible to see if builders moved to another
-                        //target
-                        //TODO make newly placed buildings visible somehow
-                        //if(!isKeyPressed(SDLK_LSHIFT)){
-                        game.mode = MODE_BUILDER;
-                        game.toBuild = NO_TYPE;
-                        for (UIBars_t::iterator it = bars.begin(); it != bars.end(); ++it)
-                           if ((*it)->isActive())
-                              (*it)->calculateRect();
+                        //Shift key: multiple constructions
+                        if(!isKeyPressed(SDLK_LSHIFT)){
+                           game.mode = MODE_BUILDER;
+                           game.toBuild = NO_TYPE;
+                           for (UIBars_t::iterator it = bars.begin(); it != bars.end(); ++it)
+                              if ((*it)->isActive())
+                                 (*it)->calculateRect();
+                        }
                      }else{ //not enough resources, or bad place
                         debug("Cannot construct building");
                      }
