@@ -174,4 +174,9 @@ void emptyQueue(std::queue<T> &q){
       q.pop();
 }
 
+bool isPathClear(const Point &start,
+                 const Point &end,
+                 const GameData &game,
+                 const Entity &entity);
+
 #endif

@@ -19,6 +19,8 @@ const pixels_t PLACEMENT_MARGIN = 1;
 
 bool validBuilding(const CoreData &core,
                    const GameData &game, typeNum_t i){
+   if (i == NO_TYPE)
+      return false;
    const BuildingType &type = core.buildingTypes[i];
    const Player &human = game.players[HUMAN_PLAYER];
    return
@@ -29,6 +31,8 @@ bool validBuilding(const CoreData &core,
 
 bool validUnit(const CoreData &core,
                const GameData &game, typeNum_t i){
+   if (i == NO_TYPE)
+      return false;
    const UnitType &type = core.unitTypes[i];
    return
       //unit comes from the selected building
@@ -40,6 +44,8 @@ bool validUnit(const CoreData &core,
 
 bool validTech(const CoreData &core,
                const GameData &game, typeNum_t i){
+   if (i == NO_TYPE)
+      return false;
    typeNum_t techIndex = i;
    const Tech &tech = core.techs[techIndex];
    const Player &human = game.players[HUMAN_PLAYER];
@@ -163,7 +169,7 @@ typeNum_t getValidTech(const CoreData &core, const GameData &game,
 
       //check player's resources
       if (game.players[HUMAN_PLAYER].
-         sufficientResources(unitType.getCost())){
+             sufficientResources(unitType.getCost())){
 
          //find location
          Point loc;
@@ -214,6 +220,7 @@ typeNum_t getValidTech(const CoreData &core, const GameData &game,
                        buildingBaseRect.y -
                        unitTypeBaseRect.h -
                        unitTypeBaseRect.y;
+
          }while (tries != NUM_PLACEMENT_TRIES &&
                  !noCollision(game, unitType, loc));
 
@@ -267,7 +274,7 @@ typeNum_t getValidTech(const CoreData &core, const GameData &game,
       return
          "Train " + type.getName() +
          ": " + type.getCostString();
-      return "";
+      //return "";
    }
 
    std::string techHelp(typeNum_t index, const CoreData &core,

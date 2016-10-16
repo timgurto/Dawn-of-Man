@@ -11,14 +11,12 @@
 
 extern Debug debug, deltaLog;
 
-//Alpha of the selection rectangle
-const Uint8 SELECTION_RECT_ALPHA = 0x66;
-
 void render(SDL_Surface *screen, SDL_Surface *selection,
             SDL_Surface *diagGreen, SDL_Surface *diagRed,
             SDL_Surface *map, SDL_Surface *darkMap,
             SDL_Surface *cursor, SDL_Surface *cursorShadow,
             SDL_Surface *cursorPause, SDL_Surface *cursorColor,
+            SDL_Surface *selRectImage,
             SDL_Surface **cursorIndex,
             const CoreData &core, const GameData &game,
             const UIBars_t &bars, const messageBoxes_t &messageBoxes){
@@ -26,13 +24,13 @@ void render(SDL_Surface *screen, SDL_Surface *selection,
    assert (screen);
 
    renderMap(screen, game, map, darkMap);
-   renderDecorations(screen, game);
+   //renderDecorations(screen, game);
    renderSelection(screen, game, selection);
    if (game.mode == MODE_CONSTRUCTION && !game.rightMouse.dragging)
        renderFootprint(screen, core, game, diagGreen, diagRed);
    renderEntities(screen, game);
    if (game.mode != MODE_CONSTRUCTION && game.leftMouse.dragging)
-      renderSelectionRect(screen, game);
+      renderSelectionRect(screen, game, selRectImage);
    renderInterface(bars);
    renderMessageBoxes(screen, messageBoxes);
    renderCursor(screen, game, cursor, cursorShadow, cursorPause,
@@ -181,7 +179,7 @@ void renderEntities(SDL_Surface *screen, const GameData &game){
       for (entities_t::const_iterator it = game.entities.begin();
            it != game.entities.end(); ++it)
          //only draw entities that are on-screen
-         if ((*it)->classID() != ENT_DECORATION && (*it)->onScreen())
+         if (/*(*it)->classID() != ENT_DECORATION &&*/ (*it)->onScreen())
             (*it)->draw(entitiesTemp);
       SDL_BlitSurface(entitiesTemp, 0, screen, 0);
       freeSurface(entitiesTemp);
@@ -197,7 +195,8 @@ void renderEntities(SDL_Surface *screen, const GameData &game){
 }
 
 //Draws the selection rectangle
-void renderSelectionRect(SDL_Surface *screen, const GameData &game){
+void renderSelectionRect(SDL_Surface *screen, const GameData &game,
+                         SDL_Surface *selRectImage){
    //Get rectangle
    SDL_Rect selRect = getSelectionRect(game);
 
@@ -213,12 +212,8 @@ void renderSelectionRect(SDL_Surface *screen, const GameData &game){
    }else if ((selRect.y + selRect.h) > SCREEN_WIDTH)
       selRect.h = SCREEN_WIDTH - selRect.y;
    
-   //Draw rectangle
-   SDL_Surface *temp = createSurface(selRect.w, selRect.h);
-   SDL_SetAlpha(temp, SDL_SRCALPHA, SELECTION_RECT_ALPHA);
-   SDL_FillRect(temp, &dimRect(selRect), WHITE_UINT);
-   SDL_BlitSurface(temp, 0, screen, &selRect);
-   freeSurface(temp);
+   SDL_BlitSurface(selRectImage, &makeRect(0, 0, selRect.w, selRect.h),
+                   screen, &selRect);
 }
 
 //Draws all UIBars

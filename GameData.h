@@ -110,6 +110,10 @@ struct GameData{
    //a UI bar
    bool recalcBars;
 
+   //whether there has been a change in what is selected,
+   //warranting updates in the game mode and UI bar displays
+   bool selectionChanged;
+
 private:
    const static CoreData *core_;
 };

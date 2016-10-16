@@ -45,6 +45,9 @@ const int DELTA_MODIFIER = 40; //40;
 //if the delta (ms) is more than this, the update is skipped.
 const int DELTA_CUTOFF = 100;
 
+//Alpha of the selection rectangle
+const Uint8 SELECTION_RECT_ALPHA = 0x66;
+
 void gameMode(){
 
    //initialize screen and debug objects
@@ -79,15 +82,22 @@ void gameMode(){
       *particleShadow = loadImage(MISC_IMAGE_PATH +
                                   "particleShadow.PNG", GREEN),
       *entitiesTemp = createSurface(),
-      *glow = loadImage(MISC_IMAGE_PATH + "glow.PNG", true);
+      *glow = loadImage(MISC_IMAGE_PATH + "glow.PNG", true),
+      *selRectImage = createSurface();
    setColorKey(entitiesTemp);
-   SDL_SetAlpha(particleShadow, SDL_SRCALPHA, SHADOW_ALPHA);
-   SDL_SetAlpha(cursorShadow, SDL_SRCALPHA, SHADOW_ALPHA);
 
    //colored cursors, generated as they're used
    SDL_Surface *cursorIndex[CLR_MAX];
    for (int i = 0; i != CLR_MAX; ++i)
       cursorIndex[i] = 0;
+
+   //shadows' alpha
+   SDL_SetAlpha(particleShadow, SDL_SRCALPHA, SHADOW_ALPHA);
+   SDL_SetAlpha(cursorShadow, SDL_SRCALPHA, SHADOW_ALPHA);
+
+   //selection rectangle: translucent white
+   SDL_FillRect(selRectImage, 0, WHITE_UINT);
+   SDL_SetAlpha(selRectImage, SDL_SRCALPHA, SELECTION_RECT_ALPHA);
 
    std::string musicPath = SOUND_PATH + "twoSteps.wav";
    Mix_Music *music = Mix_LoadMUS(musicPath.c_str());
@@ -180,7 +190,8 @@ void gameMode(){
 
          //render
          render(screen, glow, diagGreen, diagRed, map, darkMap, cursor,
-                cursorShadow, cursorPause, cursorColor, cursorIndex, core,
+                cursorShadow, cursorPause, cursorColor, selRectImage,
+                cursorIndex, core,
                 game, bars, messageBoxes);
       }
    }
@@ -200,6 +211,7 @@ void gameMode(){
    freeSurface(diagRed);
    freeSurface(entitiesTemp);
    freeSurface(glow);
+   freeSurface(selRectImage);
 
    for (int i = 0; i != CLR_MAX; ++i)
       freeSurface(cursorIndex[i]);

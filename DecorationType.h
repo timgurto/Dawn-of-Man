@@ -17,6 +17,10 @@ class DecorationType: public EntityType{
    //sprite color
    EntityColor color_;
 
+   //a means of ensuring decorations are drawn
+   //behind other entities
+   static pixels_t DECORATION_DISPLACEMENT;
+
 public:
    DecorationType(typeNum_t index,
                   const std::string &name,

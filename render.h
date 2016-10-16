@@ -16,6 +16,7 @@ void render(SDL_Surface *screen, SDL_Surface *selection,
             SDL_Surface *map, SDL_Surface *darkMap,
             SDL_Surface *cursor, SDL_Surface *cursorShadow,
             SDL_Surface *cursorPause, SDL_Surface *cursorColor,
+            SDL_Surface *selRectImage,
             SDL_Surface **cursorIndex,
             const CoreData &core, const GameData &game,
             const UIBars_t &bars, const messageBoxes_t &messageBoxes);
@@ -46,7 +47,8 @@ void renderDecorations(SDL_Surface *screen, const GameData &game);
 void renderEntities(SDL_Surface *screen, const GameData &game);
 
 //Draws the selection rectangle
-void renderSelectionRect(SDL_Surface *screen, const GameData &game);
+void renderSelectionRect(SDL_Surface *screen, const GameData &game,
+                         SDL_Surface *selRectImage);
 
 //Draws all UIBars
 void renderInterface(const UIBars_t &bars);

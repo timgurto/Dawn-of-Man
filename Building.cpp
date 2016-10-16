@@ -129,8 +129,10 @@ void Building::progressConstruction(){
          if ((*it)->classID() == ENT_UNIT){
             Unit &unit = (Unit &)(**it);
             if (unit.getTargetEntity() == this &&
-                unit.isBuilder())
+                unit.isBuilder()){
                unit.setTarget(0, (*it)->getLoc());
+               unit.combat_ = unit.moving_ = false;
+            }
          }
       //register with player
       game_->players[player_].buildBuilding(typeIndex_);

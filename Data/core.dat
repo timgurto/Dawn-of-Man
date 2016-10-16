@@ -215,6 +215,7 @@ unitType{
    gatherer = true;
    originBuilding = 1;
    progressCost = 1000;
+   autoAttack = false;
    decorationAtDeath = 1;
    soundFile = "abadacus.WAV";
    deathSoundFile = "manDeath0.wav";
@@ -246,6 +247,7 @@ unitType{
    maxHealth = 20;
    attack = 8;
    resourceAtDeath = 1;
+   autoAttack = false;
 }
 resourceNodeType{
    name = "Tree";

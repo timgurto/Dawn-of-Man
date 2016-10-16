@@ -5,7 +5,7 @@
 #include "CoreData.h"
 
 Decoration::Decoration(typeNum_t type, const Point &loc):
-Entity(type, loc){}
+Entity(type, loc - Point(0, DecorationType::DECORATION_DISPLACEMENT)){}
 
 const EntityType &Decoration::type() const{
    return core_->decorationTypes[typeIndex_];

@@ -12,7 +12,8 @@ const CoreData *UIBar::core_ = 0;
 SDL_Surface *UIBar::screen_ = 0;
 SDL_Surface *UIBar::barSurface_ = 0;
 
-UIBar::UIBar(Corner corner, Orientation orientation,
+UIBar::UIBar(Corner corner,
+             Orientation orientation,
              iconCountFunPtr iconCountFun,
              surfaceFunPtr surfaceFun,
              clickFunPtr clickFun,
@@ -110,11 +111,15 @@ typeNum_t UIBar::mouseIndex() const{
    if (collision(point, barRect))
       switch (orientation_){
       case HORIZONTAL:
+         if (point.x >= barRect.w)
+            return NO_TYPE;
          return (point.x - barRect.x) / ICON_SIZE;
-         break;
+         //break;
       case VERTICAL:
+         if (point.y >= barRect.h)
+            return NO_TYPE;
          return (point.y - barRect.y) / ICON_SIZE;
-         break;
+         //break;
       }
    return NO_TYPE;
 }

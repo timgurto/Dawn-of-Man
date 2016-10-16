@@ -347,10 +347,11 @@ bool Entity::isLocationOK() const{
 }
 
 void Entity::kill(){
+   game_->selectionChanged = true;
    const EntityType &thisType = type();
    playSound(thisType.deathSound_);
-
-   typeNum_t resourceType = NO_TYPE;
+   typeNum_t resourceType = NO_TYPE; //resource this turns into
+   ResourceNode *node = 0;
 
    //turns into decoration?
    typeNum_t decorationType = type().getDecorationAtDeath();
@@ -364,28 +365,31 @@ void Entity::kill(){
       resourceType =
          core_->unitTypes[typeIndex_].getDeathResource();
       if (resourceType != NO_TYPE){
-         ResourceNode *node = new ResourceNode(resourceType, loc_);
+         node = new ResourceNode(resourceType, loc_);
          addEntity(*game_, node);
-
-         //fix units that were targetting this
-         for (entities_t::iterator it = game_->entities.begin();
-              it != game_->entities.end(); ++it){
-            if ((*it)->classID() == ENT_UNIT){
-               Unit &unit = (Unit &)(**it);
-               if (unit.targetEntity_ == this){
-                  if (unit.isGatherer())
-                     unit.setTarget(node);
-                  else
-                     unit.setTarget(0, unit.loc_);
-                  unit.updateTarget();
-               }
-            }
-         }
-
       }
    }
 
+   //fix units that were targetting this
+   for (entities_t::iterator it = game_->entities.begin();
+        it != game_->entities.end(); ++it)
+      if ((*it)->classID() == ENT_UNIT){
+         Unit &unit = (Unit &)(**it);
+         if (unit.targetEntity_ == this){
+            if (unit.isGatherer()){
+               unit.setTarget(node, unit.loc_);
+               unit.combat_ = true;
+            }else{
+               unit.setTarget(0, unit.loc_);
+               unit.combat_ = false;
+            }
+         }
+      }
+
    trashCan_.push_back(this);
+   //TODO handle builders like buildings, and fix building corner case -
+   //separate function to set mode based on whats selected. Run this
+   //at selection-time too.
    if ((Entity *)(game_->buildingSelected) == this){
       game_->buildingSelected = 0;
       game_->mode = MODE_NORMAL;
@@ -396,14 +400,6 @@ void Entity::kill(){
         it != game_->entities.end(); ++it){
       if (*it == this)
          itToErase = it;
-
-      //fix units that were targetting this
-      else if (resourceType == NO_TYPE &&
-               (*it)->classID() == ENT_UNIT){
-         Unit &unit = (Unit &)(**it);
-         if (unit.targetEntity_ == this)
-            unit.setTarget(0, (*it)->loc_);
-      }
    }
    game_->entities.erase(itToErase);
 }

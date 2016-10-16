@@ -20,9 +20,6 @@
 
 const double PI = 3.14159265358979323846;
 
-//a yet-to-be-calculated angle
-const double DUMMY_ANGLE = 3 * PI;
-
 //used for drawn entities; excludes techs.
 const typeNum_t MAX_TYPES = 8;
 
@@ -104,8 +101,6 @@ const std::string RESOURCE_NODES_IMAGE_PATH
    = IMAGE_PATH + "Resources/";
 const std::string TECHS_IMAGE_PATH
    = IMAGE_PATH + "Techs/";
-const std::string INTERFACE_IMAGE_PATH
-   = IMAGE_PATH + "Interface/";
 const std::string SOUND_PATH = "Sounds/";
 const std::string DATA_PATH = "Data/";
 
@@ -141,10 +136,11 @@ enum EntityTypeID{
 
 //Interface modes for the game
 enum ControlMode{
-   MODE_NORMAL,
-   MODE_BUILDER,
-   MODE_CONSTRUCTION, //a building is being placed
-   MODE_BUILDING //a building is selected
+   MODE_NORMAL, //nothing useful is selected
+   MODE_BUILDER, //a builder is selected
+   MODE_CONSTRUCTION, // a building is being placed
+   MODE_BUILDING, // a building is selected
+   MODE_NONE // dummy
 };
 
 //Corners of the screen; for UIBar

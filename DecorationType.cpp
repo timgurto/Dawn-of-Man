@@ -3,6 +3,9 @@
 #include "EntityType.h"
 #include "DecorationType.h"
 #include "types.h"
+#include "misc.h"
+
+pixels_t DecorationType::DECORATION_DISPLACEMENT = 150;
 
 DecorationType::DecorationType(typeNum_t index,
                                const std::string &name,
@@ -13,7 +16,7 @@ DecorationType::DecorationType(typeNum_t index,
 EntityType(index,
            ENT_DECORATION,
            name,
-           drawRect,
-           baseRect),
+           drawRect + Point(0, DECORATION_DISPLACEMENT),
+           baseRect + Point(0, DECORATION_DISPLACEMENT)),
 collides_(collides),
 color_(color){}

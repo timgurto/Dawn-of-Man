@@ -27,9 +27,10 @@ CoreData::CoreData(std::string filename){
          deathSoundFile = "",
          hitSoundFile = "";
       bool
-         collides = false,
-         builder = false,
-         gatherer = false;
+         collides = false, //decorations
+         builder = false, //units - default: military
+         gatherer = false, //units -   "        "
+         autoAttack = true; //units -  "        "
       typeNum_t
          index = NO_TYPE,
          prereqBuilding = NO_TYPE,
@@ -114,6 +115,8 @@ CoreData::CoreData(std::string filename){
             builder = val == "true;";
          else if (attr == "gatherer")
             gatherer = val == "true;";
+         else if (attr == "autoAttack")
+            autoAttack = val == "true;";
          else if (attr == "index")
             index = typeNum_t(numVal);
          else if (attr == "prereqBuilding")
@@ -242,7 +245,8 @@ CoreData::CoreData(std::string filename){
          UnitType temp(index, name, drawRect, baseRect, selectionCenter,
                        cost, speed, maxFrameCounter, frameCount,
                        maxCombatFrameCounter, combatFrameCount, combatWait,
-                       maxHealth, attack, armor, builder, gatherer,
+                       maxHealth, attack, armor,
+                       builder, gatherer, autoAttack,
                        originBuilding, progressCost, resourceAtDeath,
                        prereqTech, decorationAtDeath,
                        soundFile, deathSoundFile, hitSoundFile);

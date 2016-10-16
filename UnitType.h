@@ -52,6 +52,10 @@ class UnitType: public EntityType{
    //whether this unit can gather resources
    bool gatherer_;
 
+   //whether this unit automatically attacks nearby
+   //enemies
+   bool autoAttack_;
+
    //How many resources it costs to train this unit
    Resources cost_;
 
@@ -83,6 +87,7 @@ public:
             damage_t armor = 0,
             bool builder = false,
             bool gatherer = false,
+            bool autoAttack = false,
             typeNum_t originBuilding = NO_TYPE,
             progress_t maxProgress = 0,
             typeNum_t resourceAtDeath = NO_TYPE,

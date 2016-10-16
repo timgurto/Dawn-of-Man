@@ -6,7 +6,7 @@ map{
 }
 
 # players; indices MUST increment, and there MUST be
-# at least two players: nature and human.
+# at least two players: nature (0) and human (1).
 player{
    index = 0;           # 0 = nature
    color = 0x765e3e;

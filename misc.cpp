@@ -256,6 +256,7 @@ bool noCollision(const GameData &game, const EntityType &type,
    if (!inside(rect, dimRect(game.map)))
       return false;
 
+   //TODO only check nearby entities
    //check against entities
    for (entities_t::const_iterator it = game.entities.begin();
         it != game.entities.end(); ++it){
@@ -385,30 +386,29 @@ void centerMap(GameData &game, const Point &center){
 bool isPathClear(const Point &start,
                  const Point &end,
                  const GameData &game,
-                 const Entity &entity,
-                 double angle){
+                 const Entity &entity){
    const EntityType &thisType = entity.type();
 
 
-   //if not already done, calculate angle
-   if (angle == DUMMY_ANGLE)
-      if (end.x == start.x)
-         angle =
-            end.y < start.y ?
-               1.5 * PI :
-               0.5 * PI;
-      else{
-         double gradient =
-            1.0 *
-            (end.y - start.y) /
-            (end.x - start.x);
-         angle = atan(gradient);
-         if (end.x < start.x)
-            if (end.y > start.y)
-               angle += PI;
-            else
-               angle -= PI;
-      }
+   //calculate angle
+   double angle;
+   if (end.x == start.x)
+      angle =
+         end.y < start.y ?
+            1.5 * PI :
+            0.5 * PI;
+   else{
+      double gradient =
+         1.0 *
+         (end.y - start.y) /
+         (end.x - start.x);
+      angle = atan(gradient);
+      if (end.x < start.x)
+         if (end.y > start.y)
+            angle += PI;
+         else
+            angle -= PI;
+   }
 
    double
       xDelta = cos(angle) * PATH_CHECK_DISTANCE,

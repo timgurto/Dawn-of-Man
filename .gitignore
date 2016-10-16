@@ -11,8 +11,8 @@ Test/*
 *.ilk
 *.pdb
 *.obj
-Dawn of Man_solution_goanna.checks
-Dawn of Man_solution_goanna.options
+*.checks
+*.options
 *.db
 *.ad
 Archive/*

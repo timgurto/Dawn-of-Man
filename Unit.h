@@ -16,6 +16,7 @@ class EntityType;
 //Created at buildings
 class Unit : public Entity{
    friend class Entity;
+   friend class Building;
    friend struct GameData;
 
    typeNum_t player_; //the unit's controlling player
@@ -36,12 +37,11 @@ class Unit : public Entity{
    double combatFrameCounter_;
    int frame_; //which frame to draw for this unit
 
-   //whether the path is fresh, and a tick of movement should
-   //be skipped
-   bool pathJustSet_;
-
    //smaller = finer, more accurate, slower pathfinding
    static const pixels_t PATH_GRID_SIZE;
+
+   //the distance at which units will automatically attack enemies
+   static const pixels_t AUTO_ATTACK_DISTANCE;
 
 public:
    Unit(typeNum_t type, const Point &loc,
@@ -72,8 +72,7 @@ public:
    //Whether the unit would have a clear path between
    //the two specified points
    bool isPathClear(const Point &start,
-                    const Point &end,
-                    double angle = DUMMY_ANGLE) const;
+                    const Point &end) const;
 
    //calculates a path to the target, and fills the path_
    //with 
@@ -81,6 +80,8 @@ public:
 
    //removes health, due to an attack
    void removeHealth(damage_t damage);
+
+   Entity *findNearbyEnemy();
 
    //get
    bool isBuilder() const;

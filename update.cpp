@@ -30,6 +30,9 @@ void updateState(double delta, const CoreData &core, GameData &game,
    handleEvents(core, game, screen, bars, contextHelp, fpsDisplay);
    scrollMap(game, delta);
 
+   if (game.selectionChanged)
+      setModeFromSelection(game, bars);
+
    //Actual updates
    if (!game.paused){
 
@@ -158,10 +161,9 @@ void handleEvents(const CoreData &core, GameData &game,
 
          case SDLK_ESCAPE:
             //HACK remove this exit
-            {
-               game.loop = false;
-               return;
-            }
+            game.loop = false;
+            return;
+            //---------------------
 
             switch(game.mode){
             //unselect all
@@ -180,8 +182,8 @@ void handleEvents(const CoreData &core, GameData &game,
                game.toBuild = NO_TYPE;
                game.mode = MODE_NORMAL;
                for (UIBars_t::iterator it = bars.begin(); it != bars.end(); ++it)
-               if ((*it)->isActive())
-                  (*it)->calculateRect();
+                  if ((*it)->isActive())
+                     (*it)->calculateRect();
                break;
             }
             break;
@@ -189,17 +191,12 @@ void handleEvents(const CoreData &core, GameData &game,
          case SDLK_DELETE:
             { //new scope for selected
                //find selected entities
-               entities_t selected;
                for (entities_t::iterator it = game.entities.begin();
-                    it != game.entities.end(); ++it)
-                  if ((*it)->selected)
-                     selected.push_back(*it);
-
-               //delete them
-               for (entities_t::iterator it = selected.begin();
-                    it != selected.end(); ++it)
-                  (*it)->kill();
-               Entity::emptyTrash();
+                  it != game.entities.end(); ++it)
+                  if ((*it)->selected){
+                     (*it)->kill();
+                     break;
+                  }
             }
             break;
 
@@ -232,7 +229,7 @@ void handleEvents(const CoreData &core, GameData &game,
 
       //A mouse button is pressed
       case SDL_MOUSEBUTTONDOWN:
-         //debug("Mouse down: ", int(event.button.button));
+         debug("Mouse down: ", int(event.button.button));
          switch (event.button.button){
          case MOUSE_BUTTON_LEFT:
             game.leftMouse.mouseDown(game.mousePos - game.map);
@@ -337,11 +334,15 @@ void handleEvents(const CoreData &core, GameData &game,
                      }else{ //not enough resources, or bad place
                         debug("Cannot construct building");
                      }
-                  }else //not construction mode
-                     select(game, bars);
+                  }else{ //not construction mode
+                     select(game);
+                     setModeFromSelection(game, bars);
+                  }
                }// if !barClicked
-            }else //if dragging
-               select(game, bars);
+            }else{ //if dragging
+               select(game);
+               setModeFromSelection(game, bars);
+            }
             game.leftMouse.mouseUp();
             break;
          }
@@ -446,12 +447,10 @@ SDL_Rect getSelectionRect(const GameData &game){
    return selRect + map;
 }
 
-void select(GameData &game, UIBars_t &bars){
-   game.buildingSelected = 0;
-   bool
-      entitySelected = false,
-      builderSelected = false;
+void select(GameData &game){
+   bool entitySelected = false;
    bool soundPlayed = false;
+   game.selectionChanged = true;
 
    //loop backwards, so objects in front have priority to be
    //selected
@@ -491,15 +490,6 @@ void select(GameData &game, UIBars_t &bars){
                      playSound((*it)->type().getSound());
                      soundPlayed = true;
                   }
-                  //if building, set buildingSelected ptr and flag
-                  if ((*it)->classID() == ENT_BUILDING)
-                     game.buildingSelected = (Building *)(*it);
-                  //if unit, set flag
-                  else if ((*it)->classID() == ENT_UNIT){
-                     const Unit &unit = (const Unit &)(**it);
-                     if (unit.isBuilder())
-                        builderSelected = true;
-                  }
             }// if collides
 
          }// if single point etc.
@@ -513,18 +503,6 @@ void select(GameData &game, UIBars_t &bars){
          break;
 
    }// for entities
-
-   //if a builder is selected
-   if (builderSelected)
-      game.mode = MODE_BUILDER;
-   //if a building is selected
-   else if (game.buildingSelected)
-      game.mode = MODE_BUILDING;
-   else
-      game.mode = MODE_NORMAL;
-
-   for (UIBars_t::iterator it = bars.begin(); it != bars.end(); ++it)
-      (*it)->calculateRect();
 }
 
 void setSelectedTargets(GameData &game){
@@ -616,4 +594,40 @@ Entity *findEntity(GameData &game, bool onlyTargetable){
          return *it;
    }
    return 0;
+}
+
+void setModeFromSelection(GameData &game, UIBars_t &bars){
+   game.selectionChanged = false;
+   game.buildingSelected = 0;
+   ControlMode oldMode = game.mode;
+   game.mode = MODE_NONE;
+
+   //loop backwards, so objects in front have priority to be
+   //selected
+   for (entities_t::const_iterator it = game.entities.begin();
+        it != game.entities.end(); ++it){
+      if ((*it)->selected){
+         EntityTypeID classType = (*it)->classID();
+
+         //builder
+         if (classType == ENT_UNIT &&
+             ((const Unit &)(**it)).isBuilder()){
+            game.mode = MODE_BUILDER;
+            break;
+         }
+
+         //building
+         else if (classType == ENT_BUILDING){
+            game.mode = MODE_BUILDING;
+            game.buildingSelected = (Building *)(*it);
+         }
+      }
+   }
+
+   if (oldMode == MODE_CONSTRUCTION &&
+       game.mode == MODE_BUILDER)
+         game.mode = MODE_CONSTRUCTION;
+
+   for (UIBars_t::iterator it = bars.begin(); it != bars.end(); ++it)
+      (*it)->calculateRect();
 }

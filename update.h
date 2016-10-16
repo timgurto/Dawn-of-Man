@@ -28,7 +28,7 @@ void scrollMap(GameData &game, double Delta);
 SDL_Rect getSelectionRect(const GameData &game);
 
 //Selects entities chosen by the user
-void select(GameData &game, UIBars_t &bars);
+void select(GameData &game);
 
 //Set the 'selected' attribute of appropriate units
 void setSelectedTargets(GameData &game);
@@ -39,5 +39,8 @@ void reSort(entities_t &entities, entities_t::iterator it,
 
 //Returns the address of the entity the mouse is currently over
 Entity *findEntity(GameData &game, bool onlyTargetable = true);
+
+//sets game mode based on what's selected
+void setModeFromSelection(GameData &game, UIBars_t &bars);
 
 #endif
