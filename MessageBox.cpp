@@ -56,6 +56,7 @@ void MessageBox::display(SDL_Surface *screen) const{
          //message
          SDL_BlitSurface(text, 0,
                          screen, &makeRect(x_ + margin_, y_ + margin_));
+         SDL_FreeSurface(text);
       }
 }
 

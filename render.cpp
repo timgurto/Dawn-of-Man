@@ -35,7 +35,6 @@ void render(SDL_Surface *screen, SDL_Surface *selection,
    assert (screen);
 
    renderMap(screen, game, map, darkMap);
-   //renderDecorations(screen, game);
    renderSelection(screen, game, selection);
    if (game.mode == MODE_CONSTRUCTION && !game.rightMouse.dragging)
        renderFootprint(screen, core, game, diagGreen, diagRed);
