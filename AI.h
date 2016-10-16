@@ -96,7 +96,10 @@ public:
    void buildPossible();
 
    //find a location for the unit to go, and send him there
-   void dispatchUnit(Unit *unit);
+   void dispatchUnit(Unit *unit, const ResourceNode *ignore = 0);
+
+   //assign tasks to all units (for init only)
+   void dispatchAllUnits();
 };
 
 #endif

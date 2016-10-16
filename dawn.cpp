@@ -90,7 +90,7 @@ int main(int argc, char **argv){
       //      break;
       //   }
       //}while(loop);
-      game(&(std::string)"02.dat");
+      game(&(std::string)"aiTest.dat");
 
    }
 

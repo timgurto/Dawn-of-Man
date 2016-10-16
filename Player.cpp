@@ -114,7 +114,12 @@ void Player::godMode(){
 
 void Player::tick(){
    if (!initialAIUpdate_){
+      ai_.dispatchAllUnits();
       ai_.update();
       initialAIUpdate_ = true;
    }
+}
+
+void Player::idleGatherer(Unit *unit, const ResourceNode *ignore){
+   ai_.dispatchUnit(unit, ignore);
 }

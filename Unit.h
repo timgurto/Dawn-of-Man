@@ -85,6 +85,7 @@ public:
    void removeHealth(damage_t damage);
 
    Entity *findNearbyEnemy();
+   ResourceNode *findNearbyResource(const ResourceNode *ignore = 0);
 
    //get
    bool isBuilder() const;

@@ -545,6 +545,22 @@ Entity *Unit::findNearbyEnemy(){
    return 0;
 }
 
+ResourceNode *Unit::findNearbyResource(const ResourceNode *ignore){
+   ResourceNode *target = 0;
+   double minDistance = -1;
+   ITERATE(entities_t::const_iterator, game_->entities, it)
+      if (*it != ignore)
+         if ((*it)->classID() == ENT_RESOURCE_NODE){
+            pixels_t dist = distance(loc_, (*it)->getLoc());
+            if (!target || //flag for the first found
+                dist < minDistance){
+               minDistance = dist;
+               target = (ResourceNode *)(*it);
+            }
+         }
+   return target;
+}
+
 bool Unit::isBuilder() const{
    return core_->unitTypes[typeIndex_].builder_;
 }

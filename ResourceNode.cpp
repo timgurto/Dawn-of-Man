@@ -43,8 +43,6 @@ Resources ResourceNode::harvest(Resources bonus){
       }
    }
 
-
-   
    resources_ -= yield;
    if (resources_.isEmpty())
       kill();

@@ -120,12 +120,13 @@ void AI::allocateIncome(const Resources &income){
 }
 
 void AI::update(){
-   if (game_){
-      checkExpansion();
-      checkMilitary();
-      checkBuildings();
-      buildPossible();
-   }
+   //TODO if (player_ != HUMAN_PLAYER)
+      if (game_){
+         checkExpansion();
+         checkMilitary();
+         checkBuildings();
+         buildPossible();
+      }
 }
 
 void AI::checkExpansion(){
@@ -255,34 +256,30 @@ void AI::buildPossible(){
    }
 }
 
-void AI::dispatchUnit(Unit *unit){
+void AI::dispatchUnit(Unit *unit, const ResourceNode *ignore){
    //1. gatherers --> resource sites
-   //TODO: choose sites based on wishlist costs instead of distance
-   ResourceNode *target = 0;
-   double minDistance = -1;
    if (unit->isGatherer()){
-      ITERATE(entities_t::const_iterator, game_->entities, it)
-         if ((*it)->classID() == ENT_RESOURCE_NODE){
-            pixels_t dist = distance(unit->getLoc(), (*it)->getLoc());
-            if (!target || //flag for the first found
-                dist < minDistance){
-               minDistance = dist;
-               target = (ResourceNode *)(*it);
-            }
-         }
+      ResourceNode *target = unit->findNearbyResource(ignore);
       if (target)
          unit->setTarget(target);
       //else no nodes on map, and so stay idle
       return;
    }
 
-   //2. builders --> construction sites (if there are builder/non-gatherers)
-   if (unit->isBuilder()){
-      
+   //non-gatherer builders are dispatched separately
+   if (unit->isBuilder())
       return;
-   }
 
-   //3. military --> surround base
+   //2. military --> surround base
    //if execution gets here, it's a military unit
+   
+}
 
+void AI::dispatchAllUnits(){
+   ITERATE(entities_t::iterator, game_->entities, it)
+      if ((*it)->classID() == ENT_UNIT){
+         Unit *unit = (Unit *)(*it);
+         if (unit->getPlayer() == player_)
+            dispatchUnit(unit);
+      }
 }

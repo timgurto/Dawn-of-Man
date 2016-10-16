@@ -56,7 +56,6 @@ SDL_Rect Entity::getDrawRect() const{
    return loc_ + type().drawRect_;   
 }
 
-//unnamed arg to suppress 'unused' warning
 void Entity::tick(double /*delta*/){} //default: do nothing
 
 bool Entity::onScreen() const{
@@ -374,8 +373,13 @@ void Entity::kill(){
       if ((*it)->classID() == ENT_UNIT){
          Unit &unit = (Unit &)(**it);
          if (unit.targetEntity_ == this){
+            //unit that became resource: gather it
             if (node && unit.isGatherer())
-               unit.targetEntity_ = node;
+               unit.setTarget(node);
+            //resource: find another resource to gather
+            else if (this->classID() == ENT_RESOURCE_NODE)
+               game_->players[unit.player_].
+                  idleGatherer(&unit, (const ResourceNode *)this);
             else
                unit.setTarget(0, unit.loc_);
          }

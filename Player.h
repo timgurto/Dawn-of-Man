@@ -89,6 +89,9 @@ public:
    //processing done every game tick
    void tick();
 
+   //a gatherer has become idle; AI should reallocate him
+   void idleGatherer(Unit *unit, const ResourceNode *ignore = 0);
+
    //get
    Uint32 getColor() const;
    std::string getResources() const;
