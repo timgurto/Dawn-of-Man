@@ -42,6 +42,8 @@ public:
    static Point mousePos;
    static Point screenRes;
 
+   static bool windowedMode;
+
    //Default screen resolutions - 16:10 16:9 and 4:3
    static const Point
       DEFAULT_SCREEN_3,
