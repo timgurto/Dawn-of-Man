@@ -250,13 +250,12 @@ void pushMouseMove(){
 //the two points specified
 SDL_Rect makePathRect(const EntityType &type,
                       const Point &p1, const Point &p2){
-   SDL_Rect rect = makeRect(min(p1.x, p2.x),
-                            min(p1.y, p2.y),
-                            distance(p1.x, p2.x),
-                            distance(p1.y, p2.y));
+   SDL_Rect rect;
+   rect.x = min(p1.x, p2.x);
+   rect.y = min(p1.y, p2.y);
+   rect.w = distance(p1.x, p2.x);
+   rect.h= distance(p1.y, p2.y);
+
    rect += type.getBaseRect();
-
-
-
    return rect;
 }

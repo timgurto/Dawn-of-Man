@@ -45,16 +45,15 @@ void MessageBox::draw() const{
                                      width + 1,
                                      height_ + 1);
             screenBuf.fill(ENGRAVE_DARK, &rect);
-            rect -= Point(1, 1);
+            rect -= Point(2, 2);
             screenBuf.fill(ENGRAVE_LIGHT_UINT, &rect);
             SDL_Rect src = makeRect(0, 0, width, height_);
             background_.draw(screenBuf,
-                             Point(x_ - margin_,y_ - margin_),
-                             &rect);
+                             Point(x_ - margin_, y_ - margin_),
+                             &src);
          }
 
          //message
-
          text.draw(screenBuf, Point(x_ + margin_, y_ + margin_));
       }
 }

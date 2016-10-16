@@ -174,7 +174,7 @@ bool isArg(std::string arg, int argc, char* argv[]){
 // arg=???
 int whatIsArg(std::string arg, int argc, char* argv[]){
    assert (argv);
-   assert(isArg(arg, argc, argv));
+   assert (isArg(arg, argc, argv));
    for (int i = 1; i != argc; ++i){
       std::string s(argv[i]);
       size_t len = s.find('=');
@@ -186,7 +186,7 @@ int whatIsArg(std::string arg, int argc, char* argv[]){
          return result;
       }
    }
-   assert(false);
+   assert (false);
    return -1;
 }
 

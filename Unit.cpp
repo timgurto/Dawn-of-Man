@@ -479,12 +479,19 @@ bool Unit::isPathClear(const Point &start,
    debug("Determing whether the path is clear.  Length = ",
          distance(start, end));
 
-   //single rectangle for horizontal/vertical path
+   //single rectangle for straight path
    if (noCollision(*game_, makePathRect(thisType, start, end),
-                   this, targetEntity_, true))
+                   this, targetEntity_, true)){
+      debug("Block path is clear");
       return true;
+   }
 
    //TODO remove
+   //why?
+   //you tell me
+   //you wrote it
+   //so did you
+   //I'm confused
    return false;
 
    //calculate angle

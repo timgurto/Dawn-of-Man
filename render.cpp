@@ -15,14 +15,13 @@
 extern Debug debug, deltaLog;
 
 void renderLoadingScreen(Surface &screen, const Surface &loading){
-   screen.fill(BLACK);
-   loading.draw(screen, /*&*/makeRect((screen->w - loading->w) / 2,
-                                  (screen->h - loading->h) / 2));
+   screen.fill();
+   loading.draw(screen, Point((screen->w - loading->w) / 2,
+                              (screen->h - loading->h) / 2));
    screen.flip();
-
 }
 
-//TODO move rendering to classes in other functions
+//TODO move rendering to functions in the specific classes
 void render(Surface &selection,
             Surface &diagGreen, Surface &diagRed,
             Surface &map, Surface &darkMap,
@@ -83,7 +82,7 @@ void renderCursor (const GameData &game,
       shadowPos = cursorPos;
 
    if (game.paused)
-      pause.draw(screenBuf, /*&*/makeRect(cursorPos));
+      pause.draw(screenBuf, cursorPos);
 
    //cursor might appear 'raised' from the wall
    bool raised = game.rightMouse.dragging;
@@ -92,8 +91,8 @@ void renderCursor (const GameData &game,
       shadowPos += CURSOR_RAISED;
    }
 
-   shadow.draw(screenBuf, /*&*/makeRect(shadowPos)); //cursor shadow
-   cursor.draw(screenBuf, /*&*/makeRect(cursorPos)); //cursor
+   shadow.draw(screenBuf, shadowPos); //cursor shadow
+   cursor.draw(screenBuf, cursorPos); //cursor
 
    //color
    unsigned colorIndex = game.cursorColor;
@@ -114,7 +113,7 @@ void renderCursor (const GameData &game,
       }
 
       //colored index definitely exists now
-      index.draw(screenBuf, /*&*/makeRect(cursorPos));
+      index.draw(screenBuf, cursorPos);
 
    }
 }
@@ -213,10 +212,9 @@ void renderEntities(const GameData &game){
                   while (!copy.empty()){
                      Point second = copy.front() + game.map;
                      copy.pop();
-                     entitiesTemp.fill(makeColor(getEntityColor(game, unit.getColor())),
-                                       &makePathRect(ent.type(), first, second));
+                     screenBuf.fill(WHITE, &makePathRect(ent.type(), first, second));
                      drawLine(entitiesTemp, first, second,
-                              getEntityColor(game, BLACK_UINT));
+                              getEntityColor(game, unit.getColor()));
                      first = second;
                   }
                }
@@ -228,13 +226,10 @@ void renderEntities(const GameData &game){
       }
 
       screenBuf << entitiesTemp;
-drawLine(screenBuf, Point(50, 50), Point(200, 400), CYAN_UINT);
-drawLine(screenBuf, Point(50, 50), Point(50, 400), CYAN_UINT);
 
    //Masks off: draws entities straight to the screen.
    //Considerably faster.
    }else
-      //some duplicate code, but cleaner this way
       ITERATE(entities_t::const_iterator, game.entities, it){
          const Entity &ent = **it;
          if (ent.classID() != ENT_DECORATION && ent.onScreen())

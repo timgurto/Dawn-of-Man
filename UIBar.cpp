@@ -100,7 +100,7 @@ void UIBar::draw() const{
       for (typeNum_t i = 0; i != iconCount_; ++i){
          //draw
          surfaceFun_(i, *core_, *game_)
-            .draw(screenBuf, /*&*/makeRect(x, y));
+            .draw(screenBuf, Point(x, y));
 
          //iterate
          if (orientation_ == HORIZONTAL)
