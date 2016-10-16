@@ -441,64 +441,76 @@ void scrollMap(GameData &game, double delta){
    if (game.rightMouse.dragging){
       scrolling = true;
       Point rmbDisplacement = Screen::mousePos - game.rightMouse.dragBegin;
-      game.map = game.map - rmbDisplacement * (delta *
-                                               RMB_SCROLL_MULTIPLIER);
+      Point scroll = rmbDisplacement * (delta * RMB_SCROLL_MULTIPLIER);
+      if (game.scrollLockX)
+         scroll.x = 0;
+      if (game.scrollLockY)
+         scroll.y = 0;
+      game.map = game.map - scroll;
    }
 
    pixels_t scroll = pixels_t(delta * SCROLL_AMOUNT);
 
    //edge of screen
-   if (Screen::mousePos.x < EDGE_SCROLL_MARGIN){
-      scrolling = true;
-      game.map.x += scroll;
-   }else if (Screen::mousePos.x > Screen::getScreenRes().x - EDGE_SCROLL_MARGIN){
-      scrolling = true;
-      game.map.x -= scroll;
-   }
-   if (Screen::mousePos.y < EDGE_SCROLL_MARGIN){
-      scrolling = true;
-      game.map.y += scroll;
-   }else if (Screen::mousePos.y > Screen::getScreenRes().y - EDGE_SCROLL_MARGIN){
-      scrolling = true;
-      game.map.y -= scroll;
-   }
+   if (!game.scrollLockX)
+      if (Screen::mousePos.x < EDGE_SCROLL_MARGIN){
+         scrolling = true;
+         game.map.x += scroll;
+      }else if (Screen::mousePos.x > Screen::getScreenRes().x - EDGE_SCROLL_MARGIN){
+         scrolling = true;
+         game.map.x -= scroll;
+      }
+   if (!game.scrollLockY)
+      if (Screen::mousePos.y < EDGE_SCROLL_MARGIN){
+         scrolling = true;
+         game.map.y += scroll;
+      }else if (Screen::mousePos.y > Screen::getScreenRes().y - EDGE_SCROLL_MARGIN){
+         scrolling = true;
+         game.map.y -= scroll;
+      }
 
-   //four SDL calls every tick... might be better to calculate once,
-   //or maybe keep a static pointer around.
    //arrow keys
-   if (isKeyPressed(SDLK_UP)){
-      scrolling = true;
-      game.map.y += scroll;
+   if (!game.scrollLockX){
+      if (isKeyPressed(SDLK_LEFT)){
+         scrolling = true;
+         game.map.x += scroll;
+      }
+      if (isKeyPressed(SDLK_RIGHT)){
+         scrolling = true;
+         game.map.x -= scroll;
+      }
    }
-   if (isKeyPressed(SDLK_DOWN)){
-      scrolling = true;
-      game.map.y -= scroll;
-   }
-   if (isKeyPressed(SDLK_LEFT)){
-      scrolling = true;
-      game.map.x += scroll;
-   }
-   if (isKeyPressed(SDLK_RIGHT)){
-      scrolling = true;
-      game.map.x -= scroll;
+   if (!game.scrollLockY){
+      if (isKeyPressed(SDLK_UP)){
+         scrolling = true;
+         game.map.y += scroll;
+      }
+      if (isKeyPressed(SDLK_DOWN)){
+         scrolling = true;
+         game.map.y -= scroll;
+      }
    }
 
    //Enforce scroll boundaries
-   if (game.map.x > SCROLL_MARGIN){
-      scrolling = true;
-      game.map.x = SCROLL_MARGIN;
+   if (!game.scrollLockX){
+      if (game.map.x > SCROLL_MARGIN){
+         scrolling = true;
+         game.map.x = SCROLL_MARGIN;
+      }
+      if (game.map.x + game.map.w < Screen::getScreenRes().x - SCROLL_MARGIN){
+         scrolling = true;
+         game.map.x = Screen::getScreenRes().x - SCROLL_MARGIN - game.map.w;
+      }
    }
-   if (game.map.x + game.map.w < Screen::getScreenRes().x - SCROLL_MARGIN){
-      scrolling = true;
-      game.map.x = Screen::getScreenRes().x - SCROLL_MARGIN - game.map.w;
-   }
-   if (game.map.y > SCROLL_MARGIN){
-      scrolling = true;
-      game.map.y = SCROLL_MARGIN;
-   }
-   if (game.map.y + game.map.h < Screen::getScreenRes().y - SCROLL_MARGIN){
-      scrolling = true;
-      game.map.y = Screen::getScreenRes().y - SCROLL_MARGIN - game.map.h;
+   if (!game.scrollLockY){
+      if (game.map.y > SCROLL_MARGIN){
+         scrolling = true;
+         game.map.y = SCROLL_MARGIN;
+      }
+      if (game.map.y + game.map.h < Screen::getScreenRes().y - SCROLL_MARGIN){
+         scrolling = true;
+         game.map.y = Screen::getScreenRes().y - SCROLL_MARGIN - game.map.h;
+      }
    }
 
    if (scrolling)

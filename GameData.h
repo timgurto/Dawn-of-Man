@@ -79,6 +79,9 @@ struct GameData{
    //w, h = map size
    SDL_Rect map;
 
+   //whether scrolling in each dimension is disabled
+   bool scrollLockX, scrollLockY;
+
    //Information about mouse button positions and
    //dragging
    MouseButton leftMouse, rightMouse;

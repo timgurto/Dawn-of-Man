@@ -129,8 +129,30 @@ Uint32 getEntityColor(const GameData &game, int color){
 //Centers the map on the provided co-ordinates.
 //Map edges are taken into account automatically
 void centerMap(GameData &game, const Point &center){
-   game.map.x = Screen::getScreenRes().x / 2 - center.x;
-   game.map.y = Screen::getScreenRes().y / 2 - center.y;
+   const Point &res = Screen::getScreenRes();
+   Point extendedDim = Point(game.map.w + SCROLL_MARGIN,
+                             game.map.h + SCROLL_MARGIN);
+   if (extendedDim.x <= res.x){
+      game.map.x = (res.x - game.map.w) / 2;
+      game.scrollLockX = true;
+   }else{
+      game.map.x = res.x / 2 - center.x;
+      if (game.map.x > SCROLL_MARGIN)
+         game.map.x = SCROLL_MARGIN;
+      else if (game.map.x + extendedDim.x < res.x)
+         game.map.x = res.x - extendedDim.x;
+   }
+
+   if (extendedDim.y <= res.y){
+      game.map.y = (res.y - game.map.h) / 2;
+      game.scrollLockY = true;
+   }else{
+      game.map.y = res.y / 2 - center.y;
+      if (game.map.y > SCROLL_MARGIN)
+         game.map.y = SCROLL_MARGIN;
+      else if (game.map.y + extendedDim.y < res.y)
+         game.map.y = res.y - extendedDim.y;
+   }
 }
 
 //Determines whether the specified entity is

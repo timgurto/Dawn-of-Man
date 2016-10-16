@@ -30,7 +30,7 @@ GameData::GameData(std::string filename):
 //just in case it isn't)
 rightMouse(),
 mapX(1),
-mapY(1),
+mapY(0),
 paused(false),
 toBuild(NO_TYPE),
 mode(MODE_NORMAL),
@@ -40,15 +40,9 @@ selectionChanged(false),
 buildingSelected(0),
 outcome(IN_PROGRESS),
 loop(true),
-buildLocationOK(false){
-   //map
-   Uint16 w = mapX * MAP_TILE_SIZE;
-   Uint16 h = mapY * MAP_TILE_SIZE;
-   //center map
-   map = makeRect((Screen::getScreenRes().x - w) / 2,
-                  (Screen::getScreenRes().y - h) / 2,
-                  w, h);
-
+buildLocationOK(false),
+scrollLockX(false),
+scrollLockY(false){
 
    //load data from file
    std::ifstream data(filename.c_str());
@@ -141,8 +135,9 @@ buildLocationOK(false){
       if (object == "map"){
          mapX = x;
          mapY = y;
-         w = mapX * MAP_TILE_SIZE;
-         h = mapY * MAP_TILE_SIZE;
+         Uint16
+            w = mapX * MAP_TILE_SIZE,
+            h = mapY * MAP_TILE_SIZE;
          //center map
          map = makeRect((Screen::getScreenRes().x - w) / 2,
                         (Screen::getScreenRes().y - h) / 2,

@@ -32,7 +32,6 @@ enum ButtonID{
    BUTTON_NEW,
    BUTTON_CREDITS
 };
-//TODO * correctly center small maps
 int main(int argc, char **argv){
 
    //seed random generator
