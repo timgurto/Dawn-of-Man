@@ -82,6 +82,30 @@ void Unit::draw(Surface &screen) const{
              !finished_);
    //debug("health / max = ", 1.0f * health_ / thisType.maxHealth_);
 
+   //health bar
+   if (isKeyPressed(SDLK_LSHIFT) || isKeyPressed(SDLK_RSHIFT)){
+      SDL_Rect bar;
+      bar.x = loc_.x -
+              thisType.maxHealth_ / 2;
+      //bar.y = drawLoc.y - (HEALTH_BAR_THICKNESS + HEALTH_BAR_GAP + 1);
+      bar.y = drawLoc.y + thisType.drawRect_.h + HEALTH_BAR_GAP + 1;
+      bar.w = thisType.maxHealth_;
+      bar.h = HEALTH_BAR_THICKNESS;
+
+      bar += locRect(game_->map);
+
+      SDL_Rect
+         lightBar = bar + Point(1, 1),
+         darkBar  = bar - Point(1, 1);
+
+      screen.fill(ENGRAVE_LIGHT, &lightBar);
+      screen.fill(ENGRAVE_DARK,  &darkBar);
+      screen.fill(BLACK,         &bar);
+      bar.w = health_;
+      screen.fill(getEntityColor(*game_, getColor()), &bar);
+   }
+
+   //target
    if (DEBUG)
       screen.fill(getEntityColor(*game_, getColor()),
                   &makeRect(target_.x + game_->map.x - 2,
@@ -210,7 +234,6 @@ void Unit::tick(double delta){
                      reachedTarget = true;
                   }
                }else{
-                  assert (xyDelta.y <= 0);
                   if (xyDelta.y < -yDown){
                      xyDelta.y = -yDown;
                      reachedTarget = true;

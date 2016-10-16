@@ -75,7 +75,7 @@ const bool ENTITY_MASKS = true;
 const double FULL  = 1;
 const double EMPTY = 0;
 
-const double PATH_CHECK_DISTANCE = 2;
+const double PATH_CHECK_DISTANCE = 3;
 const pixels_t MAP_TILE_SIZE = 512;
 const pixels_t SCROLL_AMOUNT = 40;
 const pixels_t SCROLL_MARGIN = 100;
@@ -113,6 +113,9 @@ const Uint8 MOUSE_BUTTON_MIDDLE      = 2;
 const Uint8 MOUSE_BUTTON_RIGHT       = 3;
 const Uint8 MOUSE_BUTTON_SCROLL_UP   = 4;
 const Uint8 MOUSE_BUTTON_SCROLL_DOWN = 5;
+
+const pixels_t HEALTH_BAR_THICKNESS = 5;
+const pixels_t HEALTH_BAR_GAP = 1;
 
 enum Direction{
    DIR_UP,
