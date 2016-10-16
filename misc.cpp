@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <cmath>
 #include <sstream>
+#include <queue>
 
 #include "SDL.h"
 #include "SDL_image.h"
@@ -179,7 +180,6 @@ void playSound(SDL_Sound *p){
 
 void setColorKey(SDL_Surface *surface, const SDL_Color &color){
    checkP(surface);
-   //TODO remove once Goanna has IPA
    assert (surface != 0);
    SDL_SetColorKey(surface, SDL_SRCCOLORKEY,
                    SDL_MapRGB(surface->format,
@@ -240,7 +240,8 @@ bool dereferenceLessThan(Entity *p1, Entity *p2){
 }
 
 bool noCollision(const GameData &game, const EntityType &type,
-               const Point &loc, const Entity *ignore){
+                 const Point &loc, const Entity *ignore1,
+                 const Entity *ignore2){
    SDL_Rect rect = loc + type.getBaseRect();
 
    //check that it's inside map
@@ -250,7 +251,8 @@ bool noCollision(const GameData &game, const EntityType &type,
    //check against entities
    for (entities_t::const_iterator it = game.entities.begin();
         it != game.entities.end(); ++it){
-      if (*it != ignore &&
+      if (*it != ignore1 &&
+          *it != ignore2 &&
           (*it)->collides() &&
           collision(rect, (*it)->getBaseRect()))
          return false;
@@ -489,4 +491,10 @@ double atod(std::string s){
    double d;
    is >> d;
    return d;
+}
+
+void checkTypeIndex(typeNum_t &i, size_t max){
+   if (i != NO_TYPE && (i < 0 ||
+                        i >= max))
+      i = NO_TYPE;
 }

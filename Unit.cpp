@@ -92,23 +92,25 @@ void Unit::tick(double delta){
 
    }else{
 
-      updateTarget();
+      //updateTarget();
 
       if (moving_){
 
+         const Point &targetPoint = path_.front();
+
          double angle;
-         if (target_.x == loc_.x)
+         if (targetPoint.x == loc_.x)
             angle =
-               (target_.y < loc_.y ?
+               (targetPoint.y < loc_.y ?
                1.5 * PI :
                0.5 * PI);
          else{
             double gradient = 1.0 *
-               (target_.y - loc_.y) /
-               (target_.x - loc_.x);
+               (targetPoint.y - loc_.y) /
+               (targetPoint.x - loc_.x);
             angle = atan(gradient);
-            if (target_.x < loc_.x){
-               if (target_.y > loc_.y)
+            if (targetPoint.x < loc_.x){
+               if (targetPoint.y > loc_.y)
                   angle += PI;
                else
                   angle -= PI;
@@ -158,11 +160,16 @@ void Unit::tick(double delta){
       }
 
       //check whether target has been reached
-      if (targetEntity_ != 0){
-         combat_ = isAtTarget();
-         moving_ = !combat_;
-      }else if (isAtTarget())
-         moving_ = false;
+      if (path_.size() > 1){
+         if (isAtTarget())
+            path_.pop();
+      }else{
+         if (targetEntity_ != 0){
+            combat_ = isAtTarget();
+            moving_ = !combat_;
+         }else if (isAtTarget())
+            moving_ = false;
+      }
 
       //progress frame
       if (combat_){
@@ -270,18 +277,22 @@ typeNum_t Unit::getPlayer() const{
 
 void Unit::setTarget(Entity *targetEntity, Point loc){
    targetEntity_ = targetEntity;
-   if (targetEntity == 0)
+   if (targetEntity == 0){
       target_ = loc;
-   else
+   }else
       updateTarget();
    moving_ = !isAtTarget();
+   if (moving_ && targetEntity == 0)
+      findPath();
    //debug("Path clear: ", isPathClear(loc_, target_,
    //                                  *game_, *this));
+
+   updateTarget();
 }
 
 bool Unit::isAtTarget() const{
    pixels_t margin = getSpeed();
-   if (targetEntity_ == 0)
+   if (path_.size() > 1 || targetEntity_ == 0)
       //straight distance to a point
       return (distance(loc_, target_) < margin);
    else{
@@ -309,11 +320,73 @@ bool Unit::isAtTarget() const{
    return false;
 }
 
+bool Unit::isPathClear(const Point &start,
+                 const Point &end,
+                 double angle) const{
+   const EntityType &thisType = type();
+
+
+   //if not already done, calculate angle
+   if (angle == DUMMY_ANGLE)
+      if (end.x == start.x)
+         angle =
+            end.y < start.y ?
+            1.5 * PI :
+            0.5 * PI;
+      else{
+         double gradient =
+            1.0 *
+            (end.y - start.y) /
+            (end.x - start.x);
+         angle = atan(gradient);
+         if (end.x < start.x)
+            if (end.y > start.y)
+               angle += PI;
+            else
+               angle -= PI;
+      }
+
+   double
+      xDelta = cos(angle) * PATH_CHECK_DISTANCE,
+      yDelta = sin(angle) * PATH_CHECK_DISTANCE;
+
+   double x = start.x, y = start.y;
+   bool finished = false;
+   while (!finished){
+      //debug("Checking ", x, ",", y);
+      if (!noCollision(*game_,
+                       thisType,
+                       Point(pixels_t(x), pixels_t(y)),
+                       this, this->targetEntity_))
+         return false;
+
+      x += xDelta;
+      y += yDelta;
+      finished =
+         (start.x < end.x ? x >= end.x : x <= end.x) &&
+         (start.y < end.y ? y >= end.y : y <= end.y);
+   }
+   return true;
+}
+
+void Unit::findPath(){
+   emptyQueue(path_);
+
+   //if clear path, go straight there
+   if (isPathClear(loc_, target_))
+      path_.push(target_);
+
+   moving_ = !path_.empty();
+}
+
 void Unit::updateTarget(){
-   if (targetEntity_ != 0)
+   if (targetEntity_ != 0){
       target_ = targetEntity_->getLoc();
-   else
+      findPath();
+   }else
       combat_ = false;
+
+   moving_ = !path_.empty();
 }
 
 bool Unit::isBuilder() const{

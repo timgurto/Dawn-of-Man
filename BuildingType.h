@@ -10,6 +10,7 @@
 //train units
 class BuildingType: public EntityType{
    friend class Building;
+   friend struct CoreData;
 
    //total progress points necessary for construction
    progress_t maxProgress_;
@@ -49,6 +50,7 @@ public:
    typeNum_t getPrereqTech() const;
    typeNum_t getPrereqBuilding() const;
    progress_t getMaxProgress() const;
+   damage_t getMaxHealth() const;
 };
 
 #endif

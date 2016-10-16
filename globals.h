@@ -23,6 +23,7 @@ const double PI = 3.14159265358979323846;
 //a yet-to-be-calculated angle
 const double DUMMY_ANGLE = 3 * PI;
 
+//TODO determine best size
 const typeNum_t MAX_TYPES = 8;
 const typeNum_t NO_TYPE = 0xffff;
 

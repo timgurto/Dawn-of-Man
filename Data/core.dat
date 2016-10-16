@@ -22,7 +22,7 @@ buildingType{
    selectionCenter.x = 2;
    selectionCenter.y = -37;
 
-   cost.wood = 100;
+   cost.wood = 10;
 
    maxHealth = 500;
    progressCost = 1250;
@@ -45,7 +45,7 @@ buildingType{
    selectionCenter.x = 1;
    selectionCenter.y = -20;
 
-   cost.wood = 180;
+   cost.wood = 18;
 
    maxHealth = 1000;
    progressCost = 1750;
@@ -82,7 +82,7 @@ unitType{
    selectionCenter.x = 3;
    selectionCenter.y = -55;
 
-   cost.wood = 50;
+   cost.wood = 5;
 
    speed = 8;
    maxFrameCounter = 25;
@@ -116,7 +116,7 @@ unitType{
    selectionCenter.x = 3;
    selectionCenter.y = -55;
 
-   cost.wood = 80;
+   cost.wood = 8;
 
    speed = 8;
    maxFrameCounter = 25;
@@ -179,7 +179,7 @@ resourceNodeType{
    selectionCenter.y = -78;
 
    maxResources.wood = 50;
-   yield.wood = 3;
+   yield.wood = 1;
    
    color = 6;
 }
@@ -201,7 +201,7 @@ resourceNodeType{
    selectionCenter.y = -32;
 
    maxResources.wood = 50;
-   yield.wood = 3;
+   yield.wood = 2;
    
    color = 5;
 }
@@ -210,7 +210,7 @@ technology{
    index = 0;
    bonus.unitArmor = 5;
    originBuilding = 0;
-   cost.stone = 200;
+   cost.stone = 20;
 }
 
 ;   any text below is ignored

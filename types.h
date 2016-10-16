@@ -1,5 +1,6 @@
 // (C) 2010 Tim Gurto
 
+#include <queue>
 #include "SDL.h"
 #include "SDL_mixer.h"
 
@@ -30,3 +31,7 @@ typedef Uint8 frames_t;
 
 //Mix_Chunk is a stupid name
 typedef Mix_Chunk SDL_Sound;
+
+//a set of points on the way to a unit's target
+struct Point;
+typedef std::queue<Point> path_t;

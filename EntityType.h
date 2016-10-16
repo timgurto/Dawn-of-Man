@@ -14,6 +14,7 @@ class EntityType{
    friend class Entity;
    friend class Building;
    friend class Unit;
+   friend struct CoreData;
 
    //for loading graphics, and position in vector
    typeNum_t index_;
@@ -33,7 +34,8 @@ class EntityType{
       *mask_; //green and magenta background mask
 
    //these are for copying, since it's a messier
-   //process than for surfaces
+   //process than for surfaces, and thus easier
+   //to just load again
    std::string
       soundFile_,
       deathSoundFile_,

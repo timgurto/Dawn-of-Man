@@ -259,18 +259,45 @@ CoreData::CoreData(std::string filename){
 
    Resources::init(resourceNames);
 
-   //check data
+   //check data, after everything is loaded
+
    //indices are ordered
    for (typeNum_t i = 0; i != buildingTypes.size(); ++i)
-      assert (buildingTypes[i].getIndex() == i);
+      assert (buildingTypes[i].index_ == i);
    for (typeNum_t i = 0; i != decorationTypes.size(); ++i)
-      assert (decorationTypes[i].getIndex() == i);
+      assert (decorationTypes[i].index_ == i);
    for (typeNum_t i = 0; i != unitTypes.size(); ++i)
-      assert (unitTypes[i].getIndex() == i);
+      assert (unitTypes[i].index_ == i);
    for (typeNum_t i = 0; i != resourceNodeTypes.size(); ++i)
-      assert (resourceNodeTypes[i].getIndex() == i);
+      assert (resourceNodeTypes[i].index_ == i);
    for (typeNum_t i = 0; i != techs.size(); ++i)
-      assert (techs[i].getIndex() == i);
-   
-//TODO check all prereqs, originBuildings etc. are in-bounds or NO_TYPE
+      assert (techs[i].index_ == i);
+
+   //misc referenced entity types are in-bounds or NO_TYPE
+   //prerequisites, origin buildings, 
+   for (buildingTypes_t::iterator it = buildingTypes.begin();
+        it != buildingTypes.end(); ++it){
+      checkTypeIndex(it->prereqBuilding_,
+                     buildingTypes.size());
+      checkTypeIndex(it->prereqTech_,
+                     techs.size());
+   }
+   for (unitTypes_t::iterator it = unitTypes.begin();
+        it != unitTypes.end(); ++it){
+      checkTypeIndex(it->originBuilding_,
+                     buildingTypes.size());
+      checkTypeIndex(it->resourceAtDeath_,
+                     resourceNodeTypes.size());
+      checkTypeIndex(it->prereqTech_,
+                     techs.size());
+   }
+   for (techs_t::iterator it = techs.begin();
+        it != techs.end(); ++it){
+      checkTypeIndex(it->originBuilding_,
+                     buildingTypes.size());
+      checkTypeIndex(it->prereqTech1_,
+                     techs.size());
+      checkTypeIndex(it->prereqTech2_,
+                     techs.size());
+   }
 }

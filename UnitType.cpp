@@ -79,3 +79,7 @@ typeNum_t UnitType::getPrereqTech() const{
 progress_t UnitType::getMaxProgress() const{
    return maxProgress_;
 }
+
+damage_t UnitType::getMaxHealth() const{
+   return maxHealth_;
+}

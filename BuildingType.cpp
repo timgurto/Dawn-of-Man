@@ -51,3 +51,7 @@ typeNum_t BuildingType::getPrereqBuilding() const{
 progress_t BuildingType::getMaxProgress() const{
    return maxProgress_;
 }
+
+damage_t BuildingType::getMaxHealth() const{
+   return maxHealth_;
+}

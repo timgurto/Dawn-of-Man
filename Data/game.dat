@@ -40,7 +40,7 @@ decoration{
    random = 70;  # place 70 rocks
 }
 
-# human starting guy; random location
+# human starting caveman; random location
 unit{
    type = 1;
    player = 1;

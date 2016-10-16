@@ -11,6 +11,7 @@
 //They are trained at buildings.
 class UnitType: public EntityType{
    friend class Unit;
+   friend struct CoreData;
 
    pixels_t speed_; //movement per tick, in px
    
@@ -97,6 +98,7 @@ public:
    typeNum_t getDeathResource() const;
    typeNum_t getPrereqTech() const;
    progress_t getMaxProgress() const;
+   damage_t getMaxHealth() const;
 };
 
 #endif

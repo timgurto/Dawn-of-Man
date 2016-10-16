@@ -16,16 +16,20 @@ class EntityType;
 //Created at buildings
 class Unit : public Entity{
    friend class Entity;
+   friend struct GameData;
 
    typeNum_t player_; //the unit's controlling player
-   Point target_; //where the unit is trying to go
-   Entity *targetEntity_; //the unit this unit is targetting
    bool moving_; //whether or not the unit is moving
    bool combat_; //whether or not the unit is attacking another
    damage_t health_; //the unit's remaining health
    progress_t progress_; //training progress
    bool finished_; //whether the unit is fully trained
    double drawPercent_; //value for partial drawing
+
+   //target/pathing
+   Point target_; //where the unit is trying to go
+   Entity *targetEntity_; //the unit this unit is targetting
+   path_t path_; //the path to the target
    
    //the current points in the unit's animation cycles
    double frameCounter_;
@@ -58,6 +62,14 @@ public:
 
    //sets target co-ordinates if targetting an entity
    void updateTarget();
+
+   //Whether the unit would have a clear path between
+   //the two specified points
+   bool isPathClear(const Point &start,
+                    const Point &end,
+                    double angle = DUMMY_ANGLE) const;
+
+   void findPath();
 
    //get
    bool isBuilder() const;

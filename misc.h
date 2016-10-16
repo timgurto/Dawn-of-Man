@@ -103,7 +103,8 @@ bool dereferenceLessThan(Entity *p1, Entity *p2);
 //a potential entity, of given type and location
 //ignore: an entity to skip checking, i.e. the current unit
 bool noCollision(const GameData &game, const EntityType &type,
-                const Point &loc, const Entity *ignore = 0);
+                const Point &loc, const Entity *ignore1 = 0,
+                const Entity *ignore2 = 0);
 
 //Checks for a collision between two SDL_Rects
 bool collision(const SDL_Rect &r1, const SDL_Rect &r2);
@@ -151,14 +152,6 @@ T min(T a, T b){
    return a < b ? a : b;
 }
 
-//Whether an entity with the specified base has a
-//clear straight path between points
-bool isPathClear(const Point &start,
-                 const Point &end,
-                 const GameData &game,
-                 const Entity &entity,
-                 double angle = DUMMY_ANGLE);
-
 //Adds a leading zero if x < 100
 std::string format3(double x);
 
@@ -170,5 +163,16 @@ void removeLast(std::string &str);
 
 //transform a string to a double
 double atod(std::string s);
+
+//if an index is invalid, set it to NO_TYPE
+//so that nothing breaks
+void checkTypeIndex(typeNum_t &i, size_t max);
+
+//empties a std::queue
+template<typename T>
+void emptyQueue(std::queue<T> &q){
+   while (!q.empty())
+      q.pop();
+}
 
 #endif

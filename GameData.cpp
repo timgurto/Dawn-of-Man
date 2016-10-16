@@ -212,6 +212,43 @@ buildingSelected(0){
    data.close();
 
    //TODO check data
+   for (entities_t::const_iterator it = entities.begin();
+        it != entities.end(); ++it){
+
+      //kill if location not okay?
+      //if (!noCollision(*this, (*it)->type(), (*it)->loc_, *it))
+      //   (*it)->kill();
+
+      //class-specific stuff
+      switch ((*it)->classID()){
+
+      case ENT_BUILDING:
+         {//new scope for building and type
+            Building &building = *(Building *)(*it);
+            const BuildingType &type = core_->buildingTypes[building.typeIndex_];
+            checkTypeIndex(building.typeIndex_, core_->buildingTypes.size());
+            checkTypeIndex(building.player_, players.size());
+            if (building.progress_ > type.getMaxProgress())
+               building.progress_ = type.getMaxProgress();
+            if (building.health_ > type.getMaxHealth())
+               building.health_ = type.getMaxHealth();
+         }
+         break;
+
+      case ENT_UNIT:
+         {//new scope for unit and type
+            Unit &unit = *(Unit *)(*it);
+            const UnitType &type = core_->unitTypes[unit.typeIndex_];
+            checkTypeIndex(unit.typeIndex_, core_->unitTypes.size());
+            checkTypeIndex(unit.player_, players.size());
+            if (unit.progress_ > type.getMaxProgress())
+               unit.progress_ = type.getMaxProgress();
+            if (unit.health_ > type.getMaxHealth())
+               unit.health_ = type.getMaxHealth();
+         }
+         break;
+      }
+   }
 
 }
 

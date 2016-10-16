@@ -14,6 +14,7 @@ class EntityType;
 //Entities which are constructed, and can't move or attack.
 //They train units.
 class Building : public Entity{
+   friend struct GameData;
 
    //How much progress is made to a building's construction
    //with each builder's hit.

@@ -10,6 +10,8 @@
 
 //TODO comment
 class Tech{
+   friend struct CoreData;
+
    typeNum_t index_;
    std::string name_;
    SDL_Surface *icon_;

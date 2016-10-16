@@ -18,6 +18,8 @@ typedef std::list<Entity *> entities_t;
 //An "instance" of an EntityType.  Basically, each entity
 //is an on-screen, in-game element.
 class Entity{
+   friend struct GameData;
+
 protected: //everything should be a derived class
 
    //progress points added per state update

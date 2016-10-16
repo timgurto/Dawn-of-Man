@@ -352,11 +352,13 @@ void Entity::kill(){
               it != game_->entities.end(); ++it){
             if ((*it)->classID() == ENT_UNIT){
                Unit &unit = (Unit &)(**it);
-               if (unit.targetEntity_ == this)
+               if (unit.targetEntity_ == this){
                   if (unit.isGatherer())
                      unit.setTarget(node);
                   else
                      unit.setTarget(0);
+                  unit.updateTarget();
+               }
             }
          }
       }
