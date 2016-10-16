@@ -4,7 +4,6 @@
 #define ENTITY_H
 
 #include <list>
-#include "SDL.h"
 #include "globals.h"
 #include "Point.h"
 

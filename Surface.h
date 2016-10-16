@@ -61,7 +61,7 @@ public:
    void setColorKey(const SDL_Color &color);
 
    //fills a part of the surface with color
-   void fill(const SDL_Color color = BLACK, SDL_Rect *rect = 0);
+   void fill(const SDL_Color color, SDL_Rect *rect = 0);
    void fill(Uint32 color = BLACK_UINT, SDL_Rect *rect = 0);
 
    //draw onto another surface

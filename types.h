@@ -1,7 +1,6 @@
 // (C) 2010 Tim Gurto
 
 #include <queue>
-#include "SDL.h"
 #include "SDL_mixer.h"
 
 //indexes for entity types, players, etc.

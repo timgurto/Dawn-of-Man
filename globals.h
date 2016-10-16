@@ -4,7 +4,6 @@
 #define GLOBALS_H
 
 #include <string>
-#include "SDL.h"
 #include "Point.h"
 #include "types.h"
 
@@ -76,7 +75,7 @@ const Uint8 SHADOW_ALPHA = 0x44;
 
 //This has a substantial effect on performance
 //anything behind each entity is cleared
-const bool ENTITY_MASKS = true;
+const bool ENTITY_MASKS = false;
 
 const double FULL  = 1;
 const double EMPTY = 0;

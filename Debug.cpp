@@ -5,7 +5,6 @@
 #include <queue>
 #include <cassert>
 
-#include "SDL.h"
 #include "SDL_ttf.h"
 
 #include "misc.h"
@@ -57,9 +56,10 @@ void Debug::display() const{
          std::string message = copy.front();
          copy.pop();
          //draw text
+         {
          Surface blackSurface(font_, message, BLACK);
          blackSurface.draw(*screen_, &makeRect(x_+1, y_+1 + lat));
-         
+         }
          //draw shadow
          Surface surface(font_, message, color_);
          surface.draw(*screen_, &makeRect(x_, y_ + lat));

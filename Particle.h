@@ -3,7 +3,6 @@
 #define PARTICLE_H
 
 #include <cstdlib>
-#include "SDL.h"
 #include "types.h"
 #include "misc.h"
 

@@ -4,7 +4,6 @@
 #define UNIT_H
 
 #include <queue>
-#include "SDL.h"
 #include "types.h"
 #include "Entity.h"
 #include "Point.h"

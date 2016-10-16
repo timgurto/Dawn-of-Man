@@ -54,14 +54,15 @@ int main(int argc, char **argv){
    for (int i = 0; i != levels; ++i){
       GameOutcome outcome;
       //repeat each level if lost
-      while ((outcome = gameMode(format2(i) + ".dat")) == LOSS);
+      while ((outcome = gameMode(format2(i) + ".dat")) == LOSS)
+         ;
       if (outcome == QUIT)
          break;
    }
 
    //Quit
    //TTF_Quit() happens at debug dtor
-   Mix_CloseAudio(); 
+   Mix_CloseAudio();
    SDL_Quit();
    Surface::quit();
    assert (soundsLoaded == 0);

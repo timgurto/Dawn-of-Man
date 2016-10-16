@@ -3,7 +3,6 @@
 #ifndef BUILDING_H
 #define BUILDING_H
 
-#include "SDL.h"
 #include "types.h"
 #include "Entity.h"
 #include "Particle.h"

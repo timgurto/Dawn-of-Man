@@ -7,7 +7,6 @@
 #include <string>
 #include <queue>
 
-#include "SDL.h"
 #include "SDL_mixer.h"
 #include "types.h"
 #include "globals.h"
@@ -35,9 +34,6 @@ SDL_Color makeColor(Uint32 c);
 
 //SDL_Color -> Uint32
 Uint32 colorToUInt(const SDL_Color &color);
-
-//Initializes a surface with screen settings
-SDL_Surface *setScreen();
 
 //Free a sound, and update soundsLoaded
 void freeSound(SDL_Sound *&p);

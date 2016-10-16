@@ -4,7 +4,6 @@
 #define ENTITY_TYPE_H
 
 #include <string>
-#include "SDL.h"
 #include "Point.h"
 #include "Surface.h"
 #include "globals.h"

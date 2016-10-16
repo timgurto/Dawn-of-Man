@@ -3,6 +3,7 @@
 #ifndef POINT_H
 #define POINT_H
 
+#include "SDL.h"
 #include "Types.h"
 
 //Simple x and y, with operations to work with

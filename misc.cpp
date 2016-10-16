@@ -8,8 +8,6 @@
 #include <sstream>
 #include <queue>
 
-#include "SDL.h"
-#include "SDL_image.h"
 #include "SDL_mixer.h"
 
 #include "globals.h"
@@ -129,16 +127,6 @@ void playSound(SDL_Sound *p){
    if (!DEBUG)
       if (p)
          Mix_PlayChannel(-1, p, 0);
-}
-
-//synthesizes most args of SDL_SetColorKey
-void setColorKey(SDL_Surface *surface, const SDL_Color &color){
-   assert(surface);
-   SDL_SetColorKey(surface, SDL_SRCCOLORKEY,
-                   SDL_MapRGB(surface->format,
-                              color.r,
-                              color.g,
-                              color.b));
 }
 
 //push a mouse-move event onto the queue, to refresh the

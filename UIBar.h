@@ -4,7 +4,6 @@
 #define UI_BAR_H
 
 #include <vector>
-#include "SDL.h"
 #include "globals.h"
 #include "uiBarFunctions.h"
 

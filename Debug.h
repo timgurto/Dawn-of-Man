@@ -6,7 +6,6 @@
 #include <queue>
 #include <sstream>
 
-#include "SDL.h"
 #include "SDL_ttf.h"
 
 #include "misc.h"
@@ -99,7 +98,7 @@ class Debug{
 public:
    Debug(SDL_Color color, pixels_t x, pixels_t y,
       unsigned short count){}
-   void initScreen(SDL_Surface *screen){}
+   void initScreen(Surface *screen){}
    void initFont(std::string name, int size){}
    void display(){}
 

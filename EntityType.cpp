@@ -1,6 +1,5 @@
 // (C) 2009 Tim Gurto
 
-#include "SDL.h"
 #include "EntityType.h"
 #include "misc.h"
 

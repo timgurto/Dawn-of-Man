@@ -3,7 +3,6 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "SDL.h"
 #include "Resources.h"
 #include "TechBonuses.h"
 #include "CoreData.h"

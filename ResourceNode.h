@@ -4,7 +4,6 @@
 #define RESOURCE_NODE_H
 
 #include <vector>
-#include "SDL.h"
 #include "types.h"
 #include "globals.h"
 #include "Entity.h"

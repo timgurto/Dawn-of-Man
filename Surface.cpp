@@ -28,18 +28,15 @@ isScreen_(false){
 }
 
 Surface::Surface(SpecialSurface special, int width, int height,
-                 SDL_Color background){
+                 SDL_Color background):
+isScreen_(false),
+surface_(0){
    switch(special){
-   case SUR_UNINIT:
-      surface_ = 0;
-      isScreen_ = false;
-      break;
 
    case SUR_SCREEN:
-      if (screenSet_){ //don't make duplicate screen buffers
-         surface_ = 0;
+      if (screenSet_) //don't make duplicate screen buffers
          break;
-      }
+
       surface_ = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP,
                                   SDL_HWSURFACE | (WINDOWED_MODE ?
                                   0 :
@@ -57,7 +54,15 @@ Surface::Surface(SpecialSurface special, int width, int height,
       setColorKey(background);
       break;
    }
-   ++surfacesLoaded_;
+   if (surface_ && !isScreen_)
+      ++surfacesLoaded_;
+}
+
+Surface::Surface(TTF_Font *font, std::string message, SDL_Color color):
+surface_(TTF_RenderText_Solid(font, message.c_str(), color)),
+isScreen_(false){
+   if (surface_)
+      ++surfacesLoaded_;
 }
 
 Surface::Surface(const Surface &original):
@@ -66,12 +71,8 @@ surface_(SDL_ConvertSurface(original.surface_,
                             original.surface_->format,
                             SDL_SWSURFACE)){
    //TODO try SDL_HWSURFACE
-   ++surfacesLoaded_;
-}
-
-Surface::Surface(TTF_Font *font, std::string message, SDL_Color color):
-surface_(TTF_RenderText_Solid(font, message.c_str(), color)){
-   ++surfacesLoaded_;
+   if (surface_)
+      ++surfacesLoaded_;
 }
 
 Surface::~Surface(){

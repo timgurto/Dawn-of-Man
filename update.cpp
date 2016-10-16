@@ -3,7 +3,6 @@
 #include <cassert>
 #include <sstream>
 #include <ctime>
-#include "SDL.h"
 #include "update.h"
 #include "game.h"
 #include "UIBar.h"

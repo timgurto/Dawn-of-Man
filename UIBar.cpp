@@ -1,6 +1,5 @@
 // (C) 2009-2010 Tim Gurto
 
-#include "SDL.h"
 #include "types.h"
 #include "misc.h"
 #include "GameData.h"

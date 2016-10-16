@@ -1,7 +1,6 @@
 // (C) 2010 Tim Gurto
 
 #include <cassert>
-#include "SDL.h"
 #include "render.h"
 #include "update.h"
 #include "GameData.h"
@@ -33,6 +32,8 @@ void render(Surface &screen, Surface &selection,
 
    assert (screen);
 
+   screen.fill();
+
    renderMap(screen, game, map, darkMap);
    renderSelection(screen, game, selection);
    if (game.mode == MODE_CONSTRUCTION && !game.rightMouse.dragging)
@@ -62,7 +63,6 @@ void render(Surface &screen, Surface &selection,
       outcomeMessage.draw(screen, &makeRect(x, y));                                     
    }
 
-   //Debug text
    debug.display();
    //deltaLog.display();
 
@@ -134,7 +134,7 @@ void renderMap(Surface &screen, const GameData &game,
                              border : //outside map
                              map);    //inside map
             
-            tile.draw(map, &tileRect);
+            tile.draw(screen, &tileRect);
 
          } //if collision
       } //for y
@@ -192,6 +192,7 @@ void renderEntities(Surface &screen, const GameData &game){
          //only draw entities that are on-screen
          if ((*it)->onScreen())
             (*it)->draw(entitiesTemp);
+
       entitiesTemp.draw(screen);
 
    //Masks off: draws entities straight to the screen.

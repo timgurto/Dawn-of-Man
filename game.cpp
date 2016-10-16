@@ -6,9 +6,6 @@
 #include <map>
 #include <string>
 
-#include "SDL.h"
-#include "SDL_mixer.h"
-
 #include "game.h"
 #include "globals.h"
 #include "update.h"
@@ -54,19 +51,17 @@ const timer_t END_MESSAGE_TIMER = 1250;
 
 GameOutcome gameMode(std::string fileName){
 
+   //seed random generator
+   srand(unsigned(time(0)));
+
    //initialize screen and debug objects
    Surface screen(SUR_SCREEN);
 
    //loading screen
-   {
-      Surface loading(MISC_IMAGE_PATH + "loading.PNG");
-      renderLoadingScreen(screen, loading);
-   }
+   Surface loading(MISC_IMAGE_PATH + "loading.PNG");
+   renderLoadingScreen(screen, loading);
 
    debug.initScreen(&screen);
-
-   //seed random generator
-   srand(unsigned(time(0)));
 
    //load core data (must be done after screen is initialized)
    CoreData core(DATA_PATH + "core.dat");
@@ -88,8 +83,8 @@ GameOutcome gameMode(std::string fileName){
       diagRed       (MISC_IMAGE_PATH + "diagRed.PNG",        GREEN),
       particle      (MISC_IMAGE_PATH + "particle.PNG",       GREEN),
       particleShadow(MISC_IMAGE_PATH + "particleShadow.PNG", GREEN),
-      victory       (MISC_IMAGE_PATH + "victory.PNG"),
-      loss          (MISC_IMAGE_PATH + "loss.PNG"),
+      victory       (MISC_IMAGE_PATH + "victory.PNG",        GREEN),
+      loss          (MISC_IMAGE_PATH + "loss.PNG",           GREEN),
       glow          (MISC_IMAGE_PATH + "glow.PNG", true),
       entitiesTemp  (SUR_BLANK, SCREEN_WIDTH, SCREEN_HEIGHT, ENTITY_BACKGROUND),
       selRectImage  (SUR_BLANK);
@@ -116,7 +111,7 @@ GameOutcome gameMode(std::string fileName){
 
    //create game data object, and load data from file
    GameData game(DATA_PATH + fileName);
-   
+
    //more init
    Particle::init(&screen, &particle, &particleShadow);
    Entity::init(&core, &game, &screen, &diagGreen);

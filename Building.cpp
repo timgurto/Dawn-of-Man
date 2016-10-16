@@ -3,7 +3,6 @@
 #include <list>
 #include <cassert>
 #include <sstream>
-#include "SDL.h"
 #include "Building.h"
 #include "GameData.h"
 #include "Debug.h"
