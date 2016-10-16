@@ -150,14 +150,15 @@ void handleEvents(const CoreData &core, GameData &game,
                   break;
 
                case SDLK_KP_PLUS:
-                  //HACK remove this cheat
-                  game.players[HUMAN_PLAYER]
-                     .addResources(resources_t(Resources::getResourceCount(), 1337));
+                  if (DEBUG)
+                     game.players[HUMAN_PLAYER]
+                        .addResources(resources_t(Resources::getResourceCount(), 1337));
                   break;
 
                case SDLK_KP_MINUS:
                   //HACK remove this cheat
-                  game.players[HUMAN_PLAYER].godMode();
+                  if (DEBUG)
+                     game.players[HUMAN_PLAYER].godMode();
                   break;
 
                case SDLK_ESCAPE:

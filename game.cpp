@@ -162,6 +162,12 @@ unsigned gameMode(Screen &thisScreen, const void *data){
    messageBoxes.push_back(&resourcesBox);
    messageBoxes.push_back(&fpsDisplay);
 
+   //flush event queue before accepting game controls,
+   //specifically the mouse up event from clicking "Play Campaign"
+   SDL_Event event;
+   while(SDL_PollEvent(&event))
+      debug("Unhandled event: ", int(event.type));
+
    timer_t oldTicks = SDL_GetTicks();
    game.loop = true;
    while (game.loop){

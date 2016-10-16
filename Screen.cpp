@@ -76,7 +76,7 @@ int Screen::handleEventsDefault_(){
                }
                break;
 
-            //TODO defaults for Esc and Ret
+            //TODO * defaults for Esc and Ret
             case SDLK_ESCAPE:
                break;
 
@@ -89,7 +89,6 @@ int Screen::handleEventsDefault_(){
 
       //A mouse button is pressed
       case SDL_MOUSEBUTTONDOWN:
-         debug("Mouse down: ", int(event.button.button));
          switch (event.button.button){
          case MOUSE_BUTTON_LEFT:
             //check whether a button was clicked
@@ -112,7 +111,11 @@ int Screen::handleEventsDefault_(){
          }
          break;
 
+      default:
+         debug("Uncaught event: ", int(event.type));
+
       } //event switch
+
    } //event while
 
    //nothing to report
@@ -140,6 +143,10 @@ void Screen::drawDefault_() const{
    //cursor
    cursor_->draw(screenBuf, &makeRect(mousePos + CURSOR_OFFSET));
 
+   //debug log
+   if (DEBUG)
+      debug.display();
+
    //flip buffer
    screenBuf.flip();
 }
@@ -155,11 +162,6 @@ go_(go),
 loop_(true){}
 
 int Screen::operator()(const void *data){
-   //make sure there are no events on the queue
-   //SDL_Event event;
-   //TODO assert(!SDL_PollEvent(&event));
-
-   //empty queue?
    return (*go_)(*this, data);
 }
 

@@ -82,23 +82,7 @@ int main(int argc, char **argv){
             break;
 
          case BUTTON_NEW:
-            //campaign: go through each level
-            int levels;
-            for (levels = 0;
-                 std::ifstream((DATA_PATH + format2(levels) + ".dat").c_str());
-                 ++levels);
-            //after loop, levels = number of levels in the campaign
-
-            //play each consecutive level
-            for (int i = 0; i != levels; ++i){
-               unsigned outcome;
-               //repeat each level if lost
-               std::string filename = format2(i) + ".dat";
-               while ((outcome = game(&filename)) == LOSS)
-                  ;
-               if (outcome == QUIT)
-                  break;
-            }
+            playCampaign(game);
             break;
          }
       }while(loop);
@@ -124,7 +108,7 @@ void buildScreens(Screen &mainMenu,
       (ELEM_LABEL, "Dawn of Man", ANCHOR_TOP,    Point(0, 40),  ScreenElement::NO_ID,
        0, 0, 75));
    mainMenu.addElement(ScreenElement
-      (ELEM_BUTTON, "Begin",      ANCHOR_CENTER, Point(0, -60), BUTTON_NEW));
+      (ELEM_BUTTON, "Begin Game", ANCHOR_CENTER, Point(0, -60), BUTTON_NEW));
    mainMenu.addElement(ScreenElement
       (ELEM_BUTTON, "Credits",    ANCHOR_CENTER, 0,             BUTTON_CREDITS));
    mainMenu.addElement(ScreenElement
@@ -175,4 +159,23 @@ void addCredit(Screen &creditsScreen, int &yPos, std::string text){
 
 void addCreditGap(int &yPos){
    yPos += CREDITS_GAP;
+}
+
+void playCampaign(Screen &game){
+   int levels;
+   for (levels = 0;
+        std::ifstream((DATA_PATH + format2(levels) + ".dat").c_str());
+        ++levels);
+   //after loop, levels = number of levels in the campaign
+
+   //play each consecutive level
+   for (int i = 0; i != levels; ++i){
+      unsigned outcome;
+      //repeat each level if lost
+      std::string filename = format2(i) + ".dat";
+      while ((outcome = game(&filename)) == LOSS)
+         ;
+      if (outcome == QUIT)
+         break;
+   }
 }

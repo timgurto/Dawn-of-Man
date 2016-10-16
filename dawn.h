@@ -4,6 +4,7 @@
 #define DAWN_H
 
 class ScreenElement;
+class Screen;
 
 void buildScreens(Screen &mainMenu,
                   Screen &credits);
@@ -12,5 +13,8 @@ void buildScreens(Screen &mainMenu,
 void addCreditTitle(Screen &creditsScreen, int &yPos, std::string text);
 void addCredit(Screen &creditsScreen, int &yPos, std::string text);
 void addCreditGap(int &yPos);
+
+//plays through each level in the campaign
+void playCampaign(Screen &game);
 
 #endif
