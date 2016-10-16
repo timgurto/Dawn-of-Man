@@ -32,15 +32,15 @@ class AI{
    Resources
       expansionCap_,
       militaryCap_;
-
-   //x:1 expansion:military
-   static const double allocationRatio_;
    
    //expansion items the player wants to build
    wishlist_t wishlist_;
 
    //items which have had resources allocated, in order of preference
    buildQueue_t buildQueue_;
+
+   //x:1 expansion:military
+   static const double allocationRatio_;
 
    static GameData *game_;
    static const CoreData *core_;

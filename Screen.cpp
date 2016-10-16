@@ -77,7 +77,7 @@ int Screen::handleEventsDefault_(){
                }
                break;
 
-            //TODO * defaults for Esc and Ret
+            //TODO defaults for Esc and Ret
             case SDLK_ESCAPE:
                break;
 

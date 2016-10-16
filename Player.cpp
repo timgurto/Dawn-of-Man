@@ -15,14 +15,15 @@ const CoreData *Player::core_ = 0;
 UIBar *Player::buildingsBar_ = 0;
 
 Player::Player(Uint32 color,
-               const resources_t &resources,
-               const checklist_t &techsResearched):
+               const Resources &resources,
+               const checklist_t &techsResearched,
+               const checklist_t buildingsBuilt):
 color_(color),
 bonuses_(),
 resources_(resources),
 techsResearched_(techsResearched),
+buildingsBuilt_(buildingsBuilt),
 alive(true),
-buildingsBuilt_(core_->buildingTypes.size(), false),
 resourcesString_(resources_.str()){
    for (size_t i = 0; i != techsResearched.size(); ++i)
       if (techsResearched_[i])

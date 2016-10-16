@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <cstdlib>
+#include <vector>
 #include "util.h"
 #include "AI.h"
 #include "Resources.h"
@@ -17,7 +18,7 @@ extern Debug debug;
 
 GameData *AI::game_ = 0;
 const CoreData *AI::core_ = 0;
-const double AI::allocationRatio_ = 1;
+const double AI::allocationRatio_ = 1; //x:1 expansion:military
 
 void AI::init(const CoreData *core, GameData *game){
    core_ = core;
@@ -104,6 +105,9 @@ void AI::checkExpansion(){
 void AI::checkMilitary(){
    //assumption: largest index is the best military unit
    //assumption: one type of military building, one instance of building
+   //if these assumptions are wrong, the AI will be less effective.
+
+   Player &player = game_->players[player_];
    
    //find training grounds
    const Building *militaryBuilding = 0;
@@ -121,5 +125,27 @@ void AI::checkMilitary(){
       debug("No military building found");
       return;
    }
+
    //check affordable military units
+   //as many highest-level units as possible, then as many of the next level, etc.
+   for (unitTypes_t::const_reverse_iterator it = core_->unitTypes.rbegin();
+        it != core_->unitTypes.rend(); ++it){
+      typeNum_t index = it->getIndex();
+      //valid for this player
+      if (game_->validUnit(player_, index, militaryBuilding->getTypeIndex()))
+         //created at the military building found above
+         if (it->getOriginBuilding() == militaryBuilding->getTypeIndex())
+            //military unit
+            if (!(it->isBuilder() || it->isGatherer())){
+               //while affordable
+               const Resources &cost = it->getCost();
+               while (player.sufficientResources(cost)){
+                  //pay for and queue up the unit
+                  buildQueue_.push(AnyEntityType(ENT_UNIT, index));
+                  player.subtractResources(cost);
+               }
+            }
+                  
+            
+   }
 }

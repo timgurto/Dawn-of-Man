@@ -30,7 +30,8 @@ typeNum_t getValidUnit(const CoreData &core, const GameData &game,
    ++i;
    typeNum_t index;
    for (index = 0; i != 0; ++index)
-      if (game.validUnit(HUMAN_PLAYER, index))
+      if (game.validUnit(HUMAN_PLAYER, index,
+                         game.buildingSelected->getTypeIndex()))
          --i;
    return index -1 ;
 }
@@ -40,7 +41,8 @@ typeNum_t getValidTech(const CoreData &core, const GameData &game,
    ++i;
    typeNum_t index;
    for (index = 0; i != 0; ++index)
-      if (game.validTech(HUMAN_PLAYER, index))
+      if (game.validTech(HUMAN_PLAYER, index,
+                         game.buildingSelected->getTypeIndex()))
          --i;
    return index - 1;
 }
@@ -66,7 +68,8 @@ typeNum_t getValidTech(const CoreData &core, const GameData &game,
          return 0;
       typeNum_t count = 0;
       for (typeNum_t index = 0; index != core.unitTypes.size(); ++index)
-         if (game.validUnit(HUMAN_PLAYER, index))
+         if (game.validUnit(HUMAN_PLAYER, index,
+                            game.buildingSelected->getTypeIndex()))
             ++count;
       return count;
    }
@@ -77,7 +80,8 @@ typeNum_t getValidTech(const CoreData &core, const GameData &game,
          return 0;
       typeNum_t count = 0;
       for (typeNum_t index = 0; index != core.techs.size(); ++index)
-         if (game.validTech(HUMAN_PLAYER, index))
+         if (game.validTech(HUMAN_PLAYER, index,
+                            game.buildingSelected->getTypeIndex()))
             ++count;
       return count;
    }

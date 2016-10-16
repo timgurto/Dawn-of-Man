@@ -3,7 +3,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include <set>
+#include "types.h"
 #include "globals.h"
 #include "Resources.h"
 #include "TechBonuses.h"
@@ -13,6 +13,7 @@
 struct GameData;
 class UIBar;
 
+//TODO consider bitfield
 typedef std::vector<bool> checklist_t;
 
 //Represents one player, be it the human or a
@@ -48,8 +49,9 @@ class Player{
 
 public:
    Player(Uint32 color,
-          const resources_t &resources,
-          const checklist_t &techsResearched);
+          const Resources &resources,
+          const checklist_t &techsResearched,
+          const checklist_t buildingsBuilt);
 
    //whether or not the player has any remaining buildings or units
    bool alive;

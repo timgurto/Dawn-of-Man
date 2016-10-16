@@ -132,8 +132,8 @@ public:
 
    //whether the given item is available for the player
    bool validBuilding(typeNum_t playerID, typeNum_t i) const;
-   bool validUnit(typeNum_t playerID, typeNum_t i) const;
-   bool validTech(typeNum_t playerID, typeNum_t i) const;
+   bool validUnit(typeNum_t playerID, typeNum_t i, typeNum_t buildingType) const;
+   bool validTech(typeNum_t playerID, typeNum_t i, typeNum_t buildingType) const;
 };
 
 #endif

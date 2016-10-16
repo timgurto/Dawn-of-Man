@@ -5,6 +5,7 @@
 
 #include "SDL.h"
 #include <queue>
+#include <vector>
 
 //indexes for entity types, players, etc.
 typedef unsigned short typeNum_t;

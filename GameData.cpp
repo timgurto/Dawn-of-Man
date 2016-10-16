@@ -75,7 +75,8 @@ outcome(IN_PROGRESS){
       bool
          centerScreen = false;
       checklist_t
-         techsResearched(core_->techs.size(), false);
+         techsResearched(core_->techs.size(), false),
+         buildingsBuilt(core_->buildingTypes.size(), false);
       Point
          loc;
       resources_t
@@ -155,9 +156,12 @@ outcome(IN_PROGRESS){
                   loc.y = rand() % map.h;
                }while (!noCollision(*this, core_->buildingTypes[type], loc));
                addEntity(*this, new Building(type, loc, player, progress));
+               buildingsBuilt[type] = true;
             }
-         else
+         else{
             addEntity(*this, new Building(type, loc, player, progress));
+            buildingsBuilt[type] = true;
+         }
          if (centerScreen)
             centerMap(*this, loc);
          players[player].buildBuilding(type, false);
@@ -206,7 +210,8 @@ outcome(IN_PROGRESS){
             centerMap(*this, loc);
       }else if (object == "player"){
          assert (index != NO_TYPE); //an index must be specified
-         players.push_back(Player(color, resources, techsResearched));
+         players.push_back(Player(color, resources, techsResearched,
+                                  buildingsBuilt));
       }
 
    }
@@ -405,19 +410,21 @@ bool GameData::validBuilding(typeNum_t playerID, typeNum_t i) const{
       player.hasBuilding(type.getPrereqBuilding());
 }
 
-bool GameData::validUnit(typeNum_t playerID, typeNum_t i) const{
+bool GameData::validUnit(typeNum_t playerID, typeNum_t i,
+                         typeNum_t buildingType) const{
    if (i == NO_TYPE)
       return false;
    const UnitType &type = core_->unitTypes[i];
    return
       //unit comes from the selected building
-      buildingSelected &&
-      buildingSelected->getTypeIndex() == type.getOriginBuilding() &&
+      buildingType != NO_TYPE &&
+      buildingType == type.getOriginBuilding() &&
       //prerequisites
       players[playerID].hasTech(type.getPrereqTech());
 }
 
-bool GameData::validTech(typeNum_t playerID, typeNum_t i) const{
+bool GameData::validTech(typeNum_t playerID, typeNum_t i,
+                         typeNum_t buildingType) const{
    if (i == NO_TYPE)
       return false;
    typeNum_t techIndex = i;
@@ -425,8 +432,8 @@ bool GameData::validTech(typeNum_t playerID, typeNum_t i) const{
    const Player &player = players[playerID];
    return
       //tech comes from the selected building
-      buildingSelected &&
-      buildingSelected->getTypeIndex() == tech.getOriginBuilding() &&
+      buildingType != NO_TYPE &&
+      buildingType == tech.getOriginBuilding() &&
       //prerequisites
       player.hasTech(tech.getPrereqTech1()) &&
       player.hasTech(tech.getPrereqTech2()) &&
