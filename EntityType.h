@@ -26,7 +26,7 @@ class EntityType{
    SDL_Rect
       drawRect_, //position of sprite graphic
       baseRect_; //the entity's base, for collisions
-      //TODO smaller rect for selection and creation
+      //TODO * smaller rect for selection and creation
 
    //where the selection indicator is centered
    Point selectionCenter_;

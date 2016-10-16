@@ -27,7 +27,8 @@ ScreenElement::ScreenElement(ScreenElementType type,
                              std::string fontName):
 type_(type),
 text_(text),
-id_(id){
+id_(id),
+rollover_(true){
 
    //handle default values
    if (fontSize == 0)

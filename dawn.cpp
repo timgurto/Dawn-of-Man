@@ -172,7 +172,7 @@ int playCampaign(Screen &game){
         ++levels);
    //after loop, levels = number of levels in the campaign
    //play each consecutive level
-   unsigned outcome;
+   unsigned outcome = QUIT;
    for (int i = 0; i != levels; ++i){
       //repeat each level if lost
       std::string filename = format2(i) + ".dat";

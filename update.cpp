@@ -451,7 +451,7 @@ void scrollMap(GameData &game, double delta){
    pixels_t scroll = pixels_t(delta * SCROLL_AMOUNT);
 
    //edge of screen
-   if (!game.scrollLockX)
+   if (!game.scrollLockX){
       if (Screen::mousePos.x < EDGE_SCROLL_MARGIN){
          scrolling = true;
          game.map.x += scroll;
@@ -459,7 +459,8 @@ void scrollMap(GameData &game, double delta){
          scrolling = true;
          game.map.x -= scroll;
       }
-   if (!game.scrollLockY)
+   }
+   if (!game.scrollLockY){
       if (Screen::mousePos.y < EDGE_SCROLL_MARGIN){
          scrolling = true;
          game.map.y += scroll;
@@ -467,6 +468,7 @@ void scrollMap(GameData &game, double delta){
          scrolling = true;
          game.map.y -= scroll;
       }
+   }
 
    //arrow keys
    if (!game.scrollLockX){
