@@ -43,6 +43,8 @@ void updateState(double delta, const CoreData &core, GameData &game,
       }
       Entity::emptyTrash();
 
+      //TODO tick non-human, non-nature Players
+
       //UI bars, if necessary
       if (game.recalcBars){
          game.recalcBars = false;
@@ -283,7 +285,7 @@ void handleEvents(const CoreData &core, GameData &game,
                         }
                      }
 
-                  //asdfghjkl - click equivalent UI bar button
+                  //home row keys - click equivalent UI bar button
                   else if (key == SDLK_a ||
                            key == SDLK_s ||
                            key == SDLK_d ||
@@ -369,7 +371,8 @@ void handleEvents(const CoreData &core, GameData &game,
                      //cancel build mode
                      game.toBuild = NO_TYPE;
                      game.mode = MODE_BUILDER;
-                     for (UIBars_t::iterator it = bars.begin(); it != bars.end(); ++it)
+                     for (UIBars_t::iterator it = bars.begin();
+                          it != bars.end(); ++it)
                         if ((*it)->isActive())
                            (*it)->calculateRect();
                      break;
@@ -396,44 +399,21 @@ void handleEvents(const CoreData &core, GameData &game,
                   //place new building
                   if (game.mode == MODE_CONSTRUCTION){
                      assert (game.toBuild != NO_TYPE);
-                     const BuildingType &buildingType = core.buildingTypes[game.toBuild];
-                     if (game.players[HUMAN_PLAYER].
-                        sufficientResources(buildingType.getCost()) &&
-                         game.buildLocationOK){
-
-                        buildingType.getSound().play();
-
-                        //Subtract resource cost
-                        game.players[HUMAN_PLAYER].
-                           subtractResources(buildingType.getCost());
-
-                        //create new building
-                        Building *newBuilding =
-                           new Building(game.toBuild, Screen::mousePos -
-                                                      game.map);
-                        addEntity(game, newBuilding);
-
-                        //assign selected builders to the construction
-                        for (entities_t::iterator it = game.entities.begin();
-                             it != game.entities.end(); ++it)
-                           if ((*it)->classID() == ENT_UNIT){
-                              Unit *unitP = (Unit *)(*it);
-                              if (unitP->selected)
-                                 if (unitP->isBuilder())
-                                    unitP->setTarget(newBuilding);
-                           }
-
+                     if (game.buildLocationOK){
+                        game.constructBuilding(game.toBuild,
+                                               Screen::mousePos - game.map,
+                                               HUMAN_PLAYER);
                         //Shift key: multiple constructions
                         if(!isKeyPressed(SDLK_LSHIFT)){
                            game.mode = MODE_BUILDER;
-                           game.toBuild = NO_TYPE;
-                           for (UIBars_t::iterator it = bars.begin(); it != bars.end(); ++it)
+                           for (UIBars_t::iterator it = bars.begin();
+                                it != bars.end(); ++it)
                               if ((*it)->isActive())
                                  (*it)->calculateRect();
                         }
-                     }else{ //not enough resources, or bad place
-                        debug("Cannot construct building");
-                     }
+                     }else
+                        debug ("Bad location for building");
+
                   }else{ //not construction mode
                      select(game);
                      setModeFromSelection(game, bars);

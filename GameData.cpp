@@ -19,6 +19,9 @@
 
 extern Debug debug;
 
+const int NUM_PLACEMENT_TRIES = 40;
+const pixels_t PLACEMENT_MARGIN = 1;
+
 const CoreData *GameData::core_ = 0;
 
 GameData::GameData(std::string filename):
@@ -260,4 +263,129 @@ GameData::~GameData(){
 
 void GameData::init(const CoreData *core){
    core_ = core;
+}
+
+void GameData::trainUnit(typeNum_t index,
+                         const Building &sourceBuilding,
+                         typeNum_t playerID){
+
+   const UnitType &unitType = core_->unitTypes[index];
+   Player &player = players[playerID];
+
+   //check player's resources
+   if (player. sufficientResources(unitType.getCost())){
+
+      //find location
+      Point loc;
+
+      int tries = 0;
+      do{
+         ++tries;
+         Direction dir = Direction(rand() % DIR_MAX);
+         SDL_Rect
+            buildingBaseRect = sourceBuilding.getBaseRect(),
+            unitTypeBaseRect = unitType.getBaseRect();
+
+         switch(dir){
+         case DIR_UP:
+            loc.y = buildingBaseRect.y -
+                    unitTypeBaseRect.h -
+                    unitTypeBaseRect.y -
+                    PLACEMENT_MARGIN;
+            break;
+         case DIR_DOWN:
+            loc.y = buildingBaseRect.y +
+                    buildingBaseRect.h -
+                    unitTypeBaseRect.y +
+                    PLACEMENT_MARGIN;
+            break;
+         case DIR_LEFT:
+            loc.x = buildingBaseRect.x -
+                    unitTypeBaseRect.w -
+                    unitTypeBaseRect.x -
+                    PLACEMENT_MARGIN;
+            break;
+         case DIR_RIGHT:
+            loc.x = buildingBaseRect.x +
+                    buildingBaseRect.w -
+                    unitTypeBaseRect.x +
+                    PLACEMENT_MARGIN;
+         }
+
+         if (dir == DIR_UP || dir == DIR_DOWN)
+            loc.x = rand() % (buildingBaseRect.w +
+                              unitTypeBaseRect.w) +
+                    buildingBaseRect.x -
+                    unitTypeBaseRect.w -
+                    unitTypeBaseRect.x;
+         else
+            loc.y = rand() % (buildingBaseRect.h +
+                              unitTypeBaseRect.h) +
+                    buildingBaseRect.y -
+                    unitTypeBaseRect.h -
+                    unitTypeBaseRect.y;
+
+      }while (tries != NUM_PLACEMENT_TRIES &&
+              !noCollision(*this, unitType, loc));
+
+      if (tries != NUM_PLACEMENT_TRIES){
+         //place unit
+         UIBar::clickSound();
+         Unit *unit = new Unit(index, loc, playerID);
+         //TODO move addEntity to GameData
+         addEntity(*this, unit);
+         player.subtractResources(unitType.getCost());
+      }else
+         debug("Unable to place unit");
+   }else //insufficient resources
+      debug("Insufficient resources to train unit");
+}
+
+void GameData::researchTech(typeNum_t index, typeNum_t playerID){
+
+   Player &player = players[playerID];
+   const Tech &tech = core_->techs[index];
+   
+   //check player's resources
+   if (player.sufficientResources(tech.getCost())){
+
+      //research tech
+      UIBar::clickSound();
+      player.subtractResources(tech.getCost());
+      player.researchTech(index);
+
+   }else //insufficient resources
+      debug("Insufficient resources to research tech");
+}
+
+void GameData::constructBuilding(typeNum_t index, const Point &loc,
+                                 typeNum_t playerID){
+
+   const BuildingType &buildingType = core_->buildingTypes[index];
+   Player &player = players[playerID];
+
+   if (player.sufficientResources(buildingType.getCost())){
+      buildingType.getSound().play();
+
+      //Subtract resource cost
+      player.subtractResources(buildingType.getCost());
+
+      //create new building
+      Building *newBuilding =
+         new Building(index, loc, playerID);
+      addEntity(*this, newBuilding);
+
+      //assign selected builders to the construction
+      if (playerID == HUMAN_PLAYER)
+         for (entities_t::iterator it = entities.begin();
+              it != entities.end(); ++it)
+            if ((*it)->classID() == ENT_UNIT){
+               Unit *unitP = (Unit *)(*it);
+               if (unitP->selected && unitP->isBuilder())
+                     unitP->setTarget(newBuilding);
+            }
+   }else{ //not enough resources
+      debug("Insufficient resources to construct building");
+   }
+
 }

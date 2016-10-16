@@ -15,10 +15,6 @@
 
 extern Debug debug;
 
-const int NUM_PLACEMENT_TRIES = 40;
-const pixels_t PLACEMENT_MARGIN = 1;
-
-
 bool validBuilding(const CoreData &core,
                    const GameData &game, typeNum_t i){
    if (i == NO_TYPE)
@@ -164,100 +160,14 @@ typeNum_t getValidTech(const CoreData &core, const GameData &game,
 
    void trainUnit(typeNum_t index, const CoreData &core,
                   GameData &game){
-      Building &building = *game.buildingSelected;
-
-      //get type
-      typeNum_t typeIndex = getValidUnit(core, game, index);      
-      const UnitType &unitType = core.unitTypes[typeIndex];
-
-      //check player's resources
-      if (game.players[HUMAN_PLAYER].
-             sufficientResources(unitType.getCost())){
-
-         //find location
-         Point loc;
-
-         int tries = 0;
-         do{
-            ++tries;
-            Direction dir = Direction(rand() % DIR_MAX);
-            SDL_Rect
-               buildingBaseRect = building.getBaseRect(),
-               unitTypeBaseRect = unitType.getBaseRect();
-
-            switch(dir){
-            case DIR_UP:
-               loc.y = buildingBaseRect.y -
-                       unitTypeBaseRect.h -
-                       unitTypeBaseRect.y -
-                       PLACEMENT_MARGIN;
-               break;
-            case DIR_DOWN:
-               loc.y = buildingBaseRect.y +
-                       buildingBaseRect.h -
-                       unitTypeBaseRect.y +
-                       PLACEMENT_MARGIN;
-               break;
-            case DIR_LEFT:
-               loc.x = buildingBaseRect.x -
-                       unitTypeBaseRect.w -
-                       unitTypeBaseRect.x -
-                       PLACEMENT_MARGIN;
-               break;
-            case DIR_RIGHT:
-               loc.x = buildingBaseRect.x +
-                       buildingBaseRect.w -
-                       unitTypeBaseRect.x +
-                       PLACEMENT_MARGIN;
-            }
-
-            if (dir == DIR_UP || dir == DIR_DOWN)
-               loc.x = rand() % (buildingBaseRect.w +
-                                 unitTypeBaseRect.w) +
-                       buildingBaseRect.x -
-                       unitTypeBaseRect.w -
-                       unitTypeBaseRect.x;
-            else
-               loc.y = rand() % (buildingBaseRect.h +
-                                 unitTypeBaseRect.h) +
-                       buildingBaseRect.y -
-                       unitTypeBaseRect.h -
-                       unitTypeBaseRect.y;
-
-         }while (tries != NUM_PLACEMENT_TRIES &&
-                 !noCollision(game, unitType, loc));
-
-         if (tries != NUM_PLACEMENT_TRIES){
-            //place unit
-            UIBar::clickSound();
-            Unit *unit = new Unit(typeIndex, loc);
-            addEntity(game, unit);
-            game.players[HUMAN_PLAYER].
-               subtractResources(core.unitTypes[typeIndex].getCost());
-         }else
-            debug("Unable to place unit");
-      }else //insufficient resources
-         debug("Insufficient resources");
+      game.trainUnit(getValidUnit(core, game, index),
+                     *game.buildingSelected,
+                     HUMAN_PLAYER);
    }
 
    void researchTech(typeNum_t index, const CoreData &core,
                      GameData &game){
-      Player &human = game.players[HUMAN_PLAYER];
-
-      //get type
-      typeNum_t techIndex = getValidTech(core, game, index);
-      const Tech &tech = core.techs[techIndex];
-      
-      //check player's resources
-      if (human.sufficientResources(tech.getCost())){
-
-         //research tech
-         UIBar::clickSound();
-         human.subtractResources(tech.getCost());
-         human.researchTech(techIndex);
-
-      }else //insufficient resources
-         debug("Insufficient resources");
+      game.researchTech(getValidTech(core, game, index), HUMAN_PLAYER);
    }
 
 //UIBar::helpFun_

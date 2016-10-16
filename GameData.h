@@ -32,15 +32,6 @@ typedef Surface surfaceIndex_t
 //state.  Makes passing this information to classes
 //and functions much simpler.
 struct GameData{
-
-   GameData(std::string filename);
-
-   GameData(int mapSizeX, int mapSizeY);
-
-   //free entities and surfaces pointed to
-   ~GameData();
-
-   static void init(const CoreData *core);
    
    //Each player in the game.
    //[0] is always the human player.
@@ -116,7 +107,28 @@ struct GameData{
    GameOutcome outcome;
 
 private:
+   //core data
    const static CoreData *core_;
+   
+public:
+
+   GameData(std::string filename);
+
+   GameData(int mapSizeX, int mapSizeY);
+
+   //free entities and surfaces pointed to
+   ~GameData();
+
+   static void init(const CoreData *core);
+
+   void trainUnit(typeNum_t index,
+                  const Building &sourceBuilding,
+                  typeNum_t playerID);
+
+   void researchTech(typeNum_t index, typeNum_t playerID);
+
+   void constructBuilding(typeNum_t index, const Point &loc,
+                          typeNum_t playerID);
 };
 
 #endif

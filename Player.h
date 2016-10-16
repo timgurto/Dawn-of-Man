@@ -3,14 +3,21 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include <set>
 #include "Resources.h"
 #include "TechBonuses.h"
 #include "CoreData.h"
+#include "globals.h"
 
 struct GameData;
 class UIBar;
 
 typedef std::vector<bool> checklist_t;
+
+//EntityType, and type index
+typedef std::pair<EntityTypeID, typeNum_t> AnyEntityType;
+typedef std::vector<AnyEntityType> wishList_t;
+typedef std::queue<AnyEntityType> buildQueue_t;
 
 //Represents one player, be it the human or a
 //computer opponent
@@ -30,6 +37,12 @@ class Player{
    Resources
       expansionSupply_,
       militarySupply_;
+
+   //[AI] Items the player wants to build
+   wishList_t wishList_;
+
+   //[AI] Items the player can afford, in order of preference
+   buildQueue_t buildQueue_;
 
    //So that it doesn't have to be recalculated constantly
    std::string resourcesString_;
