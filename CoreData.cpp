@@ -36,7 +36,8 @@ CoreData::CoreData(std::string filename){
          prereqTech = NO_TYPE,
          prereqTech2 = NO_TYPE,
          originBuilding = NO_TYPE,
-         resourceAtDeath = NO_TYPE;
+         resourceAtDeath = NO_TYPE,
+         decorationAtDeath = NO_TYPE;
       damage_t
          maxHealth = 1,
          armor = 0,
@@ -121,6 +122,8 @@ CoreData::CoreData(std::string filename){
             originBuilding = typeNum_t(numVal);
          else if (attr == "resourceAtDeath")
             resourceAtDeath = typeNum_t(numVal);
+         else if (attr == "decorationAtDeath")
+            decorationAtDeath = typeNum_t(numVal);
          else if (attr == "maxHealth")
             maxHealth = damage_t(numVal);
          else if (attr == "armor")
@@ -226,6 +229,7 @@ CoreData::CoreData(std::string filename){
          BuildingType temp(index, name, drawRect, baseRect,
                            selectionCenter, cost, maxHealth, armor,
                            progressCost, prereqBuilding, prereqTech,
+                           decorationAtDeath,
                            soundFile, deathSoundFile);
          buildingTypes.push_back(temp);
 
@@ -239,13 +243,14 @@ CoreData::CoreData(std::string filename){
                        maxCombatFrameCounter, combatFrameCount, combatWait,
                        maxHealth, attack, armor, builder, gatherer,
                        originBuilding, progressCost, resourceAtDeath,
-                       prereqTech, soundFile, deathSoundFile, hitSoundFile);
+                       prereqTech, decorationAtDeath,
+                       soundFile, deathSoundFile, hitSoundFile);
          unitTypes.push_back(temp);
 
       }else if (object == "resourceNodeType"){
          ResourceNodeType temp(index, name, drawRect, baseRect,
                                selectionCenter, maxResources, yield,
-                               EntityColor(color));
+                               EntityColor(color), decorationAtDeath);
          resourceNodeTypes.push_back(temp);
 
       }else if (object == "technology"){

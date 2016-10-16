@@ -27,7 +27,8 @@ public:
                     const Point &selectionCenter,
                     const Resources &maxResources,
                     const Resources &yield,
-                    EntityColor color);
+                    EntityColor color,
+                    typeNum_t decorationAtDeath = NO_TYPE);
 };
 
 #endif

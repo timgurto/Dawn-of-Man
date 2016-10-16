@@ -65,6 +65,20 @@ decorationType{
    baseRect.w = 22;
    baseRect.h = 16;
 }
+decorationType{
+   name = "Skeleton";
+   index = 1;
+   
+   drawRect.x = -10;
+   drawRect.y = -77;
+   drawRect.w = 32;
+   drawRect.h = 41;
+
+   baseRect.x = -10;
+   baseRect.y = -77;
+   baseRect.w = 32;
+   baseRect.h = 41;
+}
 unitType{
    name = "Warrior";
    index = 0;
@@ -95,6 +109,7 @@ unitType{
    armor = 2;
    originBuilding = 1;
    progressCost = 1000;
+   decorationAtDeath = 1;
    soundFile = "SKING1.WAV";
    deathSoundFile = "manDeath0.wav";
    hitSoundFile = "clubman.wav";
@@ -130,6 +145,7 @@ unitType{
    gatherer = true;
    originBuilding = 1;
    progressCost = 1000;
+   decorationAtDeath = 1;
    soundFile = "abadacus.WAV";
    deathSoundFile = "manDeath0.wav";
    hitSoundFile = "clubman.wav";

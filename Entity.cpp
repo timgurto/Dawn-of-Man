@@ -16,6 +16,7 @@
 #include "Unit.h"
 #include "ResourceNode.h"
 #include "CoreData.h"
+#include "Decoration.h"
 
 extern Debug debug;
 
@@ -170,7 +171,7 @@ void Entity::colorBlit(int color, SDL_Surface *screen,
 
    //blit mask, hiding anything that would otherwise
    //show through the gaps in the sprite
-   if (ENTITY_MASKS)
+   if (ENTITY_MASKS && classID() != ENT_DECORATION)
       SDL_BlitSurface(thisType.mask_, &srcLoc, screen,
                       &SDL_Rect(dest));
    //note: the "SDL_Rect(dest)" above avoids SDL_Blit
@@ -340,9 +341,18 @@ void Entity::kill(){
    playSound(thisType.deathSound_);
 
    typeNum_t resourceType = NO_TYPE;
-   if (this->classID() == ENT_UNIT){
+
+   //turns into decoration?
+   typeNum_t decorationType = type().getDecorationAtDeath();
+   if (decorationType != NO_TYPE){
+      Decoration *decoration = new Decoration(decorationType, loc_);
+      addEntity(*game_, decoration);
+   }
+
+   //unit that turns into resource?
+   else if (this->classID() == ENT_UNIT){
       resourceType =
-         core_->unitTypes[thisType.getIndex()].getDeathResource();
+         core_->unitTypes[typeIndex_].getDeathResource();
       if (resourceType != NO_TYPE){
          ResourceNode *node = new ResourceNode(resourceType, loc_);
          addEntity(*game_, node);

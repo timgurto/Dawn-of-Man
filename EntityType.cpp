@@ -9,6 +9,7 @@ EntityType::EntityType(typeNum_t index, EntityTypeID type,
                        const SDL_Rect &drawRect,
                        const SDL_Rect &baseRect,
                        const Point &selectionCenter,
+                       typeNum_t decorationAtDeath,
                        const std::string &soundFile,
                        const std::string &deathSoundFile,
                        const std::string &hitSoundFile):
@@ -17,6 +18,7 @@ name_(name),
 drawRect_(drawRect),
 baseRect_(baseRect),
 selectionCenter_(selectionCenter),
+decorationAtDeath_(decorationAtDeath),
 surface_(loadImage(makePath(type, index_), ENTITY_MASK)),
 icon_(loadImage(makePath(type, index_, IMG_ICON), ENTITY_BACKGROUND)),
 mask_(loadImage(makePath(type, index_, IMG_MASK), ENTITY_MASK)),
@@ -33,6 +35,7 @@ name_(original.name_),
 drawRect_(original.drawRect_),
 baseRect_(original.baseRect_),
 selectionCenter_(original.selectionCenter_),
+decorationAtDeath_(original.decorationAtDeath_),
 surface_(copySurface(original.surface_)),
 icon_(copySurface(original.icon_)),
 mask_(copySurface(original.mask_)),
@@ -78,4 +81,8 @@ SDL_Sound *EntityType::getSound() const{
 
 SDL_Sound *EntityType::getHitSound() const{
    return hitSound_;
+}
+
+typeNum_t EntityType::getDecorationAtDeath() const{
+   return decorationAtDeath_;
 }

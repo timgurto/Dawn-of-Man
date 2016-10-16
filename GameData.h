@@ -106,6 +106,10 @@ struct GameData{
    //Used for UIBar display, and unit training
    Building *buildingSelected;
 
+   //whether a change has occurred that warrants updating
+   //a UI bar
+   bool recalcBars;
+
 private:
    const static CoreData *core_;
 };

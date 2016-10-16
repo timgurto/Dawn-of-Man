@@ -28,6 +28,9 @@ class EntityType{
    //where the selection indicator is centered
    Point selectionCenter_;
 
+   //Which decoration this entity becomes when it dies
+   typeNum_t decorationAtDeath_;
+
    SDL_Surface
       *surface_, //main image
       *icon_, //icon, for UIBars
@@ -53,6 +56,7 @@ public:
               const SDL_Rect &drawRect,
               const SDL_Rect &baseRect,
               const Point &selectionCenter = Point(),
+              typeNum_t decorationAtDeath = NO_TYPE,
               const std::string &soundFile = "",
               const std::string &deathSoundFile = "",
               const std::string &hitSoundFile = "");
@@ -68,6 +72,7 @@ public:
    typeNum_t getIndex() const;
    SDL_Sound *getSound() const;
    SDL_Sound *getHitSound() const;
+   typeNum_t getDecorationAtDeath() const;
 };
 
 #endif

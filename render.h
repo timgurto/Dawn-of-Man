@@ -39,7 +39,10 @@ void renderFootprint(SDL_Surface *screen,
                      const CoreData &core, const GameData &game,
                      SDL_Surface *goodImage, SDL_Surface *badImage);
 
-//Draws all entities
+//Draws all decoration entities
+void renderDecorations(SDL_Surface *screen, const GameData &game);
+
+//Draws all entities except decorations
 void renderEntities(SDL_Surface *screen, const GameData &game);
 
 //Draws the selection rectangle

@@ -37,11 +37,21 @@ void updateState(double delta, const CoreData &core, GameData &game,
          for (entities_t::iterator it = game.entities.begin();
            it != game.entities.end(); ++it){
          (*it)->tick(delta);
+
+         //re-sort entity if it has moved vertically
          VerticalMovement v = (*it)->getVerticalMovement();
          if (v != VM_NONE)
             reSort(game.entities, it, v);
       }
       Entity::emptyTrash();
+
+      //UI bars, if necessary
+      if (game.recalcBars){
+         game.recalcBars = false;
+         for (UIBars_t::iterator it = bars.begin(); it != bars.end(); ++it)
+            if ((*it)->isActive())
+               (*it)->calculateRect();
+      }
 
       //Particles
       for (particles_t::iterator it = game.particles.begin();

@@ -41,6 +41,7 @@ public:
                 progress_t maxProgress = 0,
                 typeNum_t prereqBuilding = NO_TYPE,
                 typeNum_t prereqTech = NO_TYPE,
+                typeNum_t decorationAtDeath = NO_TYPE,
                 const std::string &soundFile = "",
                 const std::string &deathSoundFile = "");
 

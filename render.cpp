@@ -26,6 +26,7 @@ void render(SDL_Surface *screen, SDL_Surface *selection,
    assert (screen);
 
    renderMap(screen, game, map, darkMap);
+   renderDecorations(screen, game);
    renderSelection(screen, game, selection);
    if (game.mode == MODE_CONSTRUCTION && !game.rightMouse.dragging)
        renderFootprint(screen, core, game, diagGreen, diagRed);
@@ -153,7 +154,15 @@ void renderFootprint(SDL_Surface *screen,
                       screen, &SDL_Rect(baseRect));
 }
 
-//Draws all entities
+//Draws decoration entities
+void renderDecorations(SDL_Surface *screen, const GameData &game){
+   for (entities_t::const_iterator it = game.entities.begin();
+        it != game.entities.end(); ++it)
+      if ((*it)->classID() == ENT_DECORATION && (*it)->onScreen())
+         (*it)->draw(screen);
+}
+
+//Draws all entities, except decorations
 void renderEntities(SDL_Surface *screen, const GameData &game){
 
    //Masks on: draws entities onto an intermediate surface, along
@@ -173,7 +182,7 @@ void renderEntities(SDL_Surface *screen, const GameData &game){
       for (entities_t::const_iterator it = game.entities.begin();
            it != game.entities.end(); ++it)
          //only draw entities that are on-screen
-         if ((*it)->onScreen())
+         if ((*it)->classID() != ENT_DECORATION && (*it)->onScreen())
             (*it)->draw(entitiesTemp);
       SDL_BlitSurface(entitiesTemp, 0, screen, 0);
       freeSurface(entitiesTemp);
@@ -184,7 +193,7 @@ void renderEntities(SDL_Surface *screen, const GameData &game){
       //some duplicate code, but cleaner this way
       for (entities_t::const_iterator it = game.entities.begin();
            it != game.entities.end(); ++it)
-         if ((*it)->onScreen())
+         if ((*it)->classID() != ENT_DECORATION && (*it)->onScreen())
             (*it)->draw(screen);
 }
 

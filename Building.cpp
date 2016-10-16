@@ -124,6 +124,10 @@ void Building::progressConstruction(){
          }
       //register with player
       game_->players[player_].buildBuilding(typeIndex_);
+
+      //update buildingsBar
+      if (player_ == HUMAN_PLAYER)
+         game_->recalcBars = true;
    }
 }
 

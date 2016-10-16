@@ -13,13 +13,15 @@ ResourceNodeType::ResourceNodeType
    const Point &selectionCenter,
    const Resources &maxResources,
    const Resources &yield,
-   EntityColor color):
+   EntityColor color,
+   typeNum_t decorationAtDeath):
 EntityType(index,
            ENT_RESOURCE_NODE,
            name,
            drawRect,
            baseRect,
-           selectionCenter),
+           selectionCenter,
+           decorationAtDeath),
 maxResources_(maxResources),
 yield_(yield),
 color_(color){}
