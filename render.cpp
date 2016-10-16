@@ -51,7 +51,7 @@ void render(Surface &screen, Surface &selection,
       Surface darkCover(SUR_BLANK);
       darkCover.fill(BLACK);
       darkCover.setAlpha(SHADOW_ALPHA);
-      darkCover.draw(screen);
+      screen << darkCover;
    }
 
    if (outcomeMessage){
@@ -106,7 +106,7 @@ void renderCursor (Surface &screen, const GameData &game,
          assert (color);
          index = Surface(SUR_BLANK, color->w, color->h, ENTITY_BACKGROUND);
          index.fill(getEntityColor(game, colorIndex));
-         index.draw(color);
+         color << index;
       }
 
       //colored index definitely exists now
@@ -193,7 +193,7 @@ void renderEntities(Surface &screen, const GameData &game){
          if ((*it)->onScreen())
             (*it)->draw(entitiesTemp);
 
-      entitiesTemp.draw(screen);
+      screen << entitiesTemp;
 
    //Masks off: draws entities straight to the screen.
    //Considerably faster.

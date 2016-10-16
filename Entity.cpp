@@ -128,7 +128,7 @@ void Entity::colorBlit(int color, Surface &screen,
       index.fill(getEntityColor(*game_, color));
 
       //3. add sprite
-      thisType.surface_.draw(index);
+      index << thisType.surface_;
    }
 
    //make sure shadow-colored sprites are indexed,
@@ -139,7 +139,7 @@ void Entity::colorBlit(int color, Surface &screen,
                           thisType.surface_->h,
                           ENTITY_BACKGROUND);
       indexDark.fill(ENGRAVE_DARK);
-      thisType.surface_.draw(indexDark);
+      indexDark << thisType.surface_;
    }
    if (!indexLight){
       indexLight = Surface(SUR_BLANK,
@@ -147,7 +147,7 @@ void Entity::colorBlit(int color, Surface &screen,
                            thisType.surface_->h,
                            ENTITY_BACKGROUND);
       indexLight.fill(ENGRAVE_LIGHT);
-      thisType.surface_.draw(indexLight);
+      indexLight << thisType.surface_;
    }
    if (!indexShadowed){
       //Create colored, shadowed surface, as above
@@ -168,7 +168,7 @@ void Entity::colorBlit(int color, Surface &screen,
                            thisType.surface_->h + 2,
                            ENTITY_BACKGROUND);
       indexBlack.fill(BLACK);
-      thisType.surface_.draw(indexBlack);
+      indexBlack << thisType.surface_);
       if (BLACK_ENTITY_ALPHA < 0xff)
          indexBlack.setAlpha(BLACK_ENTITY_ALPHA);
    }

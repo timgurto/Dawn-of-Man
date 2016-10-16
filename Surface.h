@@ -67,7 +67,7 @@ public:
    //draw onto another surface
    void draw(Surface &dst,
              SDL_Rect *dstRect = 0, SDL_Rect *srcRect = 0) const;
-   //friend void operator<<(Surface &dst, const Surface &src);
+   friend void operator<<(Surface &dst, const Surface &src);
 
    //sets the surface's alpha value (0-ff)
    void setAlpha(Uint8 alpha);

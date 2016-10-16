@@ -159,9 +159,9 @@ void Surface::draw(Surface &dst,
 }
 //TODO fix this, then replace all appropriate draw() calls
 //dst << src
-//void operator<<(Surface &dst, const Surface &src){
-//   src
-//}
+void operator<<(Surface &dst, const Surface &src){
+   src.draw(dst);
+}
 
 void Surface::setAlpha(Uint8 alpha){
    SDL_SetAlpha(surface_, SDL_SRCALPHA, alpha);
