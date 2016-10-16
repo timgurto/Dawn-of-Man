@@ -251,8 +251,7 @@ outcome(IN_PROGRESS){
 GameData::~GameData(){
 
    //entities (delete)
-   for (entities_t::iterator it = entities.begin();
-        it != entities.end(); ++it){
+   for (entities_t::iterator it = entities.begin(); it != entities.end(); ++it){
       delete(*it);
    }
 

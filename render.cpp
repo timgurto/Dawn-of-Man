@@ -195,9 +195,9 @@ void renderEntities(const GameData &game){
 
          //only draw entities that are on-screen
          if (ent.classID() != ENT_DECORATION && ent.onScreen()){
-            ent.type().mask_.draw(entitiesTemp,
-                                  &makeRect(Point(game.map) +
-                                            ent.getDrawRect()));
+            //ent.type().mask_.draw(entitiesTemp,
+            //                      &makeRect(Point(game.map) +
+            //                                ent.getDrawRect()));
             ent.draw(entitiesTemp);
          }
       }

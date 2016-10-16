@@ -14,6 +14,7 @@ class EntityType;
 
 //Mobile, controllable entities capable of combat.
 //Created at buildings
+//Multiple frames for movement animation
 class Unit : public Entity{
    friend class Entity;
    friend class Building;
