@@ -75,7 +75,7 @@ const bool ENTITY_MASKS = true;
 const double FULL  = 1;
 const double EMPTY = 0;
 
-const double PATH_CHECK_DISTANCE = 6;
+const double PATH_CHECK_DISTANCE = 2;
 const pixels_t MAP_TILE_SIZE = 512;
 const pixels_t SCROLL_AMOUNT = 40;
 const pixels_t SCROLL_MARGIN = 100;

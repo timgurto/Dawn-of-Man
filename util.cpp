@@ -5,6 +5,7 @@
 #include "util.h"
 #include "Debug.h"
 #include "Point.h"
+#include "Surface.h"
 
 extern Debug debug;
 
@@ -107,6 +108,15 @@ SDL_Rect &operator-=(SDL_Rect &lhs, const SDL_Rect &rhs){
    return lhs;
 }
 
+//SDL_Rect += SDL_Rect
+SDL_Rect &operator+=(SDL_Rect &lhs, const SDL_Rect &rhs){
+   lhs.x += rhs.x;
+   lhs.y += rhs.y;
+   lhs.w += rhs.w;
+   lhs.h += rhs.h;
+   return lhs;
+}
+
 //SDL_Color != SDL_Color
 bool operator!=(const SDL_Color &lhs, const SDL_Color &rhs){
    return lhs.r != rhs.r ||
@@ -202,8 +212,7 @@ double modulo(double a, int b){
 
 //logical XOR
 bool lXor(bool a, bool b){
-   return
-      (a && b) || !(a || b);
+   return a != b;
 }
 
 //removes the last character of a string
@@ -223,4 +232,15 @@ double atod(std::string s){
    double d;
    is >> d;
    return d;
+}
+
+void drawLine(Surface &dst,
+              const Point &p1, const Point &p2,
+              Uint32 color){
+   SDL_Rect rect;
+   rect.x = min(p1.x, p2.x);
+   rect.y = min(p1.y, p2.y);
+   rect.w = distance(p1.x, p2.x);
+   rect.h = distance(p1.y, p2.y);
+   dst.fill(color, &rect);
 }

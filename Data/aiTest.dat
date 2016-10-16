@@ -32,35 +32,34 @@ player{
    resources.food = 20;
 }
 
-
-
 # entities; added in the order specified here.
+# non-random should be before random entities.
 
 # caves
 building{
    type = 0;
    player = 1;
-   location.x = 100;
-   location.y = 100;
+   location.x = 150;
+   location.y = 150;
    centerMap = true;
 }
 building{
    type = 0;
    player = 2;
-   location.x = 1948;
-   location.y = 100;
+   location.x = 1900;
+   location.y = 150;
 }
 building{
    type = 0;
    player = 3;
-   location.x = 100;
-   location.y = 1948;
+   location.x = 150;
+   location.y = 1900;
 }
 building{
    type = 0;
    player = 4;
-   location.x = 1948;
-   location.y = 1948;
+   location.x = 1900;
+   location.y = 1900;
 }
 
 # some deer

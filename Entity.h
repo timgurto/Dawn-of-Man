@@ -21,6 +21,7 @@ extern Surface screenBuf;
 //is an on-screen, in-game element.
 class Entity{
    friend struct GameData;
+   friend class Unit;
 
 protected: //everything should be a derived class
 

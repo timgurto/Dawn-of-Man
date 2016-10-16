@@ -10,6 +10,7 @@
 #include "Screen.h"
 #include "util.h"
 #include "misc.h"
+#include "Unit.h"
 
 extern Debug debug, deltaLog;
 
@@ -190,8 +191,31 @@ void renderEntities(const GameData &game){
          const Entity &ent = **it;
          //debug(ent.getLoc().y);
 
+         SDL_Rect baseRect = ent.getBaseRect() + game.map;
+
          //only draw entities that are on-screen
          if (ent.classID() != ENT_DECORATION && ent.onScreen()){
+            if (DEBUG){
+               //base rectangle and location
+               entitiesTemp.fill(WHITE, &baseRect);
+               const Point &loc = ent.getLoc() + game.map;
+               entitiesTemp.fill(BLACK, &makeRect(loc.x - 2, loc.y, 5, 1));
+               entitiesTemp.fill(BLACK, &makeRect(loc.x, loc.y - 2, 1, 5));
+
+               //path
+               if (ent.classID() == ENT_UNIT){
+                  const Unit &unit = (const Unit &)ent;
+                  path_t copy = unit.getPath();
+                  Point first = unit.getLoc() + game.map;
+                  while (!copy.empty()){
+                     Point second = copy.front() + game.map;
+                     copy.pop();
+                     entitiesTemp.fill(makeColor(getEntityColor(game, unit.getColor())),
+                                       &makePathRect(ent.type(), first, second));
+                     first = second;
+                  }
+               }
+            }
             //mask drawn in Entity::draw()
             ent.draw(entitiesTemp);
          }
@@ -211,8 +235,7 @@ void renderEntities(const GameData &game){
 }
 
 //Draws the selection rectangle
-void renderSelectionRect(const GameData &game,
-                         Surface &selRectImage){
+void renderSelectionRect(const GameData &game, Surface &selRectImage){
    //Get rectangle
    SDL_Rect selRect = getSelectionRect(game);
 

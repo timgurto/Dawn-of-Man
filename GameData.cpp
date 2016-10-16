@@ -20,7 +20,7 @@
 extern Debug debug;
 
 const int NUM_PLACEMENT_TRIES = 40;
-const pixels_t PLACEMENT_MARGIN = 1;
+const pixels_t PLACEMENT_MARGIN = 2;
 
 const CoreData *GameData::core_ = 0;
 
@@ -335,8 +335,9 @@ bool GameData::trainUnit(typeNum_t index,
          return true;
       }else
          debug("Unable to place unit");
-   }else //insufficient resources
-      debug("Insufficient resources to train unit");
+   }else{ //insufficient resources
+      //debug("Insufficient resources to train unit");
+   }
    return false;
 }
 
@@ -355,7 +356,7 @@ bool GameData::researchTech(typeNum_t index, typeNum_t playerID){
       return true;
    }
    //insufficient resources
-   debug("Insufficient resources to research tech");
+   //debug("Insufficient resources to research tech");
    return false;
 }
 
@@ -387,7 +388,7 @@ bool GameData::constructBuilding(typeNum_t index, const Point &loc,
       return true;
    }
    //not enough resources
-   debug("Insufficient resources to construct building");
+   //debug("Insufficient resources to construct building");
    return false;
 
 }

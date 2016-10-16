@@ -15,7 +15,7 @@ extern Surface screenBuf;
 enum SpecialSurface{
    SUR_UNINIT, //not yet a surface; needs to be set later with =
    SUR_SCREEN, //the screen buffer
-   SUR_BLANK   //a blank 
+   SUR_BLANK   //a blank surface
 };
 
 //encapsulates graphics functionality
@@ -41,7 +41,8 @@ public:
    Surface(const std::string fileName, const SDL_Color &background,
            bool alpha = false);
    Surface(SpecialSurface special = SUR_UNINIT,
-           int width = -1, int height = -1, //-1 implies current screen res
+           //-1 implies current screen res
+           int width = -1, int height = -1,
            SDL_Color background = NO_COLOR);
    Surface(TTF_Font *font, std::string message, SDL_Color color);
    Surface(const Surface &original);

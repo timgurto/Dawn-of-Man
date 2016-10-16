@@ -20,7 +20,7 @@
 
 extern Debug debug;
 
-const pixels_t Unit::PATH_GRID_SIZE = 30;
+const pixels_t Unit::PATH_GRID_SIZE = 10;
 const pixels_t Unit:: AUTO_ATTACK_DISTANCE = 200;
 
 Unit::Unit(typeNum_t type, const Point &loc,
@@ -119,14 +119,23 @@ void Unit::tick(double delta){
       if (!moving_ && !targetEntity_ && thisType.autoAttack_){
          Entity *nearbyEnemy = findNearbyEnemy();
          if (nearbyEnemy)
-            setTarget(findNearbyEnemy());
+            setTarget(nearbyEnemy);
+      }
+      pixels_t gridSize = -1;
+      if (targetEntity_ && !combat_ && path_.empty()){
+         gridSize = pixels_t(max(distance(loc_, target_)/10,
+                                 PATH_GRID_SIZE));
+         debug("Unit.cpp:", __LINE__);
+         findPath(gridSize);
       }
 
-      if (targetEntity_ && !combat_ && path_.empty())
-         findPath();
+      bool reachedTarget = false;
 
       //movement stuff
-      if (moving_){
+      if (!path_.empty() && path_.front() == loc_)
+         path_.pop();
+      if (moving_ && !path_.empty()){
+         //moving_ = true;
          const Point &targetPoint = path_.front();
 
          double angle;
@@ -151,74 +160,146 @@ void Unit::tick(double delta){
          double yMod = sin(angle);
 
          double speed = delta * getSpeed();
+         Point xyDelta;
 
          double distanceToTarget = distance(loc_, targetPoint);
-         if (speed > distanceToTarget)
-            speed = distanceToTarget;
+         if (speed >= distanceToTarget){
+            //too far; move directly to target
+            xyDelta = targetPoint - loc_;
+            path_.pop();
+         }else{
+            xyDelta.x = pixels_t(xMod * speed + 0.5);
+            xyDelta.y = pixels_t(yMod * speed + 0.5);
+         }
+         
+         if (targetEntity_){
+            const SDL_Rect &base = getBaseRect();
+            const SDL_Rect &targetBase = targetEntity_->getBaseRect();
 
-         pixels_t
-            xDelta = pixels_t(xMod * speed),
-            yDelta = pixels_t(yMod * speed);
+            //if vertical collision
+            if (base.y < targetBase.y + targetBase.h &&
+               targetBase.y < base.y + base.h){
+               pixels_t
+                  xLeft  = distance(targetBase.x, base.x + base.w),
+                  xRight = distance(base.x, targetBase.x + targetBase.w);
 
-         loc_.x += xDelta;
-         loc_.y += yDelta;
+               if (xLeft < xRight){ //unit is to the left of target entity
+                  if (xyDelta.x > xLeft){
+                     xyDelta.x = xLeft;
+                     reachedTarget = true;
+                  }
+               }else{
+                  assert (xyDelta.x <= 0);
+                  if (xyDelta.x < -xRight){
+                     xyDelta.x = -xRight;
+                     reachedTarget = true;
+                  }
+               }
+            }
 
-         // if collision, undo
-         if (!isLocationOK()){
-            loc_.x -= xDelta;
-            loc_.y -= yDelta;
-            //obstacle too close - finer search
-            findPath(pixels_t(PATH_GRID_SIZE * 0.4));
-            return;
+            //if horizontal collision
+            else if (base.x < targetBase.x + targetBase.w &&
+               targetBase.x < base.x + base.w){
+               pixels_t
+                  yUp  = distance(targetBase.y, base.y + base.h),
+                  yDown = distance(base.y, targetBase.y + targetBase.h);
+
+               if (yUp < yDown){ //unit is above target entity
+                  if (xyDelta.y > yUp){
+                     xyDelta.y = yUp;
+                     reachedTarget = true;
+                  }
+               }else{
+                  assert (xyDelta.y <= 0);
+                  if (xyDelta.y < -yDown){
+                     xyDelta.y = -yDown;
+                     reachedTarget = true;
+                  }
+               }
+            }
+
          }
 
-         if (yMod > 0)
-            verticalMovement_ = VM_DOWN;
-         else if (yMod < 0)
-            verticalMovement_ = VM_UP;
-         else
-            verticalMovement_ = VM_NONE;
+         loc_ += xyDelta;
 
-         const SDL_Rect &base = thisType.baseRect_;
-
-         //check in bounds
-         if (xMod < 0 &&
-             loc_.x + base.x < 0)
-            loc_.x = -1 * base.x;
-         else if (xMod > 0 &&
-                  loc_.x + base.x + base.w > game_->map.w)
-            loc_.x = game_->map.w - base.x - base.w;
-         if (yMod < 0 &&
-             loc_.y + base.y < 0)
-            loc_.y = -1 * base.y;
-         else if (yMod > 0 &&
-                  loc_.y + base.y + base.h > game_->map.h)
-            loc_.y = game_->map.h - base.y - base.h;
-
-      }
-
-      //check whether target has been reached
-      if (path_.size() > 1){
-         if (isAtTarget())
-            path_.pop();
-      }else{
-         if (targetEntity_){
-            //if the target entity has moved
-            if (!isAtTarget() && target_ != targetEntity_->getLoc()){
-               emptyQueue(path_);
-               updateTarget();
-               combat_ = false;
-               moving_ = true;
-            }else{
-               combat_ = isAtTarget();
-               moving_ = !combat_;
-            }
-         }else if (isAtTarget())
+         if (reachedTarget || isAtTarget()){
+            combat_ = (targetEntity_ != 0);
             moving_ = false;
-      }
-      
-      if (combat_ && !isAtTarget()){
-         findPath();
+         }else{
+
+            // if collision, undo
+            if (!isLocationOK()){
+               debug("Collision found; recalculating path");
+               loc_ -= xyDelta;
+               //obstacle too close - finer search
+               emptyQueue(path_);
+               if (gridSize == -1)
+                  gridSize = pixels_t(max(distance(loc_, target_)/10,
+                                          PATH_GRID_SIZE));
+               while (gridSize > 1 && path_.empty()){
+                  --gridSize;
+                  debug("Unit.cpp:", __LINE__ + 1);
+                  findPath(gridSize);
+               }
+               return;
+            }
+
+            if (yMod > 0)
+               verticalMovement_ = VM_DOWN;
+            else if (yMod < 0)
+               verticalMovement_ = VM_UP;
+            else
+               verticalMovement_ = VM_NONE;
+
+            const SDL_Rect &base = thisType.baseRect_;
+
+            //check in bounds
+            if (xMod < 0 &&
+                loc_.x + base.x < 0)
+               loc_.x = -1 * base.x;
+            else if (xMod > 0 &&
+                     loc_.x + base.x + base.w > game_->map.w)
+               loc_.x = game_->map.w - base.x - base.w;
+            if (yMod < 0 &&
+                loc_.y + base.y < 0)
+               loc_.y = -1 * base.y;
+            else if (yMod > 0 &&
+                     loc_.y + base.y + base.h > game_->map.h)
+               loc_.y = game_->map.h - base.y - base.h;
+
+         } //if unit hasn't reached target yet
+      } //if moving
+
+      if (!reachedTarget){
+
+         //check whether target has been reached
+         if (path_.empty())
+            if (moving_){
+               if (isAtTarget()){
+                  combat_ = (targetEntity_ != 0);
+                  moving_ = false;
+               }
+            }else{
+               if (targetEntity_){
+                  //if the target entity has moved
+                  if (!isAtTarget() && target_ != targetEntity_->getLoc()){
+                     updateTarget();
+                     combat_ = false;
+                     moving_ = true;
+                     debug("Unit.cpp:", __LINE__ + 1);
+                     findPath(1);
+                  }else{
+                     combat_ = isAtTarget();
+                     moving_ = !combat_;
+                  }
+               }else if (isAtTarget())
+                  moving_ = false;
+            }
+         
+         if (combat_ && !isAtTarget()){
+            debug("Unit.cpp:", __LINE__ + 1);
+            findPath(gridSize);
+         }
       }
 
       //progress frame
@@ -301,6 +382,8 @@ void Unit::tick(double delta){
 //sets the target entity, and co-ordinates.  If an
 //entity isn't provided, use the specified co-ordinates
 void Unit::setTarget(Entity *targetEntity, Point loc){
+   if (!path_.empty())
+      emptyQueue(path_);
    targetEntity_ = targetEntity;
    if (!targetEntity){
       //keep target in-bounds
@@ -326,19 +409,26 @@ void Unit::setTarget(Entity *targetEntity, Point loc){
 
       target_ = loc;
       combat_ = false;
+      moving_ = !isAtTarget();
    }else
       updateTarget();
-   moving_ = !isAtTarget();
    if (moving_){
-      findPath();
+      //find path
+      pixels_t gridSize = pixels_t(max(distance(loc_, target_)/10,
+                                       PATH_GRID_SIZE));
+      while (gridSize > 1 && path_.empty()){
+         --gridSize;
+         debug("Unit.cpp:", __LINE__ + 1);
+         findPath(gridSize);
+      }
+      if (gridSize == 1)
+         debug("NO PATH FOUND");
    }
 }
 
-bool Unit::isAtTarget() const{
-   SDL_Rect baseRect = getBaseRect();
-   pixels_t margin = max(baseRect.w, baseRect.h) / 2; //1.5 * getSpeed();
-   Point target = path_.size() > 1 ?
-                     path_.front() :
+bool Unit::isAtTarget(pixels_t margin) const{
+   Point target = /*path_.size() > 1 ?
+                     path_.front() :*/
                      target_;
    //straight distance to a point
    if (path_.size() > 1 || !targetEntity_)
@@ -346,22 +436,14 @@ bool Unit::isAtTarget() const{
    
    //target is an entity
    else{
-      SDL_Rect targetRect = targetEntity_->getBaseRect();
-      //check whether diagonal distance is close enough
-      if (collision(targetRect, baseRect +
-                                Point(margin, margin)))
-         return true;
-      pixels_t negMargin = -margin;
-      if (collision(targetRect, baseRect +
-                                Point(margin, negMargin)))
-         return true;
-      if (collision(targetRect, baseRect +
-                                Point(negMargin, margin)))
-         return true;
-      if (collision(targetRect, baseRect -
-                                Point(margin, margin)))
-         return true;
-      return false;
+      SDL_Rect
+         baseRect = getBaseRect(),
+         targetRect = targetEntity_->getBaseRect();
+      baseRect.x -= margin;
+      baseRect.y -= margin;
+      baseRect.w += 2 * margin;
+      baseRect.h += 2 * margin;
+      return collision(targetRect, baseRect);
    }
 }
 
@@ -369,7 +451,18 @@ bool Unit::isAtTarget() const{
 //the two specified points
 bool Unit::isPathClear(const Point &start,
                  const Point &end) const{
+
    const EntityType &thisType = type();
+   debug("Determing whether the path is clear.  Length = ",
+         distance(start, end));
+
+   //single rectangle for horizontal/vertical path
+   if (noCollision(*game_, makePathRect(thisType, start, end),
+                   this, targetEntity_, true))
+      return true;
+
+   //TODO remove
+   return false;
 
    //calculate angle
    double angle;
@@ -399,11 +492,13 @@ bool Unit::isPathClear(const Point &start,
    double x = start.x, y = start.y;
    bool finished = false;
    while (!finished){
-      //debug("Checking ", x, ",", y);
+      debug("Checking ", x, ",", y);
+      //debug("Unit.cpp:", __LINE__ + 1);
       if (!noCollision(*game_,
                        thisType,
                        Point(pixels_t(x), pixels_t(y)),
-                       this, this->targetEntity_))
+                       this, 0,
+                       true))
          return false;
 
       x += xDelta;
@@ -418,32 +513,32 @@ bool Unit::isPathClear(const Point &start,
 //calculates a path to the target, and fills the path_
 //with the co-ordinates of each sub-target
 void Unit::findPath(pixels_t gridSize){
-   debug("finding path");
+
+   debug("finding path; grid size = ", gridSize);
+   if (gridSize < 1){
+      //no path found
+      targetEntity_ = 0;
+      moving_ = false;
+      combat_ = false;
+      debug("No path found.");
+   }
 
    //if already there
-   if (isAtTarget()){
+   if (isAtTarget(gridSize)){
       moving_ = false;
-      combat_ = true;
+      combat_ = (targetEntity_ != 0);
       return;
    }
 
    emptyQueue(path_);
    
    //if clear path, go straight there
+   debug("Unit.cpp:", __LINE__ + 1);
    if (isPathClear(loc_, target_)){
+      debug("Path found - direct line!");
       path_.push(target_);
       moving_ = true;
       combat_ = false;
-      return;
-   }
-
-   //target is surrounded
-   if (!targetEntity_ &&
-       !noCollision(*game_, type(), target_, this, targetEntity_)){
-      moving_ = false;
-      path_.push(target_);
-      target_ = loc_;
-      targetEntity_ = 0;
       return;
    }
 
@@ -485,12 +580,27 @@ void Unit::findPath(pixels_t gridSize){
             continue;
          explored[next] = true;
 
-         if (noCollision(*game_, type(), next, this, targetEntity_)){
+         debug("Unit.cpp:", __LINE__ + 1);
+         if (isPathClear(next, target_)){
+            debug("Path found - grid then direct line!");
+            temp.pop();
+            temp.push(target_);
+            path_ = temp;
+            moving_ = true;
+            combat_ = false;
+            return;
+         }
+
+         //a rectangle representing the proposed path segment
+         debug("Unit.cpp:", __LINE__ + 1);
+         if (noCollision(*game_,
+                         makePathRect(type(), temp.back(), next),
+                         this, targetEntity_, true)){
 
             //is this the node we're looking for?
             temp.push(next);
-            //if (distance(next, target_) <= gridSize){
-            if (isPathClear(next, target_)){
+            if (distance(next, target_) < gridSize){
+               debug("Path found - grid!");
                temp.pop(); //first node is the current location
                temp.push(target_);
                path_ = temp;
@@ -502,6 +612,7 @@ void Unit::findPath(pixels_t gridSize){
          }
 
       }//for each direction
+
       //discard the path that has now been extended
       if (!paths.empty())
          paths.pop();
@@ -510,11 +621,11 @@ void Unit::findPath(pixels_t gridSize){
 
    //no path found
    emptyQueue(path_);
-   path_.push(loc_);
-   target_ = loc_;
+   //target_ = loc_;
    targetEntity_ = 0;
    moving_ = false;
    combat_ = false;
+   debug("No path found.");
 }
 
 //sets target co-ordinates if targetting an entity
@@ -645,4 +756,12 @@ std::string Unit::getHelp() const{
       os << " | group: " << controlGroup - CONTROL_NONE
          << " | armor: " << getArmor();
    return os.str();
+}
+
+bool Unit::isMoving() const{
+   return moving_;
+}
+
+const path_t &Unit::getPath() const{
+   return path_;
 }

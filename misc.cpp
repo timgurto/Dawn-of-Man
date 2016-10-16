@@ -16,6 +16,7 @@
 #include "Debug.h"
 #include "EntityType.h"
 #include "Screen.h"
+#include "Unit.h"
 
 extern Debug debug;
 extern int
@@ -78,8 +79,15 @@ bool dereferenceLessThan(Entity *p1, Entity *p2){
 //ignore: an entity to skip checking, i.e. the current unit
 bool noCollision(const GameData &game, const EntityType &type,
                  const Point &loc, const Entity *ignore1,
-                 const Entity *ignore2){
-   SDL_Rect rect = loc + type.getBaseRect();
+                 const Entity *ignore2, bool excludeMovingUnits){
+   return noCollision(game, type.getBaseRect() + loc,
+                      ignore1, ignore2, excludeMovingUnits);
+}
+
+//checks a specific rectangle, rather than an entity
+bool noCollision(const GameData &game, const SDL_Rect &rect,
+                 const Entity *ignore1, const Entity *ignore2,
+                 bool excludeMovingUnits){
 
    //check that it's inside map
    if (!inside(rect, dimRect(game.map)))
@@ -88,10 +96,15 @@ bool noCollision(const GameData &game, const EntityType &type,
    //TODO * only check nearby entities
    //check against entities
    ITERATE(entities_t::const_iterator, game.entities, it){
-      if (*it != ignore1 &&
-          *it != ignore2 &&
-          (*it)->collides() &&
-          collision(rect, (*it)->getBaseRect()))
+      Entity *entity = *it;
+      if (entity == ignore1 || entity == ignore2)
+         continue;
+      if (excludeMovingUnits &&
+          entity->classID() == ENT_UNIT &&
+          ((const Unit &)(*entity)).isMoving())
+         continue;
+      if (entity->collides() &&
+          collision(rect, entity->getBaseRect()))
          return false;
    }
    return true;
@@ -121,7 +134,6 @@ Uint32 getEntityColor(const GameData &game, int color){
       return CORPSE_COLOR;
    default:
       return ENTITY_DEFAULT_COLOR;
-
    }
 }
 
@@ -152,61 +164,6 @@ void centerMap(GameData &game, const Point &center){
       else if (game.map.y + extendedDim.y < res.y)
          game.map.y = res.y - extendedDim.y;
    }
-}
-
-//Determines whether the specified entity is
-//able to move freely in a straight line to
-//its target, without hitting anything
-bool isPathClear(const Point &start,
-                 const Point &end,
-                 const GameData &game,
-                 const Entity &entity){
-   const EntityType &thisType = entity.type();
-
-
-   //calculate angle
-   double angle;
-   if (end.x == start.x)
-      angle =
-         end.y < start.y ?
-            1.5 * PI :
-            0.5 * PI;
-   else{
-      double gradient =
-         1.0 *
-         (end.y - start.y) /
-         (end.x - start.x);
-      angle = atan(gradient);
-      if (end.x < start.x){
-         if (end.y > start.y)
-            angle += PI;
-         else
-            angle -= PI;
-      }
-   }
-
-   double
-      xDelta = cos(angle) * PATH_CHECK_DISTANCE,
-      yDelta = sin(angle) * PATH_CHECK_DISTANCE;
-
-   double x = start.x, y = start.y;
-   bool finished = false;
-   while (!finished){
-      //debug("Checking ", x, ",", y);
-      if (!noCollision(game,
-                       thisType,
-                       Point(pixels_t(x),
-                             pixels_t(y)),
-                       &entity))
-         return false;
-
-      x += xDelta;
-      y += yDelta;
-      finished =
-         (start.x < end.x ? x >= end.x : x <= end.x) &&
-         (start.y < end.y ? y >= end.y : y <= end.y);
-   }
-   return true;
 }
 
 //Adds a leading space if x < 100 (fps display)
@@ -273,11 +230,9 @@ std::string parseToken(std::ifstream &data){
    return ret;
 }
 
-//if an index is invalid, set it to NO_TYPE
-//so that nothing breaks
+//if an index is invalid, set it to NO_TYPE so that nothing breaks
 void checkTypeIndex(typeNum_t &i, size_t max){
-   if (i != NO_TYPE && (i < 0 ||
-                        i >= max))
+   if (i < 0 || i >= max)
       i = NO_TYPE;
 }
 
@@ -289,4 +244,19 @@ void pushMouseMove(){
    fakeMouseMove.motion.x = Screen::mousePos.x;
    fakeMouseMove.motion.y = Screen::mousePos.y;
    SDL_PushEvent(&fakeMouseMove);
+}
+
+//creates a rectangle representing the unit's path between
+//the two points specified
+SDL_Rect makePathRect(const EntityType &type,
+                      const Point &p1, const Point &p2){
+   SDL_Rect rect = makeRect(min(p1.x, p2.x),
+                            min(p1.y, p2.y),
+                            distance(p1.x, p2.x),
+                            distance(p1.y, p2.y));
+   rect += type.getBaseRect();
+
+
+
+   return rect;
 }

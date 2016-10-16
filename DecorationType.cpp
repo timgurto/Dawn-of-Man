@@ -3,7 +3,6 @@
 #include "EntityType.h"
 #include "DecorationType.h"
 #include "types.h"
-//#
 
 pixels_t DecorationType::DECORATION_DISPLACEMENT = 150;
 

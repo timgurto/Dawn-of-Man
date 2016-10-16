@@ -10,7 +10,7 @@ buildingType{
    index = 0;
    
    drawRect.x = -72;
-   drawRect.y = -54;
+   drawRect.y = -70;
    drawRect.w = 140;
    drawRect.h = 70;
    

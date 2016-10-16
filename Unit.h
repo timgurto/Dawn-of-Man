@@ -67,7 +67,7 @@ public:
       Point loc = Screen::mousePos - Point(game_->map));
 
    //Whether the unit has reached its target
-   bool isAtTarget() const;
+   bool isAtTarget(pixels_t margin = 2) const;
 
    //sets target co-ordinates if targetting an entity
    void updateTarget();
@@ -99,6 +99,8 @@ public:
    damage_t getHealth() const;
    damage_t getAttack() const;
    pixels_t getSpeed() const;
+   bool isMoving() const;
+   const path_t &getPath() const;
 };
 
 #endif

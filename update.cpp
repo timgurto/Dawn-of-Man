@@ -29,7 +29,7 @@ void updateState(double delta, const CoreData &core, GameData &game,
       setModeFromSelection(game, bars);
 
    //Actual updates
-   if (!game.paused){
+   if (!game.paused && delta > 0){
 
       //Entities
       ITERATE(entities_t::iterator, game.entities, it){

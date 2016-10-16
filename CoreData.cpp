@@ -298,7 +298,7 @@ CoreData::CoreData(std::string filename){
    for (typeNum_t i = 0; i != techs.size(); ++i)
       assert (techs[i].index_ == i);
 
-   //misc referenced entity types are in-bounds or NO_TYPE
+   //misc referenced entity types are in-bounds or NO_TYPE.
    //prerequisites, origin buildings
    ITERATE(buildingTypes_t::iterator, buildingTypes, it){
       checkTypeIndex(it->prereqBuilding_,

@@ -21,7 +21,7 @@
 
 extern Debug debug;
 
-const progress_t Entity::PROGRESS_PER_CALC = 4;
+const progress_t Entity::PROGRESS_PER_CALC = 40; //4
 GameData *Entity::game_ = 0;
 const CoreData *Entity::core_ = 0;
 Surface *Entity::diagGreen_ = 0;

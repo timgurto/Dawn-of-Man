@@ -116,7 +116,7 @@ void AI::allocateIncome(const Resources &income){
          militarySupply_ += difference;
          expansionSupply_ += (expansionShare + militaryShare - difference);
       }
-   debug("Military: ", militarySupply_, "    Expansion: ", expansionSupply_);
+   //debug("Military: ", militarySupply_, "    Expansion: ", expansionSupply_);
 }
 
 void AI::update(){
@@ -152,7 +152,7 @@ void AI::checkExpansion(){
          }
       }
    if (!expansionBuilding_){
-      debug("No expansion building found");
+      //debug("No expansion building found");
       return;
    }
    typeNum_t expBuildingType = expansionBuilding_->getTypeIndex();
@@ -170,8 +170,8 @@ void AI::checkExpansion(){
       expansionQueue_.push(index);
 
       trash.push_back(it);
-      debug("Player ", player_, "'s AI is training a ",
-            core_->unitTypes[index].getName());
+      //debug("Player ", player_, "'s AI is training a ",
+      //      core_->unitTypes[index].getName());
    }
    ITERATE(std::vector<wishlist_t::iterator>::iterator, trash, it)
       unitWishlist_.erase(*it);
@@ -197,7 +197,7 @@ void AI::checkMilitary(){
          }
       }
    if (!militaryBuilding_){
-      debug("No military building found");
+      //debug("No military building found");
       return;
    }
    typeNum_t militaryBuildingType = militaryBuilding_->getTypeIndex();
@@ -219,8 +219,8 @@ void AI::checkMilitary(){
                   //pay for and queue up the unit
                   militaryQueue_.push(index);
                   militarySupply_ -= cost;
-                  debug("Player ", player_, "'s AI is training a ",
-                        it->getName());
+                  //debug("Player ", player_, "'s AI is training a ",
+                  //      it->getName());
                }
             }//if military unit        
    }//for unitTypes

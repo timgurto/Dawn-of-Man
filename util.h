@@ -7,6 +7,9 @@
 #include "SDL.h"
 #include "types.h"
 
+struct Point;
+class Surface;
+
 //Fake constructor and copy constructor for SDL_Rect
 SDL_Rect makeRect(Sint16 x = 0, Sint16 y = 0, Uint16 w = 0, Uint16 h = 0);
 SDL_Rect makeRect(const Point &point);
@@ -34,8 +37,9 @@ SDL_Rect locRect(const SDL_Rect &original);
 //Whether the specified key is currently down
 bool isKeyPressed(SDLKey key);
 
-//SDL_Rect -= SDL_Rect
+//SDL_Rect +=/-= SDL_Rect
 SDL_Rect &operator-=(SDL_Rect &lhs, const SDL_Rect &rhs);
+SDL_Rect &operator+=(SDL_Rect &lhs, const SDL_Rect &rhs);
 
 //SDL_Color != SDL_Color
 bool operator!=(const SDL_Color &lhs, const SDL_Color &rhs);
@@ -90,5 +94,10 @@ void removeLast(std::string &str);
 
 //transform a string to a double
 double atod(std::string s);
+
+//draw a line between two points
+void drawLine(Surface &dst,
+              const Point &p1, const Point &p2,
+              Uint32 color);
 
 #endif
