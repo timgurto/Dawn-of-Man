@@ -84,3 +84,10 @@ void Player::buildBuilding(typeNum_t index, bool recalc){
    if (recalc)
       buildingsBar_->calculateRect();
 }
+
+void Player::godMode(){
+   if (bonuses_.unitArmor >= 1337) //toggle
+      bonuses_.unitArmor -= 1337;
+   else
+      bonuses_.unitArmor += 1337;
+}

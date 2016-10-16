@@ -178,7 +178,7 @@ std::string Building::getHelp() const{
    if (player_ != HUMAN_PLAYER)
       os << "Enemy ";
    os << thisType.name_;
-   os << " - " << health_ << " health";
+   os << " - " << getHealth() << " health";
    if (health_ < thisType.maxHealth_)
       os << " remaining";
    return os.str();

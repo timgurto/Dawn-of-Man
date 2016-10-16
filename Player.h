@@ -65,6 +65,9 @@ public:
    //registers the player constructing a building
    void buildBuilding(typeNum_t index, bool recalc = false);
 
+   //renders player nigh-invulnerable
+   void godMode();
+
    //get
    Uint32 getColor() const;
    std::string getResources() const;

@@ -162,6 +162,11 @@ void handleEvents(const CoreData &core, GameData &game,
                   }
                   break;
 
+               case SDLK_KP_MINUS:
+                  //HACK remove this cheat
+                  game.players[HUMAN_PLAYER].godMode();
+                  break;
+
                case SDLK_ESCAPE:
                   switch(game.mode){
                   //unselect all

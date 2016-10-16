@@ -120,7 +120,7 @@ void Unit::tick(double delta){
             setTarget(findNearbyEnemy());
       }
 
-      if (targetEntity_ && path_.empty())
+      if (targetEntity_ && !combat_ && path_.empty())
          findPath();
 
       //movement stuff
@@ -215,8 +215,9 @@ void Unit::tick(double delta){
             moving_ = false;
       }
       
-      //if (!targetEntity_)
-      //   return;
+      if (combat_ && !isAtTarget()){
+         findPath();
+      }
 
       //progress frame
       if (targetEntity_ && combat_){
@@ -239,27 +240,33 @@ void Unit::tick(double delta){
                      target.progressConstruction();
                   //enemy building: attack
                   }else if(targetPlayer != player_){
-                     damage_t damage = getAttack() - target.getArmor();
-                     if (damage >= target.getHealth())
-                        target.kill();
-                     else
-                        target.removeHealth(damage);
+                     if (target.getArmor() < getAttack()){
+                        damage_t damage = getAttack() - target.getArmor();
+                        if (damage >= target.getHealth())
+                           target.kill();
+                        else
+                           target.removeHealth(damage);
+                     }
                   }
                }
                break;
             case ENT_UNIT:
                {//local scope for target, targetType, damage
                   Unit &target = (Unit &)(*targetEntity_);
-                  damage_t damage = getAttack() - target.getArmor();
-                  if (damage >= target.getHealth())
-                     target.kill();
-                  else{
-                     target.removeHealth(damage);
-                     if (!(target.targetEntity_ ||
-                           target.moving_ ||
-                           target.combat_))
-                        target.setTarget(this);
-                  }
+                  if (target.getArmor() < getAttack()){
+                     damage_t damage = getAttack() - target.getArmor();
+                     debug(getAttack(), "attack; ", target.getArmor(), "armor");
+                     debug("Damage: ", damage);
+                     if (damage >= target.getHealth())
+                        target.kill();
+                     else{
+                        target.removeHealth(damage);
+                        if (!(target.targetEntity_ ||
+                              target.moving_ ||
+                              target.combat_))
+                           target.setTarget(this);
+                     }
+               }
                   break;
                }
             case ENT_RESOURCE_NODE:
@@ -289,6 +296,8 @@ void Unit::tick(double delta){
    }
 }
 
+//sets the target entity, and co-ordinates.  If an
+//entity isn't provided, use the specified co-ordinates
 void Unit::setTarget(Entity *targetEntity, Point loc){
    targetEntity_ = targetEntity;
    if (!targetEntity){
@@ -353,10 +362,12 @@ bool Unit::isAtTarget() const{
       return false;
    }
 
-//   assert(false);
-//   return false;
+   assert(false);
+   return false;
 }
 
+//Whether the unit would have a clear path between
+//the two specified points
 bool Unit::isPathClear(const Point &start,
                  const Point &end) const{
    const EntityType &thisType = type();
@@ -404,6 +415,8 @@ bool Unit::isPathClear(const Point &start,
    return true;
 }
 
+//calculates a path to the target, and fills the path_
+//with the co-ordinates of each sub-target
 void Unit::findPath(pixels_t gridSize){
    debug("finding path");
 
@@ -504,6 +517,7 @@ void Unit::findPath(pixels_t gridSize){
    combat_ = false;
 }
 
+//sets target co-ordinates if targetting an entity
 void Unit::updateTarget(){
    if (targetEntity_){
       target_ = targetEntity_->getLoc();
@@ -607,13 +621,11 @@ std::string Unit::getHelp() const{
    if (player_ != HUMAN_PLAYER)
       os << "Enemy ";
    os << thisType.name_;
-   os << " - " << health_ << " health";
+   os << " - " << getHealth() << " health";
    if (health_ < thisType.maxHealth_)
       os << " remaining";
    if (DEBUG)
       os << " | group: " << controlGroup - CONTROL_NONE
-         << " | moving: " << moving_
-         << " | combat: " << combat_
-         << " | target entity: " << targetEntity_;
+         << " | armor: " << getArmor();
    return os.str();
 }

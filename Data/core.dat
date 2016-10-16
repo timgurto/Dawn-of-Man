@@ -28,7 +28,7 @@ buildingType{
    maxHealth = 2000;
    progressCost = 4000;
    soundFile = "cave.wav";
-   deathSoundFile = "";
+   deathSoundFile = "destroy.wav";
 }
 buildingType{
    name = "Armory";
@@ -52,7 +52,7 @@ buildingType{
    maxHealth = 1000;
    progressCost = 1750;
    soundFile = "armory.wav";
-   deathSoundFile = "";
+   deathSoundFile = "destroy.wav";
 }
 buildingType{
    name = "Storage";
@@ -74,7 +74,7 @@ buildingType{
    maxHealth = 1000;
    progressCost = 1750;
    soundFile = "storage.wav";
-   deathSoundFile = "";
+   deathSoundFile = "destroy.wav";
 }
 buildingType{
    name = "Training Grounds";
@@ -99,7 +99,7 @@ buildingType{
    progressCost = 1750;
    prereqBuilding = 1;
    soundFile = "trainingGrounds.wav";
-   deathSoundFile = "";
+   deathSoundFile = "destroy.wav";
 }
 buildingType{
    name = "Shrine";
@@ -126,7 +126,7 @@ buildingType{
    progressCost = 3500;
    prereqBuilding = 0;
    soundFile = "shrine.wav";
-   deathSoundFile = "";
+   deathSoundFile = "destroy.wav";
 }
 buildingType{
    name = "Campfire";
@@ -152,7 +152,7 @@ buildingType{
    maxHealth = 2500;
    progressCost = 1750;
    soundFile = "fire.wav";
-   deathSoundFile = "";
+   deathSoundFile = "destroy.wav";
 }
 
 decorationType{
@@ -222,7 +222,7 @@ unitType{
    autoAttack = false;
    decorationAtDeath = 1;
    soundFile = "cavemanSelect.wav";
-   deathSoundFile = "";
+   deathSoundFile = "death.wav";
    hitSoundFile = "cavemanAttack.wav";
 }
 unitType{
@@ -258,7 +258,7 @@ unitType{
    progressCost = 1200;
    decorationAtDeath = 1;
    soundFile = "warriorSelect.wav";
-   deathSoundFile = "";
+   deathSoundFile = "death.wav";
    hitSoundFile = "warriorAttack.wav";
 }
 unitType{
@@ -295,7 +295,7 @@ unitType{
    progressCost = 1400;
    decorationAtDeath = 1;
    soundFile = "warriorSelect.wav";
-   deathSoundFile = "";
+   deathSoundFile = "death.wav";
    hitSoundFile = "clubmanAttack.wav";
 }
 unitType{
@@ -332,7 +332,7 @@ unitType{
    progressCost = 1600;
    decorationAtDeath = 1;
    soundFile = "warriorSelect.wav";
-   deathSoundFile = "";
+   deathSoundFile = "death.wav";
    hitSoundFile = "clubmanAttack.wav";
 }
 unitType{
@@ -369,7 +369,7 @@ unitType{
    progressCost = 2500;
    decorationAtDeath = 1;
    soundFile = "warriorSelect.wav";
-   deathSoundFile = "";
+   deathSoundFile = "death.wav";
    hitSoundFile = "swordAttack.wav";
 }
 unitType{
@@ -401,6 +401,32 @@ unitType{
    autoAttack = false;
    deathSoundFile = "deerDeath.wav";
    hitSoundFile = "deerAttack.wav";
+}
+unitType{
+   name = "Visitor";
+   index = 6;
+   
+   drawRect.x = -73;
+   drawRect.y = -132;
+   drawRect.w = 147;
+   drawRect.h = 38;
+
+   baseRect.x = -73;
+   baseRect.y = -22;
+   baseRect.w = 147;
+   baseRect.h = 38;
+
+   speed = 6;
+   maxFrameCounter = 1;
+   frameCount = 1;
+   maxCombatFrameCounter = 30;
+   combatFrameCount = 1;
+   combatWait = 30;
+   maxHealth = 400;
+   attack = 60;
+   autoAttack = true;
+   deathSoundFile = "destroy.wav";
+   hitSoundFile = "destroy.wav";
 }
 resourceNodeType{
    name = "Tree";
@@ -638,7 +664,7 @@ technology{
    name = "Fervor";
    index = 12;
    description = "Faster units";
-   bonus.unitSpeed = 5;
+   bonus.unitSpeed = 4;
    originBuilding = 4;
    cost.food = 30;
    cost.metal = 5;
