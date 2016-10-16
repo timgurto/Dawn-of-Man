@@ -25,6 +25,7 @@ struct Point{
 
    //scalar multiplication
    Point operator*(double rhs) const;
+   Point operator/(double rhs) const;
 
    //comparison with Point
    bool operator<(const Point &rhs) const;

@@ -14,6 +14,7 @@ class Surface;
 //A bar of icons, which can be drawn on-screen and identify
 //which of its buttons is clicked
 class UIBar{
+
    Corner corner_; //corner of the screen where the bar begins
    Orientation orientation_; //vertical or horizontal
 

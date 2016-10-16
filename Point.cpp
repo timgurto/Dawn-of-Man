@@ -43,6 +43,15 @@ Point Point::operator*(double rhs) const{
                 pixels_t(y * rhs));
 }
 
+Point Point::operator/(double rhs) const{
+   //treat 0 as 1
+   if (rhs == 0)
+      return *this;
+
+   return Point(pixels_t(x / rhs),
+                pixels_t(y / rhs));
+}
+
 SDL_Rect Point::operator-(const SDL_Rect &rhs) const{
    return makeRect(x-rhs.x, y-rhs.y, -1 * rhs.w, -1 * rhs.h);
 }

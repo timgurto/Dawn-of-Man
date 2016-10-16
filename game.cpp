@@ -200,7 +200,7 @@ unsigned gameMode(Screen &thisScreen, const void *data){
 
    //game over; display victory/loss message
    game.paused = true; //darken map
-   thisScreen.mousePos = Point(screenBuf->w, screenBuf->h); //hide cursor
+   //Screen::mousePos = Point(screenBuf->w, screenBuf->h); //hide cursor
    render(glow, diagGreen, diagRed, map, darkMap, cursor,
           cursorShadow, cursorPause, cursorColor, selRectImage,
           cursorIndex, core,
@@ -213,6 +213,8 @@ unsigned gameMode(Screen &thisScreen, const void *data){
       oldTicks = SDL_GetTicks();
       while (SDL_GetTicks() - oldTicks < END_MESSAGE_TIMER);
    }
+
+   //Screen::mousePos = Screen::screenRes / 2;
 
    //Clean up
    SDL_ShowCursor(SDL_ENABLE);

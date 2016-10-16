@@ -19,8 +19,8 @@ const Point Screen::DEFAULT_SCREEN_1(1024, 768);
 
 Surface *Screen::background_ = 0;
 Surface *Screen::cursor_ = 0;
-Point Screen::mousePos;
 Point Screen::screenRes(DEFAULT_SCREEN_1);
+Point Screen::mousePos = screenRes / 2;
 std::vector<Point> Screen::preferredResolutions;
 
 

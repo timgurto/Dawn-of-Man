@@ -191,7 +191,7 @@ void renderEntities(const GameData &game){
            it != game.entities.end(); ++it){
 
          const Entity &ent = **it;
-         debug(ent.getLoc().y);
+         //debug(ent.getLoc().y);
 
          //only draw entities that are on-screen
          if (ent.classID() != ENT_DECORATION && ent.onScreen()){
