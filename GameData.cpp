@@ -148,7 +148,7 @@ buildingSelected(0){
 
       }else if (object == "building"){
          if (progress == DUMMY_PROGRESS)
-            progress = core_->buildingTypes[type].getMaxProgress();
+            progress = core_->buildingTypes[type].getMaxProgress() + 1;
          if (random != 0)
             for (int i = 0; i != random; ++i){
                do{
@@ -179,7 +179,7 @@ buildingSelected(0){
 
       }else if (object == "unit"){
          if (progress == DUMMY_PROGRESS)
-            progress = core_->unitTypes[type].getMaxProgress();
+            progress = core_->unitTypes[type].getMaxProgress() + 1;
          if (random != 0)
             for (int i = 0; i != random; ++i){
                do{

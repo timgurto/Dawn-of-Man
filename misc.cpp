@@ -32,7 +32,7 @@ extern bool WINDOWED_MODE;
 
 SDL_Surface *loadImage(const char* fileName,bool alpha){
    debug("loading surface: ", fileName);
-   SDL_WM_SetCaption( fileName, NULL );
+   //SDL_WM_SetCaption( fileName, NULL );
    SDL_Surface *load, *opt;
    load = IMG_Load(fileName);
    assert(load);

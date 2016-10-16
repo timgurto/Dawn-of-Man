@@ -35,35 +35,44 @@ const EntityType &Building::type() const{
 
 void Building::draw(SDL_Surface *screen) const{
    const EntityType &thisType = type();
-   SDL_Rect drawLoc = loc_ + thisType.drawRect_;
-
-   pixels_t
-      partialW = pixels_t(drawPercent_ *
-                          thisType.drawRect_.w),
-      partialH = pixels_t(drawPercent_ *
-                          thisType.drawRect_.h);
-
-   //clip, based on randomized direction
-   SDL_Rect srcLoc = getSrcClip(partialW, partialH);
-
-   switch(direction_){
-   case DIR_LEFT:
-      drawLoc.x += thisType.drawRect_.w - partialW;
-      break;
-   case DIR_UP:
-      drawLoc.y += thisType.drawRect_.h - partialH;
-   }
 
    //draw footprint if construction hasn't begun
-   if (progress_ == 0){
+   if (drawPercent_ == EMPTY){
       SDL_Rect altDrawLoc =
          loc_ +
          thisType.baseRect_ +
          locRect(game_->map);
       SDL_BlitSurface(diagGreen_, &dimRect(getBaseRect()),
       screen, &altDrawLoc);
+      return;
+   }
+
+   SDL_Rect drawLoc = loc_ + thisType.drawRect_;
+   SDL_Rect srcLoc;
+
+   if (drawPercent_ < FULL){
+      pixels_t
+         partialW = pixels_t(drawPercent_ *
+                             thisType.drawRect_.w),
+         partialH = pixels_t(drawPercent_ *
+                             thisType.drawRect_.h);
+
+      //clip, based on randomized direction
+      srcLoc = getSrcClip(partialW, partialH);
+
+      switch(direction_){
+      case DIR_LEFT:
+         drawLoc.x += thisType.drawRect_.w - partialW;
+         break;
+      case DIR_UP:
+         drawLoc.y += thisType.drawRect_.h - partialH;
+      }
    }else
-      colorBlit(getColor(), screen, srcLoc, drawLoc,
+      srcLoc = makeRect(0, 0,
+                        thisType.drawRect_.w,
+                        thisType.drawRect_.h);
+   
+   colorBlit(getColor(), screen, srcLoc, drawLoc,
          !finished_); //partial
 }
 

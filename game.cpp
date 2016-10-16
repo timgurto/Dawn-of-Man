@@ -42,6 +42,9 @@ extern Debug debug;
 //Game is normalized around this delta.
 const int DELTA_MODIFIER = 40; //40;
 
+//if the delta (ms) is more than this, the update is skipped.
+const int DELTA_CUTOFF = 100;
+
 void gameMode(){
 
    //initialize screen and debug objects
@@ -70,8 +73,6 @@ void gameMode(){
                                "cursorPause.PNG", GREEN),
       *cursorColor = loadImage(MISC_IMAGE_PATH +
                                "cursorColor.PNG", MAGENTA),
-      *vBar = loadImage(INTERFACE_IMAGE_PATH + "vBar.PNG"),
-      *hBar = loadImage(INTERFACE_IMAGE_PATH + "hBar.PNG"),
       *diagGreen = loadImage(MISC_IMAGE_PATH + "diagGreen.PNG", GREEN),
       *diagRed = loadImage(MISC_IMAGE_PATH + "diagRed.PNG", GREEN),
       *particle = loadImage(MISC_IMAGE_PATH + "particle.PNG", GREEN),
@@ -160,23 +161,28 @@ void gameMode(){
       timer_t newTicks = SDL_GetTicks();
       timer_t delta = newTicks - oldTicks;
       oldTicks = newTicks;
-      double deltaMod = 1.0 * delta / DELTA_MODIFIER;
-      
-      double fps = delta == 0 ? 0 : 1000 / delta;
-      fpsDisplay(format3(fps), "fps  |  ", delta, "ms ");
 
-      //force interface refresh
-      pushMouseMove(game);
+      //if delta is too high, skip update.  Adds an instance of lag to the game,
+      //but prevents extremes in movment.
+      if (delta <= DELTA_CUTOFF){
 
-      //update state
-      updateState(deltaMod, core, game, screen, bars,
-                  contextHelp, resourcesBox, fpsDisplay);
+         double deltaMod = 1.0 * delta / DELTA_MODIFIER;
+         
+         double fps = delta == 0 ? 0 : 1000 / delta;
+         fpsDisplay(format3(fps), "fps  |  ", delta, "ms ");
 
-      //render
-      render(screen, glow, diagGreen, diagRed, map, darkMap, cursor,
-             cursorShadow, cursorPause, cursorColor, cursorIndex, core,
-             game, bars, messageBoxes);
+         //force interface refresh
+         pushMouseMove(game);
 
+         //update state
+         updateState(deltaMod, core, game, screen, bars,
+                     contextHelp, resourcesBox, fpsDisplay);
+
+         //render
+         render(screen, glow, diagGreen, diagRed, map, darkMap, cursor,
+                cursorShadow, cursorPause, cursorColor, cursorIndex, core,
+                game, bars, messageBoxes);
+      }
    }
 
    //Clean up
@@ -188,8 +194,6 @@ void gameMode(){
    freeSurface(cursorShadow);
    freeSurface(cursorPause);
    freeSurface(cursorColor);
-   freeSurface(vBar);
-   freeSurface(hBar);
    freeSurface(particle);
    freeSurface(particleShadow);
    freeSurface(diagGreen);

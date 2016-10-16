@@ -19,7 +19,7 @@
 
 extern Debug debug;
 
-const pixels_t Unit::PATH_GRID_SIZE = 35;
+const pixels_t Unit::PATH_GRID_SIZE = 50;
 
 Unit::Unit(typeNum_t type, const Point &loc,
            typeNum_t player, progress_t progress):
@@ -48,23 +48,32 @@ const EntityType &Unit::type() const{
 void Unit::draw(SDL_Surface *screen) const{
    const UnitType &thisType = (const UnitType &)(type());
    SDL_Rect drawLoc = loc_ + thisType.drawRect_;
+   SDL_Rect srcLoc;
 
-   pixels_t
-      partialW = pixels_t(drawPercent_ *
-                          thisType.drawRect_.w),
-      partialH = pixels_t(drawPercent_ *
-                          thisType.drawRect_.h);
+   if (drawPercent_ < FULL){
+      pixels_t
+         partialW = pixels_t(drawPercent_ *
+                             thisType.drawRect_.w),
+         partialH = pixels_t(drawPercent_ *
+                             thisType.drawRect_.h);
 
-   //clip, based on randomized direction
-   SDL_Rect srcLoc = getSrcClip(partialW, partialH, frame_);
+      //clip, based on randomized direction
+      srcLoc = getSrcClip(partialW, partialH, frame_);
 
-   switch(direction_){
-   case DIR_LEFT:
-      drawLoc.x += thisType.drawRect_.w - partialW;
-      break;
-   case DIR_UP:
-      drawLoc.y += thisType.drawRect_.h - partialH;
-   }
+      switch(direction_){
+      case DIR_LEFT:
+         drawLoc.x += thisType.drawRect_.w - partialW;
+         break;
+      case DIR_UP:
+         drawLoc.y += thisType.drawRect_.h - partialH;
+         break;
+      }
+   }else
+      srcLoc = makeRect((frame_) * thisType.drawRect_.w,
+                        0,
+                        thisType.drawRect_.w,
+                        thisType.drawRect_.h);
+
 
    colorBlit(player_, screen, srcLoc, drawLoc,
              //partial, if not finished
@@ -137,7 +146,8 @@ void Unit::tick(double delta){
             if (!isLocationOK()){
                loc_.x -= xDelta;
                loc_.y -= yDelta;
-               findPath();
+               //obstacle too close - finer search
+               findPath(PATH_GRID_SIZE / 2);
                return;
             }
 
@@ -174,9 +184,10 @@ void Unit::tick(double delta){
             if (targetEntity_){
                //if the target entity has moved
                if (!isAtTarget() && target_ != targetEntity_->getLoc()){
-                  //updateTarget();
+                  updateTarget();
                   path_.pop();
-                  assert (path_.empty());
+                  if (!path_.empty())
+                     emptyQueue(path_);
                   path_.push(targetEntity_->getLoc());
 
                   combat_ = false;
@@ -380,9 +391,11 @@ void Unit::findPath(pixels_t gridSize){
       return;
    }
 
+   //target is surrounded
    if (!noCollision(*game_, type(), target_, this, targetEntity_)){
       moving_ = false;
       path_.push(loc_);
+      target_ = loc_;
       return;
    }
 
@@ -428,9 +441,10 @@ void Unit::findPath(pixels_t gridSize){
 
             //is this the node we're looking for?
             temp.push(next);
-            if (distance(next, target_) <= gridSize){
-               temp.push(target_);
+            //if (distance(next, target_) <= gridSize){
+            if (isPathClear(next, target_)){
                temp.pop(); //first node is the current location
+               temp.push(target_);
                path_ = temp;
                moving_ = true;
                pathJustSet_  = true;
@@ -446,9 +460,10 @@ void Unit::findPath(pixels_t gridSize){
 
    }while (!paths.empty());
 
-   assert (path_.empty());
+   assert (paths.empty());
    if (path_.empty()){
       path_.push(loc_);
+      target_ = loc_;
       moving_ = false;
    }
    pathJustSet_  = true;

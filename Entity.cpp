@@ -253,24 +253,24 @@ void Entity::addParticles(int count) const{
 
 SDL_Rect Entity::getSrcClip(pixels_t wPartial,
                             pixels_t hPartial,
-                            int xMutiplier) const{
+                            int xMultiplier) const{
    SDL_Rect srcLoc;
    const EntityType &thisType = type();
    switch(direction_){
    case DIR_RIGHT:
-      srcLoc = makeRect(xMutiplier * thisType.drawRect_.w,
+      srcLoc = makeRect(xMultiplier * thisType.drawRect_.w,
                         0,
                         wPartial,
                         thisType.drawRect_.h);
       break;
    case DIR_DOWN:
-      srcLoc = makeRect(xMutiplier * thisType.drawRect_.w,
+      srcLoc = makeRect(xMultiplier * thisType.drawRect_.w,
                         0,
                         thisType.drawRect_.w,
                         hPartial);
       break;
    case DIR_LEFT:
-      srcLoc = makeRect((xMutiplier + 1) *
+      srcLoc = makeRect((xMultiplier + 1) *
                         thisType.drawRect_.w -
                         wPartial,
                         0,
@@ -279,7 +279,7 @@ SDL_Rect Entity::getSrcClip(pixels_t wPartial,
       //drawLoc.x += thisType.drawRect_.w - wPartial;
       break;
    case DIR_UP:
-      srcLoc = makeRect(xMutiplier * thisType.drawRect_.w,
+      srcLoc = makeRect(xMultiplier * thisType.drawRect_.w,
                         thisType.drawRect_.h - hPartial,
                         thisType.drawRect_.w,
                         hPartial);
@@ -376,7 +376,7 @@ void Entity::kill(){
                   if (unit.isGatherer())
                      unit.setTarget(node);
                   else
-                     unit.setTarget(0);
+                     unit.setTarget(0, unit.loc_);
                   unit.updateTarget();
                }
             }

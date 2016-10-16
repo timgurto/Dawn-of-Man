@@ -45,7 +45,7 @@ CoreData::CoreData(std::string filename){
       pixels_t
          speed = 8;
       progress_t
-         progressCost = 0;
+         progressCost = 1;
       frames_t
          maxFrameCounter = 0,
          frameCount = 1,

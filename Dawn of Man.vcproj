@@ -256,10 +256,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Path.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Player.h"
 				>
 			</File>

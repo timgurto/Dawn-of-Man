@@ -25,7 +25,7 @@ player{
 
 # entities; added in the order specified here.
 
-# enemy shrine
+# enemy building
 building{
    type = 1;
    player = 2;

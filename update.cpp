@@ -96,8 +96,10 @@ void handleEvents(const CoreData &core, GameData &game,
             game.mousePos.x = event.motion.x;
             game.mousePos.y = event.motion.y;
             //check right mouse movement
-            game.rightMouse.checkDrag(game.mousePos);
-            game.leftMouse.checkDrag(game.mousePos - game.map);
+            if (!game.rightMouse.dragging)
+               game.rightMouse.checkDrag(game.mousePos);
+            if (!game.leftMouse.dragging)
+               game.leftMouse.checkDrag(game.mousePos - game.map);
 
             //if over a UI bar
             bool overBar = false;

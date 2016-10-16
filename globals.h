@@ -76,7 +76,7 @@ const Uint8 SHADOW_ALPHA = 0x44;
 
 //This has a substantial effect on performance
 //anything behind each entity is cleared
-const bool ENTITY_MASKS = false;
+const bool ENTITY_MASKS = true;
 
 const double FULL  = 1;
 const double EMPTY = 0;
@@ -185,7 +185,7 @@ const Uint32 RESOURCE_WOOD_COLOR  = 0x406040;
 const Uint32 RESOURCE_FOOD_COLOR  = 0xd75757;
 
 const Uint32 DECORATION_COLOR     = 0x666666;
-const Uint32 CORPSE_COLOR         = 0xaaaa99;
+const Uint32 CORPSE_COLOR         = 0xb3b3a2;
 
 const Uint8 BLACK_ENTITY_ALPHA = 0x3b; //0x44;
 //The health percentage, below which the sprite is blackened
