@@ -29,6 +29,7 @@ buildingType{
    progressCost = 4000;
    soundFile = "cave.wav";
    deathSoundFile = "destroy.wav";
+   expansion=true;
 }
 buildingType{
    name = "Armory";

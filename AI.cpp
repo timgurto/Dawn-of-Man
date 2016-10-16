@@ -13,6 +13,7 @@
 #include "Tech.h"
 #include "Debug.h"
 #include "Building.h"
+#include "Player.h"
 
 extern Debug debug;
 
@@ -22,11 +23,24 @@ const double AI::allocationRatio_ = 3; //x:1 expansion:military
 
 AI::AI():
 militaryBuilding_(0),
+expansionBuilding_(0),
 player_(NO_TYPE){}
 
 void AI::init(const CoreData *core, GameData *game){
    core_ = core;
    game_ = game;
+   
+   //initialize military caps; only needs to be done once
+   Resources militaryCap;
+   ITERATE(unitTypes_t::const_iterator, core_->unitTypes, it)
+      if (!(it->isBuilder() || it->isGatherer())){
+         const Resources &cost = it->getCost();
+         if (militaryCap < cost)
+            militaryCap += (cost - militaryCap);
+      }
+
+   ITERATE(players_t::iterator, game_->players, it)
+      it->ai_.militaryCap_ = militaryCap;
 }
 
 void AI::initPlayer(typeNum_t player){
@@ -34,34 +48,23 @@ void AI::initPlayer(typeNum_t player){
 }
 
 void AI::updateCaps(){
-   for (wishlist_t::const_iterator it = wishlist_.begin();
-        it != wishlist_.end(); ++it){
-      Resources cost;
-      bool military = false; //whether this item is a military expense
-      switch(it->first){
-      case ENT_BUILDING:
-         cost = core_->buildingTypes[it->second].getCost();
-         break;
-      case ENT_TECH:
-         cost = core_->techs[it->second].getCost();
-         break;
-      case ENT_UNIT:
-         { //new scope for unitType
-            const UnitType &unitType = core_->unitTypes[it->second];
-            cost = unitType.getCost();
-            if (!(unitType.isBuilder() || unitType.isGatherer()))
-               military = true;
-         }
-      default:
-         assert(false);
-      }
-      //which cap to add to
-      Resources &cap = military ?
-                       militarySupply_ :
-                       expansionSupply_;
-      if (cap < cost)
-         cap += (cost - cap);
-   }  
+   ITERATE(wishlist_t::const_iterator, unitWishlist_, it){
+      const Resources &cost = core_->unitTypes[*it].getCost();
+      if (expansionCap_ < cost)
+         expansionCap_ += (cost - expansionCap_);
+   }
+
+   ITERATE(wishlist_t::const_iterator, buildingWishlist_, it){
+      const Resources &cost = core_->buildingTypes[*it].getCost();
+      if (expansionCap_ < cost)
+         expansionCap_ += (cost - expansionCap_);
+   }
+   
+   ITERATE(wishlist_t::const_iterator, techWishlist_, it){
+      const Resources &cost = core_->techs[*it].getCost();
+      if (expansionCap_ < cost)
+         expansionCap_ += (cost - expansionCap_);
+   }
 }
 
 void AI::allocateIncome(const Resources &income){
@@ -109,7 +112,40 @@ void AI::update(){
 }
 
 void AI::checkExpansion(){
-   
+   //assumption: one type of expansion unit building, one instance
+   //TODO maintain vector, and allow multiple buliding types
+
+   if (!expansionBuilding_)
+      ITERATE(entities_t::const_iterator, game_->entities, it){
+         if ((*it)->classID() == ENT_BUILDING){
+            expansionBuilding_ = (const Building *)(*it);
+            if (expansionBuilding_->getPlayer() == player_ &&
+                expansionBuilding_->isExpansion() &&
+                expansionBuilding_->isFinished())
+               break;
+            expansionBuilding_ = 0;
+         }
+      }
+   if (!expansionBuilding_){
+      debug("No expansion building found");
+      return;
+   }
+   typeNum_t expBuildingType = expansionBuilding_->getTypeIndex();
+   Player &player = game_->players[player_];
+
+   //check any expansion units
+   ITERATE(wishlist_t::iterator, unitWishlist_, it){
+      typeNum_t index = *it;
+      const Resources &cost = core_->unitTypes[index].getCost();
+      if (!player.sufficientResources(cost))
+         break;
+      
+      expansionSupply_ -= cost;
+      expansionQueue_.push(index);
+      unitWishlist_.erase(it);
+      debug("Player ", player_, "'s AI is training a ",
+            core_->unitTypes[index].getName());
+   }
 }
 
 void AI::checkMilitary(){
@@ -117,22 +153,19 @@ void AI::checkMilitary(){
    //assumption: one type of military building, one instance of building
    //if these assumptions are wrong, the AI will be less effective.
    //TODO maintain vector of military buildings, possibly of multiple types, instead
-
-   Player &player = game_->players[player_];
    
-   //find training grounds (only necessary once)
+   //find military building (only necessary once)
    //TODO set to 0 if the building is destroyed
    if (!militaryBuilding_)
-      for (entities_t::const_iterator it = game_->entities.begin();
-           it != game_->entities.end(); ++it){
+      ITERATE(entities_t::const_iterator, game_->entities, it){
          if ((*it)->classID() == ENT_BUILDING){
             militaryBuilding_ = (const Building *)(*it);
-            if (militaryBuilding_->getPlayer() == player_)
-               if (militaryBuilding_->isMilitary())
-                  if (militaryBuilding_->isFinished())
+            if (militaryBuilding_->getPlayer() == player_ &&
+                militaryBuilding_->isMilitary() &&
+                militaryBuilding_->isFinished())
                      break;
+            militaryBuilding_ = 0;
          }
-         militaryBuilding_ = 0;
       }
    if (!militaryBuilding_){
       debug("No military building found");
@@ -156,7 +189,6 @@ void AI::checkMilitary(){
                while (militarySupply_ >= cost){
                   //pay for and queue up the unit
                   militaryQueue_.push(index);
-                  player.subtractResources(cost);
                   militarySupply_ -= cost;
                   debug("Player ", player_, "'s AI is training a ", it->getName());
                }
@@ -172,11 +204,9 @@ void AI::buildPossible(){
       bool trained = game_->trainUnit(militaryQueue_.front(),
                                       *militaryBuilding_,
                                       player_);
-      if (trained){
-         militarySupply_ -= core_->unitTypes
-                               [militaryQueue_.front()].getCost();
+      if (trained)
          militaryQueue_.pop();
-      }else
-         break;
+      else
+         break; //no room to place unit
    }
 }

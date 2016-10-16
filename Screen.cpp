@@ -35,8 +35,7 @@ unsigned Screen::goDefault_(Screen &thisScreen, const void *data){
    assert(!data);
 
    //clear all rollover
-   for (elements_t::iterator it = thisScreen.elements_.begin();
-        it != thisScreen.elements_.end(); ++it)
+   ITERATE(elements_t::iterator, thisScreen.elements_, it)
       it->rollover_ = false;
 
    while(thisScreen.loop_){
@@ -67,8 +66,7 @@ int Screen::handleEventsDefault_(){
          //check whether over any buttons, for rollover color
          { //new scope for found
             bool found = false;
-            for (elements_t::iterator it = elements_.begin();
-                 it != elements_.end(); ++it){
+            ITERATE(elements_t::iterator, elements_, it){
                it->rollover_ = false;
                if (!found) //only consider one collision
                   if (collision(it->image_->clip_rect + it->loc_,
@@ -117,8 +115,8 @@ int Screen::handleEventsDefault_(){
          switch (event.button.button){
          case MOUSE_BUTTON_LEFT:
             //check whether a button was clicked
-            for (std::vector<ScreenElement>::const_iterator it = elements_.begin();
-                 it != elements_.end(); ++it)
+            ITERATE(std::vector<ScreenElement>::const_iterator,
+                    elements_, it)
                if (it->type_ == ELEM_BUTTON &&
                   collision(it->image_->clip_rect + it->loc_,
                             mousePos))
@@ -152,8 +150,7 @@ void Screen::drawDefault_() const{
                                                 y * MAP_TILE_SIZE));
 
    //elements
-   for (std::vector<ScreenElement>::const_iterator it = elements_.begin();
-        it != elements_.end(); ++it)
+   ITERATE(std::vector<ScreenElement>::const_iterator, elements_, it)
       it->draw();
 
    //cursor

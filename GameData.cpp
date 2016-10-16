@@ -214,9 +214,7 @@ scrollLockY(false){
    }
    data.close();
 
-   for (entities_t::const_iterator it = entities.begin();
-        it != entities.end(); ++it){
-
+   ITERATE(entities_t::const_iterator, entities, it){
       //kill if location not okay?
       //if (!noCollision(*this, (*it)->type(), (*it)->loc_, *it))
       //   (*it)->kill();
@@ -257,10 +255,8 @@ scrollLockY(false){
 GameData::~GameData(){
 
    //entities (delete)
-   for (entities_t::iterator it = entities.begin(); it != entities.end(); ++it){
+   ITERATE(entities_t::iterator, entities, it)
       delete(*it);
-   }
-
 }
 
 void GameData::init(const CoreData *core){
@@ -381,8 +377,7 @@ bool GameData::constructBuilding(typeNum_t index, const Point &loc,
 
       //assign selected builders to the construction
       if (playerID == HUMAN_PLAYER)
-         for (entities_t::iterator it = entities.begin();
-              it != entities.end(); ++it)
+         ITERATE(entities_t::iterator, entities, it)
             if ((*it)->classID() == ENT_UNIT){
                Unit *unitP = (Unit *)(*it);
                if (unitP->selected && unitP->isBuilder())

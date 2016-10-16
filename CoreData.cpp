@@ -34,7 +34,8 @@ CoreData::CoreData(std::string filename){
          builder = false, //units - default: military
          gatherer = false, //units -   "        "
          autoAttack = true, //units -  "        "
-         military = false; //buildings - default: civilian
+         military = false, //buildings - default: not military
+         expansion = false; //buildings - default: not expansion
       typeNum_t
          index = NO_TYPE,
          prereqBuilding = NO_TYPE,
@@ -125,6 +126,8 @@ CoreData::CoreData(std::string filename){
             autoAttack = val == "true;";
          else if (attr == "military")
             military = val == "true;";
+         else if (attr == "expansion")
+            expansion = val == "true;";
          else if (attr == "index")
             index = typeNum_t(numVal);
          else if (attr == "prereqBuilding")
@@ -244,7 +247,7 @@ CoreData::CoreData(std::string filename){
          BuildingType temp(index, name, drawRect, baseRect,
                            selectionCenter, cost, maxHealth, armor,
                            progressCost, prereqBuilding, prereqTech,
-                           decorationAtDeath, military,
+                           decorationAtDeath, military, expansion,
                            soundFile, deathSoundFile);
          buildingTypes.push_back(temp);
 
@@ -296,16 +299,14 @@ CoreData::CoreData(std::string filename){
       assert (techs[i].index_ == i);
 
    //misc referenced entity types are in-bounds or NO_TYPE
-   //prerequisites, origin buildings, 
-   for (buildingTypes_t::iterator it = buildingTypes.begin();
-        it != buildingTypes.end(); ++it){
+   //prerequisites, origin buildings
+   ITERATE(buildingTypes_t::iterator, buildingTypes, it){
       checkTypeIndex(it->prereqBuilding_,
                      buildingTypes.size());
       checkTypeIndex(it->prereqTech_,
                      techs.size());
    }
-   for (unitTypes_t::iterator it = unitTypes.begin();
-        it != unitTypes.end(); ++it){
+   ITERATE(unitTypes_t::iterator, unitTypes, it){
       checkTypeIndex(it->originBuilding_,
                      buildingTypes.size());
       checkTypeIndex(it->resourceAtDeath_,
@@ -313,8 +314,7 @@ CoreData::CoreData(std::string filename){
       checkTypeIndex(it->prereqTech_,
                      techs.size());
    }
-   for (techs_t::iterator it = techs.begin();
-        it != techs.end(); ++it){
+   ITERATE(techs_t::iterator, techs, it){
       checkTypeIndex(it->originBuilding_,
                      buildingTypes.size());
       checkTypeIndex(it->prereqTech1_,

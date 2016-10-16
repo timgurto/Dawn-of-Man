@@ -533,8 +533,7 @@ void Unit::removeHealth(damage_t damage){
 
 Entity *Unit::findNearbyEnemy(){
    //TODO only search nearby entities
-   for (entities_t::const_iterator it = game_->entities.begin();
-        it != game_->entities.end(); ++it){
+   ITERATE(entities_t::const_iterator, game_->entities, it){
       typeNum_t player = (*it)->getPlayer();
       if (player != NO_TYPE && //entity has a player associated with it
           player != player_ && //enemy

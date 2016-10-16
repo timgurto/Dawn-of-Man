@@ -55,6 +55,7 @@ public:
    damage_t getArmor() const;
    damage_t getHealth() const;
    bool isMilitary() const;
+   bool isExpansion() const;
 };
 
 #endif

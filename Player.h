@@ -19,6 +19,7 @@ typedef std::vector<bool> checklist_t;
 //Represents one player, be it the human or a
 //computer opponent
 class Player{
+   friend class AI;
 
    //the player's ID number
    typeNum_t id_;

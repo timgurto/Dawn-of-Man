@@ -17,6 +17,7 @@ BuildingType::BuildingType(typeNum_t index,
                            typeNum_t prereqTech,
                            typeNum_t decorationAtDeath,
                            bool military,
+                           bool expansion,
                            const std::string &soundFile,
                            const std::string &deathSoundFile):
 EntityType(index,
@@ -34,7 +35,8 @@ armor_(armor),
 cost_(cost),
 prereqBuilding_(prereqBuilding),
 prereqTech_(prereqTech),
-military_(military){}
+military_(military),
+expansion_(expansion){}
 
 const Resources &BuildingType::getCost() const{
    return cost_;

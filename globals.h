@@ -229,4 +229,10 @@ enum GameOutcome{
    ALT_F4 //immediately exit entire program
 };
 
+//for more terse iterating
+#define ITERATE(TYPE, CONTAINER, ITERATOR) \
+   for (TYPE ITERATOR = (CONTAINER).begin(); \
+        ITERATOR != (CONTAINER).end(); \
+        ++ ITERATOR)
+
 #endif

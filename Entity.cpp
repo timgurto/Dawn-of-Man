@@ -330,8 +330,7 @@ bool Entity::isLocationOK() const{
       return false;
 
    //entities
-   for (entities_t::const_iterator it = game_->entities.begin();
-        it != game_->entities.end(); ++it){
+   ITERATE(entities_t::const_iterator, game_->entities, it){
       
       //skip this
       if (*it == this)
@@ -371,8 +370,7 @@ void Entity::kill(){
    }
 
    //fix units that were targetting this
-   for (entities_t::iterator it = game_->entities.begin();
-        it != game_->entities.end(); ++it)
+   ITERATE(entities_t::iterator, game_->entities, it)
       if ((*it)->classID() == ENT_UNIT){
          Unit &unit = (Unit &)(**it);
          if (unit.targetEntity_ == this){
@@ -385,19 +383,19 @@ void Entity::kill(){
 
    trashCan_.push_back(this);
    entities_t::iterator itToErase;
-   for (entities_t::iterator it = game_->entities.begin();
-        it != game_->entities.end(); ++it){
-      if (*it == this)
+   ITERATE(entities_t::iterator, game_->entities, it)
+      if (*it == this){
          itToErase = it;
-   }
+         break;
+      }
+
    game_->entities.erase(itToErase);
    checkVictory(*game_);
 }
 
 void Entity::emptyTrash(){
    if (!trashCan_.empty()){
-      for (entities_t::iterator it = trashCan_.begin();
-           it != trashCan_.end(); ++it)
+      ITERATE(entities_t::iterator, trashCan_, it)
          delete (*it);
       trashCan_.clear();
    }

@@ -32,8 +32,7 @@ void updateState(double delta, const CoreData &core, GameData &game,
    if (!game.paused){
 
       //Entities
-         for (entities_t::iterator it = game.entities.begin();
-           it != game.entities.end(); ++it){
+      ITERATE(entities_t::iterator, game.entities, it){
          (*it)->tick(delta);
 
          //re-sort entity if it has moved vertically
@@ -48,14 +47,13 @@ void updateState(double delta, const CoreData &core, GameData &game,
       //UI bars, if necessary
       if (game.recalcBars){
          game.recalcBars = false;
-         for (UIBars_t::iterator it = bars.begin(); it != bars.end(); ++it)
+         ITERATE(UIBars_t::iterator, bars, it)
             if ((*it)->isActive())
                (*it)->calculateRect();
       }
 
       //Particles
-      for (particles_t::iterator it = game.particles.begin();
-           it != game.particles.end(); ++it){
+      ITERATE(particles_t::iterator, game.particles, it){
          it->tick(delta);
          if (it->expired()){
             //debug("particle expired");
@@ -105,8 +103,7 @@ void handleEvents(const CoreData &core, GameData &game,
             //if over a UI bar
             bool overBar = false;
             typeNum_t index;
-            for (UIBars_t::iterator it = bars.begin();
-                 it != bars.end(); ++it)
+            ITERATE(UIBars_t::iterator, bars, it)
                if ((*it)->isActive()){
                   index = (*it)->mouseIndex();
                   if (index != NO_TYPE){
@@ -164,6 +161,11 @@ void handleEvents(const CoreData &core, GameData &game,
                   break;
 
                case SDLK_ESCAPE:
+                  if (DEBUG){
+                     game.loop = false;
+                     game.outcome = ALT_F4;
+                     return;
+                  }
                   switch(game.mode){
                   //unselect all
                   case MODE_BUILDING:
@@ -172,15 +174,14 @@ void handleEvents(const CoreData &core, GameData &game,
                      //fall-through
                   case MODE_BUILDER:
                   case MODE_NORMAL:
-                     for (entities_t::iterator it = game.entities.begin();
-                          it != game.entities.end(); ++it)
+                     ITERATE(entities_t::iterator, game.entities, it)
                         (*it)->selected = false;
                      game.mode = MODE_NORMAL;
                      break;
                   case MODE_CONSTRUCTION:
                      game.toBuild = NO_TYPE;
                      game.mode = MODE_NORMAL;
-                     for (UIBars_t::iterator it = bars.begin(); it != bars.end(); ++it)
+                     ITERATE(UIBars_t::iterator, bars, it)
                         if ((*it)->isActive())
                            (*it)->calculateRect();
                      break;
@@ -190,8 +191,7 @@ void handleEvents(const CoreData &core, GameData &game,
                case SDLK_DELETE:
                   { //new scope for selected
                      //find selected entities
-                     for (entities_t::iterator it = game.entities.begin();
-                        it != game.entities.end(); ++it)
+                     ITERATE(entities_t::iterator, game.entities, it)
                         if ((*it)->selected){
                            (*it)->kill();
                            break;
@@ -246,22 +246,20 @@ void handleEvents(const CoreData &core, GameData &game,
                      //Ctrl: Set control group
                      if (isKeyPressed(SDLK_LCTRL) ||
                          isKeyPressed(SDLK_RCTRL)){
-                         for (entities_t::iterator it = game.entities.begin();
-                              it != game.entities.end(); ++it)
-                            if ((*it)->classID() == ENT_UNIT){
-                               Unit &unit = (Unit &)(**it);
-                               if (unit.controlGroup == key)
-                                  unit.controlGroup = CONTROL_NONE;
-                               if ((*it)->selected)
-                                  unit.controlGroup = ControlGroup(key);
-                            }
+                        ITERATE(entities_t::iterator, game.entities, it)
+                           if ((*it)->classID() == ENT_UNIT){
+                              Unit &unit = (Unit &)(**it);
+                              if (unit.controlGroup == key)
+                                 unit.controlGroup = CONTROL_NONE;
+                              if ((*it)->selected)
+                                 unit.controlGroup = ControlGroup(key);
+                           }
                      
                      //No Ctrl: select control group
                      }else{
                         if (key != CONTROL_NONE){ //0 nothing to select
                            const Sound *sound = 0; //selection sound to play
-                           for (entities_t::iterator it = game.entities.begin();
-                                it != game.entities.end(); ++it){
+                           ITERATE(entities_t::iterator, game.entities, it){
 
                               //no Shift: unselect all
                               if (!(isKeyPressed(SDLK_LSHIFT) ||
@@ -315,8 +313,7 @@ void handleEvents(const CoreData &core, GameData &game,
                      case SDLK_l:
                         index = 8; break;
                      }
-                     for (UIBars_t::iterator it = bars.begin();
-                          it != bars.end(); ++it)
+                     ITERATE(UIBars_t::iterator, bars, it)
                         if ((*it)->isActive() &&
                             (*it)->size() > index)
                            (*it)->click(index);
@@ -372,8 +369,7 @@ void handleEvents(const CoreData &core, GameData &game,
                      //cancel build mode
                      game.toBuild = NO_TYPE;
                      game.mode = MODE_BUILDER;
-                     for (UIBars_t::iterator it = bars.begin();
-                          it != bars.end(); ++it)
+                     ITERATE(UIBars_t::iterator, bars, it)
                         if ((*it)->isActive())
                            (*it)->calculateRect();
                      break;
@@ -407,8 +403,7 @@ void handleEvents(const CoreData &core, GameData &game,
                         //Shift key: multiple constructions
                         if(!isKeyPressed(SDLK_LSHIFT)){
                            game.mode = MODE_BUILDER;
-                           for (UIBars_t::iterator it = bars.begin();
-                                it != bars.end(); ++it)
+                           ITERATE(UIBars_t::iterator, bars, it)
                               if ((*it)->isActive())
                                  (*it)->calculateRect();
                         }
@@ -600,44 +595,44 @@ void select(GameData &game){
 }
 
 void setSelectedTargets(GameData &game){
-   Entity *targetEntity = findEntity(game);
-   for (entities_t::iterator it = game.entities.begin();
-        it != game.entities.end(); ++it){
+   ITERATE(entities_t::iterator, game.entities, it){
+
       //only selected units have their targets set
-      if ((*it)->classID() == ENT_UNIT &&
-          (*it)->selected){
-         Unit *unitP = (Unit *)(*it);
+      if ((*it)->classID() != ENT_UNIT ||
+          !(*it)->selected)
+          continue;
 
-         //no entity
-         if (!targetEntity){
-            unitP->setTarget();
-            continue;
-         }
+      Unit *unitP = (Unit *)(*it);
+      Entity *targetEntity = findEntity(game, unitP);
 
-         EntityTypeID targetClass = targetEntity->classID();
-
-         //enemy unit or building
-         if ((targetClass == ENT_UNIT || targetClass == ENT_BUILDING) &&
-             targetEntity->getPlayer() != unitP->getPlayer()){
-            unitP->setTarget(targetEntity);
-            continue;
-         }
-
-         //friendly, unfinished building
-         if (targetClass == ENT_BUILDING &&
-             targetEntity->getPlayer() == unitP->getPlayer() &&
-             unitP->isBuilder() &&
-             !((Building *)(targetEntity))->isFinished()){
-            unitP->setTarget(targetEntity);
-            continue;
-         }
-
-         //resource node
-         if (targetClass == ENT_RESOURCE_NODE &&
-             unitP->isGatherer())
-            unitP->setTarget(targetEntity);
+      //no entity
+      if (!targetEntity){
+         unitP->setTarget();
          continue;
       }
+
+      EntityTypeID targetClass = targetEntity->classID();
+
+      //enemy unit or building
+      if ((targetClass == ENT_UNIT || targetClass == ENT_BUILDING) &&
+          targetEntity->getPlayer() != unitP->getPlayer()){
+         unitP->setTarget(targetEntity);
+         continue;
+      }
+
+      //friendly, unfinished building
+      if (targetClass == ENT_BUILDING &&
+          targetEntity->getPlayer() == unitP->getPlayer() &&
+          unitP->isBuilder() &&
+          !((Building *)(targetEntity))->isFinished()){
+         unitP->setTarget(targetEntity);
+         continue;
+      }
+
+      //resource node
+      if (targetClass == ENT_RESOURCE_NODE &&
+          unitP->isGatherer())
+         unitP->setTarget(targetEntity);
    }
 }
 
@@ -669,7 +664,7 @@ void reSort(entities_t &entities, entities_t::iterator it,
    }
 }
 
-Entity *findEntity(GameData &game, bool onlyTargetable){
+Entity *findEntity(GameData &game, const Unit *targetingUnit){
    //loop backwards, so objects in front have priority
    for (entities_t::reverse_iterator it = game.entities.rbegin();
         it != game.entities.rend(); ++it){
@@ -680,7 +675,7 @@ Entity *findEntity(GameData &game, bool onlyTargetable){
 
       //filtering
       //only targetable entities
-      if (onlyTargetable && !(*it)->targetable())
+      if (targetingUnit && !(*it)->targetable())
          continue;
 
       if (collision((*it)->getDrawRect(),
@@ -698,8 +693,7 @@ void setModeFromSelection(GameData &game, UIBars_t &bars){
 
    //loop backwards, so objects in front have priority to be
    //selected
-   for (entities_t::const_iterator it = game.entities.begin();
-        it != game.entities.end(); ++it){
+   ITERATE(entities_t::const_iterator, game.entities, it){
       if ((*it)->selected){
          EntityTypeID classType = (*it)->classID();
 
@@ -722,19 +716,17 @@ void setModeFromSelection(GameData &game, UIBars_t &bars){
        game.mode == MODE_BUILDER)
          game.mode = MODE_CONSTRUCTION;
 
-   for (UIBars_t::iterator it = bars.begin(); it != bars.end(); ++it)
+   ITERATE(UIBars_t::iterator, bars, it)
       (*it)->calculateRect();
 }
 
 void checkVictory(GameData &game){
    //set each player initially to dead
-   for (players_t::iterator it = game.players.begin();
-        it != game.players.end(); ++it)
+   ITERATE(players_t::iterator, game.players, it)
       it->alive = false;
    
    //change players based on which entities exist
-   for (entities_t::const_iterator it = game.entities.begin();
-        it != game.entities.end(); ++it){
+   ITERATE(entities_t::const_iterator, game.entities, it){
       typeNum_t player = (*it)->getPlayer();
       if (player != NO_TYPE)
          game.players[player].alive = true;

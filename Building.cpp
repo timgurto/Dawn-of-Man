@@ -125,8 +125,7 @@ void Building::progressConstruction(){
 
    if (finished_){
       //remove builders' targets
-      for (entities_t::iterator it = game_->entities.begin();
-           it != game_->entities.end(); ++it)
+      ITERATE(entities_t::iterator, game_->entities, it)
          if ((*it)->classID() == ENT_UNIT){
             Unit &unit = (Unit &)(**it);
             if (unit.getTargetEntity() == this &&
@@ -185,4 +184,8 @@ std::string Building::getHelp() const{
 
 bool Building::isMilitary() const{
    return core_->buildingTypes[typeIndex_].military_;
+}
+
+bool Building::isExpansion() const{
+   return core_->buildingTypes[typeIndex_].expansion_;
 }

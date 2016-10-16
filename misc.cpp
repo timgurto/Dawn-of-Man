@@ -87,8 +87,7 @@ bool noCollision(const GameData &game, const EntityType &type,
 
    //TODO * only check nearby entities
    //check against entities
-   for (entities_t::const_iterator it = game.entities.begin();
-        it != game.entities.end(); ++it){
+   ITERATE(entities_t::const_iterator, game.entities, it){
       if (*it != ignore1 &&
           *it != ignore2 &&
           (*it)->collides() &&

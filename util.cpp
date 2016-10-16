@@ -62,9 +62,9 @@ bool operator==(const SDL_Color &lhs, const SDL_Color &rhs){
 SDL_Color operator*(const SDL_Color &lhs, double rhs){
    SDL_Color c = lhs;
    if (rhs > 0){
-      c.r = Uint8(1.0 * c.r * rhs);
-      c.g = Uint8(1.0 * c.g * rhs);
-      c.b = Uint8(1.0 * c.b * rhs);
+      c.r = Uint8(min<double>(1.0 * c.r * rhs, 0xff));
+      c.g = Uint8(min<double>(1.0 * c.g * rhs, 0xff));
+      c.b = Uint8(min<double>(1.0 * c.b * rhs, 0xff));
    }
    return c;
 }
@@ -73,9 +73,9 @@ SDL_Color operator*(const SDL_Color &lhs, double rhs){
 SDL_Color operator/(const SDL_Color &lhs, double rhs){
    SDL_Color c = lhs;
    if (rhs > 0){
-      c.r = Uint8(1.0 * c.r / rhs);
-      c.g = Uint8(1.0 * c.g / rhs);
-      c.b = Uint8(1.0 * c.b / rhs);
+      c.r = Uint8(min<double>(1.0 * c.r / rhs, 0xff));
+      c.g = Uint8(min<double>(1.0 * c.g / rhs, 0xff));
+      c.b = Uint8(min<double>(1.0 * c.b / rhs, 0xff));
    }
    return c;
 }

@@ -8,6 +8,7 @@
 #include "MessageBox.h"
 
 struct SDL_Surface;
+class Unit;
 
 //Any processing within the game loop
 void updateState(double delta, const CoreData &core, GameData &game,
@@ -36,8 +37,9 @@ void setSelectedTargets(GameData &game);
 void reSort(entities_t &entities, entities_t::iterator it,
             VerticalMovement verticalMovement);
 
-//Returns the address of the entity the mouse is currently over
-Entity *findEntity(GameData &game, bool onlyTargetable = true);
+//Returns the address of the entity the mouse is currently over,
+//and if a unit is specified, an entity relevant to that unit.
+Entity *findEntity(GameData &game, const Unit *targetingUnit = 0);
 
 //sets game mode based on what's selected
 void setModeFromSelection(GameData &game, UIBars_t &bars);

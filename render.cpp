@@ -145,8 +145,7 @@ void renderMap(const GameData &game,
 //Draws markers at the locations of selected entities
 void renderSelection(const GameData &game,
                      Surface &selection){
-   for (entities_t::const_iterator it = game.entities.begin();
-        it != game.entities.end(); ++it)
+   ITERATE(entities_t::const_iterator, game.entities, it)
       if ((*it)->selected && (*it)->onScreen()){
          SDL_Rect dest = (*it)->getSelectionDest(selection);
          selection.draw(screenBuf, &dest);
@@ -168,8 +167,7 @@ void renderFootprint(const CoreData &core, const GameData &game,
 
 //Draws decoration entities
 void renderDecorations(const GameData &game){
-   for (entities_t::const_iterator it = game.entities.begin();
-        it != game.entities.end(); ++it)
+   ITERATE(entities_t::const_iterator, game.entities, it)
       if ((*it)->classID() == ENT_DECORATION && (*it)->onScreen())
          (*it)->draw();
 }
@@ -188,9 +186,7 @@ void renderEntities(const GameData &game){
                            Screen::getScreenRes().y, ENTITY_BACKGROUND);
       entitiesTemp.fill(ENTITY_BACKGROUND);
 
-      for (entities_t::const_iterator it = game.entities.begin();
-           it != game.entities.end(); ++it){
-
+      ITERATE(entities_t::const_iterator, game.entities, it){
          const Entity &ent = **it;
          //debug(ent.getLoc().y);
 
@@ -207,9 +203,7 @@ void renderEntities(const GameData &game){
    //Considerably faster.
    }else
       //some duplicate code, but cleaner this way
-      for (entities_t::const_iterator it = game.entities.begin();
-           it != game.entities.end(); ++it){
-
+      ITERATE(entities_t::const_iterator, game.entities, it){
          const Entity &ent = **it;
          if (ent.classID() != ENT_DECORATION && ent.onScreen())
             ent.draw();
@@ -241,21 +235,17 @@ void renderSelectionRect(const GameData &game,
 
 //Draws all UIBars
 void renderInterface(const UIBars_t &bars){
-   for (UIBars_t::const_iterator it = bars.begin();
-        it != bars.end(); ++it){
+   ITERATE(UIBars_t::const_iterator, bars, it)
       (*it)->draw();
-   }
 }
 
 //Draws all active particles
 void renderParticles(const GameData &game){
-   for (particles_t::const_iterator it = game.particles.begin();
-        it != game.particles.end(); ++it)
+   ITERATE(particles_t::const_iterator, game.particles, it)
       it->draw(game);
 }
 
 void renderMessageBoxes(const messageBoxes_t messageBoxes){
-   for (messageBoxes_t::const_iterator it = messageBoxes.begin();
-        it != messageBoxes.end(); ++it)
+   ITERATE(messageBoxes_t::const_iterator, messageBoxes, it)
       (*it)->draw();
 }

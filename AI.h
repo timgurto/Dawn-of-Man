@@ -3,6 +3,8 @@
 #ifndef AI_H
 #define AI_H
 
+#include <list>
+#include "queue"
 #include "types.h"
 #include "globals.h"
 #include "Resources.h"
@@ -11,9 +13,8 @@
 struct GameData;
 struct CoreData;
 
-//EntityType, and type index
-typedef std::pair<EntityTypeID, typeNum_t> AnyEntityType;
-typedef std::vector<AnyEntityType> wishlist_t;
+//list, for safe removal of arbitrary elements
+typedef std::list<typeNum_t> wishlist_t;
 typedef std::queue<typeNum_t> buildQueue_t;
 
 //Handles an individual player's AI
@@ -35,15 +36,18 @@ class AI{
       militaryCap_;
    
    //expansion items the player wants to build
-   wishlist_t wishlist_;
+   wishlist_t
+      unitWishlist_,
+      buildingWishlist_,
+      techWishlist_;
 
    //items which have had resources allocated, in order of preference
    buildQueue_t buildingsQueue_; //buildings
    buildQueue_t militaryQueue_; //military units
-   buildQueue_t economyQueue_; //other units
+   buildQueue_t expansionQueue_; //other units
 
-   //the military building which will train units
-   const Building *militaryBuilding_;
+   //the buildings which will train units
+   const Building *militaryBuilding_, *expansionBuilding_;
 
    //x:1 expansion:military
    static const double allocationRatio_;
