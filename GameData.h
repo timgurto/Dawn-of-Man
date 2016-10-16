@@ -14,6 +14,7 @@
 #include "MouseButton.h"
 
 class Building;
+struct CoreData;
 
 typedef std::vector<Player> players_t;
 typedef std::list<Particle> particles_t;
@@ -33,10 +34,14 @@ typedef SDL_Surface *surfaceIndex_t
 //and functions much simpler.
 struct GameData{
 
+   GameData(std::string filename);
+
    GameData(int mapSizeX, int mapSizeY);
 
    //free entities and surfaces pointed to
    ~GameData();
+
+   static void init(const CoreData *core);
    
    //Each player in the game.
    //[0] is always the human player.
@@ -99,6 +104,9 @@ struct GameData{
    //selected, or 0 if none is.
    //Used for UIBar display, and unit training
    Building *buildingSelected;
+
+private:
+   const static CoreData *core_;
 };
 
 #endif

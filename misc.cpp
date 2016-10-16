@@ -433,6 +433,7 @@ std::string format3(double x){
 std::string parseToken(std::ifstream &data){
    std::ostringstream os;
    while (data){
+      bool skip = false;
       char c;
       data >> c;
       //end if punctuation
@@ -443,7 +444,14 @@ std::string parseToken(std::ifstream &data){
          os << c;
          break;
       }
-      if (c == '\"'){
+      //skip rest of line if comment
+      else if (c == '#'){
+         do
+            data.ignore(1);
+         while (data.peek() != '\n'); //(c != '#');
+         skip = true;
+      }
+      else if (c == '\"'){
          os << c;
          do{
             //stop >> from ignoring spaces
@@ -458,7 +466,8 @@ std::string parseToken(std::ifstream &data){
          os << c;
          break;
       }
-      os << c;
+      if (!skip)
+         os << c;
    }
    std::string ret = os.str();
    //debug(ret);
@@ -471,6 +480,12 @@ void removeLast(std::string &str){
 
 double atod(std::string s){
    std::istringstream is(s);
+   if (s.substr(0, 2) == "0x"){
+      s = s.substr(2);
+      long l;
+      is >> std::hex >> l;
+      return l;
+   }
    double d;
    is >> d;
    return d;

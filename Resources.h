@@ -38,6 +38,8 @@ public:
 
    static void init(std::vector <std::string> &names);
 
+   static typeNum_t findResource(std::string name);
+
    //equivalent to no resources
    static Resources empty();
 

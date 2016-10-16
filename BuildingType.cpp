@@ -47,3 +47,7 @@ typeNum_t BuildingType::getPrereqTech() const{
 typeNum_t BuildingType::getPrereqBuilding() const{
    return prereqBuilding_;
 }
+
+progress_t BuildingType::getMaxProgress() const{
+   return maxProgress_;
+}

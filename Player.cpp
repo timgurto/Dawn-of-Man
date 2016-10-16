@@ -14,9 +14,11 @@ const CoreData *Player::core_ = 0;
 UIBar *Player::buildingsBar_ = 0;
 
 Player::Player(Uint32 color,
+               const resources_t &resources,
                const checklist_t &techsResearched):
 color_(color),
 bonuses_(),
+resources_(resources),
 techsResearched_(techsResearched),
 buildingsBuilt_(core_->buildingTypes.size(), false){
    resourcesString_ = resources_.str();
@@ -76,7 +78,8 @@ void Player::researchTech(typeNum_t index){
    bonuses_ += core_->techs[index].getBonuses();
 }
 
-void Player::buildBuilding(typeNum_t index){
+void Player::buildBuilding(typeNum_t index, bool recalc){
    buildingsBuilt_[index] = true;
-   buildingsBar_->calculateRect();
+   if (recalc)
+      buildingsBar_->calculateRect();
 }

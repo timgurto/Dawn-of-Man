@@ -96,8 +96,10 @@ public:
    bool onScreen() const;
 
    //Initializes the class' static pointers
-   static void init(const CoreData *core, GameData *game,
-                    SDL_Surface *screen, SDL_Surface *diagGreen);
+   static void init(const CoreData *core,
+                    GameData *game = 0,
+                    SDL_Surface *screen = 0,
+                    SDL_Surface *diagGreen = 0);
 
    //identitifes which entity subclass this is
    virtual EntityTypeID classID() const = 0;

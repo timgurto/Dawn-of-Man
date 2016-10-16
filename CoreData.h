@@ -30,7 +30,7 @@ struct CoreData{
    resourceNodeTypes_t resourceNodeTypes;
    techs_t techs;
 
-   CoreData(const std::string fileName);
+   CoreData(std::string fileName);
 };
 
 #endif

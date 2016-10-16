@@ -10,7 +10,7 @@
 
 extern Debug debug;
 
-CoreData::CoreData(const std::string filename){
+CoreData::CoreData(std::string filename){
    std::ifstream data(filename.c_str());
 
    typeNum_t resourceCount = 0;
@@ -80,8 +80,6 @@ CoreData::CoreData(const std::string filename){
          assert (attr[attr.size()-1] == '=');
          removeLast(attr);
          std::string val = parseToken(data);
-         if (val[val.size() - 1] == ',')
-            removeLast(val);
          double numVal = 0;
          bool isNum = val[0] != '\"';
          if (isNum)
@@ -110,11 +108,11 @@ CoreData::CoreData(const std::string filename){
          else if (attr == "hitSoundFile")
             hitSoundFile = val;
          else if (attr == "collides")
-            collides = numVal != 0;
+            collides = val == "true;";
          else if (attr == "builder")
-            builder = numVal != 0;
+            builder = val == "true;";
          else if (attr == "gatherer")
-            gatherer = numVal != 0;
+            gatherer = val == "true;";
          else if (attr == "index")
             index = typeNum_t(numVal);
          else if (attr == "prereqBuilding")
@@ -195,16 +193,6 @@ CoreData::CoreData(const std::string filename){
                bonus.trainingSpeed = progress_t(numVal);
             else if (sub == "buildingSpeed")
                bonus.buildingSpeed = damage_t(numVal);
-            else if (sub == "unitArmor")
-               bonus.unitArmor = damage_t(numVal);
-            else if (sub == "unitArmor")
-               bonus.unitArmor = damage_t(numVal);
-            else if (sub == "unitArmor")
-               bonus.unitArmor = damage_t(numVal);
-            else if (sub == "unitArmor")
-               bonus.unitArmor = damage_t(numVal);
-            else if (sub == "unitArmor")
-               bonus.unitArmor = damage_t(numVal);
          }else if (attr.substr(0, 5) == "cost."){
             typeNum_t i = resourceIndices[attr.substr(5)];
             //ensure cost is big enough
@@ -233,15 +221,18 @@ CoreData::CoreData(const std::string filename){
          resourceNames.push_back(name);
          while (cost.size() < resourceNames.size())
             cost.push_back(0);
+
       }else if (object == "buildingType"){
          BuildingType temp(index, name, drawRect, baseRect,
                            selectionCenter, cost, maxHealth, armor,
                            progressCost, prereqBuilding, prereqTech,
                            soundFile, deathSoundFile);
          buildingTypes.push_back(temp);
+
       }else if (object == "decorationType"){
          DecorationType temp(index, name, drawRect, baseRect, collides);
          decorationTypes.push_back(temp);
+
       }else if (object == "unitType"){
          UnitType temp(index, name, drawRect, baseRect, selectionCenter,
                        cost, speed, maxFrameCounter, frameCount,
@@ -250,11 +241,13 @@ CoreData::CoreData(const std::string filename){
                        originBuilding, progressCost, resourceAtDeath,
                        prereqTech, soundFile, deathSoundFile, hitSoundFile);
          unitTypes.push_back(temp);
+
       }else if (object == "resourceNodeType"){
          ResourceNodeType temp(index, name, drawRect, baseRect,
                                selectionCenter, maxResources, yield,
                                EntityColor(color));
          resourceNodeTypes.push_back(temp);
+
       }else if (object == "technology"){
          Tech temp(index, name, bonus, originBuilding, cost, prereqTech,
                    prereqTech2);

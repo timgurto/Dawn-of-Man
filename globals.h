@@ -26,6 +26,8 @@ const double DUMMY_ANGLE = 3 * PI;
 const typeNum_t MAX_TYPES = 8;
 const typeNum_t NO_TYPE = 0xffff;
 
+const double DUMMY_PROGRESS = -1;
+
 const typeNum_t MAX_PLAYERS = 3; //including Nature
 const typeNum_t HUMAN_PLAYER = 1;
 const typeNum_t NATURE_PLAYER = 0;

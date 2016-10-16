@@ -55,6 +55,11 @@ void gameMode(){
    //load core data (must be done after screen is initialized)
    CoreData core(DATA_PATH + "core.dat");
 
+   //init
+   GameData::init(&core);
+   Entity::init(&core);
+   Player::init(&core);
+
    //load surfaces
    SDL_Surface
       *map = loadImage(MISC_IMAGE_PATH + "back.png"),
@@ -84,11 +89,12 @@ void gameMode(){
 
    SDL_ShowCursor(SDL_DISABLE);
 
-
-   //init
-   GameData game(8, 8);
-   Entity::init(&core, &game, screen, diagGreen);
+   //create game data object, and load data from file
+   GameData game(DATA_PATH + "game.dat");
+   
+   //more init
    Particle::init(screen, particle, particleShadow);
+   Entity::init(&core, &game, screen, diagGreen);
 
    //UI Bars
    UIBars_t bars;
@@ -139,69 +145,6 @@ void gameMode(){
    messageBoxes.push_back(&contextHelp);
    messageBoxes.push_back(&resourcesBox);
    messageBoxes.push_back(&fpsDisplay);
-
-   //TODO load from files
-   //=================================================
-   initializeGameData("Data/dawn.dat", game);
-
-   //starting enemy shrine
-   Building *enemyShrine = new Building(1, makeRect(1000, 1000),
-                                        2, 1750);
-   addEntity(game, enemyShrine);
-
-   //starting rocks
-   for (int i = 0; i != 70; ++i)
-      addEntity(game, new Decoration(0, Point(
-                                rand() % game.map.w,
-                                rand() % game.map.h)));
-
-   //human start: one grunt
-   Unit *newGrunt = new Unit(1,
-                             Point(rand() % game.map.w,
-                                   rand() % game.map.h),
-                             HUMAN_PLAYER,
-                             1000);
-   addEntity(game, newGrunt);
-   centerMap(game, newGrunt->getLoc());
-
-   //computer start: a bunch of generics
-   for (int i = 0; i != 30; ++i){
-      pixels_t x, y;
-      do{
-         x = rand() % game.map.w;
-         y = rand() % game.map.h;
-      }while (!noCollision(game, core.unitTypes[0],
-                          Point(x, y)));
-      addEntity(game, new Unit(0, Point(x, y), 2, 1000));
-   }
-
-   //nature start: some deer
-   for (int i = 0; i != 20; ++i){
-      pixels_t x, y;
-      do{
-         x = rand() % game.map.w;
-         y = rand() % game.map.h;
-      }while (!noCollision(game, core.unitTypes[2],
-                          Point(x, y)));
-      addEntity(game, new Unit(2, Point(x, y), NATURE_PLAYER, 1000));
-   }
-
-   //starting trees
-   for (int i = 0; i != 100; ++i){
-      pixels_t x, y;
-      do{
-         x = rand() % game.map.w;
-         y = rand() % game.map.h;
-      }while (!noCollision(game, core.resourceNodeTypes[0],
-                          Point(x, y)));
-      addEntity(game, new ResourceNode(0, Point(x, y)));
-   }
-
-   checklist_t noneResearched(core.techs.size(), false);
-   game.players.push_back(Player(0x735e3e, noneResearched)); //0: nature
-   game.players.push_back(Player(0xca6500, noneResearched)); //1: human
-   game.players.push_back(Player(0x882222, noneResearched));
-   //=================================================
 
    timer_t oldTicks = SDL_GetTicks();
    game.loop = true;
@@ -255,8 +198,4 @@ void addEntity(GameData &game, Entity *entity){
                                          game.entities.end(), entity,
                                          dereferenceLessThan),
                         entity);
-}
-
-void initializeGameData(char * /*filename*/, GameData &/*game*/){
-
 }

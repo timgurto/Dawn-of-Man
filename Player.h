@@ -42,11 +42,12 @@ class Player{
 public:
    //TODO comments
    Player(Uint32 color,
+          const resources_t &resources,
           const checklist_t &techsResearched);
 
    //initialize static pointers
-   static void init(const CoreData *core, GameData *game,
-                    UIBar *buildingsBar);
+   static void init(const CoreData *core = 0, GameData *game = 0,
+                    UIBar *buildingsBar = 0);
 
    //add or remove the player's resources
    void addResources(const Resources &r);
@@ -60,7 +61,7 @@ public:
    void researchTech(typeNum_t index);
 
    //registers the player constructing a building
-   void buildBuilding(typeNum_t index);
+   void buildBuilding(typeNum_t index, bool recalc = false);
 
    //get
    Uint32 getColor() const;

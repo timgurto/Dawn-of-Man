@@ -96,6 +96,7 @@ public:
    std::string getCostString() const;
    typeNum_t getDeathResource() const;
    typeNum_t getPrereqTech() const;
+   progress_t getMaxProgress() const;
 };
 
 #endif

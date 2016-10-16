@@ -5,6 +5,7 @@
 #include <string>
 #include <numeric>
 #include "Resources.h"
+#include "globals.h"
 
 size_t Resources::resourceCount_ = 0;
 std::vector<std::string> Resources::names_;   
@@ -84,4 +85,12 @@ resource_t Resources::sum() const{
 
 size_t Resources::getResourceCount(){
    return resourceCount_;
+}
+
+typeNum_t Resources::findResource(std::string name){
+   for (size_t i = 0; i != resourceCount_; ++i){
+      if (names_[i] == name)
+         return i;
+   }
+   return NO_TYPE;
 }

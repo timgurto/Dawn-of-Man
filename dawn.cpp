@@ -53,6 +53,7 @@ int main(int argc, char **argv){
    deltaLog.initFont("Dina.fon", 0);
 
    setScreenResolution(argc, argv);
+
 //while(true)
    //New game
    gameMode();

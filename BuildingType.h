@@ -48,6 +48,7 @@ public:
    std::string getCostString() const;
    typeNum_t getPrereqTech() const;
    typeNum_t getPrereqBuilding() const;
+   progress_t getMaxProgress() const;
 };
 
 #endif

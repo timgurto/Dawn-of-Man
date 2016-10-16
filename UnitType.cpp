@@ -75,3 +75,7 @@ typeNum_t UnitType::getDeathResource() const{
 typeNum_t UnitType::getPrereqTech() const{
    return prereqTech_;
 }
+
+progress_t UnitType::getMaxProgress() const{
+   return maxProgress_;
+}

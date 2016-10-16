@@ -3,6 +3,8 @@ resource{name = "wood";}
 resource{name = "stone";}
 resource{name = "metal";}
 
+#entity types; index numbers MUST increment for each type.
+
 buildingType{
    name = "Campfire";
    index = 0;
@@ -211,7 +213,7 @@ technology{
    cost.stone = 200;
 }
 
-;
+;   any text below is ignored
 
 Do something better about resource colors
 

@@ -15,7 +15,4 @@ void gameMode();
 //Entity must have been allocated with new
 void addEntity(GameData &game, Entity *entity);
 
-//Initializes the game's base data
-void initializeGameData(char *filename, GameData &game);
-
 #endif
