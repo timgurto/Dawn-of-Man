@@ -59,6 +59,7 @@ public:
    //nice and global, so everyone can keep it up to date.
    static Point mousePos;
 
+   //initialize with a behavior function, or with default keys
    Screen(GoFun *go);
    Screen(int returnEnter = ScreenElement::NO_ID,
           int returnEscape = ScreenElement::NO_ID);

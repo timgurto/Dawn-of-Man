@@ -69,8 +69,8 @@ void AI::updateCaps(){
          expansionCap_ += (cost - expansionCap_);
    }
 
-   ITERATE(wishlist_t::const_iterator, buildingWishlist_, it){
-      const Resources &cost = core_->buildingTypes[*it].getCost();
+   ITERATE(buildingTypes_t::const_iterator, core_->buildingTypes, it){
+      const Resources &cost = it->getCost();
       if (expansionCap_ < cost)
          expansionCap_ += (cost - expansionCap_);
    }
@@ -121,14 +121,13 @@ void AI::allocateIncome(const Resources &income){
 }
 
 void AI::update(){
-   if (player_ != HUMAN_PLAYER)
-      if (game_){
-         checkExpansion();
-         checkMilitary();
-         checkBuildings();
-         buildPossible();
-         dispatchAllUnits();
-      }
+   if (game_){
+      checkExpansion();
+      checkMilitary();
+      checkBuildings();
+      buildPossible();
+      dispatchAllUnits();
+   }
 }
 
 void AI::checkExpansion(){
@@ -227,23 +226,20 @@ void AI::checkMilitary(){
 }
 
 void AI::checkBuildings(){
-   Player &player = game_->players[player_];
-
-   //check any buildings
-   std::vector<wishlist_t::iterator> trash; //iterators to erase
-   ITERATE(wishlist_t::iterator, buildingWishlist_, it){
-      typeNum_t index = *it;
-      const Resources &cost = core_->buildingTypes[index].getCost();
-      if (!player.sufficientResources(cost))
-         break;
+   const Player &player = game_->players[player_];
+   for (typeNum_t i = 0; i != core_->buildingTypes.size(); ++i){
+      const BuildingType &type = core_->buildingTypes[i];
+      if (player.hasBuilding(i))
+         continue;
+      if (!game_->validBuilding(player_, i))
+         continue;
+      const Resources &cost = type.getCost();
+      if (expansionSupply_ < cost)
+         continue;
       
       expansionSupply_ -= cost;
-      buildingsQueue_.push(index);
-
-      trash.push_back(it);
+      buildingsQueue_.push(i);
    }
-   ITERATE(std::vector<wishlist_t::iterator>::iterator, trash, it)
-      buildingWishlist_.erase(*it);
 }
 
 //build anything in the buildQueue which can be built
@@ -272,16 +268,9 @@ void AI::buildPossible(){
    }
 
    //buildings
-   const Player &player = game_->players[player_];
-   for (typeNum_t i = 0; i != core_->buildingTypes.size(); ++i){
-      const BuildingType &type = core_->buildingTypes[i];
-      if (player.hasBuilding(i))
-         continue;
-      if (!game_->validBuilding(player_, i))
-         continue;
-      if (!player.sufficientResources(type.getCost()))
-         continue;
-
+   while (!buildingsQueue_.empty()){
+      typeNum_t index = buildingsQueue_.front();
+      const BuildingType &type = core_->buildingTypes[index];
       Point loc(-1, -1);
       int tries = 100;
       bool built;
@@ -293,10 +282,14 @@ void AI::buildPossible(){
             continue;
          if (!noCollision(*game_, type, loc))
             continue;
-         built = game_->constructBuilding(i, loc, player_);
+         built = game_->constructBuilding(index, loc, player_);
          if (!built)
             break;
       }while(--tries >= 0);
+      if (built)
+         buildingsQueue_.pop();
+      else
+         break;
    }
 }
 

@@ -48,10 +48,16 @@ unit{
 
 # computer player: a clubman
 unit{
-   type = 2;
+   type = 0; #2;
    player = 2;
    location.x = 1200;
    location.y = 500;
+}
+unit{
+   type = 1;
+   player = 2;
+   location.x = 1100;
+   location.y = 700;
 }
 
 # trees

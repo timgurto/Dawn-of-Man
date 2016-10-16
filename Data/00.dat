@@ -47,9 +47,16 @@ unit{
 
 
 # trees
+#resourceNode{
+#   type = 0;
+#   random = 5;
+#}
+
+# dead deer
 resourceNode{
-   type = 0;
-   random = 5;
-}
+   type = 1;
+   location.x = 700;
+   location.y = 300;
+};
 
 ;   any text below is ignored

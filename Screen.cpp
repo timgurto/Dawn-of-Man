@@ -12,7 +12,6 @@
 #include "globals.h"
 #include "util.h"
 
-//TODO comments
 extern Debug debug;
 
 //Default screen resolutions - 16:10 16:9 and 4:3
@@ -30,7 +29,7 @@ Point Screen::screenRes_ = defaultRes_[0];
 Point Screen::mousePos = screenRes_ / 2;
 bool Screen::windowedMode_ = DEBUG;
 
-
+//Default screen functionality.  Accepts input and renders until a button is pushed.
 unsigned Screen::goDefault_(Screen &thisScreen, const void *data){
    assert(!data);
 
@@ -48,6 +47,9 @@ unsigned Screen::goDefault_(Screen &thisScreen, const void *data){
    return 0;
 }
 
+//-inspect SDL's event queue and deal accordingly
+//-return the ID of any button pushed
+//-used by goDefault
 int Screen::handleEventsDefault_(){
    SDL_Event event;
    while (SDL_PollEvent(&event)){
@@ -136,6 +138,8 @@ int Screen::handleEventsDefault_(){
    return ScreenElement::NO_ID;
 }
 
+//-draw the screen
+//-used by goDefault
 void Screen::drawDefault_() const{
    assert(screenBuf);
    screenBuf.fill();
@@ -182,14 +186,17 @@ loop_(true),
 returnEnter_(returnEnter),
 returnEscape_(returnEscape){}
 
+//begin screen behavior
 int Screen::operator()(const void *data){
    return (*go_)(*this, data);
 }
 
+//Create a new screen element
 void Screen::addElement(const ScreenElement &element){
    elements_.push_back(element);
 }
 
+//sets screen resolution based on available settings and args
 void Screen::setScreenResolution(int argc, char **argv){
 
    const SDL_VideoInfo *current = SDL_GetVideoInfo();

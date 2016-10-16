@@ -19,7 +19,7 @@ player{
    resource.stone = 5;
 }
 player{
-   index = 2;           # 2+ = computer
+   index = 2;           # 2 = computer
    color = 0x882222;
 }
 
@@ -48,13 +48,13 @@ building{
    location.y = 1000;
 }
 unit{
-   type = 3;
+   type = 2;
    player = 2;
    location.x = 300;
    location.y = 850;
 }
 unit{
-   type = 3;
+   type = 1;
    player = 2;
    location.x = 300;
    location.y = 1150;

@@ -40,7 +40,6 @@ class AI{
    //expansion items the player wants to build
    wishlist_t
       unitWishlist_,
-      buildingWishlist_,
       techWishlist_;
 
    //items which have had resources allocated, in order of preference

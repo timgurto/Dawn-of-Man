@@ -38,8 +38,6 @@ initialAIUpdate_(false){
       ai_.update();
 }
 
-//TODO comments
-
 void Player::init(const CoreData *core, GameData *game,
                   UIBar *buildingsBar){
    core_ = core;
@@ -53,8 +51,11 @@ void Player::addResources(const Resources &r){
    resourcesString_ = resources_.str();
 
    //Give to AI bookkeeper
-   ai_.allocateIncome(r);
-   ai_.update();
+   if (id_ != HUMAN_PLAYER &&
+       id_ != NATURE_PLAYER){
+      ai_.allocateIncome(r);
+      ai_.update();
+   }
 }
 
 //subtract from the player's resources
@@ -112,7 +113,9 @@ void Player::registerBuilding(typeNum_t index, bool recalc){
 
 //register a unit being trained
 void Player::registerUnit(Unit *unit){
-   ai_.dispatchUnit(unit);
+   if (id_ != HUMAN_PLAYER &&
+       id_ != NATURE_PLAYER)
+      ai_.dispatchUnit(unit);
 }
 
 //renders player nigh-invulnerable (toggle)
@@ -124,9 +127,7 @@ void Player::godMode(){
 }
 
 void Player::tick(){
-   if (id_ != HUMAN_PLAYER &&
-       id_ != NATURE_PLAYER &&
-       !initialAIUpdate_){
+   if (!initialAIUpdate_){
       ai_.update();
       initialAIUpdate_ = true;
    }
