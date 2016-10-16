@@ -34,13 +34,16 @@ unsigned Screen::goDefault_(Screen &thisScreen, const void *data){
    assert(!data);
 
    while(thisScreen.loop_){
-      thisScreen.handleEventsDefault_();
+      int result = thisScreen.handleEventsDefault_();
+      //if a button was clicked
+      if (result != ScreenElement::NO_ID)
+         return result;
       thisScreen.drawDefault_();
    }
    return 0;
 }
 
-void Screen::handleEventsDefault_(){
+int Screen::handleEventsDefault_(){
    SDL_Event event;
    while (SDL_PollEvent(&event)){
       switch (event.type){
@@ -72,6 +75,7 @@ void Screen::handleEventsDefault_(){
                }
                break;
 
+            //TODO defaults for Esc and Ret
             case SDLK_ESCAPE:
                break;
 
@@ -82,13 +86,18 @@ void Screen::handleEventsDefault_(){
          }
          break;
 
-
-
       //A mouse button is pressed
       case SDL_MOUSEBUTTONDOWN:
          debug("Mouse down: ", int(event.button.button));
          switch (event.button.button){
          case MOUSE_BUTTON_LEFT:
+            //check whether a button was clicked
+            for (std::vector<ScreenElement>::const_iterator it = elements_.begin();
+                 it != elements_.end(); ++it)
+               if (it->type_ == ELEM_BUTTON &&
+                  collision(it->image_->clip_rect + it->loc_,
+                            mousePos))
+                     return it->id_;
             break;
          }
          break;
@@ -104,6 +113,9 @@ void Screen::handleEventsDefault_(){
 
       } //event switch
    } //event while
+
+   //nothing to report
+   return ScreenElement::NO_ID;
 }
 
 void Screen::drawDefault_() const{
@@ -119,9 +131,13 @@ void Screen::drawDefault_() const{
          background_->draw(screenBuf, &makeRect(x * MAP_TILE_SIZE,
                                                 y * MAP_TILE_SIZE));
 
+   //elements
    for (std::vector<ScreenElement>::const_iterator it = elements_.begin();
         it != elements_.end(); ++it)
       it->draw();
+
+   //cursor
+   cursor_->draw(screenBuf, &makeRect(mousePos + CURSOR_OFFSET));
 
    //flip buffer
    screenBuf.flip();

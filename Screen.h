@@ -43,8 +43,9 @@ private:
    static bool windowedMode_;
 
    //inspect SDL's event queue and deal accordingly
+   //return the ID of any button pushed
    //used by goDefault
-   void handleEventsDefault_();
+   int handleEventsDefault_();
 
    //draw the screen
    //used by goDefault
@@ -52,6 +53,7 @@ private:
 
 public:
 
+   //nice and global, so everyone can keep it up to date.
    static Point mousePos;
 
    Screen(GoFun *go = &goDefault_);

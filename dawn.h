@@ -6,6 +6,6 @@
 class ScreenElement;
 
 void buildScreens(Screen &mainMenu,
-                  Screen &game);
+                  Screen &credits);
 
 #endif

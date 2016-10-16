@@ -25,6 +25,8 @@ enum ScreenElementType{
 };
 
 class ScreenElement{
+   friend class Screen;
+
    //The identifier to return if this element is activated
    //(eg. a button click)
    int id_;

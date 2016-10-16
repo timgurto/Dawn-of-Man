@@ -231,24 +231,20 @@ bool noCollision(const GameData &game, const EntityType &type,
 
 //Checks for a collision between two SDL_Rects
 bool collision(const SDL_Rect &r1, const SDL_Rect &r2){
-   if (r1.x > r2.x + r2.w)
-      return false;
-   if (r2.x > r1.x + r1.w)
-      return false;
-   if (r1.y > r2.y + r2.h)
-      return false;
-   if (r2.y > r1.y + r1.h)
-      return false;
-   return true;
+   return
+      r1.x <= r2.x + r2.w &&
+      r2.x <= r1.x + r1.w &&
+      r1.y <= r2.y + r2.h &&
+      r2.y <= r1.y + r1.h;
 }
 
 //Whether a Point lies in an SDL_Rect
 bool collision(const Point &point, const SDL_Rect &rect){
-   if (point.x < rect.x) return false;
-   if (point.y < rect.y) return false;
-   if (point.x > rect.x + rect.w) return false;
-   if (point.y > rect.y + rect.h) return false;
-   return true;
+   return
+      point.x >= rect.x &&
+      point.y >= rect.y &&
+      point.x <= rect.x + rect.w &&
+      point.y <= rect.y + rect.h;
 }
 
 bool collision(const SDL_Rect &rect, const Point &point){
@@ -285,16 +281,11 @@ Uint32 getEntityColor(const GameData &game, int color){
 
 //whether rect A is completely inside rect B
 bool inside(const SDL_Rect &a, const SDL_Rect &b){
-   if (a.x < b.x)
-      return false;
-   if (a.y < b.y)
-      return false;
-   if (a.x + a.w > b.x + b.w)
-      return false;
-   if (a.y + a.h > b.y + b.h)
-      return false;
-
-   return true;
+   return
+      a.x >= b.x &&
+      a.y >= b.y &&
+      a.x + a.w <= b.x + b.w &&
+      a.y + a.h <= b.y + b.h;
 }
 
 //Whether an argument exists

@@ -58,6 +58,8 @@ int main(int argc, char **argv){
 
    Screen::setScreenResolution(argc, argv);
 
+   SDL_ShowCursor(SDL_DISABLE);
+
    //initialize screen buffer
    screenBuf = Surface(SUR_SCREEN);
    
@@ -74,33 +76,50 @@ int main(int argc, char **argv){
       Screen::init(&background, &cursor);
       Screen
          mainMenu,
-         game(&gameMode);
-      buildScreens(mainMenu, game);
+         game(&gameMode),
+         credits;
+      buildScreens(mainMenu, credits);
 
-      mainMenu();
-
-      //campaign: go through each level
-      int levels;
-      for (levels = 0;
-           std::ifstream((DATA_PATH + format2(levels) + ".dat").c_str());
-           ++levels);
-      //after loop, levels = number of levels in the campaign
-
-      //play each consecutive level
-      for (int i = 0; i != levels; ++i){
-         unsigned outcome;
-         //repeat each level if lost
-         std::string filename = format2(i) + ".dat";
-         while ((outcome = game(&filename)) == LOSS)
-            ;
-         if (outcome == QUIT)
+      bool loop = true;
+      do{
+         switch(mainMenu()){
+         case BUTTON_QUIT:
+            loop = false;
             break;
-      }
+
+         case BUTTON_CREDITS:
+            credits();
+            break;
+
+         case BUTTON_NEW:
+            //campaign: go through each level
+            int levels;
+            for (levels = 0;
+                 std::ifstream((DATA_PATH + format2(levels) + ".dat").c_str());
+                 ++levels);
+            //after loop, levels = number of levels in the campaign
+
+            //play each consecutive level
+            for (int i = 0; i != levels; ++i){
+               unsigned outcome;
+               //repeat each level if lost
+               std::string filename = format2(i) + ".dat";
+               while ((outcome = game(&filename)) == LOSS)
+                  ;
+               if (outcome == QUIT)
+                  break;
+            }
+            break;
+         }
+      }while(loop);
+
+
 
    }
 
    //Quit
    //TTF_Quit() happens at debug dtor
+   SDL_ShowCursor(SDL_ENABLE);
    Mix_CloseAudio();
    SDL_Quit();
    Surface::quit();
@@ -109,7 +128,7 @@ int main(int argc, char **argv){
 }
 
 void buildScreens(Screen &mainMenu,
-                  Screen &game){
+                  Screen &credits){
    
    //Main menu
    mainMenu.addElement(ScreenElement(ELEM_LABEL,

@@ -104,8 +104,6 @@ unsigned gameMode(Screen &thisScreen, const void *data){
 
    SDL_Sound *click = loadSound(SOUND_PATH + "interfaceClick.wav");
 
-   SDL_ShowCursor(SDL_DISABLE);
-
    //create game data object, and load data from file
    GameData game(DATA_PATH + fileName);
 
@@ -215,8 +213,6 @@ unsigned gameMode(Screen &thisScreen, const void *data){
    //Screen::mousePos = Screen::screenRes / 2;
 
    //Clean up
-   SDL_ShowCursor(SDL_ENABLE);
-
    freeSound(click);
 
    Mix_HaltMusic(); 
