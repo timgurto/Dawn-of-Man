@@ -7,6 +7,8 @@
 #include "Point.h"
 #include "types.h"
 
+//TODO move stuff to relevant classes
+
 //DEBUG means:
 // -The displaying of debug messages
 // -The automatic display of delta/FPS

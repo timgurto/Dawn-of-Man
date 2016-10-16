@@ -45,7 +45,7 @@ public:
    
    ~Surface();
 
-   const Surface &operator=(const Surface &rhs);
+   Surface &operator=(const Surface &rhs);
    operator bool() const;
    SDL_Surface *operator->();
    const SDL_Surface *operator->() const;

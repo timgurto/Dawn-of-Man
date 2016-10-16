@@ -41,7 +41,7 @@ void Building::draw(Surface &screen) const{
          loc_ +
          thisType.baseRect_ +
          locRect(game_->map);
-      diagGreen_->draw(*screen_, &altDrawLoc, &dimRect(getBaseRect()));
+      diagGreen_->draw(screen, &altDrawLoc, &dimRect(getBaseRect()));
       return;
    }
 
@@ -70,7 +70,7 @@ void Building::draw(Surface &screen) const{
                         thisType.drawRect_.w,
                         thisType.drawRect_.h);
    
-   colorBlit(getColor(), *screen_, srcLoc, drawLoc,
+   colorBlit(getColor(), screen, srcLoc, drawLoc,
          !finished_); //partial
 }
 

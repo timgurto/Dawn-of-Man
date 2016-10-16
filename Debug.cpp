@@ -20,7 +20,9 @@ Debug::Debug(SDL_Color color, pixels_t x, pixels_t y,
 color_(color),
 x_(x),
 y_(y),
-count_(count){
+count_(count),
+font_(0),
+height_(0){
    ++debugCount_;
 }
 

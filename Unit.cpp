@@ -385,12 +385,13 @@ bool Unit::isPathClear(const Point &start,
          (end.y - start.y) /
          (end.x - start.x);
       angle = atan(gradient);
-      if (end.x < start.x)
+      if (end.x < start.x){
          if (end.y > start.y)
             angle += PI;
          else
             angle -= PI;
       }
+   }
 
    double
       xDelta = cos(angle) * PATH_CHECK_DISTANCE,

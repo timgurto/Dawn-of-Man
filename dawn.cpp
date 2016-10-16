@@ -11,6 +11,8 @@
 #include "globals.h"
 #include "Debug.h"
 
+//TODO: try replace get()s with const refs, or reaffirm why it can't be done
+
 //Default screen resolutions, 16:10 and 4:3
 const pixels_t DEFAULT_W_SCREEN_WIDTH = 1280;
 const pixels_t DEFAULT_W_SCREEN_HEIGHT = 800;

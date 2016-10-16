@@ -32,6 +32,7 @@
 #include "TechBonuses.h"
 #include "CoreData.h"
 #include "Surface.h"
+#include "Screen.h"
 
 extern Debug debug;
 //extern Debug deltaLog;
@@ -115,6 +116,7 @@ GameOutcome gameMode(std::string fileName){
    //more init
    Particle::init(&screen, &particle, &particleShadow);
    Entity::init(&core, &game, &screen, &diagGreen);
+   Screen::init(&darkMap, &screen, &cursor);
 
    //UI Bars
    UIBars_t bars;
@@ -165,6 +167,10 @@ GameOutcome gameMode(std::string fileName){
    messageBoxes.push_back(&contextHelp);
    messageBoxes.push_back(&resourcesBox);
    messageBoxes.push_back(&fpsDisplay);
+
+   //Screens
+   Screen mainMenu;
+   mainMenu.go();
 
    timer_t oldTicks = SDL_GetTicks();
    game.loop = true;

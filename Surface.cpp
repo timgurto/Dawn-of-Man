@@ -70,7 +70,6 @@ isScreen_(false), //copy = not screen buffer
 surface_(SDL_ConvertSurface(original.surface_,
                             original.surface_->format,
                             SDL_HWSURFACE)){
-   //TODO try SDL_HWSURFACE
    if (surface_)
       ++surfacesLoaded_;
 }
@@ -86,7 +85,7 @@ Surface::~Surface(){
    }
 }
 
-const Surface &Surface::operator=(const Surface &rhs){
+Surface &Surface::operator=(const Surface &rhs){
    if (this == &rhs)
       return *this;
    if (surface_){
@@ -97,7 +96,6 @@ const Surface &Surface::operator=(const Surface &rhs){
    surface_ = SDL_ConvertSurface(rhs.surface_,
                                  rhs.surface_->format,
                                  SDL_HWSURFACE);
-   //TODO try SDL_HWSURFACE here too
    ++surfacesLoaded_;
    return *this;
 }

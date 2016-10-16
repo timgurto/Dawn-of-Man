@@ -155,10 +155,8 @@ void handleEvents(const CoreData &core, GameData &game,
 
                case SDLK_KP_PLUS:
                   //HACK remove this cheat
-                  { //new scope for cheatResources
-                     resources_t cheatResources(Resources::getResourceCount(), 1337);
-                     game.players[HUMAN_PLAYER].addResources(cheatResources);
-                  }
+                  game.players[HUMAN_PLAYER]
+                     .addResources(resources_t(Resources::getResourceCount(), 1337));
                   break;
 
                case SDLK_KP_MINUS:
