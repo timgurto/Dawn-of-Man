@@ -20,6 +20,7 @@ typedef std::queue<typeNum_t> buildQueue_t;
 
 //Handles an individual player's AI
 class AI{
+   friend class Player;
 
    //whose AI this is (needed for some calls)
    typeNum_t player_;

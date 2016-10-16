@@ -29,7 +29,6 @@ class Surface{
    bool isScreen_;
 
    //Keeps track of allocated surfaces
-   //TODO graph?
    static int surfacesLoaded_;
 
    //whether there is a screen buffer
@@ -37,14 +36,19 @@ class Surface{
 
 public:
 
+   //file
    Surface(const std::string fileName, bool alpha = false);
+   //file + transparent background
    Surface(const std::string fileName, const SDL_Color &background,
            bool alpha = false);
+   //special (blank, screen, or default uninitialized)
    Surface(SpecialSurface special = SUR_UNINIT,
            //-1 implies current screen res
            int width = -1, int height = -1,
            SDL_Color background = NO_COLOR);
+   //text
    Surface(TTF_Font *font, std::string message, SDL_Color color);
+   //copy
    Surface(const Surface &original);
    
    ~Surface();

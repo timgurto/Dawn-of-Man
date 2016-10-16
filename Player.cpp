@@ -38,6 +38,8 @@ initialAIUpdate_(false){
       ai_.update();
 }
 
+//TODO comments
+
 void Player::init(const CoreData *core, GameData *game,
                   UIBar *buildingsBar){
    core_ = core;
@@ -113,8 +115,9 @@ void Player::godMode(){
 }
 
 void Player::tick(){
-   if (!initialAIUpdate_){
-      ai_.dispatchAllUnits();
+   if (id_ != HUMAN_PLAYER &&
+       id_ != NATURE_PLAYER &&
+       !initialAIUpdate_){
       ai_.update();
       initialAIUpdate_ = true;
    }
@@ -122,4 +125,27 @@ void Player::tick(){
 
 void Player::idleGatherer(Unit *unit, const ResourceNode *ignore){
    ai_.dispatchUnit(unit, ignore);
+}
+
+//clean up after an entity is destroyed
+void Player::unregisterBuilding(const Building *building){
+   if (building == ai_.expansionBuilding_)
+      ai_.expansionBuilding_ = 0;
+   else if (building == ai_.militaryBuilding_)
+      ai_.militaryBuilding_ = 0;
+
+   //if the only one of its type, remove it from
+   //the checklist of built buildings
+   bool duplicateFound = false;
+   ITERATE(entities_t::const_iterator, game_->entities, it)
+      if ((*it)->classID() == ENT_BUILDING){
+         const Building &checkBuilding = (const Building &)(**it);
+         if (checkBuilding.getPlayer() == id_ &&
+             checkBuilding.getTypeIndex() == building->getTypeIndex()){
+            duplicateFound = true;
+            break;
+         }
+      }
+   if (!duplicateFound)
+      buildingsBuilt_[building->getTypeIndex()] = false;
 }

@@ -92,6 +92,9 @@ public:
    //a gatherer has become idle; AI should reallocate him
    void idleGatherer(Unit *unit, const ResourceNode *ignore = 0);
 
+   //clean up after an entity is destroyed
+   void unregisterBuilding(const Building *building);
+
    //get
    Uint32 getColor() const;
    std::string getResources() const;

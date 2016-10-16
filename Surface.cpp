@@ -13,6 +13,7 @@
 int Surface::surfacesLoaded_ = 0;
 int Surface::screensSet_ = 0;
 
+//constructor - from file
 Surface::Surface(const std::string fileName, bool alpha):
 isScreen_(false),
 surface_(0){
@@ -20,6 +21,7 @@ surface_(0){
    ++surfacesLoaded_;
 }
 
+//constructor - from file, with transparent background
 Surface::Surface(const std::string fileName, const SDL_Color &background, bool alpha):
 isScreen_(false),
 surface_(0){
@@ -28,6 +30,7 @@ surface_(0){
    ++surfacesLoaded_;
 }
 
+//constructor - special (blank, screen, or default uninitialized)
 Surface::Surface(SpecialSurface special, int width, int height,
                  SDL_Color background):
 isScreen_(false),
@@ -65,6 +68,7 @@ surface_(0){
       ++surfacesLoaded_;
 }
 
+//constructor - text
 Surface::Surface(TTF_Font *font, std::string message, SDL_Color color):
 surface_(TTF_RenderText_Solid(font, message.c_str(), color)),
 isScreen_(false){
@@ -126,7 +130,6 @@ Surface &Surface::operator=(const Surface &rhs){
 
 Surface::operator bool() const{
    //return surface_;
-   //use ternary operator to suppress performance warning, ironically
    return surface_ != 0;
 }
 
@@ -138,14 +141,15 @@ const SDL_Surface *Surface::operator->() const{
    return surface_;
 }
 
+//needs to be called once, in main or wherever
 void Surface::init(){}
 
+//needs to be called once, in main or wherever
 void Surface::quit(){
    assert(surfacesLoaded_ == 0);
 }
 
-//TODO comments
-
+//load a surface from an image file
 void Surface::loadImage(const std::string &fileName, bool alpha){
    SDL_Surface *load = IMG_Load(fileName.c_str());
    assert(load);
@@ -156,6 +160,7 @@ void Surface::loadImage(const std::string &fileName, bool alpha){
    SDL_FreeSurface(load);
 }
 
+//set the surface's transparent color
 void Surface::setColorKey(const SDL_Color &color){
    if (color != NO_COLOR)
       SDL_SetColorKey(surface_,
@@ -166,28 +171,34 @@ void Surface::setColorKey(const SDL_Color &color){
                                  color.b));
 }
 
+//fills a part of the surface with color
 void Surface::fill(const SDL_Color color, SDL_Rect *rect){
    fill(colorToUInt(color), rect);
 }
 
+//fills a part of the surface with color
 void Surface::fill(Uint32 color, SDL_Rect *rect){
    SDL_FillRect(surface_, rect, color);
 }
 
+//draw onto another surface
 void Surface::draw(Surface &dst,
                    SDL_Rect *dstRect, SDL_Rect *srcRect) const{
    SDL_BlitSurface(surface_, srcRect, dst.surface_, dstRect);
 }
 
+//dst << src: draw
 Surface &operator<<(Surface &dst, const Surface &src){
    src.draw(dst);
    return dst;
 }
 
+//sets the surface's alpha value (0-ff)
 void Surface::setAlpha(Uint8 alpha){
    SDL_SetAlpha(surface_, SDL_SRCALPHA, alpha);
 }
 
+//flips the screen buffer
 void Surface::flip(){
    assert(isScreen_);
    bool test;
@@ -195,6 +206,7 @@ void Surface::flip(){
    assert(test);
 }
 
+//saves the surface as an image file
 void Surface::saveToBitmap(std::string &fileName) const{
    SDL_SaveBMP(surface_, fileName.c_str());
 }

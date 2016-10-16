@@ -121,7 +121,7 @@ void AI::allocateIncome(const Resources &income){
 }
 
 void AI::update(){
-   //TODO if (player_ != HUMAN_PLAYER)
+   if (player_ != HUMAN_PLAYER)
       if (game_){
          checkExpansion();
          checkMilitary();
@@ -326,7 +326,7 @@ void AI::dispatchUnit(Unit *unit, const ResourceNode *ignore){
    }
 
    //2. military --> attack nearest enemy
-   //TODO surround base
+   //TODO surround base first
    Entity *target = 0;
    double dist = -1;
    ITERATE(entities_t::const_iterator, game_->entities, it){
