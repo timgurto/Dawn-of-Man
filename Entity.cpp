@@ -351,6 +351,12 @@ void Entity::kill(){
    typeNum_t resourceType;
    ResourceNode *node = 0;
 
+   //let player know
+   if (classID() == ENT_BUILDING){
+      const Building *building = (const Building *)this;
+      game_->players[building->player_].unregisterBuilding(building);
+   }
+
    //turns into decoration?
    typeNum_t decorationType = type().getDecorationAtDeath();
    if (decorationType != NO_TYPE){
