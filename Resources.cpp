@@ -39,10 +39,18 @@ Resources Resources::operator+(const Resources &rhs) const{
 
 Resources &Resources::operator-=(const Resources &rhs){
    for (size_t i = 0; i != resourceCount_; ++i)
-      vals_[i] -= rhs.vals_[i];
+      if (vals_[i] > rhs.vals_[i])
+         vals_[i] -= rhs.vals_[i];
+      else
+         vals_[i] = 0;
    return *this;
 }
 
+Resources Resources::operator-(const Resources &rhs) const{
+   Resources result = *this;
+   result -= rhs;
+   return result;
+}
 
 bool Resources::operator>=(const Resources &rhs) const{
    for (size_t i = 0; i != resourceCount_; ++i)
@@ -50,6 +58,10 @@ bool Resources::operator>=(const Resources &rhs) const{
       if (vals_[i] < rhs.vals_[i])
          return false;
    return true;
+}
+
+bool Resources::operator<(const Resources &rhs) const{
+   return !(*this >= rhs);
 }
 
 std::ostream &operator<<(std::ostream &os,

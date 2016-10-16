@@ -105,6 +105,8 @@ public:
    typeNum_t getPrereqTech() const;
    progress_t getMaxProgress() const;
    damage_t getMaxHealth() const;
+   bool isBuilder() const;
+   bool isGatherer() const;
 };
 
 #endif

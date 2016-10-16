@@ -87,3 +87,11 @@ progress_t UnitType::getMaxProgress() const{
 damage_t UnitType::getMaxHealth() const{
    return maxHealth_;
 }
+
+bool UnitType::isBuilder() const{
+   return builder_;
+}
+
+bool UnitType::isGatherer() const{
+   return gatherer_;
+}

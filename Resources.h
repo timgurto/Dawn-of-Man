@@ -29,10 +29,14 @@ public:
 
    Resources &operator+=(const Resources &rhs);
    Resources operator+(const Resources &rhs) const;
+
+   //minus: any deficit in rhs
    Resources &operator-=(const Resources &rhs);
-   //Resources operator-(const Resources rhs);
-   //bool operator<(const Resources rhs) const;
+   Resources operator-(const Resources &rhs) const;
+
+   //whether each resource is higher in the lhs
    bool operator>=(const Resources &rhs) const;
+   bool operator<(const Resources &rhs) const;
 
    bool isEmpty() const;
 

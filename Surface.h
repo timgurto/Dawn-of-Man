@@ -29,6 +29,7 @@ class Surface{
    bool isScreen_;
 
    //Keeps track of allocated surfaces
+   //TODO graph?
    static int surfacesLoaded_;
 
    //whether there is a screen buffer

@@ -353,7 +353,7 @@ unitType{
    selectionCenter.y = -50;
 
    cost.food = 20;
-   cost.netal = 5;
+   cost.metal = 5;
 
    speed = 8;
    maxFrameCounter = 25;

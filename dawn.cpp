@@ -110,7 +110,7 @@ void buildScreens(Screen &mainMenu,
    mainMenu.addElement(ScreenElement
       (ELEM_BUTTON, "Begin Game", ANCHOR_CENTER, Point(0, -60), BUTTON_NEW));
    mainMenu.addElement(ScreenElement
-      (ELEM_BUTTON, "Credits",    ANCHOR_CENTER, 0,             BUTTON_CREDITS));
+      (ELEM_BUTTON, "Credits",    ANCHOR_CENTER, Point(0, 0),   BUTTON_CREDITS));
    mainMenu.addElement(ScreenElement
       (ELEM_BUTTON, "Quit",       ANCHOR_CENTER, Point(0, 60),  BUTTON_QUIT));
 
@@ -140,8 +140,8 @@ void buildScreens(Screen &mainMenu,
    addCreditGap(yPos);
 
    addCreditTitle(credits, yPos, "Special Thanks");
-   addCredit     (credits, yPos, "Evan Pipho");
    addCredit     (credits, yPos, "Drew Banyai");
+   addCredit     (credits, yPos, "Evan Pipho");
 }
 
 void addCreditTitle(Screen &creditsScreen, int &yPos, std::string text){

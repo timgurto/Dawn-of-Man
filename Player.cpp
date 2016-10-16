@@ -12,6 +12,8 @@ extern Debug debug;
 GameData *Player::game_ = 0;
 const CoreData *Player::core_ = 0;
 UIBar *Player::buildingsBar_ = 0;
+Resources Player::expansionCap_;
+Resources Player::militaryCap_;
 
 Player::Player(Uint32 color,
                const resources_t &resources,
@@ -33,6 +35,45 @@ void Player::init(const CoreData *core, GameData *game,
    core_ = core;
    game_ = game;
    buildingsBar_ = buildingsBar;
+
+
+   
+}
+
+void Player::initAI(const CoreData &core, GameData &game){
+   expansionCap_ = militaryCap_ = Resources();
+   
+   //buildings
+   for (buildingTypes_t::const_iterator it = core.buildingTypes.begin();
+        it != core.buildingTypes.end(); ++it){
+      if (expansionCap_ < it->getCost())
+         expansionCap_ += (it->getCost() - expansionCap_);
+   }
+
+   //tech
+   for (techs_t::const_iterator it = core.techs.begin();
+        it != core.techs.end(); ++it){
+      if (expansionCap_ < it->getCost())
+         expansionCap_ += (it->getCost() - expansionCap_);
+   }
+
+//units (both expansion and military)
+   for (unitTypes_t::const_iterator it = core.unitTypes.begin();
+        it != core.unitTypes.end(); ++it){
+      Resources &cap = (it->isBuilder() || it->isGatherer()) ?
+                       expansionCap_ :
+                       militaryCap_;
+      if (cap < it->getCost())
+         cap += (it->getCost() - cap);
+   }
+
+   //military units
+   for (unitTypes_t::const_iterator it = core.unitTypes.begin();
+        it != core.unitTypes.end(); ++it){
+      if (expansionCap_ < it->getCost())
+         expansionCap_ += (it->getCost() - expansionCap_);
+   }
+expansionCap_; militaryCap_;
 }
 
 void Player::addResources(const Resources &r){

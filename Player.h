@@ -22,6 +22,15 @@ class Player{
    //the player's resource stockpiles
    Resources resources_;
 
+   //[AI] for AI's bookkeeping
+   //TODO individual, dynamic caps based on wishlists
+   static Resources
+      expansionCap_,
+      militaryCap_;
+   Resources
+      expansionSupply_,
+      militarySupply_;
+
    //So that it doesn't have to be recalculated constantly
    std::string resourcesString_;
 
@@ -49,6 +58,10 @@ public:
    //initialize static pointers
    static void init(const CoreData *core = 0, GameData *game = 0,
                     UIBar *buildingsBar = 0);
+
+   //[AI] initializes AI stuff:
+   // -expansion/military supply caps
+   static void initAI(const CoreData &core, GameData &game);
 
    //add or remove the player's resources
    void addResources(const Resources &r);
