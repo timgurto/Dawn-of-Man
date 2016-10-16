@@ -27,7 +27,6 @@ GameData::GameData(std::string filename):
 rightMouse(),
 mapX(1),
 mapY(1),
-mousePos(SCREEN_WIDTH/2, SCREEN_HEIGHT/2),
 paused(false),
 toBuild(NO_TYPE),
 mode(MODE_NORMAL),

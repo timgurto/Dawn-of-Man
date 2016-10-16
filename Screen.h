@@ -25,8 +25,6 @@ private:
       *background_, //the background image for all screens
       *cursor_;     //the cursor image
 
-   static Point mousePos_;
-
    //Default screen functionality.  Accepts input and renders
    //until a button is pushed.
    static GoFun goDefault;
@@ -40,6 +38,8 @@ private:
    void drawDefault() const;
 
 public:
+
+   static Point mousePos;
 
    Screen(GoFun *go = &goDefault);
 

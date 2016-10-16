@@ -14,7 +14,7 @@ extern Debug debug;
 
 Surface *Screen::background_ = 0;
 Surface *Screen::cursor_ = 0;
-Point Screen::mousePos_;
+Point Screen::mousePos;
 
 
 unsigned Screen::goDefault(Screen &thisScreen, const void *data){
@@ -38,8 +38,8 @@ void Screen::handleEventsDefault(){
 
       //Mouse is moved
       case SDL_MOUSEMOTION:
-         mousePos_.x = event.motion.x;
-         mousePos_.y = event.motion.y;
+         mousePos.x = event.motion.x;
+         mousePos.y = event.motion.y;
 
          //TODO context help
 
@@ -111,7 +111,7 @@ loop_(true){}
 
 int Screen::operator()(const void *data){
    //make sure there are no events on the queue
-   SDL_Event event;
+   //SDL_Event event;
    //TODO assert(!SDL_PollEvent(&event));
    return (*go_)(*this, data);
 }

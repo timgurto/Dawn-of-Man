@@ -7,6 +7,7 @@
 #include "Debug.h"
 #include "MessageBox.h"
 #include "Surface.h"
+#include "Screen.h"
 #include "misc.h"
 
 extern Debug debug, deltaLog;
@@ -75,7 +76,7 @@ void renderCursor (const GameData &game,
                    Surface &pause, Surface &color,
                    Surface *cursorIndex){
    Point
-      cursorPos = game.mousePos + CURSOR_OFFSET,
+      cursorPos = Screen::mousePos + CURSOR_OFFSET,
       shadowPos = cursorPos;
 
    if (game.paused)
@@ -153,7 +154,7 @@ void renderSelection(const GameData &game,
 //Draws a building footprint at the cursor
 void renderFootprint(const CoreData &core, const GameData &game,
                      Surface &goodImage, Surface &badImage){
-   SDL_Rect baseRect = game.mousePos +
+   SDL_Rect baseRect = Screen::mousePos +
                        core.buildingTypes[game.toBuild].getBaseRect();
    if (game.buildLocationOK &&
        game.players[HUMAN_PLAYER].

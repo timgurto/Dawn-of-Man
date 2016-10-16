@@ -11,6 +11,7 @@
 #include "Debug.h"
 #include "MessageBox.h"
 #include "Entity.h"
+#include "Screen.h"
 
 extern Debug debug;
 
@@ -89,13 +90,13 @@ void handleEvents(const CoreData &core, GameData &game,
          { //new scope for overBar, index
             game.cursorColor = CLR_MAX;
             contextHelp("");
-            game.mousePos.x = event.motion.x;
-            game.mousePos.y = event.motion.y;
+            Screen::mousePos.x = event.motion.x;
+            Screen::mousePos.y = event.motion.y;
             //check right mouse movement
             if (!game.rightMouse.dragging)
-               game.rightMouse.checkDrag(game.mousePos);
+               game.rightMouse.checkDrag(Screen::mousePos);
             if (!game.leftMouse.dragging)
-               game.leftMouse.checkDrag(game.mousePos - game.map);
+               game.leftMouse.checkDrag(Screen::mousePos - game.map);
 
             //if over a UI bar
             bool overBar = false;
@@ -125,7 +126,7 @@ void handleEvents(const CoreData &core, GameData &game,
             case MODE_CONSTRUCTION:
                game.buildLocationOK =
                   noCollision(game, core.buildingTypes[game.toBuild],
-                              game.mousePos - locRect(game.map));
+                              Screen::mousePos - locRect(game.map));
                break;
             }
          }
@@ -328,7 +329,7 @@ void handleEvents(const CoreData &core, GameData &game,
          debug("Mouse down: ", int(event.button.button));
          switch (event.button.button){
          case MOUSE_BUTTON_LEFT:
-            game.leftMouse.mouseDown(game.mousePos - game.map);
+            game.leftMouse.mouseDown(Screen::mousePos - game.map);
             { //new scope for barClicked
                //if not clicking a button
                bool barClicked = false;
@@ -339,13 +340,13 @@ void handleEvents(const CoreData &core, GameData &game,
                         barClicked = true;
                if (!barClicked){
                   //initialize selection box stuff
-                  game.leftMouse.mouseDown(game.mousePos - game.map);
+                  game.leftMouse.mouseDown(Screen::mousePos - game.map);
                }
                break;
             }
          case MOUSE_BUTTON_RIGHT:
             //initialize right-drag scroll stuff
-            game.rightMouse.mouseDown(game.mousePos);
+            game.rightMouse.mouseDown(Screen::mousePos);
             break;
          }// switch mouse button
          pushMouseMove(game);
@@ -405,7 +406,7 @@ void handleEvents(const CoreData &core, GameData &game,
 
                         //create new building
                         Building *newBuilding =
-                           new Building(game.toBuild, game.mousePos -
+                           new Building(game.toBuild, Screen::mousePos -
                                                       game.map);
                         addEntity(game, newBuilding);
 
@@ -455,7 +456,7 @@ void scrollMap(GameData &game, double delta){
    //right-dragging
    if (game.rightMouse.dragging){
       scrolling = true;
-      Point rmbDisplacement = game.mousePos - game.rightMouse.dragBegin;
+      Point rmbDisplacement = Screen::mousePos - game.rightMouse.dragBegin;
       game.map = game.map - rmbDisplacement * (delta *
                                                RMB_SCROLL_MULTIPLIER);
    }
@@ -463,17 +464,17 @@ void scrollMap(GameData &game, double delta){
    pixels_t scroll = pixels_t(delta * SCROLL_AMOUNT);
 
    //edge of screen
-   if (game.mousePos.x < EDGE_SCROLL_MARGIN){
+   if (Screen::mousePos.x < EDGE_SCROLL_MARGIN){
       scrolling = true;
       game.map.x += scroll;
-   }else if (game.mousePos.x > SCREEN_WIDTH - EDGE_SCROLL_MARGIN){
+   }else if (Screen::mousePos.x > SCREEN_WIDTH - EDGE_SCROLL_MARGIN){
       scrolling = true;
       game.map.x -= scroll;
    }
-   if (game.mousePos.y < EDGE_SCROLL_MARGIN){
+   if (Screen::mousePos.y < EDGE_SCROLL_MARGIN){
       scrolling = true;
       game.map.y += scroll;
-   }else if (game.mousePos.y > SCREEN_HEIGHT - EDGE_SCROLL_MARGIN){
+   }else if (Screen::mousePos.y > SCREEN_HEIGHT - EDGE_SCROLL_MARGIN){
       scrolling = true;
       game.map.y -= scroll;
    }
@@ -523,7 +524,7 @@ void scrollMap(GameData &game, double delta){
 SDL_Rect getSelectionRect(const GameData &game){
    const SDL_Rect &map = game.map;
    const MouseButton &leftMouse = game.leftMouse;
-   Point modMouse = game.mousePos - map;
+   Point modMouse = Screen::mousePos - map;
    SDL_Rect selRect;
 
    if (leftMouse.dragBegin.x < modMouse.x){
@@ -572,7 +573,7 @@ void select(GameData &game){
             else
                //single point: collision(SDL_Rect, Point)
                collides = collision((*it)->getDrawRect(),
-                                    game.mousePos - 
+                                    Screen::mousePos - 
                                     Point(game.map));
 
             if (collides){
@@ -686,7 +687,7 @@ Entity *findEntity(GameData &game, bool onlyTargetable){
          continue;
 
       if (collision((*it)->getDrawRect(),
-                    game.mousePos - Point(game.map)))
+                    Screen::mousePos - Point(game.map)))
          return *it;
    }
    return 0;

@@ -6,6 +6,7 @@
 #include "Point.h"
 #include "UIBar.h"
 #include "Surface.h"
+#include "Screen.h"
 
 GameData *UIBar::game_ = 0;
 const CoreData *UIBar::core_ = 0;
@@ -109,7 +110,7 @@ void UIBar::draw() const{
 
 typeNum_t UIBar::mouseIndex() const{
    //if collision with bar
-   const Point &point = game_->mousePos;
+   const Point &point = Screen::mousePos;
    SDL_Rect barRect = rect_;
    if (collision(point, barRect))
       switch (orientation_){

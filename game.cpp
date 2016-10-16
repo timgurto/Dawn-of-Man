@@ -199,7 +199,7 @@ unsigned gameMode(Screen &thisScreen, const void *data){
 
    //game over; display victory/loss message
    game.paused = true; //darken map
-   game.mousePos = Point(screenBuf->w, screenBuf->h); //hide cursor
+   thisScreen.mousePos = Point(screenBuf->w, screenBuf->h); //hide cursor
    render(glow, diagGreen, diagRed, map, darkMap, cursor,
           cursorShadow, cursorPause, cursorColor, selRectImage,
           cursorIndex, core,

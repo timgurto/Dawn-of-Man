@@ -17,6 +17,7 @@
 #include "GameData.h"
 #include "Debug.h"
 #include "EntityType.h"
+#include "Screen.h"
 
 extern Debug debug;
 extern int
@@ -134,8 +135,8 @@ void playSound(SDL_Sound *p){
 void pushMouseMove(const GameData &game){
    SDL_Event fakeMouseMove;
    fakeMouseMove.type = SDL_MOUSEMOTION;
-   fakeMouseMove.motion.x = game.mousePos.x;
-   fakeMouseMove.motion.y = game.mousePos.y;
+   fakeMouseMove.motion.x = Screen::mousePos.x;
+   fakeMouseMove.motion.y = Screen::mousePos.y;
    SDL_PushEvent(&fakeMouseMove);
 }
 

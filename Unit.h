@@ -7,6 +7,7 @@
 #include "types.h"
 #include "Entity.h"
 #include "Point.h"
+#include "Screen.h"
 
 struct GameData;
 class EntityType;
@@ -62,8 +63,7 @@ public:
    //sets the target entity, and co-ordinates.  If an
    //entity isn't provided, use the specified co-ordinates
    void setTarget(Entity *targetEntity = 0,
-                  Point loc = game_->mousePos -
-                              Point(game_->map));
+      Point loc = Screen::mousePos - Point(game_->map));
 
    //Whether the unit has reached its target
    bool isAtTarget() const;

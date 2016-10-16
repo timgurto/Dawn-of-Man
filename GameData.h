@@ -76,9 +76,6 @@ struct GameData{
    //Whether the game loop is continuing
    bool loop;
 
-   //The position of the mouse pointer
-   Point mousePos;
-
    //if in build mode, the selected building type
    typeNum_t toBuild;
 
