@@ -38,7 +38,8 @@ finished_(progress >= core_->unitTypes[type].maxProgress_),
 drawPercent_(core_->unitTypes[type].maxProgress_ == 0 ?
                 1.0 :
                 1.0 * progress_ /
-                core_->unitTypes[type].maxProgress_){}
+                core_->unitTypes[type].maxProgress_),
+controlGroup(CONTROL_NONE){}
 
 const EntityType &Unit::type() const{
    return core_->unitTypes[typeIndex_];
@@ -503,6 +504,20 @@ void Unit::removeHealth(damage_t damage){
    health_ -= damage;
 }
 
+Entity *Unit::findNearbyEnemy(){
+   //TODO only search nearby entities
+   for (entities_t::const_iterator it = game_->entities.begin();
+        it != game_->entities.end(); ++it){
+      typeNum_t player = (*it)->getPlayer();
+      if (player != NO_TYPE && //entity has a player associated with it
+          player != player_ && //enemy
+          player != NATURE_PLAYER) //deer never hurt anyone
+         if (distance(loc_, (*it)->getLoc()) <= AUTO_ATTACK_DISTANCE)
+            return *it;
+   }
+   return 0;
+}
+
 bool Unit::isBuilder() const{
    return core_->unitTypes[typeIndex_].builder_;
 }
@@ -582,20 +597,6 @@ std::string Unit::getHelp() const{
    if (health_ < thisType.maxHealth_)
       os << " remaining";
    if (DEBUG)
-      os << " | Frame: " << frame_;
+      os << " | Control group: " << controlGroup;
    return os.str();
-}
-
-Entity *Unit::findNearbyEnemy(){
-   //TODO only search nearby entities
-   for (entities_t::const_iterator it = game_->entities.begin();
-        it != game_->entities.end(); ++it){
-      typeNum_t player = (*it)->getPlayer();
-      if (player != NO_TYPE && //entity has a player associated with it
-          player != player_ && //enemy
-          player != NATURE_PLAYER) //deer never hurt anyone
-         if (distance(loc_, (*it)->getLoc()) <= AUTO_ATTACK_DISTANCE)
-            return *it;
-   }
-   return 0;
 }

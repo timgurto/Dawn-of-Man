@@ -140,88 +140,129 @@ void handleEvents(const CoreData &core, GameData &game,
 
 
 
-      //A key is pressed
-      case SDL_KEYDOWN:
-         switch (event.key.keysym.sym){
-         case SDLK_PRINT:
-            { //new scope for os
-               std::ostringstream os;
-               os << "shot" << time(0) << ".bmp";
-               SDL_SaveBMP(screen, os.str().c_str());
-            }
-            break;
+         //A key is pressed
+         case SDL_KEYDOWN:
+            {//new scope for key
+               SDLKey key = event.key.keysym.sym;
+               switch (key){
+               case SDLK_PRINT:
+                  { //new scope for os
+                     std::ostringstream os;
+                     os << "shot" << time(0) << ".bmp";
+                     SDL_SaveBMP(screen, os.str().c_str());
+                  }
+                  break;
 
-         case SDLK_KP_PLUS:
-            //HACK remove this cheat
-            { //new scope for cheatResources
-               resources_t cheatResources(Resources::getResourceCount(), 1337);
-               game.players[HUMAN_PLAYER].addResources(cheatResources);
-            }
-            break;
+               case SDLK_KP_PLUS:
+                  //HACK remove this cheat
+                  { //new scope for cheatResources
+                     resources_t cheatResources(Resources::getResourceCount(), 1337);
+                     game.players[HUMAN_PLAYER].addResources(cheatResources);
+                  }
+                  break;
 
-         case SDLK_ESCAPE:
-            //HACK remove this exit
-            game.loop = false;
-            return;
-            //---------------------
+               case SDLK_ESCAPE:
+                  //HACK remove this exit
+                  game.loop = false;
+                  return;
+                  //---------------------
 
-            switch(game.mode){
-            //unselect all
-            case MODE_BUILDING:
-               game.buildingSelected->selected = false;
-               game.buildingSelected = 0;
-               //fall-through
-            case MODE_BUILDER:
-            case MODE_NORMAL:
-               for (entities_t::iterator it = game.entities.begin();
-                    it != game.entities.end(); ++it)
-                  (*it)->selected = false;
-               game.mode = MODE_NORMAL;
-               break;
-            case MODE_CONSTRUCTION:
-               game.toBuild = NO_TYPE;
-               game.mode = MODE_NORMAL;
-               for (UIBars_t::iterator it = bars.begin(); it != bars.end(); ++it)
-                  if ((*it)->isActive())
-                     (*it)->calculateRect();
-               break;
-            }
-            break;
-
-         case SDLK_DELETE:
-            { //new scope for selected
-               //find selected entities
-               for (entities_t::iterator it = game.entities.begin();
-                  it != game.entities.end(); ++it)
-                  if ((*it)->selected){
-                     (*it)->kill();
+                  switch(game.mode){
+                  //unselect all
+                  case MODE_BUILDING:
+                     game.buildingSelected->selected = false;
+                     game.buildingSelected = 0;
+                     //fall-through
+                  case MODE_BUILDER:
+                  case MODE_NORMAL:
+                     for (entities_t::iterator it = game.entities.begin();
+                          it != game.entities.end(); ++it)
+                        (*it)->selected = false;
+                     game.mode = MODE_NORMAL;
+                     break;
+                  case MODE_CONSTRUCTION:
+                     game.toBuild = NO_TYPE;
+                     game.mode = MODE_NORMAL;
+                     for (UIBars_t::iterator it = bars.begin(); it != bars.end(); ++it)
+                        if ((*it)->isActive())
+                           (*it)->calculateRect();
                      break;
                   }
-            }
-            break;
+                  break;
 
-         case SDLK_F11:
-            //F11: toggle FPS display
-            fpsDisplay.toggleVisibility();
-            break;
+               case SDLK_DELETE:
+                  { //new scope for selected
+                     //find selected entities
+                     for (entities_t::iterator it = game.entities.begin();
+                        it != game.entities.end(); ++it)
+                        if ((*it)->selected){
+                           (*it)->kill();
+                           break;
+                        }
+                  }
+                  break;
 
-         case SDLK_F4:
-            //Alt+F4 = quit
-            if (isKeyPressed(SDLK_LALT) || isKeyPressed(SDLK_RALT)){
-               game.loop = false;
-               return;
+               case SDLK_F11:
+                  //F11: toggle FPS display
+                  fpsDisplay.toggleVisibility();
+                  break;
+
+               case SDLK_F4:
+                  //Alt+F4 = quit
+                  if (isKeyPressed(SDLK_LALT) || isKeyPressed(SDLK_RALT)){
+                     game.loop = false;
+                     return;
+                  }
+                  break;
+               
+               case SDLK_F3:
+               case SDLK_PAUSE:
+                  //toggle pause
+                  game.paused = !game.paused;
+                  if (game.paused)
+                     Mix_PauseMusic();
+                  else
+                     Mix_ResumeMusic();
+                  break;
+
+               //another key
+               default:
+                  
+                  //control groups
+                  if (key >= CONTROL_MIN &&
+                      key <= CONTROL_MAX ||
+                      key == CONTROL_NONE)
+
+                     //Ctrl: Set control group
+                     if (isKeyPressed(SDLK_LCTRL) ||
+                         isKeyPressed(SDLK_RCTRL)){
+                         for (entities_t::iterator it = game.entities.begin();
+                              it != game.entities.end(); ++it)
+                            if ((*it)->classID() == ENT_UNIT &&
+                                (*it)->selected)
+                               ((Unit &)(**it)).controlGroup = ControlGroup(key);
+                     
+                     //No Ctrl: select control group
+                     }else
+                        if (key != CONTROL_NONE){ //0 nothing to select
+                           for (entities_t::iterator it = game.entities.begin();
+                                it != game.entities.end(); ++it){
+
+                              //no Shift: unselect all
+                              if (!(isKeyPressed(SDLK_LSHIFT) ||
+                                    isKeyPressed(SDLK_RSHIFT)))
+                                 (*it)->selected = false;
+
+                              //select if right control group
+                              if ((*it)->classID() == ENT_UNIT){
+                                 Unit &unit = (Unit &)(**it);
+                                 if (unit.controlGroup == key)
+                                    unit.selected = true;
+                              }
+                           }
+                           game.selectionChanged = true;
+                        }
             }
-            break;
-         
-         case SDLK_F3:
-         case SDLK_PAUSE:
-            //toggle pause
-            game.paused = !game.paused;
-            if (game.paused)
-               Mix_PauseMusic();
-            else
-               Mix_ResumeMusic();
-            break;
          }
          break;
 

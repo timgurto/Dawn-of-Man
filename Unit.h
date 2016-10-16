@@ -47,6 +47,9 @@ public:
    Unit(typeNum_t type, const Point &loc,
         typeNum_t player = HUMAN_PLAYER,
         progress_t progress = 0);
+   
+   //which control group this unit is in
+   ControlGroup controlGroup;
 
    //Inherited from Entity
    virtual const EntityType &Unit::type() const;

@@ -350,7 +350,7 @@ void Entity::kill(){
    game_->selectionChanged = true;
    const EntityType &thisType = type();
    playSound(thisType.deathSound_);
-   typeNum_t resourceType = NO_TYPE; //resource this turns into
+   typeNum_t resourceType; //resource this turns into
    ResourceNode *node = 0;
 
    //turns into decoration?

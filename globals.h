@@ -194,4 +194,11 @@ enum VerticalMovement{
    VM_NONE
 };
 
+//values correspond to keys.
+enum ControlGroup{
+   CONTROL_MIN = SDLK_1,
+   CONTROL_MAX = SDLK_9,
+   CONTROL_NONE = SDLK_0
+};
+
 #endif
