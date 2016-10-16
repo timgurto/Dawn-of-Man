@@ -4,20 +4,16 @@
 #define PLAYER_H
 
 #include <set>
+#include "globals.h"
 #include "Resources.h"
 #include "TechBonuses.h"
 #include "CoreData.h"
-#include "globals.h"
+#include "AI.h"
 
 struct GameData;
 class UIBar;
 
 typedef std::vector<bool> checklist_t;
-
-//EntityType, and type index
-typedef std::pair<EntityTypeID, typeNum_t> AnyEntityType;
-typedef std::vector<AnyEntityType> wishList_t;
-typedef std::queue<AnyEntityType> buildQueue_t;
 
 //Represents one player, be it the human or a
 //computer opponent
@@ -28,21 +24,6 @@ class Player{
 
    //the player's resource stockpiles
    Resources resources_;
-
-   //[AI] for AI's bookkeeping
-   //TODO individual, dynamic caps based on wishlists
-   static Resources
-      expansionCap_,
-      militaryCap_;
-   Resources
-      expansionSupply_,
-      militarySupply_;
-
-   //[AI] Items the player wants to build
-   wishList_t wishList_;
-
-   //[AI] Items the player can afford, in order of preference
-   buildQueue_t buildQueue_;
 
    //So that it doesn't have to be recalculated constantly
    std::string resourcesString_;
@@ -55,6 +36,8 @@ class Player{
 
    //which buildings have been constructed
    checklist_t buildingsBuilt_;
+
+   AI ai_;
 
    static GameData *game_;
    static const CoreData *core_;
@@ -71,10 +54,6 @@ public:
    //initialize static pointers
    static void init(const CoreData *core = 0, GameData *game = 0,
                     UIBar *buildingsBar = 0);
-
-   //[AI] initializes AI stuff:
-   // -expansion/military supply caps
-   static void initAI(const CoreData &core, GameData &game);
 
    //add or remove the player's resources
    void addResources(const Resources &r);

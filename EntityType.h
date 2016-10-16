@@ -4,10 +4,10 @@
 #define ENTITY_TYPE_H
 
 #include <string>
+#include "globals.h"
 #include "Point.h"
 #include "Surface.h"
 #include "Sound.h"
-#include "globals.h"
 
 //A category of entities, differing by attributes,
 //regular actions, and in-game behavior
@@ -26,6 +26,7 @@ class EntityType{
    SDL_Rect
       drawRect_, //position of sprite graphic
       baseRect_; //the entity's base, for collisions
+      //TODO smaller rect for 
 
    //where the selection indicator is centered
    Point selectionCenter_;

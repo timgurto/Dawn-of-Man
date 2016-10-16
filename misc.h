@@ -41,7 +41,7 @@ double modulo(double a, int b);
 //Map edges are taken into account automatically
 void centerMap(GameData &game, const Point &center);
 
-//Adds a leading zero if x < 100
+//Adds a leading space if x < 100
 std::string format3(double x);
 
 //Adds a leading zero if x < 10

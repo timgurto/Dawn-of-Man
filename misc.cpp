@@ -188,7 +188,7 @@ bool isPathClear(const Point &start,
    return true;
 }
 
-//Adds a leading zero if x < 100 (fps display)
+//Adds a leading space if x < 100 (fps display)
 std::string format3(double x){
    std::ostringstream oss;
    if (x < 100)

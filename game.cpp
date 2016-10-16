@@ -139,7 +139,6 @@ unsigned gameMode(Screen &thisScreen, const void *data){
 
    //more init
    Player::init(&core, &game, &buildingsBar);
-   Player::initAI(core, game);
 
    //Message Boxes
    messageBoxes_t messageBoxes;
