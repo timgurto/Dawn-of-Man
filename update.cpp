@@ -149,7 +149,7 @@ void handleEvents(const CoreData &core, GameData &game,
                case SDLK_PRINT:
                   { //new scope for os
                      std::ostringstream os;
-                     os << "shot" << time(0) << ".bmp";
+                     os << SCREENSHOTS_PATH << "shot" << time(0) << ".bmp";
                      SDL_SaveBMP(screen, os.str().c_str());
                   }
                   break;
