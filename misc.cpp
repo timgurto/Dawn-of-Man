@@ -34,11 +34,11 @@ SDL_Surface *loadImage(const char* fileName,bool alpha){
    debug("loading surface: ", fileName);
    SDL_Surface *load, *opt;
    load = IMG_Load(fileName);
-   checkP(load);
+   assert(load);
    opt = alpha ?
       SDL_DisplayFormatAlpha(load) :
       SDL_DisplayFormat(load);
-   checkP(opt);
+   assert(opt);
    SDL_FreeSurface(load);
    ++surfacesLoaded;
 
@@ -78,7 +78,7 @@ SDL_Sound *loadSound(const std::string &fileName){
    if (fileName == "" || fileName == SOUND_PATH)
       return 0;
    SDL_Sound *p = Mix_LoadWAV(fileName.c_str());
-   checkP(p);
+   assert(p);
    ++soundsLoaded;
    return p;
 }
@@ -125,7 +125,7 @@ SDL_Surface *setScreen(){
 }
 
 void freeSurface(SDL_Surface *&p){
-   if (p != 0){
+   if (p){
       //debug("Unloading surface");
       SDL_FreeSurface(p);
       p = 0;
@@ -134,7 +134,7 @@ void freeSurface(SDL_Surface *&p){
 }
 
 void freeSound(SDL_Sound *&p){
-   if (p != 0){
+   if (p){
       Mix_FreeChunk(p);
       p = 0;
       --soundsLoaded;
@@ -142,7 +142,7 @@ void freeSound(SDL_Sound *&p){
 }
 
 SDL_Surface *copySurface(SDL_Surface* src){
-   if (src == 0)
+   if (!src)
       return 0;
    ++surfacesLoaded;
    return SDL_ConvertSurface(src,
@@ -174,13 +174,13 @@ SDL_Rect &operator-=(SDL_Rect &lhs, const SDL_Rect &rhs){
 
 void playSound(SDL_Sound *p){
    if (!DEBUG)
-      if (p != 0)
+      if (p)
          Mix_PlayChannel(-1, p, 0);
 }
 
 void setColorKey(SDL_Surface *surface, const SDL_Color &color){
-   checkP(surface);
-   assert (surface != 0);
+   assert(surface);
+   assert (surface);
    SDL_SetColorKey(surface, SDL_SRCCOLORKEY,
                    SDL_MapRGB(surface->format,
                               color.r,
@@ -234,8 +234,8 @@ std::string makePath(EntityTypeID type, typeNum_t imageNumber,
 }
 
 bool dereferenceLessThan(Entity *p1, Entity *p2){
-   assert (p1 != 0);
-   assert (p2 != 0);
+   assert (p1);
+   assert (p2);
    return *p1 < *p2;
 }
 
@@ -320,7 +320,7 @@ bool inside(const SDL_Rect &a, const SDL_Rect &b){
 }
 
 bool isArg(std::string arg, int argc, char* argv[]){
-   assert (argv != 0);
+   assert (argv);
    for (int i = 1; i != argc; ++i){
       std::string s(argv[i]);
       size_t len = s.find('=');
@@ -333,7 +333,7 @@ bool isArg(std::string arg, int argc, char* argv[]){
 }
 
 int whatIsArg(std::string arg, int argc, char* argv[]){
-   assert (argv != 0);
+   assert (argv);
    assert(isArg(arg, argc, argv));
    for (int i = 1; i != argc; ++i){
       std::string s(argv[i]);

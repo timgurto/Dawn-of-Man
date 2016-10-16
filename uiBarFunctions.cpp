@@ -32,7 +32,7 @@ bool validUnit(const CoreData &core,
    const UnitType &type = core.unitTypes[i];
    return
       //unit comes from the selected building
-      game.buildingSelected != 0 &&
+      game.buildingSelected &&
       game.buildingSelected->getTypeIndex() == type.getOriginBuilding() &&
       //prerequisites
       game.players[HUMAN_PLAYER].hasTech(type.getPrereqTech());
@@ -47,7 +47,7 @@ bool validTech(const CoreData &core,
    const Player &human = game.players[HUMAN_PLAYER];
    return
       //tech comes from the selected building
-      game.buildingSelected != 0 &&
+      game.buildingSelected &&
       game.buildingSelected->getTypeIndex() == tech.getOriginBuilding() &&
       //prerequisites
       human.hasTech(tech.getPrereqTech1()) &&
@@ -111,7 +111,7 @@ typeNum_t getValidTech(const CoreData &core, const GameData &game,
 
    //Techs bar:
    typeNum_t getNumTechIcons(const CoreData &core, const GameData &game){
-      if (game.buildingSelected  == 0)
+      if (!game.buildingSelected)
          return 0;
       typeNum_t count = 0;
       for (techs_t::const_iterator it = core.techs.begin();

@@ -47,7 +47,6 @@ void gameMode(){
    //initialize screen and debug objects
    SDL_Surface *screen = setScreen();
    debug.initScreen(screen);
-   //deltaLog.initScreen(screen);
 
    //seed random generator
    srand(unsigned(time(0)));
@@ -69,6 +68,8 @@ void gameMode(){
                                 "cursorShadow.PNG", GREEN),
       *cursorPause = loadImage(MISC_IMAGE_PATH +
                                "cursorPause.PNG", GREEN),
+      *cursorColor = loadImage(MISC_IMAGE_PATH +
+                               "cursorColor.PNG", MAGENTA),
       *vBar = loadImage(INTERFACE_IMAGE_PATH + "vBar.PNG"),
       *hBar = loadImage(INTERFACE_IMAGE_PATH + "hBar.PNG"),
       *diagGreen = loadImage(MISC_IMAGE_PATH + "diagGreen.PNG", GREEN),
@@ -81,6 +82,11 @@ void gameMode(){
    setColorKey(entitiesTemp);
    SDL_SetAlpha(particleShadow, SDL_SRCALPHA, SHADOW_ALPHA);
    SDL_SetAlpha(cursorShadow, SDL_SRCALPHA, SHADOW_ALPHA);
+
+   //colored cursors, generated as they're used
+   SDL_Surface *cursorIndex[CLR_MAX];
+   for (int i = 0; i != CLR_MAX; ++i)
+      cursorIndex[i] = 0;
 
    std::string musicPath = SOUND_PATH + "twoSteps.wav";
    Mix_Music *music = Mix_LoadMUS(musicPath.c_str());
@@ -157,8 +163,6 @@ void gameMode(){
       double deltaMod = 1.0 * delta / DELTA_MODIFIER;
       
       double fps = delta == 0 ? 0 : 1000 / delta;
-      //deltaLog("Framerate: ", fps);
-      //deltaLog("    Delta: ", delta, "ms");
       fpsDisplay(format3(fps), "fps  |  ", delta, "ms ");
 
       //update state
@@ -167,7 +171,8 @@ void gameMode(){
 
       //render
       render(screen, glow, diagGreen, diagRed, map, darkMap, cursor,
-             cursorShadow, cursorPause, core, game, bars, messageBoxes);
+             cursorShadow, cursorPause, cursorColor, cursorIndex, core,
+             game, bars, messageBoxes);
 
    }
 
@@ -179,6 +184,7 @@ void gameMode(){
    freeSurface(cursor);
    freeSurface(cursorShadow);
    freeSurface(cursorPause);
+   freeSurface(cursorColor);
    freeSurface(vBar);
    freeSurface(hBar);
    freeSurface(particle);
@@ -187,6 +193,9 @@ void gameMode(){
    freeSurface(diagRed);
    freeSurface(entitiesTemp);
    freeSurface(glow);
+
+   for (int i = 0; i != CLR_MAX; ++i)
+      freeSurface(cursorIndex[i]);
 
    Mix_HaltMusic(); 
    Mix_FreeMusic(music);

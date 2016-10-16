@@ -90,11 +90,6 @@ void setColorKey(SDL_Surface *surface,
 std::string makePath(EntityTypeID type, typeNum_t imageNumber,
                      ImageModifier modifier = IMG_NONE);
 
-//Checks whether a pointer is NULL
-template <typename Type> void checkP(Type *pointer){
-   assert (pointer != 0);
-}
-
 //Dereferences Entity pointers and performs <
 //(used in sorting the Entities list)
 bool dereferenceLessThan(Entity *p1, Entity *p2);

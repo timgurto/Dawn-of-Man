@@ -22,10 +22,8 @@ typedef SDL_Surface *surfaceIndex_t
                         //number of colors
         //[0] - [MAX_PLAYERS-1] = each player's color
                         [CLR_MAX]
-
                         //number of types
                         [MAX_TYPES]
-
                         //number of entity subclasses
                         [ENT_MAX];
 
@@ -67,6 +65,9 @@ struct GameData{
    //with and without shadows.
    surfaceIndex_t surfaceIndex;
    surfaceIndex_t surfaceIndexShadowed;
+
+   //the color the cursor should be painted
+   int cursorColor;
 
    //The current game mode
    ControlMode mode;

@@ -20,7 +20,7 @@ margin_(margin),
 background_(background),
 visible_(visible),
 font_(TTF_OpenFont(fontName.c_str(), fontSize)){
-   assert (font_ != 0);
+   assert (font_);
    //font height
    int fontHeight = TTF_FontHeight(font_);
    height_ = fontHeight + 2 * margin_;
@@ -31,7 +31,7 @@ font_(TTF_OpenFont(fontName.c_str(), fontSize)){
 void MessageBox::display(SDL_Surface *screen) const{
    if (visible_)
       if (message_ != ""){
-         assert (screen != 0);
+         assert (screen);
 
          //message surface
          SDL_Surface *text = TTF_RenderText_Solid(font_,
@@ -40,7 +40,7 @@ void MessageBox::display(SDL_Surface *screen) const{
          pixels_t width = text->clip_rect.w + margin_;
 
          //background
-         if (background_ != 0){
+         if (background_){
             SDL_FillRect(screen,
                          &makeRect(x_ - margin_, y_ - margin_,
                          width + 1, height_ + 1),

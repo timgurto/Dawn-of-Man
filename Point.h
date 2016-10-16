@@ -25,6 +25,11 @@ struct Point{
    //scalar multiplication
    Point operator*(double rhs) const;
 
+   //comparison
+   bool operator<(const Point &rhs) const;
+   bool operator==(const Point &rhs) const;
+   bool operator!=(const Point &rhs) const;
+
    //addition/subtraction with SDL_Rects
    //width and height values of rhs are retained
    SDL_Rect operator-(const SDL_Rect &rhs) const;

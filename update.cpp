@@ -106,8 +106,12 @@ void handleEvents(const CoreData &core, GameData &game,
 
             if (!overBar){
                Entity *entityP = findEntity(game, false);
-               if (entityP != 0)
+               if (entityP){
+                  //TODO virtual getHelp() fun for entities
                   contextHelp(entityP->type().getName());
+                  game.cursorColor = entityP->getColor();
+               }else
+                  game.cursorColor = CLR_MAX; //no color
             }
 
             switch(game.mode){
@@ -473,7 +477,7 @@ void select(GameData &game, UIBars_t &bars){
    if (builderSelected)
       game.mode = MODE_BUILDER;
    //if a building is selected
-   else if (game.buildingSelected != 0)
+   else if (game.buildingSelected)
       game.mode = MODE_BUILDING;
    else
       game.mode = MODE_NORMAL;
@@ -492,7 +496,7 @@ void setSelectedTargets(GameData &game){
          Unit *unitP = (Unit *)(*it);
 
          //no entity
-         if (targetEntity == 0){
+         if (!targetEntity){
             unitP->setTarget();
             continue;
          }

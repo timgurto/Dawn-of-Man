@@ -25,7 +25,7 @@ count_(count){
 
 Debug::~Debug(){
    --debugCount_;
-   if (font_ != 0)
+   if (font_)
       TTF_CloseFont(font_);
    if (debugCount_ == 0)
       TTF_Quit();
@@ -37,7 +37,7 @@ void Debug::initScreen(SDL_Surface *screen){
 
 void Debug::initFont(std::string name, int size){
    font_ = TTF_OpenFont(name.c_str(), size);
-   assert (font_ != 0);
+   assert (font_);
    height_ = TTF_FontHeight(font_);
 }
 
@@ -48,7 +48,7 @@ void Debug::add(std::string message){
 }
 
 void Debug::display() const{
-   if (screen_ != 0){
+   if (screen_){
       std::queue<std::string> copy(messages);
       int lat = 0;
       while (copy.size() != 0){

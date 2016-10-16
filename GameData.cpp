@@ -31,6 +31,7 @@ mousePos(SCREEN_WIDTH/2, SCREEN_HEIGHT/2),
 paused(false),
 toBuild(NO_TYPE),
 mode(MODE_NORMAL),
+cursorColor(CLR_MAX), //no color
 buildingSelected(0){
    for (typeNum_t i = 0; i != CLR_MAX; ++i)
       for (typeNum_t j = 0; j != MAX_TYPES; ++j)

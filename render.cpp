@@ -18,11 +18,12 @@ void render(SDL_Surface *screen, SDL_Surface *selection,
             SDL_Surface *diagGreen, SDL_Surface *diagRed,
             SDL_Surface *map, SDL_Surface *darkMap,
             SDL_Surface *cursor, SDL_Surface *cursorShadow,
-            SDL_Surface *cursorPause,
+            SDL_Surface *cursorPause, SDL_Surface *cursorColor,
+            SDL_Surface **cursorIndex,
             const CoreData &core, const GameData &game,
             const UIBars_t &bars, const messageBoxes_t &messageBoxes){
 
-   assert (screen != 0);
+   assert (screen);
 
    renderMap(screen, game, map, darkMap);
    renderSelection(screen, game, selection);
@@ -33,7 +34,8 @@ void render(SDL_Surface *screen, SDL_Surface *selection,
       renderSelectionRect(screen, game);
    renderInterface(bars);
    renderMessageBoxes(screen, messageBoxes);
-   renderCursor(screen, game, cursor, cursorShadow, cursorPause);
+   renderCursor(screen, game, cursor, cursorShadow, cursorPause,
+                cursorColor, cursorIndex);
    renderParticles(game);
 
    if (game.paused){
@@ -51,13 +53,13 @@ void render(SDL_Surface *screen, SDL_Surface *selection,
    //Finalize
    bool test = SDL_Flip(screen) == 0;
    assert(test);
-
 }
 
 //TODO different cursor for attacking, maybe for gathering
 void renderCursor (SDL_Surface *screen, const GameData &game,
                    SDL_Surface *cursor, SDL_Surface *shadow,
-                   SDL_Surface *pause){
+                   SDL_Surface *pause, SDL_Surface *color,
+                   SDL_Surface **cursorIndex){
    Point
       cursorPos = game.mousePos + CURSOR_OFFSET,
       shadowPos = cursorPos;
@@ -72,14 +74,37 @@ void renderCursor (SDL_Surface *screen, const GameData &game,
       shadowPos += CURSOR_RAISED;
    }
 
-   SDL_BlitSurface(shadow, 0, screen, &makeRect(shadowPos));
-   SDL_BlitSurface(cursor, 0, screen, &makeRect(cursorPos));
+   SDL_BlitSurface(shadow, 0, screen, &makeRect(shadowPos)); //shadow
+   SDL_BlitSurface(cursor, 0, screen, &makeRect(cursorPos)); //cursor
+
+   //color
+   int colorIndex = game.cursorColor;
+   if (colorIndex != CLR_MAX){
+      //same technique as with coloring entities
+      assert (colorIndex < CLR_MAX);
+      assert (cursorIndex);
+      SDL_Surface *&index = cursorIndex[colorIndex];
+      
+      //create colored surface if it doesn't exist
+      if (!index){
+         assert (color);
+         index = createSurface(color->w, color->h);
+         setColorKey(index);
+         SDL_FillRect(index, 0, getEntityColor(game, colorIndex));
+         SDL_BlitSurface(color, 0, index, 0);
+      }
+
+      //colored index definitely exists now
+      SDL_BlitSurface(index, 0, screen, &makeRect(cursorPos));
+
+
+   }
 }
 
 //Draws the terrain and border tiles
 void renderMap(SDL_Surface *screen, const GameData &game,
                SDL_Surface *map, SDL_Surface *border){
-   assert (screen != 0);
+   assert (screen);
    for (int x = -1; x != game.mapX + 1; ++x)
       for (int y = -1; y != game.mapY + 1; ++y){
          SDL_Rect tileRect = makeRect(game.map.x + x * MAP_TILE_SIZE,

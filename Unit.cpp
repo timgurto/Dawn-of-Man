@@ -2,6 +2,7 @@
 
 #include <queue>
 #include <cmath>
+#include <map>
 #include <cassert>
 #include "SDL_mixer.h"
 #include "misc.h"
@@ -25,6 +26,7 @@ Entity(type, loc),
 player_(player),
 moving_(false),
 combat_(false),
+pathJustSet_(false),
 frameCounter_(rand() % core_->unitTypes[type].maxFrameCounter_),
 combatFrameCounter_(0),
 frame_(0),
@@ -93,167 +95,196 @@ void Unit::tick(double delta){
       addParticles(particlesToDraw);
 
    }else{
+      if (pathJustSet_)
+         pathJustSet_ = false;
+      else{
 
-      if (moving_){
-         const Point &targetPoint = path_.front();
+         if (moving_){
+            const Point &targetPoint = path_.front();
 
-         double angle;
-         if (targetPoint.x == loc_.x)
-            angle =
-               (targetPoint.y < loc_.y ?
-               1.5 * PI :
-               0.5 * PI);
-         else{
-            double gradient = 1.0 *
-               (targetPoint.y - loc_.y) /
-               (targetPoint.x - loc_.x);
-            angle = atan(gradient);
-            if (targetPoint.x < loc_.x){
-               if (targetPoint.y > loc_.y)
-                  angle += PI;
-               else
-                  angle -= PI;
+            double angle;
+            if (targetPoint.x == loc_.x)
+               angle =
+                  (targetPoint.y < loc_.y ?
+                  1.5 * PI :
+                  0.5 * PI);
+            else{
+               double gradient = 1.0 *
+                  (targetPoint.y - loc_.y) /
+                  (targetPoint.x - loc_.x);
+               angle = atan(gradient);
+               if (targetPoint.x < loc_.x){
+                  if (targetPoint.y > loc_.y)
+                     angle += PI;
+                  else
+                     angle -= PI;
+               }
             }
+            double xMod = cos(angle);
+            double yMod = sin(angle);
+
+            double speed = delta * getSpeed();
+
+            pixels_t
+               xDelta = pixels_t(xMod * speed),
+               yDelta = pixels_t(yMod * speed);
+
+            loc_.x += xDelta;
+            loc_.y += yDelta;
+
+            // if collision, undo
+            if (!isLocationOK()){
+               loc_.x -= xDelta;
+               loc_.y -= yDelta;
+               findPath();
+               return;
+            }
+
+            if (yMod > 0)
+               verticalMovement_ = VM_DOWN;
+            else if (yMod < 0)
+               verticalMovement_ = VM_UP;
+            else
+               verticalMovement_ = VM_NONE;
+
+            const SDL_Rect &base = thisType.baseRect_;
+
+            //check in bounds
+            if (xMod < 0 &&
+                loc_.x + base.x < 0)
+               loc_.x = -1 * base.x;
+            else if (xMod > 0 &&
+                     loc_.x + base.x + base.w > game_->map.w)
+               loc_.x = game_->map.w - base.x - base.w;
+            if (yMod < 0 &&
+                loc_.y + base.y < 0)
+               loc_.y = -1 * base.y;
+            else if (yMod > 0 &&
+                     loc_.y + base.y + base.h > game_->map.h)
+               loc_.y = game_->map.h - base.y - base.h;
+
          }
-         double xMod = cos(angle);
-         double yMod = sin(angle);
 
-         double speed = delta * getSpeed();
-         pixels_t
-            xDelta = pixels_t(xMod * speed),
-            yDelta = pixels_t(yMod * speed);
+         //check whether target has been reached
+         if (path_.size() > 1){
+            if (isAtTarget())
+               path_.pop();
+         }else{
+            if (targetEntity_){
+               //if the target entity has moved
+               if (!isAtTarget() && target_ != targetEntity_->getLoc()){
+                  //updateTarget();
+                  path_.pop();
+                  assert (path_.empty());
+                  path_.push(targetEntity_->getLoc());
 
-         loc_.x += xDelta;
-         loc_.y += yDelta;
-
-         // if collision, undo
-         if (!isLocationOK()){
-            loc_.x -= xDelta;
-            loc_.y -= yDelta;
-            return;
+                  combat_ = false;
+                  moving_ = true;
+               }else{
+                  combat_ = isAtTarget();
+                  moving_ = !combat_;
+               }
+            }else if (isAtTarget())
+               moving_ = false;
          }
 
-         if (yMod > 0)
-            verticalMovement_ = VM_DOWN;
-         else if (yMod < 0)
-            verticalMovement_ = VM_UP;
-         else
-            verticalMovement_ = VM_NONE;
+         //progress frame
+         if (combat_){
+            //debug("in combat");
+            combatFrameCounter_ += delta;
 
-         const SDL_Rect &base = thisType.baseRect_;
-
-         //check in bounds
-         if (xMod < 0 &&
-             loc_.x + base.x < 0)
-            loc_.x = -1 * base.x;
-         else if (xMod > 0 &&
-                  loc_.x + base.x + base.w > game_->map.w)
-            loc_.x = game_->map.w - base.x - base.w;
-         if (yMod < 0 &&
-             loc_.y + base.y < 0)
-            loc_.y = -1 * base.y;
-         else if (yMod > 0 &&
-                  loc_.y + base.y + base.h > game_->map.h)
-            loc_.y = game_->map.h - base.y - base.h;
-
-      }
-
-      //check whether target has been reached
-      if (path_.size() > 1){
-         if (isAtTarget())
-            path_.pop();
-      }else{
-         if (targetEntity_){
-            combat_ = isAtTarget();
-            moving_ = !combat_;
-         }else if (isAtTarget())
-            moving_ = false;
-      }
-
-      //progress frame
-      if (combat_){
-         //debug("in combat");
-         combatFrameCounter_ += delta;
-
-         //Combat/construction
-         if (combatFrameCounter_ >= thisType.maxCombatFrameCounter_){
-            combatFrameCounter_ -= (thisType.maxCombatFrameCounter_ +
-                                    thisType.combatWait_);
-            playSound(thisType.getHitSound());
-            //debug("hit");
-            switch (targetEntity_->classID()){
-            case ENT_BUILDING:
-               {//local scope for target
-                  Building &target = (Building &)(*targetEntity_);
-                  //friendly building: construction
-                  typeNum_t targetPlayer = target.getPlayer();
-                  if (thisType.builder_ && targetPlayer == player_){
-                     target.progressConstruction();
-                  //enemy building: attack
-                  }else if(targetPlayer != player_){
+            //Combat/construction
+            if (combatFrameCounter_ >= thisType.maxCombatFrameCounter_){
+               combatFrameCounter_ -= (thisType.maxCombatFrameCounter_ +
+                                       thisType.combatWait_);
+               playSound(thisType.getHitSound());
+               //debug("hit");
+               switch (targetEntity_->classID()){
+               case ENT_BUILDING:
+                  {//local scope for target
+                     Building &target = (Building &)(*targetEntity_);
+                     //friendly building: construction
+                     typeNum_t targetPlayer = target.getPlayer();
+                     if (thisType.builder_ && targetPlayer == player_){
+                        target.progressConstruction();
+                     //enemy building: attack
+                     }else if(targetPlayer != player_){
+                        damage_t damage = getAttack() - target.getArmor();
+                        if (damage > target.getHealth())
+                           target.kill();
+                        else
+                           target.removeHealth(damage);
+                     }
+                  }
+                  break;
+               //TODO remove health in target's method
+               case ENT_UNIT:
+                  {//local scope for target, targetType, damage
+                     Unit &target = (Unit &)(*targetEntity_);
                      damage_t damage = getAttack() - target.getArmor();
                      if (damage > target.getHealth())
                         target.kill();
-                     else
-                        target.removeHealth(damage);
+                     else{
+                        target.health_ -= damage;
+                        if (!target.getTargetEntity() &&
+                            !target.moving_)
+                           target.setTarget(this);
+                     }
+                     break;
                   }
-               }
-               break;
-            //TODO remove health in target's method
-            case ENT_UNIT:
-               {//local scope for target, targetType, damage
-                  Unit &target = (Unit &)(*targetEntity_);
-                  damage_t damage = getAttack() - target.getArmor();
-                  if (damage > target.getHealth())
-                     target.kill();
-                  else{
-                     target.health_ -= damage;
-                     if (target.getTargetEntity() == 0 &&
-                         !target.moving_)
-                        target.setTarget(this);
+               case ENT_RESOURCE_NODE:
+                  {//local scope for target, targetType
+                     ResourceNode &target = (ResourceNode &)(*targetEntity_);
+                     Resources yield = target.harvest();
+                     game_->players[player_].addResources(yield);
                   }
-                  break;
-               }
-            case ENT_RESOURCE_NODE:
-               {//local scope for target, targetType
-                  ResourceNode &target = (ResourceNode &)(*targetEntity_);
-                  Resources yield = target.harvest();
-                  game_->players[player_].addResources(yield);
                }
             }
+            if (combatFrameCounter_ < 0)
+               frame_ = thisType.frameCount_;
+            else
+               frame_ = int(combatFrameCounter_ /
+                            thisType.maxCombatFrameCounter_ *
+                            thisType.combatFrameCount_ +
+                            thisType.frameCount_);
+         }else{
+               frameCounter_ = modulo(frameCounter_ + delta,
+                                      thisType.maxFrameCounter_);
+            frame_ = moving_ ?
+                        int(frameCounter_ /
+                            thisType.maxFrameCounter_ *
+                            thisType.frameCount_) :
+                        0;
          }
-         if (combatFrameCounter_ < 0)
-            frame_ = thisType.frameCount_;
-         else
-            frame_ = int(combatFrameCounter_ /
-                         thisType.maxCombatFrameCounter_ *
-                         thisType.combatFrameCount_ +
-                         thisType.frameCount_);
-      }else{
-            frameCounter_ = modulo(frameCounter_ + delta,
-                                   thisType.maxFrameCounter_);
-         frame_ = moving_ ?
-                     int(frameCounter_ /
-                         thisType.maxFrameCounter_ *
-                         thisType.frameCount_) :
-                     0;
       }
    }
 }
-
+//TODO ?
 void Unit::setTarget(Entity *targetEntity, Point loc){
    targetEntity_ = targetEntity;
-   if (targetEntity == 0){
+   if (!targetEntity){
+      //keep target in-bounds
+      if (loc.x < 0)
+         loc.x = 0;
+      else if (loc.x >= game_->map.w)
+         loc.x = game_->map.w - 1;
+      if (loc.y < 0)
+         loc.y = 0;
+      else if (loc.y >= game_->map.h)
+         loc.y = game_->map.h - 1;
+
       target_ = loc;
+      combat_ = false;
    }else
       updateTarget();
    moving_ = !isAtTarget();
-   if (moving_ && targetEntity == 0)
+   if (moving_ && !targetEntity){
       findPath();
+   }
    //debug("Path clear: ", isPathClear(loc_, target_,
    //                                  *game_, *this));
 
-   updateTarget();
+   //updateTarget();
 }
 
 bool Unit::isAtTarget() const{
@@ -265,6 +296,7 @@ bool Unit::isAtTarget() const{
    if (path_.size() > 1 || !targetEntity_)
       return (distance(loc_, target) < margin);
    
+   //target is an entity
    else{
       SDL_Rect baseRect = getBaseRect();
       SDL_Rect targetRect = targetEntity_->getBaseRect();
@@ -282,7 +314,6 @@ bool Unit::isAtTarget() const{
       if (collision(targetRect, baseRect -
                                 Point(margin, margin)))
          return true;
-
       return false;
    }
 
@@ -343,105 +374,89 @@ void Unit::findPath(){
    debug("finding path");
    emptyQueue(path_);
    //if clear path, go straight there
-   if (false)//(isPathClear(loc_, target_))
+   if (isPathClear(loc_, target_)){
       path_.push(target_);
-
-
-   //path needs to be found
-   else{
-
-      //set up GRID for breadth-first search
-      //exploit integer division to keep nodes in-bounds
-      int gridWidth = loc_.x / PATH_GRID_SIZE +
-                      (game_->map.w - loc_.x) / PATH_GRID_SIZE;
-      int gridHeight = loc_.y / PATH_GRID_SIZE +
-                      (game_->map.h - loc_.y) / PATH_GRID_SIZE;
-      pixels_t gridLeft = loc_.x -
-                          (loc_.x / PATH_GRID_SIZE) *
-                          PATH_GRID_SIZE;
-      pixels_t gridTop = loc_.y -
-                         (loc_.y / PATH_GRID_SIZE) *
-                         PATH_GRID_SIZE;
-
-      bool **explored = (bool **)malloc(sizeof(bool *) * gridWidth);
-      for (int i = 0; i != gridWidth; ++i){
-         explored[i] = (bool *)malloc(sizeof(bool) * gridHeight);
-         for (int j = 0; j != gridHeight; ++j)
-            explored[i][j] = false;
-      }
-      int //location of this unit
-         startX = loc_.x / PATH_GRID_SIZE,
-         startY = loc_.y / PATH_GRID_SIZE;
-
-      //set up QUEUE of queues to store branching paths
-      typedef std::queue<Point> path_t;
-      path_t start;
-      start.push(loc_);
-      explored[startX][startY] = true;
-      std::queue<path_t> paths;
-      paths.push(start);
-
-      do{
-         for (int dir = DIR_UP; dir != DIR_MAX; ++dir){
-            path_t temp(paths.front());
-            Point next = temp.back(); // = current
-            switch (dir){
-            case DIR_UP:
-               next.y -= PATH_GRID_SIZE;
-               break;
-            case DIR_DOWN:
-               next.y += PATH_GRID_SIZE;
-               break;
-            case DIR_LEFT:
-               next.x -= PATH_GRID_SIZE;
-               break;
-            case DIR_RIGHT:
-               next.x += PATH_GRID_SIZE;
-               break;
-            }
-            //TODO replace these divisions
-            //check proposed node is okay
-            pixels_t
-               xIndex = (next.x - gridLeft) / PATH_GRID_SIZE,
-               yIndex = (next.y - gridTop) / PATH_GRID_SIZE;
-            if (xIndex < 0 || xIndex >= gridWidth)
-               continue;
-            if (yIndex < 0 || yIndex >= gridHeight)
-               continue;
-            if (explored[xIndex][yIndex])
-               continue;
-            explored[xIndex][yIndex] = true;
-            if (noCollision(*game_, type(), next, this, targetEntity_)){
-
-               //is this the node we're looking for?
-               temp.push(next);
-               if (distance(next, target_) <= PATH_GRID_SIZE){
-                  temp.push(target_);
-                  path_ = temp;
-                  emptyQueue(paths);
-                  break;
-               }else
-                  paths.push(temp);
-            }
-
-         }//for each direction
-         if (!paths.empty())
-            paths.pop();
-
-      }while (!paths.empty());
-
-      for (int i = 0; i != gridWidth; ++i)
-         free(explored[i]);
-      free(explored);
+      pathJustSet_  = true;
+      return;
    }
 
-   moving_ = true;
+   if (!noCollision(*game_, type(), target_, this, targetEntity_)){
+      moving_ = false;
+      path_.push(loc_);
+      return;
+   }
+
+   //path needs to be found
+   std::map<Point, bool> explored;
+   //set up queue of queues to store branching paths
+   typedef std::queue<Point> path_t;
+   path_t start;
+   start.push(loc_);
+   explored[loc_] = true;
+   std::queue<path_t> paths;
+   paths.push(start);
+
+   do{
+      for (int dir = DIR_UP; dir != DIR_MAX; ++dir){
+         path_t temp(paths.front());
+         Point next = temp.back(); // = current
+         switch (dir){
+         case DIR_UP:
+            next.y -= PATH_GRID_SIZE;
+            if (next.y < 0) continue;
+            break;
+         case DIR_DOWN:
+            next.y += PATH_GRID_SIZE;
+            if (next.y > game_->map.h) continue;
+            break;
+         case DIR_LEFT:
+            next.x -= PATH_GRID_SIZE;
+            if (next.x < 0) continue;
+            break;
+         case DIR_RIGHT:
+            next.x += PATH_GRID_SIZE;
+            if (next.x > game_->map.w) continue;
+            break;
+         }
+
+         //don't repeat nodes
+         if (explored[next])
+            continue;
+         explored[next] = true;
 
 
+         if (noCollision(*game_, type(), next, this, targetEntity_)){
+
+            //is this the node we're looking for?
+            temp.push(next);
+            if (distance(next, target_) <= PATH_GRID_SIZE){
+               temp.push(target_);
+               temp.pop(); //first node is the current location
+               path_ = temp;
+               moving_ = true;
+               pathJustSet_  = true;
+               return;
+            }
+            paths.push(temp);
+         }
+
+      }//for each direction
+      //discard the path that has now been extended
+      if (!paths.empty())
+         paths.pop();
+
+   }while (!paths.empty());
+
+   assert (path_.empty());
+   if (path_.empty()){
+      path_.push(loc_);
+      moving_ = false;
+   }
+   pathJustSet_  = true;
 }
 
 void Unit::updateTarget(){
-   if (targetEntity_ != 0){
+   if (targetEntity_){
       target_ = targetEntity_->getLoc();
       findPath();
    }else

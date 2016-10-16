@@ -113,7 +113,7 @@ void Entity::colorBlit(int color, SDL_Surface *screen,
                                        [thisClass];
 
    //make sure colored sprite is indexed; if not,
-   if (index == 0){
+   if (!index){
 
       //1. create it
       //debug("Creating indexed surface");
@@ -131,21 +131,21 @@ void Entity::colorBlit(int color, SDL_Surface *screen,
 
    //make sure shadow-colored sprites are indexed,
    //as for colored sprite above.
-   if (indexDark == 0){
+   if (!indexDark){
       indexDark = createSurface(thisType.surface_->w,
                                 thisType.surface_->h);
       setColorKey(indexDark);
       SDL_FillRect(indexDark, 0, ENGRAVE_DARK_UINT);
       SDL_BlitSurface(thisType.surface_, 0, indexDark, 0);
    }
-   if (indexLight == 0){
+   if (!indexLight){
       indexLight = createSurface(thisType.surface_->w,
                                 thisType.surface_->h);
       setColorKey(indexLight);
       SDL_FillRect(indexLight, 0, ENGRAVE_LIGHT_UINT);
       SDL_BlitSurface(thisType.surface_, 0, indexLight, 0);
    }
-   if (indexShadowed == 0){
+   if (!indexShadowed){
       //Create colored, shadowed surface, as above
       indexShadowed = createSurface(thisType.surface_->w + 2,
                                     thisType.surface_->h + 2);
@@ -156,7 +156,7 @@ void Entity::colorBlit(int color, SDL_Surface *screen,
       SDL_BlitSurface(indexDark, 0, indexShadowed, &makeRect(0, 0));
       SDL_BlitSurface(index, 0, indexShadowed, &makeRect(1, 1));
    }
-   if (drawBlack() && indexBlack == 0){
+   if (drawBlack() && !indexBlack){
       indexBlack = createSurface(thisType.surface_->w,
                                  thisType.surface_->h);
       setColorKey(indexBlack);
@@ -293,7 +293,7 @@ typeNum_t Entity::getPlayer() const{
 }
 
 SDL_Rect Entity::getSelectionDest(SDL_Surface *selection) const{
-   assert (selection != 0);
+   assert (selection);
    const EntityType &t = type();
    SDL_Rect r;
    r.x = loc_.x +

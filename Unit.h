@@ -36,6 +36,10 @@ class Unit : public Entity{
    double combatFrameCounter_;
    int frame_; //which frame to draw for this unit
 
+   //whether the path is fresh, and a tick of movement should
+   //be skipped
+   bool pathJustSet_;
+
    //smaller = finer, more accurate, slower pathfinding
    static const pixels_t PATH_GRID_SIZE;
 

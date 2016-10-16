@@ -15,14 +15,16 @@ void render(SDL_Surface *screen, SDL_Surface *selection,
             SDL_Surface *diagGreen, SDL_Surface *diagRed,
             SDL_Surface *map, SDL_Surface *darkMap,
             SDL_Surface *cursor, SDL_Surface *cursorShadow,
-            SDL_Surface *cursorPause,
+            SDL_Surface *cursorPause, SDL_Surface *cursorColor,
+            SDL_Surface **cursorIndex,
             const CoreData &core, const GameData &game,
             const UIBars_t &bars, const messageBoxes_t &messageBoxes);
 
 //Draws the cursor
 void renderCursor (SDL_Surface *screen, const GameData &game,
                    SDL_Surface *cursor, SDL_Surface *shadow,
-                   SDL_Surface *Pause);
+                   SDL_Surface *pause, SDL_Surface *color,
+                   SDL_Surface **cursorIndex);
 
 //Draws the terrain and border tiles
 void renderMap(SDL_Surface *screen, const GameData &game,

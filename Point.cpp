@@ -62,3 +62,21 @@ SDL_Rect operator-(SDL_Rect lhs, const Point &rhs){
    lhs.y -= rhs.y;
    return lhs;
 }
+
+bool Point::operator<(const Point &rhs) const{
+   if (x < rhs.x)
+      return true;
+   if (x > rhs.x)
+      return false;
+   return (y < rhs.y);
+}
+
+bool Point::operator==(const Point &rhs) const{
+   return
+      x == rhs.x &&
+      y == rhs.y;
+}
+
+bool Point::operator!=(const Point &rhs) const{
+   return !(*this == rhs);
+}

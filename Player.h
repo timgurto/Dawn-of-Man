@@ -40,7 +40,6 @@ class Player{
    static UIBar *buildingsBar_;
 
 public:
-   //TODO comments
    Player(Uint32 color,
           const resources_t &resources,
           const checklist_t &techsResearched);

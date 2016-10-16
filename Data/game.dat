@@ -1,8 +1,8 @@
 # map size; must be before any random entities,
 # if specified
 map{
-   x = 8;
-   y = 8;
+   x = 3;
+   y = 2;
 }
 
 # players; indices MUST increment, and there MUST be
@@ -37,14 +37,14 @@ building{
 # rocks
 decoration{
    type = 0;
-   random = 70;  # place 70 rocks
+   random = 7;  # place 70 rocks
 }
 
 # human starting caveman; random location
 unit{
    type = 1;
    player = 1;
-   random = 1;
+   random = 10;
    centerMap = true;
 }
 
@@ -52,19 +52,19 @@ unit{
 unit{
    type = 0;
    player = 2;
-   random = 30;
+   random = 3;
 }
 
 # some deer
 unit{
    type = 2;
-   random = 20;
+   random = 2;
 }
 
 # trees
 resourceNode{
    type = 0;
-   random = 100;
+   random = 10;
 }
 
 ;   any text below is ignored

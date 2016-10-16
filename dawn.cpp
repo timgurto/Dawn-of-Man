@@ -75,7 +75,7 @@ void setScreenResolution(int argc, char **argv){
    SDL_Rect** resolutions = SDL_ListModes(0, SDL_FULLSCREEN |
                                              SDL_HWSURFACE |
                                              SDL_DOUBLEBUF);
-   assert (resolutions != 0);
+   assert (resolutions);
    debug("Available resolutions:");
    //whether the default screen size is available
    bool defaultResOkay = false;
