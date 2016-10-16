@@ -70,6 +70,7 @@ bool Player::hasBuilding(typeNum_t i) const{
 void Player::researchTech(typeNum_t index){
    assert(!techsResearched_[index]);
    techsResearched_[index] = true;
+   bonuses_ += game_->techs[index].getBonuses();
 }
 
 void Player::buildBuilding(typeNum_t index){

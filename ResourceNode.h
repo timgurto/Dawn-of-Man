@@ -31,7 +31,7 @@ public:
 
    //remove some resources from the node, and return the
    //amount harvested
-   Resources harvest();
+   Resources harvest(Resources bonus = Resources());
 
    //get
    virtual int getColor() const;

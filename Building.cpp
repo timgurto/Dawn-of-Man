@@ -94,7 +94,8 @@ typeNum_t Building::getPlayer() const{
 void Building::progressConstruction(){
    const BuildingType &thisType =
       (const BuildingType &) type();
-   progress_ += PROGRESS_PER_BUILDER_HIT;
+   progress_ += PROGRESS_PER_BUILDER_HIT + game_->
+                players[player_].getBonuses().buildingSpeed;
    if (progress_ >= thisType.maxProgress_){
       finished_ = true;
       drawPercent_ = FULL;
@@ -131,11 +132,14 @@ bool Building::isFinished() const{
 
 damage_t Building::getArmor() const{
    return
-      game_->buildingTypes[typeIndex_].armor_;
+      game_->buildingTypes[typeIndex_].armor_ +
+      game_->players[player_].getBonuses().buildingArmor;
 }
 
 damage_t Building::getHealth() const{
-   return health_;
+   return 
+      health_ +
+      game_->players[player_].getBonuses().buildingHealth;
 }
 
 void Building::removeHealth(damage_t damage){

@@ -152,48 +152,6 @@ void gameMode(){
                                 rand() % game.map.w,
                                 rand() % game.map.h)));
 
-   //unit types
-
-
-   resources_t gruntCost(4, 0); gruntCost[0] = 80;
-   UnitType grunt(1, "Caveman",
-                  makeRect(-22, -107, 70, 113),
-                  makeRect(-22,-6, 53, 11),
-                  Point(3, -55),
-                  gruntCost,
-                  8, //speed
-                  25, 8, //frames
-                  10, 4, 25, //combat frames
-                  25, 5, 0, //combat details
-                  true, //builder
-                  true, //gatherer
-                  0, //origin building
-                  1000, //progress cost
-                  NO_TYPE,
-                  NO_TYPE,
-                  "abadacus.wav",
-                  "mandeath0.wav",
-                  "clubman.wav");
-   resources_t deerCost(4, 0);
-   UnitType deer(2, "Deer",
-                 makeRect(-132, -155, 235, 165),
-                 makeRect(-67, -52, 139, 82),
-                 Point(-29, -64),
-                 gruntCost,
-                 14, //speed
-                 17, 8, //frames
-                 13, 4, 5, //combat frames
-                 20, 8, 0, //combat details
-                 true, //builder
-                 true, //gatherer
-                 NO_TYPE, //origin building
-                 1000, //progress cost
-                 1); //resource at death
-   game.unitTypes.push_back(grunt);
-   game.unitTypes.push_back(deer);
-   for (typeNum_t i = 0; i != game.unitTypes.size(); ++i)
-      assert (game.unitTypes[i].getIndex() == i);
-
    //human start: one grunt
    Unit *newGrunt = new Unit(1,
                              Point(rand() % game.map.w,
@@ -202,6 +160,7 @@ void gameMode(){
                              1000);
    addEntity(game, newGrunt);
    centerMap(game, newGrunt->getLoc());
+
    //computer start: a bunch of generics
    for (int i = 0; i != 30; ++i){
       pixels_t x, y;
@@ -212,6 +171,7 @@ void gameMode(){
                           Point(x, y)));
       addEntity(game, new Unit(0, Point(x, y), 2, 1000));
    }
+
    //nature start: some deer
    for (int i = 0; i != 20; ++i){
       pixels_t x, y;
@@ -223,31 +183,6 @@ void gameMode(){
       addEntity(game, new Unit(2, Point(x, y), NATURE_PLAYER, 1000));
    }
 
-   //resource node types
-   resources_t treeMax, treeYield;
-   treeMax.push_back(75);
-   treeYield.push_back(5);
-   ResourceNodeType tree(0, "Tree",
-                     makeRect(-56, -132, 114, 133),
-                     makeRect(-17, -5, 34, 12),
-                     Point(2, -78),
-                     treeMax,
-                     treeYield,
-                     CLR_RESOURCE_WOOD);
-   resources_t deerMax, deerYield;
-   deerMax.push_back(50);
-   deerYield.push_back(3);
-   //Unit --> Resource: resource's baseRect should be the same or smaller
-   ResourceNodeType deadDeer(1, "Dead Deer",
-                             makeRect(-110, -112, 219, 141),
-                             makeRect(-67, -52, 139, 82),
-                             Point(-19, -32),
-                             deerMax,
-                             deerYield,
-                             CLR_RESOURCE_FOOD);
-   game.resourceNodeTypes.push_back(tree);
-   game.resourceNodeTypes.push_back(deadDeer);
-
    //starting trees
    for (int i = 0; i != 100; ++i){
       pixels_t x, y;
@@ -258,12 +193,6 @@ void gameMode(){
                           Point(x, y)));
       addEntity(game, new ResourceNode(0, Point(x, y)));
    }
-
-   //techs
-   resources_t fireShieldCost(4, 0); fireShieldCost[0] = 200;
-   TechBonuses fireShieldBonuses(5);
-   Tech fireArmor(0, "Fire Armor", fireShieldBonuses, 0, fireShieldCost);
-   game.techs.push_back(fireArmor);
 
    checklist_t noneResearched(game.techs.size(), false);
    game.players.push_back(Player(0x735e3e, noneResearched)); //0: nature
@@ -339,30 +268,48 @@ void initializeData(char *filename, GameData &game){
       std::string
          name = "",
          soundFile = "",
-         deathSoundFile = "";
+         deathSoundFile = "",
+         hitSoundFile = "";
       bool
-         collides = false;
+         collides = false,
+         builder = false,
+         gatherer = false;
       typeNum_t
          index = NO_TYPE,
          prereqBuilding = NO_TYPE,
-         prereqTech = NO_TYPE;
+         prereqTech = NO_TYPE,
+         prereqTech2 = NO_TYPE,
+         originBuilding = NO_TYPE,
+         resourceAtDeath = NO_TYPE;
       damage_t
          maxHealth = 1,
-         armor = 0;
+         armor = 0,
+         attack = 0;
       pixels_t
          speed = 8;
       progress_t
          progressCost = 0;
+      frames_t
+         maxFrameCounter = 0,
+         frameCount = 1,
+         maxCombatFrameCounter = 0,
+         combatFrameCount = 1,
+         combatWait = 1;
       int
-         maxFrameCounter = 0;
+         color = 0;
       SDL_Rect
          drawRect = makeRect(),
          baseRect = makeRect();
       Point
          selectionCenter = Point();
+      TechBonuses
+         bonus;
       resources_t
-         cost(resourceCount, 0);
+         cost(resourceCount, 0),
+         maxResources(resourceCount, 0),
+         yield(resourceCount, 0);
 
+      //read object name
       std::string object = parseToken(data);
       if (object == ";")
          break;
@@ -373,6 +320,7 @@ void initializeData(char *filename, GameData &game){
          std::string attr = parseToken(data);
          if (attr == "}")
             break;
+
          assert (attr[attr.size()-1] == '=');
          removeLast(attr);
          std::string val = parseToken(data);
@@ -397,23 +345,51 @@ void initializeData(char *filename, GameData &game){
          }
 
          //read attribute into relevant var
-         if (attr == "name"){
+         if (attr == "name")
             name = val;
-         }else if (attr == "collides"){
+         else if (attr == "soundFile")
+            soundFile = val;
+         else if (attr == "deathSoundFile")
+            deathSoundFile = val;
+         else if (attr == "hitSoundFile")
+            hitSoundFile = val;
+         else if (attr == "collides")
             collides = numVal != 0;
-         }else if (attr == "index"){
+         else if (attr == "builder")
+            builder = numVal != 0;
+         else if (attr == "gatherer")
+            gatherer = numVal != 0;
+         else if (attr == "index")
             index = typeNum_t(numVal);
-         }else if (attr == "prereqBuilding"){
+         else if (attr == "prereqBuilding")
             prereqBuilding = typeNum_t(numVal);
-         }else if (attr == "maxHealth"){
+         else if (attr == "originBuilding")
+            originBuilding = typeNum_t(numVal);
+         else if (attr == "resourceAtDeath")
+            resourceAtDeath = typeNum_t(numVal);
+         else if (attr == "maxHealth")
             maxHealth = damage_t(numVal);
-         }else if (attr == "armor"){
+         else if (attr == "armor")
             armor = damage_t(numVal);
-         }else if (attr == "speed"){
+         else if (attr == "attack")
+            attack = damage_t(numVal);
+         else if (attr == "speed")
             speed = pixels_t(numVal);
-         }else if (attr == "progressCost"){
+         else if (attr == "progressCost")
             progressCost = progress_t(numVal);
-         }else if (attr.substr(0, 9) == "drawRect."){
+         else if (attr == "maxFrameCounter")
+            maxFrameCounter = frames_t(numVal);
+         else if (attr == "frameCount")
+            frameCount = frames_t(numVal);
+         else if (attr == "maxCombatFrameCounter")
+            maxCombatFrameCounter = frames_t(numVal);
+         else if (attr == "combatFrameCount")
+            combatFrameCount = frames_t(numVal);
+         else if (attr == "combatWait")
+            combatWait = frames_t(numVal);
+         else if (attr == "color")
+            color = EntityColor(int(numVal + CLR_DEFAULT));
+         else if (attr.substr(0, 9) == "drawRect."){
             char c = attr[9];
             if (c == 'x')
                drawRect.x = pixels_t(numVal);
@@ -439,12 +415,58 @@ void initializeData(char *filename, GameData &game){
                selectionCenter.x = pixels_t(numVal);
             else if (c == 'y')
                selectionCenter.y = pixels_t(numVal);
+         }else if (attr.substr(0, 16) == "bonus.gathering."){
+            typeNum_t i = resourceIndices[attr.substr(16)];
+            //ensure gathering bonus is big enough
+            while (bonus.gathering.size() < i)
+               bonus.gathering.push_back(0);
+            bonus.gathering[i] = resource_t(numVal);
+         }else if (attr.substr(0, 6) == "bonus."){
+            std::string sub = attr.substr(6);
+            if (sub == "unitHealth")
+               bonus.unitHealth = damage_t(numVal);
+            else if (sub == "unitArmor")
+               bonus.unitArmor = damage_t(numVal);
+            else if (sub == "unitAttack")
+               bonus.attack = damage_t(numVal);
+            else if (sub == "buildingHealth")
+               bonus.buildingHealth = damage_t(numVal);
+            else if (sub == "buildingArmor")
+               bonus.buildingArmor = damage_t(numVal);
+            else if (sub == "unitSpeed")
+               bonus.speed = pixels_t(numVal);
+            else if (sub == "trainingSpeed")
+               bonus.trainingSpeed = progress_t(numVal);
+            else if (sub == "buildingSpeed")
+               bonus.buildingSpeed = damage_t(numVal);
+            else if (sub == "unitArmor")
+               bonus.unitArmor = damage_t(numVal);
+            else if (sub == "unitArmor")
+               bonus.unitArmor = damage_t(numVal);
+            else if (sub == "unitArmor")
+               bonus.unitArmor = damage_t(numVal);
+            else if (sub == "unitArmor")
+               bonus.unitArmor = damage_t(numVal);
+            else if (sub == "unitArmor")
+               bonus.unitArmor = damage_t(numVal);
          }else if (attr.substr(0, 5) == "cost."){
             typeNum_t i = resourceIndices[attr.substr(5)];
             //ensure cost is big enough
-            while (i >= cost.size())
+            while (cost.size() < i)
                cost.push_back(0);
             cost[i] = resource_t(numVal);
+         }else if (attr.substr(0, 13) == "maxResources."){
+            typeNum_t i = resourceIndices[attr.substr(13)];
+            //ensure maxResources is big enough
+            while (maxResources.size() < i)
+               maxResources.push_back(0);
+            maxResources[i] = resource_t(numVal);
+         }else if (attr.substr(0, 6) == "yield."){
+            typeNum_t i = resourceIndices[attr.substr(6)];
+            //ensure yield is big enough
+            while (yield.size() < i)
+               yield.push_back(0);
+            yield[i] = resource_t(numVal);
          }
 
       }
@@ -457,14 +479,30 @@ void initializeData(char *filename, GameData &game){
          cost.push_back(0);
       }else if (object == "buildingType"){
          BuildingType temp(index, name, drawRect, baseRect,
-                           selectionCenter, cost, maxHealth,
-                           armor, progressCost,
-                           prereqBuilding, prereqTech,
+                           selectionCenter, cost, maxHealth, armor,
+                           progressCost, prereqBuilding, prereqTech,
                            soundFile, deathSoundFile);
          game.buildingTypes.push_back(temp);
       }else if (object == "decorationType"){
          DecorationType temp(index, name, drawRect, baseRect, collides);
          game.decorationTypes.push_back(temp);
+      }else if (object == "unitType"){
+         UnitType temp(index, name, drawRect, baseRect, selectionCenter,
+                       cost, speed, maxFrameCounter, frameCount,
+                       maxCombatFrameCounter, combatFrameCount, combatWait,
+                       maxHealth, attack, armor, builder, gatherer,
+                       originBuilding, progressCost, resourceAtDeath,
+                       prereqTech, soundFile, deathSoundFile, hitSoundFile);
+         game.unitTypes.push_back(temp);
+      }else if (object == "resourceNodeType"){
+         ResourceNodeType temp(index, name, drawRect, baseRect,
+                               selectionCenter, maxResources, yield,
+                               EntityColor(color));
+         game.resourceNodeTypes.push_back(temp);
+      }else if (object == "technology"){
+         Tech temp(index, name, bonus, originBuilding, cost, prereqTech,
+                   prereqTech2);
+         game.techs.push_back(temp);
       }
 
    }
@@ -478,29 +516,13 @@ void initializeData(char *filename, GameData &game){
       assert (game.buildingTypes[i].getIndex() == i);
    for (typeNum_t i = 0; i != game.decorationTypes.size(); ++i)
       assert (game.decorationTypes[i].getIndex() == i);
+   for (typeNum_t i = 0; i != game.unitTypes.size(); ++i)
+      assert (game.unitTypes[i].getIndex() == i);
+   for (typeNum_t i = 0; i != game.resourceNodeTypes.size(); ++i)
+      assert (game.resourceNodeTypes[i].getIndex() == i);
+   for (typeNum_t i = 0; i != game.techs.size(); ++i)
+      assert (game.techs[i].getIndex() == i);
    
    
 //TODO check all prereqs, originBuildings etc. are in-bounds or NO_TYPE
 }
-
-   //resources_t genericCost(4, 0); genericCost[0] = 50;
-   //UnitType generic(0, "Warrior",
-   //               makeRect(-22, -107, 70, 113),
-   //               makeRect(-22,-6, 53, 11),
-   //               Point(3, -55),
-   //               genericCost,
-   //               8, //speed
-   //               25, 8, //frames
-   //               10, 4, 25, //combat frames
-   //               50, 10, 2, //combat details
-   //               false, //builder
-   //               false, //gatherer
-   //               1, //origin building
-   //               1000, //progress cost
-   //               NO_TYPE,
-   //               NO_TYPE,
-   //               "SKING1.WAV",
-   //               "mandeath0.wav",
-   //               "clubman.wav");
-
-   //game.unitTypes.push_back(generic);

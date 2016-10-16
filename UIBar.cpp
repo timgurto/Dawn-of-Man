@@ -135,6 +135,7 @@ void UIBar::init(GameData *game,
 
 void UIBar::click(){
    clickFun_(mouseIndex(), *game_);
+   calculateRect();
 }
 
 std::string UIBar::helpText(typeNum_t index){

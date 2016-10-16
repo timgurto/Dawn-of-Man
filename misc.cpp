@@ -446,7 +446,12 @@ std::string parseToken(std::ifstream &data){
       if (c == '\"'){
          os << c;
          do{
-            data >> c;
+            //stop >> from ignoring spaces
+            if (data.peek() == ' '){
+               c = ' ';
+               data.ignore(1);
+            }else
+               data >> c;
             os << c;
          }while(c != '\"');
          data >> c;

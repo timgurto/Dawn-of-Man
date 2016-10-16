@@ -72,7 +72,9 @@ void Unit::tick(double delta){
 
    //training
    if (!finished_){
-      progress_ += delta * PROGRESS_PER_CALC;
+      progress_ += delta * (PROGRESS_PER_CALC + game_->
+                            players[player_].getBonuses().
+                            trainingSpeed);
       //debug("progress = ", progress_);
       if (progress_ >= thisType.maxProgress_){
          finished_ = true;
@@ -115,7 +117,7 @@ void Unit::tick(double delta){
          double xMod = cos(angle);
          double yMod = sin(angle);
 
-         double speed = delta * thisType.speed_;
+         double speed = delta * getSpeed();
          pixels_t
             xDelta = pixels_t(xMod * speed),
             yDelta = pixels_t(yMod * speed);
@@ -183,7 +185,7 @@ void Unit::tick(double delta){
                      target.progressConstruction();
                   //enemy building: attack
                   }else if(targetPlayer != player_){
-                     damage_t damage = thisType.attack_ - target.getArmor();
+                     damage_t damage = getAttack() - target.getArmor();
                      if (damage > target.getHealth())
                         target.kill();
                      else
@@ -195,12 +197,13 @@ void Unit::tick(double delta){
             case ENT_UNIT:
                {//local scope for target, targetType, damage
                   Unit &target = (Unit &)(*targetEntity_);
-                  damage_t damage = thisType.attack_ - target.getArmor();
-                  if (damage > target.health_)
+                  damage_t damage = getAttack() - target.getArmor();
+                  if (damage > target.getHealth())
                      target.kill();
                   else{
                      target.health_ -= damage;
-                     if (target.getTargetEntity() == 0)
+                     if (target.getTargetEntity() == 0 &&
+                         !target.moving_)
                         target.setTarget(this);
                   }
                   break;
@@ -277,7 +280,7 @@ void Unit::setTarget(Entity *targetEntity, Point loc){
 }
 
 bool Unit::isAtTarget() const{
-   pixels_t margin = game_->unitTypes[typeIndex_].speed_;
+   pixels_t margin = getSpeed();
    if (targetEntity_ == 0)
       //straight distance to a point
       return (distance(loc_, target_) < margin);
@@ -288,11 +291,12 @@ bool Unit::isAtTarget() const{
       if (collision(targetRect, baseRect +
                                 Point(margin, margin)))
          return true;
+      pixels_t negMargin = -1 * margin;
       if (collision(targetRect, baseRect +
-                                Point(margin, -1 * margin)))
+                                Point(margin, negMargin)))
          return true;
       if (collision(targetRect, baseRect +
-                                Point(-1 * margin, margin)))
+                                Point(negMargin, margin)))
          return true;
       if (collision(targetRect, baseRect -
                                 Point(margin, margin)))
@@ -328,4 +332,22 @@ damage_t Unit::getArmor() const{
    return
       game_->unitTypes[typeIndex_].armor_ +
       game_->players[player_].getBonuses().unitArmor;
+}
+
+damage_t Unit::getHealth() const{
+   return
+      health_ +
+      game_->players[player_].getBonuses().unitHealth;
+}
+
+damage_t Unit::getAttack() const{
+   return
+      game_->unitTypes[typeIndex_].attack_ +
+      game_->players[player_].getBonuses().attack;
+}
+
+pixels_t Unit::getSpeed() const{
+   return
+      game_->unitTypes[typeIndex_].speed_ +
+      game_->players[player_].getBonuses().speed;
 }

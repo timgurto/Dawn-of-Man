@@ -163,8 +163,8 @@ enum EntityColor{
    CLR_SHADOW_LIGHT,
    CLR_BLACK,
    CLR_DECORATION,
-   CLR_RESOURCE_WOOD,
    CLR_RESOURCE_FOOD,
+   CLR_RESOURCE_WOOD,
 
    CLR_MAX //for array sizes
 };

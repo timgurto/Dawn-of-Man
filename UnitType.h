@@ -15,19 +15,19 @@ class UnitType: public EntityType{
    pixels_t speed_; //movement per tick, in px
    
    //the number of walking animation frames
-   int frameCount_;
+   frames_t frameCount_;
    
    //how long the walking animation cycle takes
-   int maxFrameCounter_;
+   frames_t maxFrameCounter_;
 
    //the number of combat animation frames
-   int combatFrameCount_;
+   frames_t combatFrameCount_;
 
    //how long the combat anumation cycle takes
-   int maxCombatFrameCounter_;
+   frames_t maxCombatFrameCounter_;
 
    //extra wait time before each combat cycle
-   int combatWait_;
+   frames_t combatWait_;
 
    //the unit's maximum/full health value
    damage_t maxHealth_;
@@ -72,11 +72,11 @@ public:
             const Point &selectionCenter,
             const Resources &cost,
             pixels_t speed = 0,
-            int maxFrameCounter = 0,
-            int frameCount = 1,
-            int maxCombatFrameCounter = 0,
-            int combatFrameCount = 1,
-            int combatWait = 1,
+            frames_t maxFrameCounter = 0,
+            frames_t frameCount = 1,
+            frames_t maxCombatFrameCounter = 0,
+            frames_t combatFrameCount = 1,
+            frames_t combatWait = 1,
             damage_t maxHealth = 1,
             damage_t attack = 0,
             damage_t armor = 0,

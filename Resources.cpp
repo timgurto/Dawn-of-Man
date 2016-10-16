@@ -10,7 +10,7 @@ size_t Resources::resourceCount_ = 0;
 std::vector<std::string> Resources::names_;   
 
 Resources::Resources():
-vals_(resources_t(resourceCount_, 100)){}
+vals_(resources_t(resourceCount_, 0)){}
 
 Resources::Resources(const resources_t &v):
 vals_(v){}
@@ -24,20 +24,26 @@ Resources Resources::empty(){
    return resources_t(resourceCount_, 0);
 }
 
-Resources &Resources::operator+=(const Resources rhs){
+Resources &Resources::operator+=(const Resources &rhs){
    for (size_t i = 0; i != resourceCount_; ++i)
       vals_[i] += rhs.vals_[i];
    return *this;
 }
 
-Resources &Resources::operator-=(const Resources rhs){
+Resources Resources::operator+(const Resources &rhs) const{
+   Resources result = *this;
+   result += rhs;
+   return result;
+}
+
+Resources &Resources::operator-=(const Resources &rhs){
    for (size_t i = 0; i != resourceCount_; ++i)
       vals_[i] -= rhs.vals_[i];
    return *this;
 }
 
 
-bool Resources::operator>=(const Resources rhs) const{
+bool Resources::operator>=(const Resources &rhs) const{
    for (size_t i = 0; i != resourceCount_; ++i)
       //check all resources are >= rhs
       if (vals_[i] < rhs.vals_[i])
@@ -74,4 +80,8 @@ resource_t Resources::sum() const{
    return std::accumulate(vals_.begin(),
                           vals_.end(),
                           0);
+}
+
+size_t Resources::getResourceCount(){
+   return resourceCount_;
 }

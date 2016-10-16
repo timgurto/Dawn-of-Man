@@ -27,12 +27,12 @@ public:
    Resources();
    Resources(const resources_t &v);
 
-   Resources &operator+=(const Resources rhs);
-   //Resources operator+(const Resources rhs);
-   Resources &operator-=(const Resources rhs);
+   Resources &operator+=(const Resources &rhs);
+   Resources operator+(const Resources &rhs) const;
+   Resources &operator-=(const Resources &rhs);
    //Resources operator-(const Resources rhs);
    //bool operator<(const Resources rhs) const;
-   bool operator>=(const Resources rhs) const;
+   bool operator>=(const Resources &rhs) const;
 
    bool isEmpty() const;
 
@@ -44,6 +44,8 @@ public:
    std::string str() const;
 
    resource_t sum() const;
+
+   static size_t getResourceCount();
 };
 
 #endif

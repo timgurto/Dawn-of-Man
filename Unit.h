@@ -67,6 +67,9 @@ public:
    virtual int getColor() const;
    virtual typeNum_t getPlayer() const;
    virtual double getDrawPercent() const;
+   damage_t getHealth() const;
+   damage_t getAttack() const;
+   pixels_t getSpeed() const;
 };
 
 #endif

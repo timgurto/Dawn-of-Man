@@ -27,15 +27,16 @@ bool ResourceNode::drawBlack() const{
       ENTITY_BLACK_HEALTH;
 }
 
-Resources ResourceNode::harvest(){
+Resources ResourceNode::harvest(Resources bonus){
    const ResourceNodeType &thisType =
       game_->resourceNodeTypes[typeIndex_];
    Resources yield = Resources::empty();
-   if (resources_ >= thisType.yield_)
-      yield = thisType.yield_;
+   Resources maxYield = thisType.yield_ + bonus;
+   if (resources_ >= maxYield)
+      yield = maxYield;
    else{
       for (size_t i = 0; i != Resources::resourceCount_; ++i){
-         yield.vals_[i] = min(thisType.yield_.vals_[i],
+         yield.vals_[i] = min(maxYield.vals_[i],
                               resources_.vals_[i]);
       }
    }

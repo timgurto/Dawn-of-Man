@@ -25,5 +25,8 @@ typedef unsigned short damage_t;
 //the amount of a single resource type,
 typedef unsigned resource_t;
 
+//dealing with animation frames
+typedef Uint8 frames_t;
+
 //Mix_Chunk is a stupid name
 typedef Mix_Chunk SDL_Sound;
