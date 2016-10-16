@@ -69,7 +69,7 @@ Surface::Surface(const Surface &original):
 isScreen_(false), //copy = not screen buffer
 surface_(SDL_ConvertSurface(original.surface_,
                             original.surface_->format,
-                            SDL_SWSURFACE)){
+                            SDL_HWSURFACE)){
    //TODO try SDL_HWSURFACE
    if (surface_)
       ++surfacesLoaded_;
@@ -96,7 +96,7 @@ const Surface &Surface::operator=(const Surface &rhs){
    
    surface_ = SDL_ConvertSurface(rhs.surface_,
                                  rhs.surface_->format,
-                                 SDL_SWSURFACE);
+                                 SDL_HWSURFACE);
    //TODO try SDL_HWSURFACE here too
    ++surfacesLoaded_;
    return *this;
@@ -157,8 +157,7 @@ void Surface::draw(Surface &dst,
                    SDL_Rect *dstRect, SDL_Rect *srcRect) const{
    SDL_BlitSurface(surface_, srcRect, dst.surface_, dstRect);
 }
-//TODO fix this, then replace all appropriate draw() calls
-//dst << src
+
 void operator<<(Surface &dst, const Surface &src){
    src.draw(dst);
 }

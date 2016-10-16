@@ -92,7 +92,7 @@ void renderCursor (Surface &screen, const GameData &game,
    cursor.draw(screen, &makeRect(cursorPos)); //cursor
 
    //color
-   int colorIndex = game.cursorColor;
+   unsigned colorIndex = game.cursorColor;
    if (colorIndex != CLR_MAX){
       //same technique as with coloring entities
       assert (colorIndex < CLR_MAX);
@@ -106,7 +106,7 @@ void renderCursor (Surface &screen, const GameData &game,
          assert (color);
          index = Surface(SUR_BLANK, color->w, color->h, ENTITY_BACKGROUND);
          index.fill(getEntityColor(game, colorIndex));
-         color << index;
+         index << color;
       }
 
       //colored index definitely exists now

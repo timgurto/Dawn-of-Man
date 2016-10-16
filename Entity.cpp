@@ -168,7 +168,7 @@ void Entity::colorBlit(int color, Surface &screen,
                            thisType.surface_->h + 2,
                            ENTITY_BACKGROUND);
       indexBlack.fill(BLACK);
-      indexBlack << thisType.surface_);
+      indexBlack << thisType.surface_;
       if (BLACK_ENTITY_ALPHA < 0xff)
          indexBlack.setAlpha(BLACK_ENTITY_ALPHA);
    }
