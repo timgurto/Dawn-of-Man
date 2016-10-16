@@ -34,6 +34,11 @@ bool Screen::windowedMode_ = DEBUG;
 unsigned Screen::goDefault_(Screen &thisScreen, const void *data){
    assert(!data);
 
+   //clear all rollover
+   for (elements_t::iterator it = thisScreen.elements_.begin();
+        it != thisScreen.elements_.end(); ++it)
+      it->rollover_ = false;
+
    while(thisScreen.loop_){
       int result = thisScreen.handleEventsDefault_();
       //if a button was clicked
@@ -58,6 +63,22 @@ int Screen::handleEventsDefault_(){
       case SDL_MOUSEMOTION:
          mousePos.x = event.motion.x;
          mousePos.y = event.motion.y;
+
+         //check whether over any buttons, for rollover color
+         { //new scope for found
+            bool found = false;
+            for (elements_t::iterator it = elements_.begin();
+                 it != elements_.end(); ++it){
+               it->rollover_ = false;
+               if (!found) //only consider one collision
+                  if (collision(it->image_->clip_rect + it->loc_,
+                                mousePos)){
+                     it->rollover_ = true;
+                     //debug("rollover: ", it->text_);
+                     found = true;
+                  }
+            }
+         }
 
          //TODO context help
          //TODO rollover color for buttons
@@ -99,15 +120,6 @@ int Screen::handleEventsDefault_(){
                   collision(it->image_->clip_rect + it->loc_,
                             mousePos))
                      return it->id_;
-            break;
-         }
-         break;
-
-      //A mouse button is released
-      case SDL_MOUSEBUTTONUP:
-         switch (event.button.button){
-         case MOUSE_BUTTON_LEFT:
-            //check buttons/other elements
             break;
          }
          break;

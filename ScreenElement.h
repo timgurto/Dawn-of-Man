@@ -3,6 +3,7 @@
 #ifndef SCREEN_ELEMENT_H
 #define SCREEN_ELEMENT_H
 
+#include <vector>
 #include <string>
 #include "Point.h"
 #include "Surface.h"
@@ -21,8 +22,11 @@ enum Anchor{
 
 enum ScreenElementType{
    ELEM_LABEL,
-   ELEM_BUTTON //can be cicked to return its id_
+   ELEM_BUTTON //can be clicked to return its id_
 };
+
+class ScreenElement;
+typedef std::vector<ScreenElement> elements_t;
 
 class ScreenElement{
    friend class Screen;
@@ -33,18 +37,22 @@ class ScreenElement{
 
    //location of the element
    Point loc_;
+
+   //whether the element has the mouse over it
+   bool rollover_;
    
    //the element's type (button, label, etc.)
    ScreenElementType type_;
 
-   //element's complete image
-   Surface image_;
+   //element's complete images
+   Surface image_, altImage_;
 
    //the text that appears on the element
    std::string text_;
 
    static SDL_Color defaultLabelColor_;
    static SDL_Color defaultButtonColor_;
+   static SDL_Color defaultButtonAltColor_; //rollover
    static int defaultFontSize_;
    static std::string defaultFontName_;
 

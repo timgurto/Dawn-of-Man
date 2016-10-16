@@ -32,6 +32,7 @@ enum ButtonID{
    BUTTON_NEW,
    BUTTON_CREDITS
 };
+
 int main(int argc, char **argv){
 
    //seed random generator

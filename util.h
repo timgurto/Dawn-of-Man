@@ -21,8 +21,9 @@ bool operator==(const SDL_Color &lhs, const SDL_Color &rhs);
 //SDL_Color -> Uint32
 Uint32 colorToUInt(const SDL_Color &color);
 
-//SDL_Color / int
-SDL_Color operator/(const SDL_Color &lhs, int rhs);
+//SDL_Color */ double
+SDL_Color operator*(const SDL_Color &lhs, double rhs);
+SDL_Color operator/(const SDL_Color &lhs, double rhs);
 
 //returns a rectangle with equal dimensions, but blank co-ordinates
 SDL_Rect dimRect(const SDL_Rect &original);

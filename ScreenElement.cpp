@@ -10,6 +10,7 @@
 
 SDL_Color      ScreenElement::defaultLabelColor_ = WHITE;
 SDL_Color      ScreenElement::defaultButtonColor_ = YELLOW;
+SDL_Color      ScreenElement::defaultButtonAltColor_ = {0xca, 0x65, 0x0};
 int            ScreenElement::defaultFontSize_ = 30;
 std::string    ScreenElement::defaultFontName_ = FONT_GAME;
 const int      ScreenElement::NO_ID = -1;
@@ -36,10 +37,10 @@ id_(id){
                   defaultLabelColor_ :
                   defaultButtonColor_;
 
-
    //text surfaces
    TTF_Font *font = TTF_OpenFont(fontName.c_str(), fontSize);
    Surface textSurface(font, text, fontColor);
+   Surface altSurface(font, text, defaultButtonAltColor_);
    Surface textLight(font, text, ENGRAVE_LIGHT / 2);
    Surface textDark (font, text, ENGRAVE_DARK / 2);   
    TTF_CloseFont(font);
@@ -52,11 +53,22 @@ id_(id){
    image_.setColorKey(GREEN);
    image_.fill(GREEN);
 
+   altImage_ = image_; //hope this works!
+
    if (background)
       image_ << *background;
    textLight  .draw(image_, &makeRect(2, 2));
    textDark   .draw(image_);
    textSurface.draw(image_, &makeRect(1, 1));
+
+   //alternate rollover image for buttons
+   if (type_ == ELEM_BUTTON){
+      if (background)
+         altImage_ << *background;
+      textLight .draw(altImage_, &makeRect(2, 2));
+      textDark  .draw(altImage_);
+      altSurface.draw(altImage_, &makeRect(1, 1));
+   }
 
 
    //loc_
@@ -82,5 +94,8 @@ id_(id){
 }
 
 void ScreenElement::draw() const{
-   image_.draw(screenBuf, &makeRect(loc_));
+   if (type_ == ELEM_BUTTON && rollover_)
+      altImage_.draw(screenBuf, &makeRect(loc_));
+   else
+      image_.draw(screenBuf, &makeRect(loc_));
 }

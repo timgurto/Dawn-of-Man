@@ -26,7 +26,7 @@ private:
    bool loop_;
 
    //the on-screen elements
-   std::vector<ScreenElement> elements_;
+   elements_t elements_;
 
    //Default screen resolutions - 16:10 16:9 and 4:3
    static const Point defaultRes_[];
