@@ -58,7 +58,6 @@ public:
                     SDL_Surface *vBarSurface,
                     SDL_Surface *hBarSurface);
 
-   //TODO: call whenever tech levels change, buildings constructed, etc.
    //determines the number of icons on the bar, and
    //calculates the rectangle for drawing it
    void calculateRect();

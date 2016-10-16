@@ -136,7 +136,7 @@ void handleEvents(const CoreData &core, GameData &game,
          case SDLK_KP_PLUS:
             //HACK remove this cheat
             {
-               resources_t cheatResources(4, 1337);
+               resources_t cheatResources(Resources::getResourceCount(), 1337);
                game.players[HUMAN_PLAYER].addResources(cheatResources);
             }
             break;
@@ -164,6 +164,9 @@ void handleEvents(const CoreData &core, GameData &game,
             case MODE_CONSTRUCTION:
                game.toBuild = NO_TYPE;
                game.mode = MODE_NORMAL;
+               for (UIBars_t::iterator it = bars.begin(); it != bars.end(); ++it)
+               if ((*it)->isActive())
+                  (*it)->calculateRect();
                break;
             }
             break;
@@ -251,8 +254,11 @@ void handleEvents(const CoreData &core, GameData &game,
                   switch(game.mode){
                   case MODE_CONSTRUCTION:
                      //cancel build mode
+                     game.toBuild = NO_TYPE;
                      game.mode = MODE_BUILDER;
-                     
+                     for (UIBars_t::iterator it = bars.begin(); it != bars.end(); ++it)
+                        if ((*it)->isActive())
+                           (*it)->calculateRect();
                      break;
                   default:
                      setSelectedTargets(game);
@@ -312,6 +318,9 @@ void handleEvents(const CoreData &core, GameData &game,
                         //if(!isKeyPressed(SDLK_LSHIFT)){
                         game.mode = MODE_BUILDER;
                         game.toBuild = NO_TYPE;
+                        for (UIBars_t::iterator it = bars.begin(); it != bars.end(); ++it)
+                           if ((*it)->isActive())
+                              (*it)->calculateRect();
                      }else{ //not enough resources, or bad place
                         debug("Cannot construct building");
                      }

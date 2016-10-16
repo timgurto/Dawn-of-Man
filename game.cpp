@@ -257,6 +257,6 @@ void addEntity(GameData &game, Entity *entity){
                         entity);
 }
 
-void initializeGameData(char */*filename*/, GameData &/*game*/){
+void initializeGameData(char * /*filename*/, GameData &/*game*/){
 
 }
