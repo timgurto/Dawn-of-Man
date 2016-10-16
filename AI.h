@@ -12,6 +12,7 @@
 
 struct GameData;
 struct CoreData;
+class Unit;
 
 //list, for safe removal of arbitrary elements
 typedef std::list<typeNum_t> wishlist_t;
@@ -20,7 +21,7 @@ typedef std::queue<typeNum_t> buildQueue_t;
 //Handles an individual player's AI
 class AI{
 
-   //whose AI this is
+   //whose AI this is (needed for some calls)
    typeNum_t player_;
 
    //allocated stockpiles
@@ -82,14 +83,20 @@ public:
    //check for and execute any newly available actions
    void update();
 
-   //pay for any available expansion items
+   //pay for any available expansion units
    void checkExpansion();
 
-   //pay for any available military items
+   //pay for any available military units
    void checkMilitary();
+
+   //pay for any available buildings
+   void checkBuildings();
 
    //build stuff in the buildQueue
    void buildPossible();
+
+   //find a location for the unit to go, and send him there
+   void dispatchUnit(Unit *unit);
 };
 
 #endif

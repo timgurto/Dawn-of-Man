@@ -27,7 +27,8 @@ resources_(resources),
 techsResearched_(techsResearched),
 buildingsBuilt_(buildingsBuilt),
 alive(true),
-resourcesString_(resources_.str()){
+resourcesString_(resources_.str()),
+initialAIUpdate_(false){
    ai_.initPlayer(playerID);
       ai_.allocateIncome(resources_);
    for (size_t i = 0; i != techsResearched.size(); ++i)
@@ -86,18 +87,22 @@ bool Player::hasBuilding(typeNum_t i) const{
    return buildingsBuilt_[i];
 }
 
-void Player::researchTech(typeNum_t index){
+void Player::registerTech(typeNum_t index){
    assert(!techsResearched_[index]);
    techsResearched_[index] = true;
    bonuses_ += core_->techs[index].getBonuses();
    ai_.update();
 }
 
-void Player::buildBuilding(typeNum_t index, bool recalc){
+void Player::registerBuilding(typeNum_t index, bool recalc){
    buildingsBuilt_[index] = true;
    if (recalc)
       buildingsBar_->calculateRect();
    ai_.update();
+}
+
+void Player::registerUnit(Unit *unit){
+   ai_.dispatchUnit(unit);
 }
 
 void Player::godMode(){
@@ -105,4 +110,11 @@ void Player::godMode(){
       bonuses_.unitArmor -= 1337;
    else
       bonuses_.unitArmor += 1337;
+}
+
+void Player::tick(){
+   if (!initialAIUpdate_){
+      ai_.update();
+      initialAIUpdate_ = true;
+   }
 }

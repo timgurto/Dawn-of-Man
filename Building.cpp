@@ -135,7 +135,7 @@ void Building::progressConstruction(){
             }
          }
       //register with player
-      game_->players[player_].buildBuilding(typeIndex_);
+      game_->players[player_].registerBuilding(typeIndex_);
 
       //update buildingsBar
       if (player_ == HUMAN_PLAYER)

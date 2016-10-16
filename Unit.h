@@ -8,8 +8,8 @@
 #include "Entity.h"
 #include "Point.h"
 #include "Screen.h"
+#include "GameData.h"
 
-struct GameData;
 class EntityType;
 
 //Mobile, controllable entities capable of combat.

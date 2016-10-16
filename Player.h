@@ -45,6 +45,9 @@ class Player{
    //AI - bookkeeping and controlling
    AI ai_;
 
+   //whether an AI update() has occurred yet in the game
+   bool initialAIUpdate_;
+
    static GameData *game_;
    static const CoreData *core_;
    static UIBar *buildingsBar_;
@@ -72,13 +75,19 @@ public:
    bool sufficientResources(const Resources &r) const;
 
    //registers the player researching a tech
-   void researchTech(typeNum_t index);
+   void registerTech(typeNum_t index);
 
    //registers the player constructing a building
-   void buildBuilding(typeNum_t index, bool recalc = false);
+   void registerBuilding(typeNum_t index, bool recalc = false);
 
-   //renders player nigh-invulnerable
+   //tells the AI that a unit has been trained
+   void registerUnit(Unit *unit);
+
+   //renders player nigh-invulnerable (toggle)
    void godMode();
+
+   //processing done every game tick
+   void tick();
 
    //get
    Uint32 getColor() const;

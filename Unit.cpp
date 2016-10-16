@@ -20,7 +20,7 @@
 
 extern Debug debug;
 
-const pixels_t Unit::PATH_GRID_SIZE = 50;
+const pixels_t Unit::PATH_GRID_SIZE = 30;
 const pixels_t Unit:: AUTO_ATTACK_DISTANCE = 200;
 
 Unit::Unit(typeNum_t type, const Point &loc,
@@ -102,6 +102,7 @@ void Unit::tick(double delta){
          finished_ = true;
          drawPercent_ = FULL;
          thisType.sound_.play();
+         game_->players[player_].registerUnit(this);
       }else
          drawPercent_ = 1.0 * progress_ /
                         thisType.maxProgress_;

@@ -43,6 +43,8 @@ void updateState(double delta, const CoreData &core, GameData &game,
       Entity::emptyTrash();
 
       //TODO tick non-human, non-nature Players
+      ITERATE(players_t::iterator, game.players, it)
+         it->tick();
 
       //UI bars, if necessary
       if (game.recalcBars){

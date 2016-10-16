@@ -206,8 +206,6 @@ bool lXor(bool a, bool b){
       (a && b) || !(a || b);
 }
 
-
-
 //removes the last character of a string
 void removeLast(std::string &str){
    str = str.substr(0, str.size() - 1);

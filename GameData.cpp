@@ -161,7 +161,8 @@ scrollLockY(false){
          }
          if (centerScreen)
             centerMap(*this, loc);
-         players[player].buildBuilding(type, false);
+         players[player].registerBuilding(type, false);
+         loc = loc;
 
       }else if (object == "decoration"){
          if (random != 0)
@@ -350,7 +351,7 @@ bool GameData::researchTech(typeNum_t index, typeNum_t playerID){
       //research tech
       UIBar::clickSound();
       player.subtractResources(tech.getCost());
-      player.researchTech(index);
+      player.registerTech(index);
       return true;
    }
    //insufficient resources

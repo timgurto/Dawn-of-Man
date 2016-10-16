@@ -19,7 +19,7 @@ player{
    resource.stone = 5;
 }
 player{
-   index = 2;           # 2 = computer
+   index = 2;           # 2+ = computer
    color = 0x882222;
 }
 

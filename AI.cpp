@@ -14,6 +14,8 @@
 #include "Debug.h"
 #include "Building.h"
 #include "Player.h"
+#include "Unit.h"
+#include "ResourceNode.h"
 
 extern Debug debug;
 
@@ -118,9 +120,12 @@ void AI::allocateIncome(const Resources &income){
 }
 
 void AI::update(){
-   checkExpansion();
-   checkMilitary();
-   buildPossible();
+   if (game_){
+      checkExpansion();
+      checkMilitary();
+      checkBuildings();
+      buildPossible();
+   }
 }
 
 void AI::checkExpansion(){
@@ -220,6 +225,10 @@ void AI::checkMilitary(){
    }//for unitTypes
 }
 
+void AI::checkBuildings(){
+   //TODO
+}
+
 //build anything in the buildQueue which can be built
 void AI::buildPossible(){
 
@@ -244,4 +253,36 @@ void AI::buildPossible(){
       else
          break; //no room to place unit
    }
+}
+
+void AI::dispatchUnit(Unit *unit){
+   //1. gatherers --> resource sites
+   //TODO: choose sites based on wishlist costs instead of distance
+   ResourceNode *target = 0;
+   double minDistance = -1;
+   if (unit->isGatherer()){
+      ITERATE(entities_t::const_iterator, game_->entities, it)
+         if ((*it)->classID() == ENT_RESOURCE_NODE){
+            pixels_t dist = distance(unit->getLoc(), (*it)->getLoc());
+            if (!target || //flag for the first found
+                dist < minDistance){
+               minDistance = dist;
+               target = (ResourceNode *)(*it);
+            }
+         }
+      if (target)
+         unit->setTarget(target);
+      //else no nodes on map, and so stay idle
+      return;
+   }
+
+   //2. builders --> construction sites (if there are builder/non-gatherers)
+   if (unit->isBuilder()){
+      
+      return;
+   }
+
+   //3. military --> surround base
+   //if execution gets here, it's a military unit
+
 }
