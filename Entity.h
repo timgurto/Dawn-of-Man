@@ -140,6 +140,9 @@ public:
    //default: false
    virtual bool drawBlack() const;
 
+   //the entity's context help
+   virtual std::string getHelp() const;
+
    //get
    typeNum_t getTypeIndex() const;
    const Point &getLoc() const;

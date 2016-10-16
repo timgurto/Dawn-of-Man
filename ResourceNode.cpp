@@ -1,5 +1,6 @@
 // (C) 2010 Tim Gurto
 
+#include <sstream>
 #include "ResourceNode.h"
 #include "GameData.h"
 
@@ -51,4 +52,12 @@ Resources ResourceNode::harvest(Resources bonus){
 
 int ResourceNode::getColor() const{
    return core_->resourceNodeTypes[typeIndex_].color_;
+}
+
+std::string ResourceNode::getHelp() const{
+   const ResourceNodeType &thisType = (const ResourceNodeType &)type();
+   std::ostringstream os;
+   os << thisType.name_;
+   os << " - " << resources_.str() << " remaining";
+   return os.str();
 }

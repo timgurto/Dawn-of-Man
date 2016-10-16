@@ -224,7 +224,7 @@ buildingSelected(0){
       switch ((*it)->classID()){
 
       case ENT_BUILDING:
-         {//new scope for building and type
+         { //new scope for building and type
             Building &building = *(Building *)(*it);
             const BuildingType &type = core_->buildingTypes[building.typeIndex_];
             checkTypeIndex(building.typeIndex_, core_->buildingTypes.size());
@@ -237,7 +237,7 @@ buildingSelected(0){
          break;
 
       case ENT_UNIT:
-         {//new scope for unit and type
+         { //new scope for unit and type
             Unit &unit = *(Unit *)(*it);
             const UnitType &type = core_->unitTypes[unit.typeIndex_];
             checkTypeIndex(unit.typeIndex_, core_->unitTypes.size());

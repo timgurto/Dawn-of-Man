@@ -84,6 +84,10 @@ void playSound(SDL_Sound *p);
 void setColorKey(SDL_Surface *surface,
                  const SDL_Color &color = ENTITY_BACKGROUND);
 
+//push a mouse-move event onto the queue, to refresh the
+//calculations handled there
+void pushMouseMove(const GameData &game);
+
 //===misc===
 
 //Constructs a file path to load graphics for entities
@@ -104,7 +108,7 @@ bool noCollision(const GameData &game, const EntityType &type,
 //Checks for a collision between two SDL_Rects
 bool collision(const SDL_Rect &r1, const SDL_Rect &r2);
 
-//Whether a Point lies on an SDL_Rect
+//Whether a Point lies in an SDL_Rect
 bool collision(const Point &point, const SDL_Rect &rect);
 bool collision(const SDL_Rect &rect, const Point &point);
 

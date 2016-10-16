@@ -14,12 +14,16 @@ class DecorationType: public EntityType{
    //whether this kind of decoration collides
    bool collides_;
 
+   //sprite color
+   EntityColor color_;
+
 public:
    DecorationType(typeNum_t index,
                   const std::string &name,
                   const SDL_Rect &drawRect,
                   const SDL_Rect &baseRect,
-                  bool collides = false);
+                  bool collides = false,
+                  EntityColor color = CLR_CORPSE);
 };
 
 #endif

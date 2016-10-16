@@ -20,5 +20,5 @@ bool Decoration::collides() const{
 }
 
 int Decoration::getColor() const{
-   return CLR_DECORATION;
+   return core_->decorationTypes[typeIndex_].color_;
 }

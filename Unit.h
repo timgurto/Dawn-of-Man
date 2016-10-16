@@ -75,7 +75,12 @@ public:
                     const Point &end,
                     double angle = DUMMY_ANGLE) const;
 
+   //calculates a path to the target, and fills the path_
+   //with 
    void findPath();
+
+   //removes health, due to an attack
+   void removeHealth(damage_t damage);
 
    //get
    bool isBuilder() const;
@@ -85,6 +90,7 @@ public:
    virtual int getColor() const;
    virtual typeNum_t getPlayer() const;
    virtual double getDrawPercent() const;
+   virtual std::string getHelp() const;
    damage_t getHealth() const;
    damage_t getAttack() const;
    pixels_t getSpeed() const;

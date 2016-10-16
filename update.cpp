@@ -75,7 +75,6 @@ void updateState(double delta, const CoreData &core, GameData &game,
 void handleEvents(const CoreData &core, GameData &game,
                   SDL_Surface *screen, UIBars_t &bars,
                   MessageBox &contextHelp, MessageBox &fpsDisplay){
-
    SDL_Event event;
    while (SDL_PollEvent(&event)){
       switch (event.type){
@@ -91,7 +90,8 @@ void handleEvents(const CoreData &core, GameData &game,
 
       //Mouse is moved
       case SDL_MOUSEMOTION:
-         {//new scope for overBar, index
+         { //new scope for overBar, index
+            game.cursorColor = CLR_MAX;
             contextHelp("");
             game.mousePos.x = event.motion.x;
             game.mousePos.y = event.motion.y;
@@ -118,7 +118,7 @@ void handleEvents(const CoreData &core, GameData &game,
                Entity *entityP = findEntity(game, false);
                if (entityP){
                   //TODO virtual getHelp() fun for entities
-                  contextHelp(entityP->type().getName());
+                  contextHelp(entityP->getHelp());
                   game.cursorColor = entityP->getColor();
                }else
                   game.cursorColor = CLR_MAX; //no color
@@ -149,7 +149,7 @@ void handleEvents(const CoreData &core, GameData &game,
 
          case SDLK_KP_PLUS:
             //HACK remove this cheat
-            {
+            { //new scope for cheatResources
                resources_t cheatResources(Resources::getResourceCount(), 1337);
                game.players[HUMAN_PLAYER].addResources(cheatResources);
             }
@@ -186,20 +186,20 @@ void handleEvents(const CoreData &core, GameData &game,
             break;
 
          case SDLK_DELETE:
-            //HACK repeats loop for each deletion, to avoid invalidated iterator
-            bool deleted;
-            do{
-               deleted = false;
+            { //new scope for selected
+               //find selected entities
+               entities_t selected;
                for (entities_t::iterator it = game.entities.begin();
-                  it != game.entities.end(); ++it){
-                     if ((*it)->selected){
-                        (*it)->kill();
-                        deleted = true;
-                        break;
-                     }
-               }
-            }while (deleted);
-            Entity::emptyTrash();
+                    it != game.entities.end(); ++it)
+                  if ((*it)->selected)
+                     selected.push_back(*it);
+
+               //delete them
+               for (entities_t::iterator it = selected.begin();
+                    it != selected.end(); ++it)
+                  (*it)->kill();
+               Entity::emptyTrash();
+            }
             break;
 
          case SDLK_F11:
@@ -235,7 +235,7 @@ void handleEvents(const CoreData &core, GameData &game,
          switch (event.button.button){
          case MOUSE_BUTTON_LEFT:
             game.leftMouse.mouseDown(game.mousePos - game.map);
-            {//new scope for barClicked
+            { //new scope for barClicked
                //if not clicking a button
                bool barClicked = false;
                for (UIBars_t::iterator it = bars.begin();
@@ -243,10 +243,10 @@ void handleEvents(const CoreData &core, GameData &game,
                   if ((*it)->isActive())
                      if ((*it)->mouseIndex() != NO_TYPE)
                         barClicked = true;
-               if (!barClicked)
-
+               if (!barClicked){
                   //initialize selection box stuff
                   game.leftMouse.mouseDown(game.mousePos - game.map);
+               }
                break;
             }
          case MOUSE_BUTTON_RIGHT:
@@ -254,6 +254,7 @@ void handleEvents(const CoreData &core, GameData &game,
             game.rightMouse.mouseDown(game.mousePos);
             break;
          }// switch mouse button
+         pushMouseMove(game);
          break;
 
 
@@ -343,6 +344,7 @@ void handleEvents(const CoreData &core, GameData &game,
             game.leftMouse.mouseUp();
             break;
          }
+         pushMouseMove(game);
          break;
       } //event switch
    } //event while
@@ -350,8 +352,11 @@ void handleEvents(const CoreData &core, GameData &game,
 
 void scrollMap(GameData &game, double delta){
 
+   bool scrolling = false;
+
    //right-dragging
    if (game.rightMouse.dragging){
+      scrolling = true;
       Point rmbDisplacement = game.mousePos - game.rightMouse.dragBegin;
       game.map = game.map - rmbDisplacement * (delta *
                                                RMB_SCROLL_MULTIPLIER);
@@ -360,36 +365,61 @@ void scrollMap(GameData &game, double delta){
    pixels_t scroll = pixels_t(delta * SCROLL_AMOUNT);
 
    //edge of screen
-   if (game.mousePos.x < EDGE_SCROLL_MARGIN)
+   if (game.mousePos.x < EDGE_SCROLL_MARGIN){
+      scrolling = true;
       game.map.x += scroll;
-   else if (game.mousePos.x > SCREEN_WIDTH - EDGE_SCROLL_MARGIN)
+   }else if (game.mousePos.x > SCREEN_WIDTH - EDGE_SCROLL_MARGIN){
+      scrolling = true;
       game.map.x -= scroll;
-   if (game.mousePos.y < EDGE_SCROLL_MARGIN)
+   }
+   if (game.mousePos.y < EDGE_SCROLL_MARGIN){
+      scrolling = true;
       game.map.y += scroll;
-   else if (game.mousePos.y > SCREEN_HEIGHT - EDGE_SCROLL_MARGIN)
+   }else if (game.mousePos.y > SCREEN_HEIGHT - EDGE_SCROLL_MARGIN){
+      scrolling = true;
       game.map.y -= scroll;
+   }
 
    //four SDL calls every tick... might be better to calculate once,
    //or maybe keep a static pointer around.
    //arrow keys
-   if (isKeyPressed(SDLK_UP))
+   if (isKeyPressed(SDLK_UP)){
+      scrolling = true;
       game.map.y += scroll;
-   if (isKeyPressed(SDLK_DOWN))
+   }
+   if (isKeyPressed(SDLK_DOWN)){
+      scrolling = true;
       game.map.y -= scroll;
-   if (isKeyPressed(SDLK_LEFT))
+   }
+   if (isKeyPressed(SDLK_LEFT)){
+      scrolling = true;
       game.map.x += scroll;
-   if (isKeyPressed(SDLK_RIGHT))
+   }
+   if (isKeyPressed(SDLK_RIGHT)){
+      scrolling = true;
       game.map.x -= scroll;
+   }
 
    //Enforce scroll boundaries
-   if (game.map.x > SCROLL_MARGIN)
+   if (game.map.x > SCROLL_MARGIN){
+      scrolling = true;
       game.map.x = SCROLL_MARGIN;
-   if (game.map.x + game.map.w < SCREEN_WIDTH - SCROLL_MARGIN)
+   }
+   if (game.map.x + game.map.w < SCREEN_WIDTH - SCROLL_MARGIN){
+      scrolling = true;
       game.map.x = SCREEN_WIDTH - SCROLL_MARGIN - game.map.w;
-   if (game.map.y > SCROLL_MARGIN)
+   }
+   if (game.map.y > SCROLL_MARGIN){
+      scrolling = true;
       game.map.y = SCROLL_MARGIN;
-   if (game.map.y + game.map.h < SCREEN_HEIGHT - SCROLL_MARGIN)
+   }
+   if (game.map.y + game.map.h < SCREEN_HEIGHT - SCROLL_MARGIN){
+      scrolling = true;
       game.map.y = SCREEN_HEIGHT - SCROLL_MARGIN - game.map.h;
+   }
+
+   if (scrolling)
+      pushMouseMove(game);
 }
 
 SDL_Rect getSelectionRect(const GameData &game){
@@ -570,6 +600,10 @@ Entity *findEntity(GameData &game, bool onlyTargetable){
    //loop backwards, so objects in front have priority
    for (entities_t::reverse_iterator it = game.entities.rbegin();
         it != game.entities.rend(); ++it){
+
+      //skip decorations
+      if ((*it)->classID() == ENT_DECORATION)
+         continue;
 
       //filtering
       //only targetable entities

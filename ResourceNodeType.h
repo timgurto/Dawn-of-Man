@@ -6,7 +6,9 @@
 #include "Resources.h"
 #include "globals.h"
 
-//TODO comment
+//An entity which can be harvested by certain
+//"gatherer" units, for resources.  Once empty,
+//the resource node is killed.
 class ResourceNodeType: public EntityType{
    friend class ResourceNode;
 

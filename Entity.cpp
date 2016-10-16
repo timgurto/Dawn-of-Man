@@ -201,38 +201,39 @@ void Entity::addParticles(int count) const{
       //calculate initial co-ords
       pixels_t x = 0, y = 0;
       double drawPercent = getDrawPercent();
+      const SDL_Rect &drawRect = type().drawRect_;
       switch(direction_){
       case DIR_UP:
          x = loc_.x + 
-             type().drawRect_.x +
-             rand() % type().drawRect_.w;
+             drawRect.x +
+             rand() % drawRect.w;
          y = loc_.y + 
-             type().drawRect_.y +
-             pixels_t((1.0 - drawPercent) * type().drawRect_.h);
+             drawRect.y +
+             pixels_t((1.0 - drawPercent) * drawRect.h);
          break;
       case DIR_DOWN:
          x = loc_.x + 
-             type().drawRect_.x +
-             rand() % type().drawRect_.w;
+             drawRect.x +
+             rand() % drawRect.w;
          y = loc_.y + 
-             type().drawRect_.y +
-             pixels_t(drawPercent * type().drawRect_.h);
+             drawRect.y +
+             pixels_t(drawPercent * drawRect.h);
          break;
       case DIR_LEFT:
          x = loc_.x + 
-             type().drawRect_.x +
-             pixels_t((1.0 - drawPercent) * type().drawRect_.w);
+             drawRect.x +
+             pixels_t((1.0 - drawPercent) * drawRect.w);
          y = loc_.y + 
-             type().drawRect_.y +
-             rand() % type().drawRect_.h;
+             drawRect.y +
+             rand() % drawRect.h;
          break;
       case DIR_RIGHT:
          x = loc_.x + 
-             type().drawRect_.x +
-             pixels_t(drawPercent * type().drawRect_.w);
+             drawRect.x +
+             pixels_t(drawPercent * drawRect.w);
          y = loc_.y + 
-             type().drawRect_.y +
-             rand() % type().drawRect_.h;
+             drawRect.y +
+             rand() % drawRect.h;
       }
 
       //add
@@ -336,7 +337,6 @@ bool Entity::isLocationOK() const{
 }
 
 void Entity::kill(){
-   //TODO make death more spectacular
    const EntityType &thisType = type();
    playSound(thisType.deathSound_);
 
@@ -371,6 +371,7 @@ void Entity::kill(){
                }
             }
          }
+
       }
    }
 
@@ -416,4 +417,8 @@ const Point &Entity::getLoc() const{
 
 bool Entity::drawBlack() const{
    return false;
+}
+
+std::string Entity::getHelp() const{
+   return ""; //default is blank, for decorations
 }

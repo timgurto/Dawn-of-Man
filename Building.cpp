@@ -2,6 +2,7 @@
 
 #include <list>
 #include <cassert>
+#include <sstream>
 #include "SDL.h"
 #include "Building.h"
 #include "GameData.h"
@@ -149,4 +150,22 @@ damage_t Building::getHealth() const{
 
 void Building::removeHealth(damage_t damage){
    health_ -= damage;
+}
+
+bool Building::drawBlack() const{
+   return
+      1.0 * health_ /
+      core_->buildingTypes[typeIndex_].maxHealth_ <
+      ENTITY_BLACK_HEALTH;
+}
+
+std::string Building::getHelp() const{
+   const BuildingType &thisType = (const BuildingType &)type();
+   std::ostringstream os;
+   if (player_ != HUMAN_PLAYER)
+      os << "Enemy ";
+   os << thisType.name_;
+   if (health_ < thisType.maxHealth_)
+      os << " - " << health_ << " health remaining";
+   return os.str();
 }

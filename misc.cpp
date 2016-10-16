@@ -188,6 +188,14 @@ void setColorKey(SDL_Surface *surface, const SDL_Color &color){
                               color.b));
 }
 
+void pushMouseMove(const GameData &game){
+   SDL_Event fakeMouseMove;
+   fakeMouseMove.type = SDL_MOUSEMOTION;
+   fakeMouseMove.motion.x = game.mousePos.x;
+   fakeMouseMove.motion.y = game.mousePos.y;
+   SDL_PushEvent(&fakeMouseMove);
+}
+
 
 //========misc=========
 
@@ -299,6 +307,8 @@ Uint32 getEntityColor(const GameData &game, int color){
       return RESOURCE_FOOD_COLOR;
    case CLR_DECORATION:
       return DECORATION_COLOR;
+   case CLR_CORPSE:
+      return CORPSE_COLOR;
    default:
       return ENTITY_DEFAULT_COLOR;
 
@@ -385,8 +395,8 @@ bool isPathClear(const Point &start,
       if (end.x == start.x)
          angle =
             end.y < start.y ?
-            1.5 * PI :
-            0.5 * PI;
+               1.5 * PI :
+               0.5 * PI;
       else{
          double gradient =
             1.0 *

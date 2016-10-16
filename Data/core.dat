@@ -64,6 +64,8 @@ decorationType{
    baseRect.y = -8;
    baseRect.w = 22;
    baseRect.h = 16;
+   
+   color = 4;
 }
 decorationType{
    name = "Skeleton";
@@ -78,6 +80,8 @@ decorationType{
    baseRect.y = -77;
    baseRect.w = 32;
    baseRect.h = 41;
+   
+   color = 5;
 }
 unitType{
    name = "Warrior";
@@ -197,7 +201,7 @@ resourceNodeType{
    maxResources.wood = 50;
    yield.wood = 1;
    
-   color = 6;
+   color = 7;
 }
 resourceNodeType{
    name = "Dead Deer";
@@ -219,7 +223,7 @@ resourceNodeType{
    maxResources.wood = 50;
    yield.wood = 2;
    
-   color = 5;
+   color = 6;
 }
 technology{
    name = "Fire Armor (stone)";
@@ -233,11 +237,11 @@ technology{
 
 Do something better about resource colors
 
-Colors
 0: default
 1: dark shadow
 2: light shadow
 3: black
 4: decoration
-5: food
-6: wood
+5: corpse
+6: food
+7: wood

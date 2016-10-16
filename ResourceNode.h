@@ -28,6 +28,7 @@ public:
    virtual EntityTypeID classID() const;
    virtual bool targetable() const;
    virtual bool drawBlack() const;
+   virtual std::string getHelp() const;
 
    //remove some resources from the node, and return the
    //amount harvested

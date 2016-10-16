@@ -23,8 +23,9 @@ const double PI = 3.14159265358979323846;
 //a yet-to-be-calculated angle
 const double DUMMY_ANGLE = 3 * PI;
 
-//TODO determine best size
+//used for drawn entities; excludes techs.
 const typeNum_t MAX_TYPES = 8;
+
 const typeNum_t NO_TYPE = 0xffff;
 
 const double DUMMY_PROGRESS = -1;
@@ -167,6 +168,7 @@ enum EntityColor{
    CLR_SHADOW_LIGHT,
    CLR_BLACK,
    CLR_DECORATION,
+   CLR_CORPSE,
    CLR_RESOURCE_FOOD,
    CLR_RESOURCE_WOOD,
 
@@ -183,6 +185,7 @@ const Uint32 RESOURCE_WOOD_COLOR  = 0x406040;
 const Uint32 RESOURCE_FOOD_COLOR  = 0xd75757;
 
 const Uint32 DECORATION_COLOR     = 0x666666;
+const Uint32 CORPSE_COLOR         = 0xaaaa99;
 
 const Uint8 BLACK_ENTITY_ALPHA = 0x3b; //0x44;
 //The health percentage, below which the sprite is blackened

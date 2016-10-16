@@ -22,9 +22,6 @@ pixels_t
    SCREEN_HEIGHT = DEFAULT_SCREEN_HEIGHT;
 bool WINDOWED_MODE = DEBUG;
 
-//shows framerate and delta values
-Debug deltaLog(CYAN, 465, 0, 2);
-
 //general debug messages
 Debug debug(YELLOW, 0, 0, 59);
 
@@ -50,7 +47,6 @@ int main(int argc, char **argv){
    assert (mixInit >= 0);
 
    debug.initFont("Dina.fon", 0);
-   deltaLog.initFont("Dina.fon", 0);
 
    setScreenResolution(argc, argv);
 

@@ -4,6 +4,7 @@
 #include <cmath>
 #include <map>
 #include <cassert>
+#include <sstream>
 #include "SDL_mixer.h"
 #include "misc.h"
 #include "GameData.h"
@@ -106,8 +107,8 @@ void Unit::tick(double delta){
             if (targetPoint.x == loc_.x)
                angle =
                   (targetPoint.y < loc_.y ?
-                  1.5 * PI :
-                  0.5 * PI);
+                     1.5 * PI :
+                     0.5 * PI);
             else{
                double gradient = 1.0 *
                   (targetPoint.y - loc_.y) /
@@ -210,22 +211,21 @@ void Unit::tick(double delta){
                      //enemy building: attack
                      }else if(targetPlayer != player_){
                         damage_t damage = getAttack() - target.getArmor();
-                        if (damage > target.getHealth())
+                        if (damage >= target.getHealth())
                            target.kill();
                         else
                            target.removeHealth(damage);
                      }
                   }
                   break;
-               //TODO remove health in target's method
                case ENT_UNIT:
                   {//local scope for target, targetType, damage
                      Unit &target = (Unit &)(*targetEntity_);
                      damage_t damage = getAttack() - target.getArmor();
-                     if (damage > target.getHealth())
+                     if (damage >= target.getHealth())
                         target.kill();
                      else{
-                        target.health_ -= damage;
+                        target.removeHealth(damage);
                         if (!target.getTargetEntity() &&
                             !target.moving_)
                            target.setTarget(this);
@@ -259,7 +259,7 @@ void Unit::tick(double delta){
       }
    }
 }
-//TODO ?
+
 void Unit::setTarget(Entity *targetEntity, Point loc){
    targetEntity_ = targetEntity;
    if (!targetEntity){
@@ -290,8 +290,8 @@ void Unit::setTarget(Entity *targetEntity, Point loc){
 bool Unit::isAtTarget() const{
    pixels_t margin = getSpeed();
    Point target = path_.size() > 1 ?
-                  path_.front() :
-                  target_;
+                     path_.front() :
+                     target_;
    //straight distance to a point
    if (path_.size() > 1 || !targetEntity_)
       return (distance(loc_, target) < margin);
@@ -332,8 +332,8 @@ bool Unit::isPathClear(const Point &start,
       if (end.x == start.x)
          angle =
             end.y < start.y ?
-            1.5 * PI :
-            0.5 * PI;
+               1.5 * PI :
+               0.5 * PI;
       else{
          double gradient =
             1.0 *
@@ -465,6 +465,10 @@ void Unit::updateTarget(){
    moving_ = !path_.empty();
 }
 
+void Unit::removeHealth(damage_t damage){
+   health_ -= damage;
+}
+
 bool Unit::isBuilder() const{
    return core_->unitTypes[typeIndex_].builder_;
 }
@@ -532,4 +536,15 @@ bool Unit::drawBlack() const{
 
 typeNum_t Unit::getPlayer() const{
    return player_;
+}
+
+std::string Unit::getHelp() const{
+   const UnitType &thisType = (const UnitType &)type();
+   std::ostringstream os;
+   if (player_ != HUMAN_PLAYER)
+      os << "Enemy ";
+   os << thisType.name_;
+   if (health_ < thisType.maxHealth_)
+      os << " - " << health_ << " health remaining";
+   return os.str();
 }

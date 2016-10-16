@@ -136,12 +136,12 @@ void gameMode(){
                           2, SCREEN_HEIGHT - ICON_SIZE - 1,
                           1,
                           darkMap,
-                          "Woodbrush.ttf", 18,
+                          "Thor.ttf", 18,
                           true);
    MessageBox resourcesBox(WHITE,
                            2, 2, 1,
                            darkMap,
-                           "Woodbrush.ttf", 18);
+                           "Thor.ttf", 18);
    MessageBox fpsDisplay(WHITE,
                          SCREEN_WIDTH / 2 - 40, 2,
                          1,
@@ -164,6 +164,9 @@ void gameMode(){
       
       double fps = delta == 0 ? 0 : 1000 / delta;
       fpsDisplay(format3(fps), "fps  |  ", delta, "ms ");
+
+      //force interface refresh
+      pushMouseMove(game);
 
       //update state
       updateState(deltaMod, core, game, screen, bars,

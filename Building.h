@@ -38,6 +38,7 @@ public:
    virtual EntityTypeID classID() const;
    virtual bool selectable() const;
    virtual bool targetable() const;
+   virtual bool drawBlack() const;
 
    //progresses the building's construction when a builder
    //hits it
@@ -51,6 +52,7 @@ public:
    virtual int getColor() const;
    virtual typeNum_t getPlayer() const;
    virtual double getDrawPercent() const;
+   virtual std::string getHelp() const;
    damage_t getArmor() const;
    damage_t getHealth() const;
 };

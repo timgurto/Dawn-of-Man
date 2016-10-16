@@ -40,8 +40,6 @@ bool validUnit(const CoreData &core,
 
 bool validTech(const CoreData &core,
                const GameData &game, typeNum_t i){
-   //TODO figure out what the hell is going on here
-   //typeNum_t techIndex = getValidTech(core, game, i);
    typeNum_t techIndex = i;
    const Tech &tech = core.techs[techIndex];
    const Player &human = game.players[HUMAN_PLAYER];

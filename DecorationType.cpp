@@ -8,10 +8,12 @@ DecorationType::DecorationType(typeNum_t index,
                                const std::string &name,
                                const SDL_Rect &drawRect,
                                const SDL_Rect &baseRect,
-                               bool collides):
+                               bool collides,
+                               EntityColor color):
 EntityType(index,
            ENT_DECORATION,
            name,
            drawRect,
            baseRect),
-collides_(collides){}
+collides_(collides),
+color_(color){}

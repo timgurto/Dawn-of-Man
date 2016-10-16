@@ -234,7 +234,8 @@ CoreData::CoreData(std::string filename){
          buildingTypes.push_back(temp);
 
       }else if (object == "decorationType"){
-         DecorationType temp(index, name, drawRect, baseRect, collides);
+         DecorationType temp(index, name, drawRect, baseRect, collides,
+                             EntityColor(color));
          decorationTypes.push_back(temp);
 
       }else if (object == "unitType"){

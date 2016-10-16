@@ -26,7 +26,6 @@ offset_(0){
    vV_ = rand() * 2 * VELOCITY_RANGE / RAND_MAX - VELOCITY_RANGE;
 }
 
-//TODO ParticleType class with tick() function pointer (if multiple particle types are used)
 void Particle::tick(double delta){
    age_ -= delta * DECAY;
    x_ += delta * hV_;

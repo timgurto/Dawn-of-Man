@@ -8,7 +8,8 @@
 #include "TechBonuses.h"
 #include "Resources.h"
 
-//TODO comment
+//An improvement each player can employ once,
+//at a cost, to yield defined permanent bonuses
 class Tech{
    friend struct CoreData;
 

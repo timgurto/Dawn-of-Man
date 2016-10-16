@@ -81,9 +81,9 @@ void UIBar::draw() const{
    if (game_->mode == requiredMode_){
 
       //blit background
-      SDL_Surface *src = (orientation_ == HORIZONTAL ?
-                          hBarSurface_ :
-                          vBarSurface_);
+      SDL_Surface *src = orientation_ == HORIZONTAL ?
+                            hBarSurface_ :
+                            vBarSurface_;
 
       SDL_BlitSurface(src, &makeRect(0, 0, rect_.w, rect_.h),
                       screen_, &SDL_Rect(rect_));
@@ -111,10 +111,10 @@ typeNum_t UIBar::mouseIndex() const{
    if (collision(point, barRect))
       switch (orientation_){
       case HORIZONTAL:
-         return (point.x - barRect.x - 1) / ICON_SIZE;
+         return (point.x - barRect.x) / ICON_SIZE;
          break;
       case VERTICAL:
-         return (point.y - barRect.y - 1) / ICON_SIZE;
+         return (point.y - barRect.y) / ICON_SIZE;
          break;
       }
    return NO_TYPE;

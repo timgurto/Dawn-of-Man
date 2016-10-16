@@ -14,6 +14,7 @@ class EntityType{
    friend class Entity;
    friend class Building;
    friend class Unit;
+   friend class ResourceNode;
    friend struct CoreData;
 
    //for loading graphics, and position in vector

@@ -62,7 +62,6 @@ typedef surfaceFun *surfaceFunPtr;
    surfaceFun getTechIcons;
 
 
-//TODO enable for all players
 //clickFun_
 typedef void clickFun(typeNum_t index, const CoreData &data,
                       GameData &game);
