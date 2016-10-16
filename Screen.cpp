@@ -8,13 +8,20 @@
 #include "Debug.h"
 #include "Point.h"
 
+//TODO comments
 extern Debug debug;
 
-//TODO comments
+//Default screen resolutions - 16:10 16:9 and 4:3
+//TODO array
+const Point Screen::DEFAULT_SCREEN_3(1280, 800);
+const Point Screen::DEFAULT_SCREEN_2(1280, 720);
+const Point Screen::DEFAULT_SCREEN_1(1024, 768);
 
 Surface *Screen::background_ = 0;
 Surface *Screen::cursor_ = 0;
 Point Screen::mousePos;
+Point Screen::screenRes(DEFAULT_SCREEN_1);
+std::vector<Point> Screen::preferredResolutions;
 
 
 unsigned Screen::goDefault(Screen &thisScreen, const void *data){
@@ -114,4 +121,8 @@ int Screen::operator()(const void *data){
    //SDL_Event event;
    //TODO assert(!SDL_PollEvent(&event));
    return (*go_)(*this, data);
+}
+
+static void setScreenResolution(int argc, char **argv){
+
 }

@@ -70,7 +70,7 @@ void Building::draw(Surface &screen) const{
                         thisType.drawRect_.w,
                         thisType.drawRect_.h);
    
-   colorBlit(getColor(), screenBuf,
+   colorBlit(getColor(), screen,
              srcLoc, drawLoc, !finished_); //partial
 }
 

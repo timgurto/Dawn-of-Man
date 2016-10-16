@@ -17,8 +17,6 @@ class Unit;
 struct Point;
 struct GameData;
 
-extern pixels_t SCREEN_WIDTH, SCREEN_HEIGHT;
-
 const Uint8 MOUSE_BUTTON_LEFT        = 1;
 const Uint8 MOUSE_BUTTON_MIDDLE      = 2;
 const Uint8 MOUSE_BUTTON_RIGHT       = 3;

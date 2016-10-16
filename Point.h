@@ -26,10 +26,13 @@ struct Point{
    //scalar multiplication
    Point operator*(double rhs) const;
 
-   //comparison
+   //comparison with Point
    bool operator<(const Point &rhs) const;
    bool operator==(const Point &rhs) const;
    bool operator!=(const Point &rhs) const;
+
+   //comparison with SDL_Rect
+   bool operator==(const SDL_Rect &rhs) const;
 
    //addition/subtraction with SDL_Rects
    //width and height values of rhs are retained
@@ -40,5 +43,8 @@ struct Point{
 //addition/subtraction with SDL_Rects, reversed
 SDL_Rect operator+(SDL_Rect lhs, const Point &rhs);
 SDL_Rect operator-(SDL_Rect lhs, const Point &rhs);
+
+//comparison with SDL_Rect, reversed
+bool operator==(const SDL_Rect &lhs, const Point &rhs);
 
 #endif

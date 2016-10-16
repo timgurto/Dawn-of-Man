@@ -77,7 +77,7 @@ const Uint8 SHADOW_ALPHA = 0x44;
 
 //This has a substantial effect on performance
 //anything behind each entity is cleared
-const bool ENTITY_MASKS = false;
+const bool ENTITY_MASKS = true;
 
 const double FULL  = 1;
 const double EMPTY = 0;

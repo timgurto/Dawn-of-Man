@@ -39,8 +39,8 @@ outcome(IN_PROGRESS){
    Uint16 w = mapX * MAP_TILE_SIZE;
    Uint16 h = mapY * MAP_TILE_SIZE;
    //center map
-   map = makeRect((SCREEN_WIDTH - w) / 2,
-                  (SCREEN_HEIGHT - h) / 2,
+   map = makeRect((Screen::screenRes.x - w) / 2,
+                  (Screen::screenRes.y - h) / 2,
                   w, h);
 
 
@@ -137,8 +137,8 @@ outcome(IN_PROGRESS){
          w = mapX * MAP_TILE_SIZE;
          h = mapY * MAP_TILE_SIZE;
          //center map
-         map = makeRect((SCREEN_WIDTH - w) / 2,
-                        (SCREEN_HEIGHT - h) / 2,
+         map = makeRect((Screen::screenRes.x - w) / 2,
+                        (Screen::screenRes.y - h) / 2,
                         w, h);
 
       }else if (object == "building"){

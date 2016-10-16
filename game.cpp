@@ -84,7 +84,8 @@ unsigned gameMode(Screen &thisScreen, const void *data){
       victory       (MISC_IMAGE_PATH + "victory.PNG",        GREEN),
       loss          (MISC_IMAGE_PATH + "loss.PNG",           GREEN),
       glow          (MISC_IMAGE_PATH + "glow.PNG", true),
-      entitiesTemp  (SUR_BLANK, SCREEN_WIDTH, SCREEN_HEIGHT, ENTITY_BACKGROUND),
+      entitiesTemp  (SUR_BLANK, Screen::screenRes.x, Screen::screenRes.y,
+                     ENTITY_BACKGROUND),
       selRectImage  (SUR_BLANK);
 
    //colored cursors, generated as they're used
@@ -145,7 +146,7 @@ unsigned gameMode(Screen &thisScreen, const void *data){
    //Message Boxes
    messageBoxes_t messageBoxes;
    MessageBox contextHelp(WHITE,
-                          2, SCREEN_HEIGHT - ICON_SIZE - 1,
+                          2, Screen::screenRes.y - ICON_SIZE - 1,
                           1,
                           darkMap,
                           "Thor.ttf", 18,
@@ -155,7 +156,7 @@ unsigned gameMode(Screen &thisScreen, const void *data){
                            darkMap,
                            "Thor.ttf", 18);
    MessageBox fpsDisplay(WHITE,
-                         SCREEN_WIDTH / 2 - 40, 2,
+                         Screen::screenRes.x / 2 - 40, 2,
                          1,
                          darkMap,
                          "Dina.fon", 0,

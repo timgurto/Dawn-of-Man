@@ -6,10 +6,9 @@
 #include <string>
 #include "SDL.h"
 #include "SDL_ttf.h"
+#include "Screen.h"
 #include "types.h"
 #include "globals.h"
-
-extern pixels_t SCREEN_WIDTH, SCREEN_HEIGHT;
 
 class Surface;
 extern Surface screenBuf;
@@ -41,7 +40,8 @@ public:
    Surface(const std::string fileName, const SDL_Color &background,
            bool alpha = false);
    Surface(SpecialSurface special = SUR_UNINIT,
-           int width = SCREEN_WIDTH, int height = SCREEN_HEIGHT,
+           int width = Screen::screenRes.x,
+           int height = Screen::screenRes.y,
            SDL_Color background = NO_COLOR);
    Surface(TTF_Font *font, std::string message, SDL_Color color);
    Surface(const Surface &original);

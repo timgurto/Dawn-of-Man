@@ -467,14 +467,14 @@ void scrollMap(GameData &game, double delta){
    if (Screen::mousePos.x < EDGE_SCROLL_MARGIN){
       scrolling = true;
       game.map.x += scroll;
-   }else if (Screen::mousePos.x > SCREEN_WIDTH - EDGE_SCROLL_MARGIN){
+   }else if (Screen::mousePos.x > Screen::screenRes.x - EDGE_SCROLL_MARGIN){
       scrolling = true;
       game.map.x -= scroll;
    }
    if (Screen::mousePos.y < EDGE_SCROLL_MARGIN){
       scrolling = true;
       game.map.y += scroll;
-   }else if (Screen::mousePos.y > SCREEN_HEIGHT - EDGE_SCROLL_MARGIN){
+   }else if (Screen::mousePos.y > Screen::screenRes.y - EDGE_SCROLL_MARGIN){
       scrolling = true;
       game.map.y -= scroll;
    }
@@ -504,17 +504,17 @@ void scrollMap(GameData &game, double delta){
       scrolling = true;
       game.map.x = SCROLL_MARGIN;
    }
-   if (game.map.x + game.map.w < SCREEN_WIDTH - SCROLL_MARGIN){
+   if (game.map.x + game.map.w < Screen::screenRes.x - SCROLL_MARGIN){
       scrolling = true;
-      game.map.x = SCREEN_WIDTH - SCROLL_MARGIN - game.map.w;
+      game.map.x = Screen::screenRes.x - SCROLL_MARGIN - game.map.w;
    }
    if (game.map.y > SCROLL_MARGIN){
       scrolling = true;
       game.map.y = SCROLL_MARGIN;
    }
-   if (game.map.y + game.map.h < SCREEN_HEIGHT - SCROLL_MARGIN){
+   if (game.map.y + game.map.h < Screen::screenRes.y - SCROLL_MARGIN){
       scrolling = true;
-      game.map.y = SCREEN_HEIGHT - SCROLL_MARGIN - game.map.h;
+      game.map.y = Screen::screenRes.y - SCROLL_MARGIN - game.map.h;
    }
 
    if (scrolling)

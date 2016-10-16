@@ -31,7 +31,7 @@ class EntityType{
 
    //Which decoration this entity becomes when it dies
    typeNum_t decorationAtDeath_;
-
+public://TODO remove
    Surface
       surface_, //main image
       icon_, //icon, for UIBars

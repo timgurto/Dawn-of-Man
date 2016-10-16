@@ -44,7 +44,7 @@ void Entity::draw(Surface &screen) const{
    SDL_Rect srcLoc = makeRect(0, 0,
                               thisType.drawRect_.w,
                               thisType.drawRect_.h);
-   colorBlit(getColor(), screenBuf, srcLoc, drawLoc);
+   colorBlit(getColor(), screen, srcLoc, drawLoc);
 }
 
 SDL_Rect Entity::getBaseRect() const{
@@ -173,12 +173,12 @@ void Entity::colorBlit(int color, Surface &screen,
 
    SDL_Rect dest = dstLoc + Point(game_->map);
 
-   //blit mask, hiding anything that would otherwise
-   //show through the gaps in the sprite
-   if (ENTITY_MASKS && classID() != ENT_DECORATION)
-      thisType.mask_.draw(screenBuf, &SDL_Rect(dest), &srcLoc);
-   //note: the "SDL_Rect(dest)" above avoids SDL_Blit
-   //messing with the draw location
+   ////blit mask, hiding anything that would otherwise
+   ////show through the gaps in the sprite
+   //if (ENTITY_MASKS && classID() != ENT_DECORATION)
+   //   thisType.mask_.draw(screenBuf, &SDL_Rect(dest), &srcLoc);
+   ////note: the "SDL_Rect(dest)" above avoids SDL_Blit
+   ////messing with the draw location
 
    //blit colored sprite to the screen.
    //The indexed version definitely exists now.

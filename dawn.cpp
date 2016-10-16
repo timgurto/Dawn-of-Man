@@ -14,22 +14,13 @@
 #include "Debug.h"
 #include "Screen.h"
 #include "Surface.h"
+#include "Point.h"
 
 //TODO: try to replace get()s with const refs, or reaffirm why it can't be done
-
-//TODO replace with ranked priorities, including 16:9
-//Default screen resolutions, 16:10 and 4:3
-const pixels_t DEFAULT_W_SCREEN_WIDTH = 1280;
-const pixels_t DEFAULT_W_SCREEN_HEIGHT = 800;
-const pixels_t DEFAULT_SCREEN_WIDTH = 1024;
-const pixels_t DEFAULT_SCREEN_HEIGHT = 768;
 
 //global screen buffer
 Surface screenBuf; //uninitialized
 
-pixels_t
-   SCREEN_WIDTH = DEFAULT_SCREEN_WIDTH,
-   SCREEN_HEIGHT = DEFAULT_SCREEN_HEIGHT;
 bool WINDOWED_MODE = DEBUG;
 
 //general debug messages
@@ -76,7 +67,6 @@ int main(int argc, char **argv){
       //mainMenu();
 
       Screen game(&gameMode);
-      //game();
 
       //campaign: go through each level
       int levels;
@@ -117,34 +107,48 @@ void setScreenResolution(int argc, char **argv){
    //whether the default screen size is available
    bool defaultResOkay = false;
    bool defaultWResOkay = false; //as above, for widescreen
+   unsigned resPriority = 0; //no preferred resolution available yet
    while (*resolutions){
       debug((*resolutions)->w, "x", (*resolutions)->h);
-      if ((*resolutions)->w == DEFAULT_SCREEN_WIDTH &&
-          (*resolutions)->h == DEFAULT_SCREEN_HEIGHT)
-         defaultResOkay = true;
-      if ((*resolutions)->w == DEFAULT_W_SCREEN_WIDTH &&
-          (*resolutions)->h == DEFAULT_W_SCREEN_HEIGHT)
-         defaultWResOkay = true;
+      if (3 > resPriority &&
+          **resolutions == Screen::DEFAULT_SCREEN_3)
+         resPriority = 3;
+      else if (2 > resPriority &&
+          **resolutions == Screen::DEFAULT_SCREEN_2)
+         resPriority = 2;
+      else if (1 > resPriority &&
+          **resolutions == Screen::DEFAULT_SCREEN_1)
+         resPriority = 1;
       ++resolutions;
    }
    //Windowed
    WINDOWED_MODE = DEBUG || isArg("-win", argc, argv);
    if (isArg("-width", argc, argv) &&
        isArg("-height", argc, argv)){
-      SCREEN_WIDTH = whatIsArg("-width", argc, argv);
-      SCREEN_HEIGHT = whatIsArg("-height", argc, argv);
+          Screen::screenRes.x = whatIsArg("-width", argc, argv);
+      Screen::screenRes.y = whatIsArg("-height", argc, argv);
    //Current resolution
    }else if (isArg("-retain", argc, argv) ||
              !defaultWResOkay && !defaultResOkay){
-      SCREEN_WIDTH = current->current_w;
-      SCREEN_HEIGHT = current->current_h;
+      Screen::screenRes.x = current->current_w;
+      Screen::screenRes.y = current->current_h;
    //Default
-   }else if (defaultWResOkay){
-      SCREEN_WIDTH = DEFAULT_W_SCREEN_WIDTH;
-      SCREEN_HEIGHT = DEFAULT_W_SCREEN_HEIGHT;
    }else{
-      SCREEN_WIDTH = DEFAULT_SCREEN_WIDTH;
-      SCREEN_HEIGHT = DEFAULT_SCREEN_HEIGHT;
+      switch(resPriority){
+      case 1:
+         Screen::screenRes = Screen::DEFAULT_SCREEN_1;
+         break;
+      case 2:
+         Screen::screenRes = Screen::DEFAULT_SCREEN_2;
+         break;
+      case 3:
+         Screen::screenRes = Screen::DEFAULT_SCREEN_3;
+         break;
+      default:
+         //no valid resolution available
+         //(tentatively) use default 4:3
+         Screen::screenRes = Screen::DEFAULT_SCREEN_3;
+      }
    }
 
 }

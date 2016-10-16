@@ -39,6 +39,7 @@ void render(Surface &selection,
    renderSelection(game, selection);
    if (game.mode == MODE_CONSTRUCTION && !game.rightMouse.dragging)
        renderFootprint(core, game, diagGreen, diagRed);
+   renderDecorations(game);
    renderEntities(game);
    if (game.mode != MODE_CONSTRUCTION && game.leftMouse.dragging)
       renderSelectionRect(game, selRectImage);
@@ -182,15 +183,24 @@ void renderEntities(const GameData &game){
    //along with the regular sprite drawing
    if (ENTITY_MASKS){
       //intermediate surface
-      Surface entitiesTemp(SUR_BLANK, SCREEN_WIDTH, SCREEN_HEIGHT,
+      Surface entitiesTemp(SUR_BLANK, Screen::screenRes.x, Screen::screenRes.y,
                            ENTITY_BACKGROUND);
       entitiesTemp.fill(ENTITY_BACKGROUND);
 
       for (entities_t::const_iterator it = game.entities.begin();
-           it != game.entities.end(); ++it)
+           it != game.entities.end(); ++it){
+
+         const Entity &ent = **it;
+         debug(ent.getLoc().y);
+
          //only draw entities that are on-screen
-         if ((*it)->onScreen())
-            (*it)->draw(entitiesTemp);
+         if (ent.classID() != ENT_DECORATION && ent.onScreen()){
+            ent.type().mask_.draw(entitiesTemp,
+                                  &makeRect(Point(game.map) +
+                                            ent.getDrawRect()));
+            ent.draw(entitiesTemp);
+         }
+      }
 
       screenBuf << entitiesTemp;
 
@@ -199,9 +209,12 @@ void renderEntities(const GameData &game){
    }else
       //some duplicate code, but cleaner this way
       for (entities_t::const_iterator it = game.entities.begin();
-           it != game.entities.end(); ++it)
-         if ((*it)->classID() != ENT_DECORATION && (*it)->onScreen())
-            (*it)->draw();
+           it != game.entities.end(); ++it){
+
+         const Entity &ent = **it;
+         if (ent.classID() != ENT_DECORATION && ent.onScreen())
+            ent.draw();
+      }
 }
 
 //Draws the selection rectangle
@@ -214,13 +227,13 @@ void renderSelectionRect(const GameData &game,
    if (selRect.x < 0){
       selRect.w += selRect.x;
       selRect.x = 0;
-   }else if ((selRect.x + selRect.w) > SCREEN_WIDTH)
-      selRect.w = SCREEN_WIDTH - selRect.x;
+   }else if ((selRect.x + selRect.w) > Screen::screenRes.x)
+      selRect.w = Screen::screenRes.x - selRect.x;
    if (selRect.y < 0){
       selRect.h += selRect.y;
       selRect.y = 0;
-   }else if ((selRect.y + selRect.h) > SCREEN_WIDTH)
-      selRect.h = SCREEN_WIDTH - selRect.y;
+   }else if ((selRect.y + selRect.h) > Screen::screenRes.y)
+      selRect.h = Screen::screenRes.x - selRect.y;
 
    selRectImage.draw(screenBuf, &selRect, &makeRect(0, 0,
                                                     selRect.w,

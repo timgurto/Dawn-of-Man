@@ -37,7 +37,9 @@ surface_(0){
       if (screensSet_ != 0) //don't make duplicate screen buffers
          break;
 
-      surface_ = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP,
+      surface_ = SDL_SetVideoMode(Screen::screenRes.x,
+                                  Screen::screenRes.y,
+                                  SCREEN_BPP,
                                   SDL_HWSURFACE | (WINDOWED_MODE ?
                                   0 :
                                   SDL_FULLSCREEN));

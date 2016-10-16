@@ -39,16 +39,16 @@ void UIBar::calculateRect(){
          rect_.y = 0;
          break;
       case TOP_RIGHT:
-         rect_.x = SCREEN_WIDTH - ICON_SIZE;
+         rect_.x = Screen::screenRes.x - ICON_SIZE;
          rect_.y = 0;
          break;
       case BOTTOM_LEFT:
          rect_.x = 0;
-         rect_.y = SCREEN_HEIGHT - ICON_SIZE * iconCount_;
+         rect_.y = Screen::screenRes.y - ICON_SIZE * iconCount_;
          break;
       case BOTTOM_RIGHT:
-         rect_.x = SCREEN_WIDTH - ICON_SIZE;
-         rect_.y = SCREEN_HEIGHT - ICON_SIZE * iconCount_;
+         rect_.x = Screen::screenRes.x - ICON_SIZE;
+         rect_.y = Screen::screenRes.y - ICON_SIZE * iconCount_;
          break;
       }
       rect_.w = ICON_SIZE;
@@ -60,16 +60,16 @@ void UIBar::calculateRect(){
          rect_.y = 0;
          break;
       case TOP_RIGHT:
-         rect_.x = SCREEN_WIDTH - ICON_SIZE * iconCount_;
+         rect_.x = Screen::screenRes.x - ICON_SIZE * iconCount_;
          rect_.y = 0;
          break;
       case BOTTOM_LEFT:
          rect_.x = 0;
-         rect_.y = SCREEN_HEIGHT - ICON_SIZE;
+         rect_.y = Screen::screenRes.y - ICON_SIZE;
          break;
       case BOTTOM_RIGHT:
-         rect_.x = SCREEN_WIDTH - ICON_SIZE * iconCount_;
-         rect_.y = SCREEN_HEIGHT - ICON_SIZE;
+         rect_.x = Screen::screenRes.x - ICON_SIZE * iconCount_;
+         rect_.y = Screen::screenRes.y - ICON_SIZE;
          break;
       }
       rect_.w = ICON_SIZE * iconCount_;

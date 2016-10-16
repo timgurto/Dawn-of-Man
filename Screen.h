@@ -40,12 +40,24 @@ private:
 public:
 
    static Point mousePos;
+   static Point screenRes;
+
+   //Default screen resolutions - 16:10 16:9 and 4:3
+   static const Point
+      DEFAULT_SCREEN_3,
+      DEFAULT_SCREEN_2,
+      DEFAULT_SCREEN_1;
+   
+   static std::vector<Point> preferredResolutions;
 
    Screen(GoFun *go = &goDefault);
 
    //initialize static pointers
    static void init(Surface *background,
                     Surface *cursor);
+
+   //sets screen resolution based on available settings and args
+   static void setScreenResolution(int argc, char **argv);
 
    int operator()(const void *data = 0);
 };

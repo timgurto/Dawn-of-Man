@@ -80,3 +80,13 @@ bool Point::operator==(const Point &rhs) const{
 bool Point::operator!=(const Point &rhs) const{
    return !(*this == rhs);
 }
+
+bool Point::operator==(const SDL_Rect &rhs) const{
+   return
+      x == rhs.x &&
+      y == rhs.y;
+}
+
+bool operator==(const SDL_Rect &lhs, const Point &rhs){
+   return rhs == lhs;
+}
