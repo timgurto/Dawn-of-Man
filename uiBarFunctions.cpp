@@ -11,6 +11,7 @@
 #include "Unit.h"
 #include "CoreData.h"
 #include "UIBar.h"
+#include "misc.h"
 
 extern Debug debug;
 

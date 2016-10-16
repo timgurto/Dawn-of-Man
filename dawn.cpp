@@ -4,6 +4,7 @@
 #include <fstream>
 #include <ctime>
 #include <cstdlib>
+#include <string>
 
 #include "SDL.h"
 #include "SDL_ttf.h"
@@ -16,6 +17,7 @@
 #include "Point.h"
 #include "ScreenElement.h"
 #include "dawn.h"
+#include "misc.h"
 
 //global screen buffer
 Surface screenBuf; //uninitialized

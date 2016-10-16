@@ -11,6 +11,7 @@
 #include "Unit.h"
 #include "Player.h"
 #include "CoreData.h"
+#include "util.h"
 
 extern Debug debug;
 

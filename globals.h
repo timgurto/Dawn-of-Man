@@ -108,6 +108,13 @@ const std::string SCREENSHOTS_PATH = "Screenshots/";
 const std::string FONT_DEBUG = "Dina.fon";
 const std::string FONT_GAME = "Thor.ttf";
 
+//Not enum:
+//Never used as a type, and values are fixed in SDL
+const Uint8 MOUSE_BUTTON_LEFT        = 1;
+const Uint8 MOUSE_BUTTON_MIDDLE      = 2;
+const Uint8 MOUSE_BUTTON_RIGHT       = 3;
+const Uint8 MOUSE_BUTTON_SCROLL_UP   = 4;
+const Uint8 MOUSE_BUTTON_SCROLL_DOWN = 5;
 
 enum Direction{
    DIR_UP,

@@ -3,7 +3,7 @@
 #include <cassert>
 #include "MessageBox.h"
 #include "globals.h"
-#include "misc.h"
+#include "util.h"
 #include "Surface.h"
 
 MessageBox::MessageBox(SDL_Color color,

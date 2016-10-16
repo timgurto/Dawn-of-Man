@@ -5,6 +5,7 @@
 #include <list>
 #include "Particle.h"
 #include "GameData.h"
+#include "util.h"
 
 const bool   Particle::PARTICLE_FADE = false;
 const double Particle::GRAVITY = 1.6;

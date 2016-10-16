@@ -3,6 +3,7 @@
 #include <sstream>
 #include "ResourceNode.h"
 #include "GameData.h"
+#include "util.h"
 
 ResourceNode::ResourceNode(typeNum_t typeIndex,
                            const Point &loc):

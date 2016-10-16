@@ -8,6 +8,7 @@
 #include "MessageBox.h"
 #include "Surface.h"
 #include "Screen.h"
+#include "util.h"
 #include "misc.h"
 
 extern Debug debug, deltaLog;

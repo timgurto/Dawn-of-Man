@@ -4,6 +4,7 @@
 #include "types.h"
 #include "Point.h"
 #include "Debug.h"
+#include "util.h"
 
 extern Debug debug;
 

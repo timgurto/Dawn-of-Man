@@ -6,6 +6,7 @@
 #include <map>
 #include "types.h"
 #include "update.h"
+#include "util.h"
 #include "misc.h"
 #include "GameData.h"
 #include "Debug.h"

@@ -8,7 +8,7 @@
 
 #include "SDL_ttf.h"
 
-#include "misc.h"
+//#
 #include "types.h"
 
 class Surface;

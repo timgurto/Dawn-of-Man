@@ -319,6 +319,10 @@
 				RelativePath=".\update.h"
 				>
 			</File>
+			<File
+				RelativePath=".\util.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
@@ -453,6 +457,10 @@
 			</File>
 			<File
 				RelativePath=".\update.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\util.cpp"
 				>
 			</File>
 		</Filter>

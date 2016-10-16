@@ -2,6 +2,7 @@
 
 #include "EntityType.h"
 #include "misc.h"
+#include "util.h"
 
 EntityType::EntityType(typeNum_t index, EntityTypeID type,
                        const std::string &name,

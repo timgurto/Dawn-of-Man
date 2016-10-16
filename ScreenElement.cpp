@@ -6,7 +6,7 @@
 #include "ScreenElement.h"
 #include "Surface.h"
 #include "Screen.h"
-#include "misc.h"
+#include "util.h"
 
 SDL_Color      ScreenElement::defaultLabelColor_ = WHITE;
 SDL_Color      ScreenElement::defaultButtonColor_ = YELLOW;

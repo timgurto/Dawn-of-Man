@@ -5,6 +5,8 @@
 #include <ctime>
 #include "update.h"
 #include "game.h"
+#include "util.h"
+#include "misc.h"
 #include "UIBar.h"
 #include "Building.h"
 #include "Unit.h"

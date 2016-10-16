@@ -1,7 +1,8 @@
 // (C) 2009, 2010 Tim Gurto
 
 #include "SDL.h"
-#include "misc.h"
+#include "util.h"
+#include "Point.h"
 
 Point::Point(const SDL_Rect &original):
 x(original.x),

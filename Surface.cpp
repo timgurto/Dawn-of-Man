@@ -8,7 +8,7 @@
 #include "Surface.h"
 #include "Screen.h"
 #include "globals.h"
-#include "misc.h"
+#include "util.h"
 
 extern bool WINDOWED_MODE;
 

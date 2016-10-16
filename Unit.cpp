@@ -7,6 +7,7 @@
 #include <sstream>
 #include "SDL_mixer.h"
 #include "misc.h"
+#include "util.h"
 #include "GameData.h"
 #include "Unit.h"
 #include "UnitType.h"

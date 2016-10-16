@@ -10,6 +10,7 @@
 #include "Point.h"
 #include "ScreenElement.h"
 #include "globals.h"
+#include "util.h"
 
 //TODO comments
 extern Debug debug;

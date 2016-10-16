@@ -1,7 +1,7 @@
 // (C) 2009, 2010 Tim Gurto
 
 #include "types.h"
-#include "misc.h"
+#include "util.h"
 #include "GameData.h"
 #include "Point.h"
 #include "UIBar.h"

@@ -8,6 +8,7 @@
 #include "globals.h"
 #include "update.h"
 #include "render.h"
+#include "util.h"
 #include "misc.h"
 #include "Debug.h"
 #include "GameData.h"

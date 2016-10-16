@@ -3,7 +3,6 @@
 #include <cstdlib> //rand
 #include <cassert>
 
-#include "misc.h"
 #include "types.h"
 #include "update.h"
 #include "globals.h"
@@ -17,6 +16,8 @@
 #include "CoreData.h"
 #include "Decoration.h"
 #include "Surface.h"
+#include "util.h"
+#include "misc.h"
 
 extern Debug debug;
 

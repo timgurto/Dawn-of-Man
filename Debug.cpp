@@ -7,7 +7,7 @@
 
 #include "SDL_ttf.h"
 
-#include "misc.h"
+#include "util.h"
 #include "types.h"
 #include "Debug.h"
 #include "Surface.h"
