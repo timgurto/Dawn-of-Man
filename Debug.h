@@ -1,4 +1,4 @@
-// (C) 2009-2010 Tim Gurto
+// (C) 2009, 2010 Tim Gurto
 
 #ifndef DEBUG_H
 #define DEBUG_H

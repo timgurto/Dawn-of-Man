@@ -183,8 +183,8 @@ void renderEntities(const GameData &game){
    //along with the regular sprite drawing
    if (ENTITY_MASKS){
       //intermediate surface
-      Surface entitiesTemp(SUR_BLANK, Screen::screenRes.x, Screen::screenRes.y,
-                           ENTITY_BACKGROUND);
+      Surface entitiesTemp(SUR_BLANK, Screen::getScreenRes().x,
+                           Screen::getScreenRes().y, ENTITY_BACKGROUND);
       entitiesTemp.fill(ENTITY_BACKGROUND);
 
       for (entities_t::const_iterator it = game.entities.begin();
@@ -227,13 +227,13 @@ void renderSelectionRect(const GameData &game,
    if (selRect.x < 0){
       selRect.w += selRect.x;
       selRect.x = 0;
-   }else if ((selRect.x + selRect.w) > Screen::screenRes.x)
-      selRect.w = Screen::screenRes.x - selRect.x;
+   }else if ((selRect.x + selRect.w) > Screen::getScreenRes().x)
+      selRect.w = Screen::getScreenRes().x - selRect.x;
    if (selRect.y < 0){
       selRect.h += selRect.y;
       selRect.y = 0;
-   }else if ((selRect.y + selRect.h) > Screen::screenRes.y)
-      selRect.h = Screen::screenRes.x - selRect.y;
+   }else if ((selRect.y + selRect.h) > Screen::getScreenRes().y)
+      selRect.h = Screen::getScreenRes().x - selRect.y;
 
    selRectImage.draw(screenBuf, &selRect, &makeRect(0, 0,
                                                     selRect.w,

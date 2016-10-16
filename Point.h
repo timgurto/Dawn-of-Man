@@ -1,4 +1,4 @@
-// (C) 2009-2010 Tim Gurto
+// (C) 2009, 2010 Tim Gurto
 
 #ifndef POINT_H
 #define POINT_H

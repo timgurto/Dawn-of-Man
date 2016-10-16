@@ -1,4 +1,4 @@
-// (C) 2009-2010 Tim Gurto
+// (C) 2009, 2010 Tim Gurto
 
 #include <cassert>
 #include <map>
@@ -82,7 +82,7 @@ unsigned gameMode(Screen &thisScreen, const void *data){
       victory       (MISC_IMAGE_PATH + "victory.PNG",        GREEN),
       loss          (MISC_IMAGE_PATH + "loss.PNG",           GREEN),
       glow          (MISC_IMAGE_PATH + "glow.PNG", true),
-      entitiesTemp  (SUR_BLANK, Screen::screenRes.x, Screen::screenRes.y,
+      entitiesTemp  (SUR_BLANK, Screen::getScreenRes().x, Screen::getScreenRes().y,
                      ENTITY_BACKGROUND),
       selRectImage  (SUR_BLANK);
 
@@ -144,7 +144,7 @@ unsigned gameMode(Screen &thisScreen, const void *data){
    //Message Boxes
    messageBoxes_t messageBoxes;
    MessageBox contextHelp(WHITE,
-                          2, Screen::screenRes.y - ICON_SIZE - 1,
+                          2, Screen::getScreenRes().y - ICON_SIZE - 1,
                           1,
                           darkMap,
                           "Thor.ttf", 18,
@@ -154,7 +154,7 @@ unsigned gameMode(Screen &thisScreen, const void *data){
                            darkMap,
                            "Thor.ttf", 18);
    MessageBox fpsDisplay(WHITE,
-                         Screen::screenRes.x / 2 - 40, 2,
+                         Screen::getScreenRes().x / 2 - 40, 2,
                          1,
                          darkMap,
                          "Dina.fon", 0,

@@ -1,4 +1,4 @@
-// (C) 2009-2010 Tim Gurto
+// (C) 2009, 2010 Tim Gurto
 
 #ifndef GAME_DATA_H
 #define GAME_DATA_H

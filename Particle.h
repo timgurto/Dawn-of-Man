@@ -1,4 +1,4 @@
-// (C) 2009-2010 Tim Gurto
+// (C) 2009, 2010 Tim Gurto
 #ifndef PARTICLE_H
 #define PARTICLE_H
 

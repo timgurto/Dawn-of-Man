@@ -40,8 +40,8 @@ public:
    Surface(const std::string fileName, const SDL_Color &background,
            bool alpha = false);
    Surface(SpecialSurface special = SUR_UNINIT,
-           int width = Screen::screenRes.x,
-           int height = Screen::screenRes.y,
+           int width = Screen::getScreenRes().x,
+           int height = Screen::getScreenRes().y,
            SDL_Color background = NO_COLOR);
    Surface(TTF_Font *font, std::string message, SDL_Color color);
    Surface(const Surface &original);

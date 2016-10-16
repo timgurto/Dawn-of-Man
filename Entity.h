@@ -1,4 +1,4 @@
-// (C) 2009-2010 Tim Gurto
+// (C) 2009, 2010 Tim Gurto
 
 #ifndef ENTITY_H
 #define ENTITY_H
@@ -49,6 +49,8 @@ protected: //everything should be a derived class
    //here when marked for deletion, but deleting would
    //invalidate data or iterators.
    //Allows deletion at a later time.
+   //It's best to empty it at the same place you use it,
+   //so that you know what's going on.
    static entities_t trashCan_;
 
    //Draws the mask, then the colored sprite, creating

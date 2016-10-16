@@ -1,4 +1,4 @@
-// (C) 2009-2010 Tim Gurto
+// (C) 2009, 2010 Tim Gurto
 
 #ifndef MISC_H
 #define MISC_H
@@ -45,12 +45,10 @@ void freeSound(SDL_Sound *&p);
 //Deep-copies a sound from one pointer to another.
 SDL_Sound *copySound(SDL_Sound* src);
 
-//returns a rectangle with equal dimensions, but co-ordinates
-// of zero.
+//returns a rectangle with equal dimensions, but blank co-ordinates
 SDL_Rect dimRect(const SDL_Rect &original);
 
-//returns a rectangle with equal co-ordinates, but dimensions
-// of zero.
+//returns a rectangle with equal co-ordinates, but blank dimensions
 SDL_Rect locRect(const SDL_Rect &original);
 
 //Whether the specified key is currently down

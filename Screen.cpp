@@ -13,31 +13,34 @@
 extern Debug debug;
 
 //Default screen resolutions - 16:10 16:9 and 4:3
-const Point Screen::defaultRes[] = {
+const Point Screen::defaultRes_[] = {
    Point(1280, 800),
    Point(1280, 720),
    Point(1024, 768),
+
    Point() //sentinel
 };
 
 Surface *Screen::background_ = 0;
 Surface *Screen::cursor_ = 0;
-Point Screen::screenRes(defaultRes[0]);
-Point Screen::mousePos = screenRes / 2;
-std::vector<Point> Screen::preferredResolutions;
-bool Screen::windowedMode = DEBUG;
+Point Screen::screenRes_(defaultRes_[0]);
+Point Screen::mousePos = screenRes_ / 2;
+bool Screen::windowedMode_ = DEBUG;
+TTF_Font *Screen::titleFont_ = 0;
+SDL_Color Screen::defaultTextColor_ = BLACK;
 
 
-unsigned Screen::goDefault(Screen &thisScreen, const void *data){
+unsigned Screen::goDefault_(Screen &thisScreen, const void *data){
+   assert(!data);
 
    while(thisScreen.loop_){
-      thisScreen.handleEventsDefault();
-      thisScreen.drawDefault();
+      thisScreen.handleEventsDefault_();
+      thisScreen.drawDefault_();
    }
    return 0;
 }
 
-void Screen::handleEventsDefault(){
+void Screen::handleEventsDefault_(){
    SDL_Event event;
    while (SDL_PollEvent(&event)){
       switch (event.type){
@@ -103,20 +106,43 @@ void Screen::handleEventsDefault(){
    } //event while
 }
 
-void Screen::drawDefault() const{
+void Screen::drawDefault_() const{
    assert(screenBuf);
    screenBuf.fill();
-   screenBuf << *background_;
+
+   //background
+   int
+      xTiles = screenRes_.x / MAP_TILE_SIZE + 1,
+      yTiles = screenRes_.y / MAP_TILE_SIZE + 1;
+   for (int x = 0; x != xTiles; ++x)
+      for (int y = 0; y != yTiles; ++y)
+         background_->draw(screenBuf, &makeRect(x * MAP_TILE_SIZE,
+                                                y * MAP_TILE_SIZE));
+
+   //title
+   Surface title(titleFont_, title_, defaultTextColor_);
+   pixels_t xCoord = (screenRes_.x - title->w) / 2;
+   //TODO init this y co-ord
+   title.draw(screenBuf, &makeRect(xCoord, 20));
+
+   //flip buffer
    screenBuf.flip();
 }
 
 void Screen::init(Surface *background,
-                  Surface *cursor){
+                  Surface *cursor,
+                  int titleSize,
+                  const std::string &titleFontName,
+                  SDL_Color textColor){
    background_ = background;
    cursor_ = cursor;
+   defaultTextColor_ = textColor;
+   titleFont_ = TTF_OpenFont(titleFontName.c_str(), titleSize);
+   assert (titleFont_);
 }
 
-Screen::Screen(GoFun go):
+Screen::Screen(std::string title, GoFun go):
+title_(title),
 go_(go),
 loop_(true){}
 
@@ -124,7 +150,8 @@ int Screen::operator()(const void *data){
    //make sure there are no events on the queue
    //SDL_Event event;
    //TODO assert(!SDL_PollEvent(&event));
-   //TODO don't deref FPs
+
+   //empty queue?
    return (*go_)(*this, data);
 }
 
@@ -141,7 +168,7 @@ void Screen::setScreenResolution(int argc, char **argv){
    //whether the default screen size is available
    bool defaultResFound = false;
    const Point *defaultResCheck;
-   for (defaultResCheck = defaultRes; *defaultResCheck != Point();
+   for (defaultResCheck = defaultRes_; *defaultResCheck != Point();
         ++defaultResCheck){
       for (SDL_Rect **currentResCheck = resolutions; *currentResCheck;
            ++currentResCheck){
@@ -155,22 +182,30 @@ void Screen::setScreenResolution(int argc, char **argv){
    }
 
    //Windowed
-   windowedMode = DEBUG || isArg("-win", argc, argv);
+   windowedMode_ = DEBUG || isArg("-win", argc, argv);
    if (isArg("-width", argc, argv) &&
        isArg("-height", argc, argv)){
-      screenRes.x = whatIsArg("-width", argc, argv);
-      screenRes.y = whatIsArg("-height", argc, argv);
+      screenRes_.x = whatIsArg("-width", argc, argv);
+      screenRes_.y = whatIsArg("-height", argc, argv);
    //Current resolution
    }else if (isArg("-retain", argc, argv) || !defaultResFound){
-      screenRes.x = current->current_w;
-      screenRes.y = current->current_h;
+      screenRes_.x = current->current_w;
+      screenRes_.y = current->current_h;
    //Default
    }else{
-      if (defaultResFound)
-         screenRes = *defaultResCheck;
+      if (windowedMode_ || defaultResFound)
+         screenRes_ = *defaultResCheck;
       else
          //default: retain current resolution
-         screenRes.x = current->current_w;
-         screenRes.y = current->current_h;
+         screenRes_.x = current->current_w;
+         screenRes_.y = current->current_h;
    }
+}
+
+const Point &Screen::getScreenRes(){
+   return screenRes_;
+}
+
+bool Screen::getWindowedMode(){
+   return windowedMode_;
 }

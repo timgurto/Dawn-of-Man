@@ -1,4 +1,4 @@
-// (C) 2009-2010 Tim Gurto
+// (C) 2009, 2010 Tim Gurto
 
 #include <cassert>
 #include <fstream>
@@ -60,12 +60,13 @@ int main(int argc, char **argv){
       cursorShadow.setAlpha(SHADOW_ALPHA);
 
       //init with surfaces
-      Screen::init(&background, &cursor);
+      //TODO const font names
+      Screen::init(&background, &cursor, 60, "Thor.ttf", WHITE);
 
-      Screen mainMenu;
-      mainMenu();
+      Screen mainMenu("Dawn of Man");
+      //mainMenu();
 
-      Screen game(&gameMode);
+      Screen game("", &gameMode);
 
       //campaign: go through each level
       int levels;
@@ -74,10 +75,12 @@ int main(int argc, char **argv){
            ++levels);
       //levels = number of levels in the campaign
 
+      //play each consecutive level
       for (int i = 0; i != levels; ++i){
          unsigned outcome;
          //repeat each level if lost
-         while ((outcome = game(&(format2(i) + ".dat"))) == LOSS)
+         std::string filename = format2(i) + ".dat";
+         while ((outcome = game(&filename)) == LOSS)
             ;
          if (outcome == QUIT)
             break;

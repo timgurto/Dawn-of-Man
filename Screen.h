@@ -3,6 +3,8 @@
 #ifndef SCREEN_H
 #define SCREEN_H
 
+#include <string>
+#include "SDL_ttf.h"
 #include "Point.h"
 
 class Surface;
@@ -14,15 +16,18 @@ public:
 
 private:
 
-   //Default screen resolutions - 16:10 16:9 and 4:3
-   static const Point defaultRes[];
-
    //What the screen does
    //Default: goDefault
    GoFun *go_;
 
    //whether to continue looping
    bool loop_;
+
+   //the screen's title
+   std::string title_;
+
+   //Default screen resolutions - 16:10 16:9 and 4:3
+   static const Point defaultRes_[];
    
    static Surface
       *background_, //the background image for all screens
@@ -30,35 +35,42 @@ private:
 
    //Default screen functionality.  Accepts input and renders
    //until a button is pushed.
-   static GoFun goDefault;
+   static GoFun goDefault_;
+
+   static TTF_Font *titleFont_;
+   static SDL_Color defaultTextColor_;
+
+   static Point screenRes_;
+   static bool windowedMode_;
 
    //inspect SDL's event queue and deal accordingly
    //used by goDefault
-   void handleEventsDefault();
+   void handleEventsDefault_();
 
    //draw the screen
    //used by goDefault
-   void drawDefault() const;
+   void drawDefault_() const;
 
 public:
 
    static Point mousePos;
-   static Point screenRes;
 
-   static bool windowedMode;
-   
-   static std::vector<Point> preferredResolutions;
+   Screen(std::string title = "", GoFun *go = &goDefault_);
 
-   Screen(GoFun *go = &goDefault);
+   int operator()(const void *data = 0);
 
    //initialize static pointers
    static void init(Surface *background,
-                    Surface *cursor);
+                    Surface *cursor,
+                    int titleSize,
+                    const std::string &titleFontName,
+                    SDL_Color textColor);
 
    //sets screen resolution based on available settings and args
    static void setScreenResolution(int argc, char **argv);
 
-   int operator()(const void *data = 0);
+   static const Point &getScreenRes();
+   static bool getWindowedMode();
 };
 
 #endif

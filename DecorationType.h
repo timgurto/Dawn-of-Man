@@ -1,4 +1,4 @@
-// (C) 2009-2010 Tim Gurto
+// (C) 2009, 2010 Tim Gurto
 
 #ifndef DECORATION_TYPE_H
 #define DECORATION_TYPE_H

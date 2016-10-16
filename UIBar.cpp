@@ -1,4 +1,4 @@
-// (C) 2009-2010 Tim Gurto
+// (C) 2009, 2010 Tim Gurto
 
 #include "types.h"
 #include "misc.h"
@@ -39,16 +39,16 @@ void UIBar::calculateRect(){
          rect_.y = 0;
          break;
       case TOP_RIGHT:
-         rect_.x = Screen::screenRes.x - ICON_SIZE;
+         rect_.x = Screen::getScreenRes().x - ICON_SIZE;
          rect_.y = 0;
          break;
       case BOTTOM_LEFT:
          rect_.x = 0;
-         rect_.y = Screen::screenRes.y - ICON_SIZE * iconCount_;
+         rect_.y = Screen::getScreenRes().y - ICON_SIZE * iconCount_;
          break;
       case BOTTOM_RIGHT:
-         rect_.x = Screen::screenRes.x - ICON_SIZE;
-         rect_.y = Screen::screenRes.y - ICON_SIZE * iconCount_;
+         rect_.x = Screen::getScreenRes().x - ICON_SIZE;
+         rect_.y = Screen::getScreenRes().y - ICON_SIZE * iconCount_;
          break;
       }
       rect_.w = ICON_SIZE;
@@ -60,16 +60,16 @@ void UIBar::calculateRect(){
          rect_.y = 0;
          break;
       case TOP_RIGHT:
-         rect_.x = Screen::screenRes.x - ICON_SIZE * iconCount_;
+         rect_.x = Screen::getScreenRes().x - ICON_SIZE * iconCount_;
          rect_.y = 0;
          break;
       case BOTTOM_LEFT:
          rect_.x = 0;
-         rect_.y = Screen::screenRes.y - ICON_SIZE;
+         rect_.y = Screen::getScreenRes().y - ICON_SIZE;
          break;
       case BOTTOM_RIGHT:
-         rect_.x = Screen::screenRes.x - ICON_SIZE * iconCount_;
-         rect_.y = Screen::screenRes.y - ICON_SIZE;
+         rect_.x = Screen::getScreenRes().x - ICON_SIZE * iconCount_;
+         rect_.y = Screen::getScreenRes().y - ICON_SIZE;
          break;
       }
       rect_.w = ICON_SIZE * iconCount_;
@@ -145,8 +145,10 @@ void UIBar::init(const CoreData *core,
 void UIBar::click(typeNum_t index){
    if (index == NO_TYPE)
       index = mouseIndex();
-   clickFun_(index, *core_, *game_);
-   calculateRect();
+   if (index < iconCountFun_(*core_, *game_)){
+      clickFun_(index, *core_, *game_);
+      calculateRect();
+   }
 }
 
 std::string UIBar::helpText(typeNum_t index){

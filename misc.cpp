@@ -1,4 +1,4 @@
-// (C) 2009-2010 Tim Gurto
+// (C) 2009, 2010 Tim Gurto
 
 #include <cassert>
 #include <string>
@@ -344,8 +344,8 @@ double modulo(double a, int b){
 //Centers the map on the provided co-ordinates.
 //Map edges are taken into account automatically
 void centerMap(GameData &game, const Point &center){
-   game.map.x = Screen::screenRes.x / 2 - center.x;
-   game.map.y = Screen::screenRes.y / 2 - center.y;
+   game.map.x = Screen::getScreenRes().x / 2 - center.x;
+   game.map.y = Screen::getScreenRes().y / 2 - center.y;
 }
 
 //Determines whether the specified entity is
