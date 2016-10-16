@@ -213,7 +213,6 @@ void Unit::tick(double delta){
                      reachedTarget = true;
                   }
                }else{
-                  assert (xyDelta.x <= 0);
                   if (xyDelta.x < -xRight){
                      xyDelta.x = -xRight;
                      reachedTarget = true;
@@ -746,7 +745,7 @@ EntityTypeID Unit::classID() const{
 bool Unit::selectable() const{
    return
       finished_ &&
-      player_ == HUMAN_PLAYER;
+      DEBUG || player_ == HUMAN_PLAYER;
 }
 
 bool Unit::targetable() const{
@@ -787,4 +786,8 @@ bool Unit::isMoving() const{
 
 const path_t &Unit::getPath() const{
    return path_;
+}
+
+bool Unit::isIdle() const{
+   return !(moving_ || combat_);
 }

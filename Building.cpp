@@ -90,7 +90,7 @@ EntityTypeID Building::classID() const{
 bool Building::selectable() const{
    return
       finished_ &&
-      player_ == HUMAN_PLAYER;
+      DEBUG || player_ == HUMAN_PLAYER;
 }
 
 bool Building::targetable() const{

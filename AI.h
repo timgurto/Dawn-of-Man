@@ -98,7 +98,7 @@ public:
    //find a location for the unit to go, and send him there
    void dispatchUnit(Unit *unit, const ResourceNode *ignore = 0);
 
-   //assign tasks to all units (for init only)
+   //assign tasks to all idle units
    void dispatchAllUnits();
 };
 

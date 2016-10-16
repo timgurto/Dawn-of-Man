@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <vector>
 #include "util.h"
+#include "misc.h"
 #include "AI.h"
 #include "Resources.h"
 #include "CoreData.h"
@@ -126,6 +127,7 @@ void AI::update(){
          checkMilitary();
          checkBuildings();
          buildPossible();
+         dispatchAllUnits();
       }
 }
 
@@ -227,7 +229,23 @@ void AI::checkMilitary(){
 }
 
 void AI::checkBuildings(){
-   //TODO
+   Player &player = game_->players[player_];
+
+   //check any buildings
+   std::vector<wishlist_t::iterator> trash; //iterators to erase
+   ITERATE(wishlist_t::iterator, buildingWishlist_, it){
+      typeNum_t index = *it;
+      const Resources &cost = core_->buildingTypes[index].getCost();
+      if (!player.sufficientResources(cost))
+         break;
+      
+      expansionSupply_ -= cost;
+      buildingsQueue_.push(index);
+
+      trash.push_back(it);
+   }
+   ITERATE(std::vector<wishlist_t::iterator>::iterator, trash, it)
+      buildingWishlist_.erase(*it);
 }
 
 //build anything in the buildQueue which can be built
@@ -254,9 +272,49 @@ void AI::buildPossible(){
       else
          break; //no room to place unit
    }
+
+   //buildings
+   const Player &player = game_->players[player_];
+   for (typeNum_t i = 0; i != core_->buildingTypes.size(); ++i){
+      const BuildingType &type = core_->buildingTypes[i];
+      if (player.hasBuilding(i))
+         continue;
+      if (!game_->validBuilding(player_, i))
+         continue;
+      if (!player.sufficientResources(type.getCost()))
+         continue;
+
+      Point loc(-1, -1);
+      int tries = 100;
+      bool built;
+      do{
+         loc = Point(pixels_t(rand() % game_->map.w),
+                     pixels_t(rand() % game_->map.h));
+         if (!inside(type.getBaseRect() + loc,
+             dimRect(game_->map)))
+            continue;
+         if (!noCollision(*game_, type, loc))
+            continue;
+         built = game_->constructBuilding(i, loc, player_);
+         if (!built)
+            break;
+      }while(--tries >= 0);
+   }
 }
 
 void AI::dispatchUnit(Unit *unit, const ResourceNode *ignore){
+
+   //non-gatherer builders are dispatched separately
+   if (unit->isBuilder())
+      ITERATE(entities_t::const_iterator, game_->entities, it)
+         if ((*it)->classID() == ENT_BUILDING){
+            const Building &building = (const Building &)(**it);
+            if (!building.isFinished()){
+               unit->setTarget(*it);
+               return;
+            }
+         }
+
    //1. gatherers --> resource sites
    if (unit->isGatherer()){
       ResourceNode *target = unit->findNearbyResource(ignore);
@@ -265,10 +323,6 @@ void AI::dispatchUnit(Unit *unit, const ResourceNode *ignore){
       //else no nodes on map, and so stay idle
       return;
    }
-
-   //non-gatherer builders are dispatched separately
-   if (unit->isBuilder())
-      return;
 
    //2. military --> surround base
    //if execution gets here, it's a military unit
@@ -279,7 +333,8 @@ void AI::dispatchAllUnits(){
    ITERATE(entities_t::iterator, game_->entities, it)
       if ((*it)->classID() == ENT_UNIT){
          Unit *unit = (Unit *)(*it);
-         if (unit->getPlayer() == player_)
+         if (unit->getPlayer() == player_ &&
+             unit->isIdle())
             dispatchUnit(unit);
       }
 }

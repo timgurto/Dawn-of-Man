@@ -101,6 +101,7 @@ public:
    pixels_t getSpeed() const;
    bool isMoving() const;
    const path_t &getPath() const;
+   bool isIdle() const;
 };
 
 #endif
