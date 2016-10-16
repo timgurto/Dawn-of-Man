@@ -234,13 +234,40 @@ double atod(std::string s){
    return d;
 }
 
-void drawLine(Surface &dst,
-              const Point &p1, const Point &p2,
-              Uint32 color){
-   SDL_Rect rect;
-   rect.x = min(p1.x, p2.x);
-   rect.y = min(p1.y, p2.y);
-   rect.w = distance(p1.x, p2.x);
-   rect.h = distance(p1.y, p2.y);
-   dst.fill(color, &rect);
+void drawLine(Surface &dst, const Point &p1, const Point &p2, Uint32 color){
+   //if horizontal or vertical line, draw a rectangle
+   if (p1.x == p2.x || p1.y == p2.y){
+      SDL_Rect rect;
+      rect.x = min(p1.x, p2.x);
+      rect.y = min(p1.y, p2.y);
+      rect.w = max(2, distance(p1.x, p2.x));
+      rect.h = max(2, distance(p1.y, p2.y));
+      dst.fill(color, &rect);
+
+   //otherwise, invoke the magic of trigonometry!
+   }else{
+      double gradient = 1.0 * (p2.y - p1.y) / (p2.x - p1.x);
+      double angle = atan(gradient);
+      if (p2.x < p1.x){
+         if (p2.y > p1.y)
+            angle += PI;
+         else
+            angle -= PI;
+      }
+
+      //iterate through line, pixel-by-pixel
+      double
+         xMod = p1.x,
+         yMod = p1.y;
+      while ((p1.x < p2.x) == (xMod <= p2.x) &&
+             (p1.y < p2.y) == (yMod <= p2.y)){
+         SDL_Rect rect;
+         rect.x = pixels_t(xMod);
+         rect.y = pixels_t(yMod);
+         rect.w = rect.h = 2;
+         dst.fill(color, &rect);
+         xMod += cos(angle);
+         yMod += sin(angle);
+      }
+   }
 }

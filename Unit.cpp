@@ -106,11 +106,12 @@ void Unit::draw(Surface &screen) const{
    }
 
    //target
-   if (DEBUG)
-      screen.fill(getEntityColor(*game_, getColor()),
-                  &makeRect(target_.x + game_->map.x - 2,
-                            target_.y + game_->map.y - 2,
-                            5, 5));
+   if (DEBUG){
+      SDL_Rect rect = makeRect(target_.x + game_->map.x - 2,
+                               target_.y + game_->map.y - 2,
+                               5, 5);
+      screen.fill(getEntityColor(*game_, getColor()), &rect);
+   }
 }
 
 void Unit::tick(double delta){

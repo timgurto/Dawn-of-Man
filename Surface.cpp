@@ -47,7 +47,7 @@ surface_(0){
                                   SDL_HWSURFACE | (Screen::getWindowedMode() ?
                                   0 :
                                   SDL_FULLSCREEN));
-      SDL_WM_SetCaption("Dawn of Man", 0);
+      SDL_WM_SetCaption("Game", 0);
       isScreen_ = true;
       assert (screensSet_ == 0);
       screensSet_ = 1;
@@ -152,7 +152,7 @@ void Surface::quit(){
 //load a surface from an image file
 void Surface::loadImage(const std::string &fileName, bool alpha){
    SDL_Surface *load = IMG_Load(fileName.c_str());
-   assert(load);
+   //assert(load);
    surface_ = alpha ?
       SDL_DisplayFormatAlpha(load) :
       SDL_DisplayFormat(load);
@@ -185,6 +185,11 @@ void Surface::fill(Uint32 color, SDL_Rect *rect){
 void Surface::draw(Surface &dst,
                    SDL_Rect *dstRect, SDL_Rect *srcRect) const{
    SDL_BlitSurface(surface_, srcRect, dst.surface_, dstRect);
+}
+
+void Surface::draw(Surface &dst, Point dstPoint, SDL_Rect *srcRect) const{
+   SDL_Rect rect = makeRect(dstPoint);
+   draw(dst, &rect, srcRect);
 }
 
 //dst << src: draw

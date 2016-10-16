@@ -60,11 +60,13 @@ void Debug::display() const{
 
       //draw shadow
       Surface blackSurface(font_, message, BLACK);
-      blackSurface.draw(screenBuf, &makeRect(x_+1, y_+1 + lat));
+      SDL_Rect rect = makeRect(x_ + 1, y_ + 1 + lat);
+      blackSurface.draw(screenBuf, &rect);
       
       //draw text
       Surface surface(font_, message, color_);
-      surface.draw(screenBuf, &makeRect(x_, y_ + lat));
+      --rect.y;
+      surface.draw(screenBuf, &rect);
 
       lat += height_;
    }

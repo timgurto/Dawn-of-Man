@@ -1,0 +1,56 @@
+# map size; must be before any random entities,
+# if specified
+map{
+   x = 2;
+   y = 2;
+}
+
+# players; indices MUST increment, and there MUST be
+# at least two players: nature (0) and human (1).
+player{
+   index = 0;           # 0 = nature
+   color = 0x765e3e;
+}
+player{
+   index = 1;           # 1 = human player
+   color = 0;#0x882222;
+}
+player{
+   index = 2;           # 2 = computer
+   color = 0xca6500;
+}
+
+
+
+# entities; added in the order specified here.
+
+building{
+   type = 4;
+   player = 1;
+   location.x = 260;
+   location.y = 400;
+   centerMap = true;
+}
+building{
+   type = 5;
+   player = 2;
+   location.x = 400;
+   location.y = 450;
+}
+unit{
+   type = 0;
+   player = 1;
+   location.x = 500;
+   location.y = 400;
+}
+
+
+
+# trees
+
+decoration{
+   type = 1;
+   random = 80;
+}
+
+;   any text below is ignored

@@ -70,27 +70,27 @@ int main(int argc, char **argv){
          credits(BUTTON_QUIT, BUTTON_QUIT);
       buildScreens(mainMenu, credits);
 
-      bool loop = true;
-      do{
-         switch(mainMenu()){
-         case BUTTON_QUIT:
-            loop = false;
-            break;
+      //bool loop = true;
+      //do{
+      //   switch(mainMenu()){
+      //   case BUTTON_QUIT:
+      //      loop = false;
+      //      break;
 
-         case BUTTON_CREDITS:
-            credits();
-            break;
+      //   case BUTTON_CREDITS:
+      //      credits();
+      //      break;
 
-         case BUTTON_NEW:
-            {
-               int outcome = playCampaign(game);
-               if (outcome == ALT_F4)
-                  loop = false;
-            }
-            break;
-         }
-      }while(loop);
-      //game(&(std::string)"aiTest.dat");
+      //   case BUTTON_NEW:
+      //      {
+      //         int outcome = playCampaign(game);
+      //         if (outcome == ALT_F4)
+      //            loop = false;
+      //      }
+      //      break;
+      //   }
+      //}while(loop);
+      game(&(std::string)"00.dat");
 
    }
 

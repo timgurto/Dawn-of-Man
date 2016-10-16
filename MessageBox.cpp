@@ -40,19 +40,22 @@ void MessageBox::draw() const{
 
          //background
          if (background_){
-            screenBuf.fill(ENGRAVE_DARK,
-                           &makeRect(x_ - margin_, y_ - margin_,
-                                     width + 1, height_ + 1));
-            screenBuf.fill(ENGRAVE_LIGHT_UINT,
-                           &makeRect(x_ - margin_ - 1, y_ - margin_ - 1,
-                                     width + 1, height_ + 1));
+            SDL_Rect rect = makeRect(x_ - margin_,
+                                     y_ - margin_,
+                                     width + 1,
+                                     height_ + 1);
+            screenBuf.fill(ENGRAVE_DARK, &rect);
+            rect -= Point(1, 1);
+            screenBuf.fill(ENGRAVE_LIGHT_UINT, &rect);
+            SDL_Rect src = makeRect(0, 0, width, height_);
             background_.draw(screenBuf,
-                             &makeRect(x_ - margin_, y_ - margin_),
-                             &makeRect(0, 0, width, height_));
+                             Point(x_ - margin_,y_ - margin_),
+                             &rect);
          }
 
          //message
-         text.draw(screenBuf, &makeRect(x_ + margin_, y_ + margin_));
+
+         text.draw(screenBuf, Point(x_ + margin_, y_ + margin_));
       }
 }
 

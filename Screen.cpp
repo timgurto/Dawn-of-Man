@@ -27,7 +27,7 @@ Surface *Screen::background_ = 0;
 Surface *Screen::cursor_ = 0;
 Point Screen::screenRes_ = defaultRes_[0];
 Point Screen::mousePos = screenRes_ / 2;
-bool Screen::windowedMode_ = DEBUG;
+bool Screen::windowedMode_ = true;//DEBUG;
 
 //Default screen functionality.  Accepts input and renders until a button is pushed.
 unsigned Screen::goDefault_(Screen &thisScreen, const void *data){
@@ -150,7 +150,7 @@ void Screen::drawDefault_() const{
       yTiles = screenRes_.y / MAP_TILE_SIZE + 1;
    for (int x = 0; x != xTiles; ++x)
       for (int y = 0; y != yTiles; ++y)
-         background_->draw(screenBuf, &makeRect(x * MAP_TILE_SIZE,
+         background_->draw(screenBuf, /*&*/makeRect(x * MAP_TILE_SIZE,
                                                 y * MAP_TILE_SIZE));
 
    //elements
@@ -158,7 +158,7 @@ void Screen::drawDefault_() const{
       it->draw();
 
    //cursor
-   cursor_->draw(screenBuf, &makeRect(mousePos + CURSOR_OFFSET));
+   cursor_->draw(screenBuf, /*&*/makeRect(mousePos + CURSOR_OFFSET));
 
    //debug log
    if (DEBUG)

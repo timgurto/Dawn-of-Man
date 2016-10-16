@@ -156,9 +156,9 @@ void Entity::colorBlit(int color, Surface &screen,
       indexShadowed.fill(ENTITY_BACKGROUND);
 
       //Draw shadows, and sprite
-      indexLight.draw(indexShadowed, &makeRect(2, 2));
-      indexDark .draw(indexShadowed, &makeRect(0, 0));
-      index     .draw(indexShadowed, &makeRect(1, 1));
+      indexLight.draw(indexShadowed, Point(2, 2));
+      indexDark .draw(indexShadowed, Point(0, 0));
+      index     .draw(indexShadowed, Point(1, 1));
    }
    if (drawBlack() && !indexBlack){
       indexBlack = Surface(SUR_BLANK,

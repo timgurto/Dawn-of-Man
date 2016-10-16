@@ -87,20 +87,20 @@ void UIBar::draw() const{
          &barSurface = *barSurface_;
 
       //shadow
+      SDL_Rect src = makeRect(0, 9, rect_.w, rect_.h);
       screenBuf.fill(ENGRAVE_LIGHT,
                      &SDL_Rect(rect_ - Point(1, 1)));
       screenBuf.fill(ENGRAVE_DARK,
                      &SDL_Rect(rect_ + Point(1, 1)));
       barSurface.draw(screenBuf,
-                      &SDL_Rect(rect_),
-                      &makeRect(0, 0, rect_.w, rect_.h));
+                      &SDL_Rect(rect_), &src);
       
       //blit icons
       pixels_t x = rect_.x, y = rect_.y;
       for (typeNum_t i = 0; i != iconCount_; ++i){
          //draw
          surfaceFun_(i, *core_, *game_)
-            .draw(screenBuf, &makeRect(x, y));
+            .draw(screenBuf, /*&*/makeRect(x, y));
 
          //iterate
          if (orientation_ == HORIZONTAL)

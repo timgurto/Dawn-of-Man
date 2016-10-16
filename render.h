@@ -43,10 +43,7 @@ void renderSelection(const GameData &game,
 void renderFootprint(const CoreData &core, const GameData &game,
                      Surface &goodImage, Surface &badImage);
 
-//Draws all decoration entities
-void renderDecorations(const GameData &game);
-
-//Draws all entities except decorations
+//Draws all entities
 void renderEntities(const GameData &game);
 
 //Draws the selection rectangle

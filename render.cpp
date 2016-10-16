@@ -16,12 +16,13 @@ extern Debug debug, deltaLog;
 
 void renderLoadingScreen(Surface &screen, const Surface &loading){
    screen.fill(BLACK);
-   loading.draw(screen, &makeRect((screen->w - loading->w) / 2,
+   loading.draw(screen, /*&*/makeRect((screen->w - loading->w) / 2,
                                   (screen->h - loading->h) / 2));
    screen.flip();
 
 }
 
+//TODO move rendering to classes in other functions
 void render(Surface &selection,
             Surface &diagGreen, Surface &diagRed,
             Surface &map, Surface &darkMap,
@@ -41,7 +42,6 @@ void render(Surface &selection,
    renderSelection(game, selection);
    if (game.mode == MODE_CONSTRUCTION && !game.rightMouse.dragging)
        renderFootprint(core, game, diagGreen, diagRed);
-   renderDecorations(game);
    renderEntities(game);
    if (game.mode != MODE_CONSTRUCTION && game.leftMouse.dragging)
       renderSelectionRect(game, selRectImage);
@@ -62,9 +62,9 @@ void render(Surface &selection,
       pixels_t
          x = (screenBuf->w - outcomeMessage->w) / 2,
          y = (screenBuf->h - outcomeMessage->h) / 2;
-      screenBuf.fill(game.players[HUMAN_PLAYER].getColor(),
-                  &makeRect(x, y, outcomeMessage->w, outcomeMessage->h));
-      outcomeMessage.draw(screenBuf, &makeRect(x, y));                                     
+      SDL_Rect dst = makeRect(x, y, outcomeMessage->w, outcomeMessage->h);
+      screenBuf.fill(game.players[HUMAN_PLAYER].getColor(), &dst);
+      outcomeMessage.draw(screenBuf, Point(x, y));                                     
    }
 
    debug.display();
@@ -83,7 +83,7 @@ void renderCursor (const GameData &game,
       shadowPos = cursorPos;
 
    if (game.paused)
-      pause.draw(screenBuf, &makeRect(cursorPos));
+      pause.draw(screenBuf, /*&*/makeRect(cursorPos));
 
    //cursor might appear 'raised' from the wall
    bool raised = game.rightMouse.dragging;
@@ -92,8 +92,8 @@ void renderCursor (const GameData &game,
       shadowPos += CURSOR_RAISED;
    }
 
-   shadow.draw(screenBuf, &makeRect(shadowPos)); //cursor shadow
-   cursor.draw(screenBuf, &makeRect(cursorPos)); //cursor
+   shadow.draw(screenBuf, /*&*/makeRect(shadowPos)); //cursor shadow
+   cursor.draw(screenBuf, /*&*/makeRect(cursorPos)); //cursor
 
    //color
    unsigned colorIndex = game.cursorColor;
@@ -114,7 +114,7 @@ void renderCursor (const GameData &game,
       }
 
       //colored index definitely exists now
-      index.draw(screenBuf, &makeRect(cursorPos));
+      index.draw(screenBuf, /*&*/makeRect(cursorPos));
 
    }
 }
@@ -166,14 +166,7 @@ void renderFootprint(const CoreData &core, const GameData &game,
       badImage .draw(screenBuf, &SDL_Rect(baseRect), &dimRect(baseRect));
 }
 
-//Draws decoration entities
-void renderDecorations(const GameData &game){
-   ITERATE(entities_t::const_iterator, game.entities, it)
-      if ((*it)->classID() == ENT_DECORATION && (*it)->onScreen())
-         (*it)->draw();
-}
-
-//Draws all entities, except decorations
+//Draws all entities
 void renderEntities(const GameData &game){
 
    //Masks on: draws entities onto an intermediate surface, along
@@ -187,6 +180,12 @@ void renderEntities(const GameData &game){
                            Screen::getScreenRes().y, ENTITY_BACKGROUND);
       entitiesTemp.fill(ENTITY_BACKGROUND);
 
+      //decorations first
+      ITERATE(entities_t::const_iterator, game.entities, it)
+         if ((*it)->classID() == ENT_DECORATION && (*it)->onScreen())
+            (*it)->draw(entitiesTemp);
+
+      //then the rest
       ITERATE(entities_t::const_iterator, game.entities, it){
          const Entity &ent = **it;
          //debug(ent.getLoc().y);
@@ -195,14 +194,18 @@ void renderEntities(const GameData &game){
 
          //only draw entities that are on-screen
          if (ent.classID() != ENT_DECORATION && ent.onScreen()){
+            
+            //DEBUG
             if (DEBUG){
                //base rectangle and location
                entitiesTemp.fill(WHITE, &baseRect);
                const Point &loc = ent.getLoc() + game.map;
-               entitiesTemp.fill(BLACK, &makeRect(loc.x - 2, loc.y, 5, 1));
-               entitiesTemp.fill(BLACK, &makeRect(loc.x, loc.y - 2, 1, 5));
+               SDL_Rect dst = makeRect(loc.x - 2, loc.y, 5, 1);
+               entitiesTemp.fill(BLACK, &dst);
+               dst = makeRect(loc.x, loc.y - 2, 1, 5);
+               entitiesTemp.fill(BLACK, &dst);
 
-               //path
+               //draw path
                if (ent.classID() == ENT_UNIT){
                   const Unit &unit = (const Unit &)ent;
                   path_t copy = unit.getPath();
@@ -212,16 +215,21 @@ void renderEntities(const GameData &game){
                      copy.pop();
                      entitiesTemp.fill(makeColor(getEntityColor(game, unit.getColor())),
                                        &makePathRect(ent.type(), first, second));
+                     drawLine(entitiesTemp, first, second,
+                              getEntityColor(game, BLACK_UINT));
                      first = second;
                   }
                }
-            }
+            }//DEBUG
+
             //mask drawn in Entity::draw()
             ent.draw(entitiesTemp);
          }
       }
 
       screenBuf << entitiesTemp;
+drawLine(screenBuf, Point(50, 50), Point(200, 400), CYAN_UINT);
+drawLine(screenBuf, Point(50, 50), Point(50, 400), CYAN_UINT);
 
    //Masks off: draws entities straight to the screen.
    //Considerably faster.
@@ -251,9 +259,8 @@ void renderSelectionRect(const GameData &game, Surface &selRectImage){
    }else if ((selRect.y + selRect.h) > Screen::getScreenRes().y)
       selRect.h = Screen::getScreenRes().x - selRect.y;
 
-   selRectImage.draw(screenBuf, &selRect, &makeRect(0, 0,
-                                                    selRect.w,
-                                                    selRect.h));
+   SDL_Rect src = makeRect(0, 0, selRect.w, selRect.h);
+   selRectImage.draw(screenBuf, &selRect, &src);
 }
 
 //Draws all UIBars

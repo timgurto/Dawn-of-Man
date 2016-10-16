@@ -58,17 +58,17 @@ rollover_(true){
 
    if (background)
       image_ << *background;
-   textLight  .draw(image_, &makeRect(2, 2));
+   textLight  .draw(image_, /*&*/makeRect(2, 2));
    textDark   .draw(image_);
-   textSurface.draw(image_, &makeRect(1, 1));
+   textSurface.draw(image_, /*&*/makeRect(1, 1));
 
    //alternate rollover image for buttons
    if (type_ == ELEM_BUTTON){
       if (background)
          altImage_ << *background;
-      textLight .draw(altImage_, &makeRect(2, 2));
+      textLight .draw(altImage_, /*&*/makeRect(2, 2));
       textDark  .draw(altImage_);
-      altSurface.draw(altImage_, &makeRect(1, 1));
+      altSurface.draw(altImage_, /*&*/makeRect(1, 1));
    }
 
 
@@ -96,7 +96,7 @@ rollover_(true){
 
 void ScreenElement::draw() const{
    if (type_ == ELEM_BUTTON && rollover_)
-      altImage_.draw(screenBuf, &makeRect(loc_));
+      altImage_.draw(screenBuf, /*&*/makeRect(loc_));
    else
-      image_.draw(screenBuf, &makeRect(loc_));
+      image_.draw(screenBuf, /*&*/makeRect(loc_));
 }
