@@ -22,15 +22,13 @@
 //global screen buffer
 Surface screenBuf; //uninitialized
 
-bool WINDOWED_MODE = DEBUG;
-
 //general debug messages
 Debug debug(YELLOW, 0, 0, 59);
 
 //can be reused for whichever screens; the useful bit is the name
 enum ButtonID{
    //ScreenElement::NO_ID = -1
-   BUTTON_QUIT,
+   BUTTON_QUIT = 0,
    BUTTON_NEW,
    BUTTON_CREDITS
 };

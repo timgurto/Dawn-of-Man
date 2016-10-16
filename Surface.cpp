@@ -10,8 +10,6 @@
 #include "globals.h"
 #include "util.h"
 
-extern bool WINDOWED_MODE;
-
 int Surface::surfacesLoaded_ = 0;
 int Surface::screensSet_ = 0;
 
@@ -41,7 +39,7 @@ surface_(0){
       surface_ = SDL_SetVideoMode(Screen::getScreenRes().x,
                                   Screen::getScreenRes().y,
                                   SCREEN_BPP,
-                                  SDL_HWSURFACE | (WINDOWED_MODE ?
+                                  SDL_HWSURFACE | (Screen::getWindowedMode() ?
                                   0 :
                                   SDL_FULLSCREEN));
       SDL_WM_SetCaption("Dawn of Man", 0);

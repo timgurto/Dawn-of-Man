@@ -22,31 +22,9 @@ decorationAtDeath_(decorationAtDeath),
 surface_(makePath(type, index_), ENTITY_MASK),
 icon_(makePath(type, index_, IMG_ICON), ENTITY_BACKGROUND),
 mask_(makePath(type, index_, IMG_MASK), ENTITY_MASK),
-soundFile_(soundFile),
-deathSoundFile_(deathSoundFile),
-hitSoundFile_(hitSoundFile),
 sound_(SOUND_PATH + soundFile),
 deathSound_(SOUND_PATH + deathSoundFile),
 hitSound_(SOUND_PATH + hitSoundFile){}
-//TODO remove sound files
-EntityType::EntityType(const EntityType &original):
-index_(original.index_),
-name_(original.name_),
-drawRect_(original.drawRect_),
-baseRect_(original.baseRect_),
-selectionCenter_(original.selectionCenter_),
-decorationAtDeath_(original.decorationAtDeath_),
-surface_(original.surface_),
-icon_(original.icon_),
-mask_(original.mask_),
-soundFile_(original.soundFile_),
-deathSoundFile_(original.deathSoundFile_),
-hitSoundFile_(original.hitSoundFile_),
-sound_(SOUND_PATH + soundFile_),
-deathSound_(SOUND_PATH + deathSoundFile_),
-hitSound_(SOUND_PATH + hitSoundFile_){}
-
-EntityType::~EntityType(){}
 
 const SDL_Rect &EntityType::getBaseRect() const{
    return baseRect_;

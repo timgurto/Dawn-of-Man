@@ -38,14 +38,6 @@ class EntityType{
       icon_, //icon, for UIBars
       mask_; //green and magenta background mask
 
-   //these are for copying, since it's a messier
-   //process than for surfaces, and thus easier
-   //to just load again
-   std::string
-      soundFile_,
-      deathSoundFile_,
-      hitSoundFile_;
-
    Sound
       sound_, //standard entity sound
       hitSound_, //sound when attacking or gathering
@@ -61,10 +53,8 @@ public:
               const std::string &soundFile = "",
               const std::string &deathSoundFile = "",
               const std::string &hitSoundFile = "");
-   //deep-copy, loading and allocating new surfaces
-   EntityType(const EntityType &original);
 
-   ~EntityType();
+   //synthesized assignment/copy c'tor
 
    //get
    const SDL_Rect &getBaseRect() const;

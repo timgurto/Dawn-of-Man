@@ -22,9 +22,6 @@ extern int
    surfacesLoaded,
    soundsLoaded;
 
-//TODO replace with Screen::asdf
-extern bool WINDOWED_MODE;
-
 
 //Constructs a file path to load graphics for entities
 std::string makePath(EntityTypeID type, typeNum_t imageNumber,

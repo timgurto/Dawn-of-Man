@@ -173,7 +173,7 @@ void Screen::setScreenResolution(int argc, char **argv){
    debug("Current resolution: ", current->current_w, "x",
          current->current_h);
    SDL_Rect **resolutions = SDL_ListModes(0, SDL_FULLSCREEN |
-                                             SDL_HWSURFACE |
+                                             SDL_SWSURFACE |
                                              SDL_DOUBLEBUF);
    assert (resolutions);
    debug("Available resolutions:");
