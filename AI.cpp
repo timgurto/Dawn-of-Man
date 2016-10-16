@@ -115,6 +115,8 @@ void AI::checkExpansion(){
    //assumption: one type of expansion unit building, one instance
    //TODO maintain vector, and allow multiple buliding types
 
+   //find expansion building
+   //TODO set to 0 if the building is destroyed
    if (!expansionBuilding_)
       ITERATE(entities_t::const_iterator, game_->entities, it){
          if ((*it)->classID() == ENT_BUILDING){
@@ -190,7 +192,8 @@ void AI::checkMilitary(){
                   //pay for and queue up the unit
                   militaryQueue_.push(index);
                   militarySupply_ -= cost;
-                  debug("Player ", player_, "'s AI is training a ", it->getName());
+                  debug("Player ", player_, "'s AI is training a ",
+                        it->getName());
                }
             }//if military unit        
    }//for unitTypes
