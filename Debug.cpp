@@ -11,11 +11,13 @@
 #include "types.h"
 #include "Debug.h"
 #include "Surface.h"
+#include "Screen.h"
 
 extern Surface screenBuf;
 
 int Debug::debugCount_ = 0;
 
+//TODO size based on screen
 Debug::Debug(SDL_Color color, pixels_t x, pixels_t y,
              unsigned short count):
 color_(color),
@@ -39,6 +41,9 @@ void Debug::initFont(std::string name, int size){
    font_ = TTF_OpenFont(name.c_str(), size);
    assert (font_);
    height_ = TTF_FontHeight(font_);
+   unsigned short maxCount = Screen::getScreenRes().y / height_;
+   if (count_ > maxCount)
+      count_ = maxCount;
 }
 
 void Debug::add(std::string message){
@@ -53,13 +58,12 @@ void Debug::display() const{
    while (copy.size() != 0){
       std::string message = copy.front();
       copy.pop();
-      //draw text
-      //TODO why are these braces here?
-      {
+
+      //draw shadow
       Surface blackSurface(font_, message, BLACK);
       blackSurface.draw(screenBuf, &makeRect(x_+1, y_+1 + lat));
-      }
-      //draw shadow
+      
+      //draw text
       Surface surface(font_, message, color_);
       surface.draw(screenBuf, &makeRect(x_, y_ + lat));
 

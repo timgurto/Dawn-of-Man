@@ -34,7 +34,7 @@ enum ButtonID{
    BUTTON_NEW,
    BUTTON_CREDITS
 };
-
+//TODO correctly center small maps
 int main(int argc, char **argv){
 
    //seed random generator
@@ -48,8 +48,8 @@ int main(int argc, char **argv){
    int mixInit(Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 256));//256));
    assert (mixInit >= 0);
 
-   debug.initFont(FONT_DEBUG, 0);
    Screen::setScreenResolution(argc, argv);
+   debug.initFont(FONT_DEBUG, 0);
    SDL_ShowCursor(SDL_DISABLE);
 
    //initialize screen buffer

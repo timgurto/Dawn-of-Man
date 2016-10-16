@@ -5,10 +5,7 @@
 
 #include <queue>
 #include <sstream>
-
 #include "SDL_ttf.h"
-
-//#
 #include "types.h"
 
 class Surface;
@@ -42,7 +39,9 @@ public:
    //Initializes static pointers
    void initScreen(Surface *screen);
 
-   //Initializes font info
+   //Initializes font info - this can't be done
+   //in the constructor, as a global Debug object
+   //will be created before SDL can be initialized
    void initFont(std::string name, int size);
 
    //Adds message
