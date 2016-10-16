@@ -225,7 +225,8 @@ enum GameOutcome{
    IN_PROGRESS,
    VICTORY,
    LOSS,
-   QUIT //user-ordered quit
+   QUIT, //user-ordered quit
+   ALT_F4 //immediately exit entire program
 };
 
 #endif

@@ -28,6 +28,9 @@ private:
    //the on-screen elements
    elements_t elements_;
 
+   //default return values for Enter and Esc keys
+   int returnEscape_, returnEnter_;
+
    //Default screen resolutions - 16:10 16:9 and 4:3
    static const Point defaultRes_[];
    
@@ -56,7 +59,9 @@ public:
    //nice and global, so everyone can keep it up to date.
    static Point mousePos;
 
-   Screen(GoFun *go = &goDefault_);
+   Screen(GoFun *go);
+   Screen(int returnEnter = ScreenElement::NO_ID,
+          int returnEscape = ScreenElement::NO_ID);
 
    int operator()(const void *data = 0);
 

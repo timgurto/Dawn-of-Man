@@ -65,9 +65,9 @@ int main(int argc, char **argv){
       //init with surfaces
       Screen::init(&background, &cursor);
       Screen
-         mainMenu,
+         mainMenu(BUTTON_NEW, BUTTON_QUIT),
          game(&gameMode),
-         credits;
+         credits(BUTTON_QUIT, BUTTON_QUIT);
       buildScreens(mainMenu, credits);
 
       bool loop = true;
@@ -82,7 +82,11 @@ int main(int argc, char **argv){
             break;
 
          case BUTTON_NEW:
-            playCampaign(game);
+            {
+               int outcome = playCampaign(game);
+               if (outcome == ALT_F4)
+                  loop = false;
+            }
             break;
          }
       }while(loop);
@@ -161,21 +165,21 @@ void addCreditGap(int &yPos){
    yPos += CREDITS_GAP;
 }
 
-void playCampaign(Screen &game){
+int playCampaign(Screen &game){
    int levels;
    for (levels = 0;
         std::ifstream((DATA_PATH + format2(levels) + ".dat").c_str());
         ++levels);
    //after loop, levels = number of levels in the campaign
-
    //play each consecutive level
+   unsigned outcome;
    for (int i = 0; i != levels; ++i){
-      unsigned outcome;
       //repeat each level if lost
       std::string filename = format2(i) + ".dat";
       while ((outcome = game(&filename)) == LOSS)
          ;
-      if (outcome == QUIT)
+      if (outcome == QUIT || outcome == ALT_F4)
          break;
    }
+   return outcome;
 }

@@ -203,23 +203,26 @@ unsigned gameMode(Screen &/*thisScreen*/, const void *data){
       }
    }
 
-   //game over; display victory/loss message
-   game.paused = true; //darken map
-   //Screen::mousePos = Point(screenBuf->w, screenBuf->h); //hide cursor
-   render(glow, diagGreen, diagRed, map, darkMap, cursor,
-          cursorShadow, cursorPause, cursorColor, selRectImage,
-          cursorIndex, core,
-          game, bars, messageBoxes,
-          game.outcome == VICTORY ? //QUIT treated as loss
-             victory :
-             loss);
-   //wait
-   if (!DEBUG){
-      oldTicks = SDL_GetTicks();
-      while (SDL_GetTicks() - oldTicks < END_MESSAGE_TIMER);
-   }
+   //Alt+F4: exit immediately
+   if (game.outcome != ALT_F4){
 
-   //Screen::mousePos = Screen::getScreenRes() / 2;
+      //game over; display victory/loss message
+      game.paused = true; //darken map
+      //Screen::mousePos = Point(screenBuf->w, screenBuf->h); //hide cursor
+      render(glow, diagGreen, diagRed, map, darkMap, cursor,
+             cursorShadow, cursorPause, cursorColor, selRectImage,
+             cursorIndex, core,
+             game, bars, messageBoxes,
+             game.outcome == VICTORY ? //QUIT treated as loss
+                victory :
+                loss);
+      //wait
+      if (!DEBUG){
+         oldTicks = SDL_GetTicks();
+         while (SDL_GetTicks() - oldTicks < END_MESSAGE_TIMER);
+      }
+
+   }
 
    //Clean up
    Mix_HaltMusic(); 

@@ -15,6 +15,6 @@ void addCredit(Screen &creditsScreen, int &yPos, std::string text);
 void addCreditGap(int &yPos);
 
 //plays through each level in the campaign
-void playCampaign(Screen &game);
+int playCampaign(Screen &game);
 
 #endif

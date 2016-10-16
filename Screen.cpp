@@ -81,7 +81,6 @@ int Screen::handleEventsDefault_(){
          }
 
          //TODO context help
-         //TODO rollover color for buttons
 
          break;
 
@@ -100,9 +99,14 @@ int Screen::handleEventsDefault_(){
 
             //TODO defaults for Esc and Ret
             case SDLK_ESCAPE:
+               if (returnEscape_ != ScreenElement::NO_ID)
+                  return returnEscape_;
                break;
 
             case SDLK_RETURN:
+            case SDLK_KP_ENTER:
+               if (returnEnter_ != ScreenElement::NO_ID)
+                  return returnEnter_;
                break;
 
             }
@@ -172,7 +176,15 @@ void Screen::init(Surface *background,
 
 Screen::Screen(GoFun go):
 go_(go),
-loop_(true){}
+loop_(true),
+returnEscape_(ScreenElement::NO_ID),
+returnEnter_(ScreenElement::NO_ID){}
+
+Screen::Screen(int returnEnter, int returnEscape):
+go_(goDefault_),
+loop_(true),
+returnEnter_(returnEnter),
+returnEscape_(returnEscape){}
 
 int Screen::operator()(const void *data){
    return (*go_)(*this, data);

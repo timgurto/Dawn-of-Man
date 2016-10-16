@@ -199,6 +199,15 @@ void handleEvents(const CoreData &core, GameData &game,
                   }
                   break;
 
+               case SDLK_F4:
+                  //Alt+F4: Exit program immediately
+                  if (isKeyPressed(SDLK_LALT) || isKeyPressed(SDLK_RALT)){
+                     game.loop = false;
+                     game.outcome = ALT_F4;
+                     return;
+                  }
+                  break;
+
                case SDLK_F11:
                   //F11: toggle FPS display
                   fpsDisplay.toggleVisibility();
@@ -209,23 +218,12 @@ void handleEvents(const CoreData &core, GameData &game,
                   game.loop = false;
                   game.outcome = LOSS;
                   return;
-                  break;
 
                case SDLK_F10:
                   //F10: quit
                   game.loop = false;
                   game.outcome = QUIT;
                   return;
-                  break;
-
-               case SDLK_F4:
-                  //Alt+F4 = quit
-                  if (isKeyPressed(SDLK_LALT) || isKeyPressed(SDLK_RALT)){
-                     game.loop = false;
-                     game.outcome = QUIT;
-                     return;
-                  }
-                  break;
                
                case SDLK_F3:
                case SDLK_PAUSE:
@@ -320,10 +318,11 @@ void handleEvents(const CoreData &core, GameData &game,
                      for (UIBars_t::iterator it = bars.begin();
                           it != bars.end(); ++it)
                         if ((*it)->isActive() &&
-                            (*it)->size() > 0)
+                            (*it)->size() > index)
                            (*it)->click(index);
                   }
-
+                  else
+                     debug("unhandled keypress: ", key);
                }
             }
          break;

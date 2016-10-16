@@ -5,7 +5,6 @@
 
 #include <string>
 #include <vector>
-
 #include "BuildingType.h"
 #include "DecorationType.h"
 #include "UnitType.h"
