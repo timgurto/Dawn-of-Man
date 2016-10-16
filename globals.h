@@ -61,7 +61,7 @@ const Uint32 MAGENTA_UINT = 0xff00ff;
 const Uint32 YELLOW_UINT  = 0xffff00;
 const Uint32 WHITE_UINT   = 0xffffff;
 
-//aritrary dummy value
+//arbitrary dummy value, using "unused" fourth element
 const SDL_Color NO_COLOR = {0xde, 0xca, 0xfb, 0xad};
 
 const SDL_Color ENTITY_BACKGROUND = GREEN;

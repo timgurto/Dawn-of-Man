@@ -6,6 +6,7 @@
 #include "SDL.h"
 #include "SDL_image.h"
 #include "Surface.h"
+#include "Screen.h"
 #include "globals.h"
 #include "misc.h"
 
@@ -50,6 +51,10 @@ surface_(0){
       break;
 
    case SUR_BLANK:
+      if (width == -1)
+         width = Screen::getScreenRes().x;
+      if (height == -1)
+         height = Screen::getScreenRes().y;
       surface_ = SDL_CreateRGBSurface(SDL_HWSURFACE,
                                    width, height, SCREEN_BPP,
                                    0, 0, 0, 0);

@@ -14,6 +14,7 @@
 #include "Screen.h"
 #include "Surface.h"
 #include "Point.h"
+#include "ScreenElement.h"
 
 //TODO try to replace get()s with const refs, or reaffirm why it can't be done
 
@@ -61,19 +62,19 @@ int main(int argc, char **argv){
 
       //init with surfaces
       //TODO const font names
-      Screen::init(&background, &cursor, 60, "Thor.ttf", WHITE);
+      Screen::init(&background, &cursor);
 
-      Screen mainMenu("Dawn of Man");
-      //mainMenu();
+      Screen mainMenu;
+      mainMenu();
 
-      Screen game("", &gameMode);
+      Screen game(&gameMode);
 
       //campaign: go through each level
       int levels;
       for (levels = 0;
            std::ifstream((DATA_PATH + format2(levels) + ".dat").c_str());
            ++levels);
-      //levels = number of levels in the campaign
+      //after loop, levels = number of levels in the campaign
 
       //play each consecutive level
       for (int i = 0; i != levels; ++i){

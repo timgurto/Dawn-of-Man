@@ -12,6 +12,10 @@ x(xCoord),
 y(yCoord)
 {}
 
+Point::operator SDL_Rect(){
+   return makeRect(x, y);
+}
+
 Point &Point::operator=(const SDL_Rect &rhs){
    this->x = rhs.x;
    this->y = rhs.y;

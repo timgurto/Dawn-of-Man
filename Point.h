@@ -15,6 +15,9 @@ struct Point{
    Point(const SDL_Rect &original);
    Point(pixels_t xCoord = 0, pixels_t yCoord = 0);
 
+   //implicit cast to SDL_Rect
+   operator SDL_Rect();
+
    Point &operator=(const SDL_Rect &rhs);
 
    //addition/subtraction with other Points

@@ -7,6 +7,7 @@
 #include "Surface.h"
 #include "Debug.h"
 #include "Point.h"
+#include "ScreenElement.h"
 #include "globals.h"
 
 //TODO comments
@@ -26,8 +27,6 @@ Surface *Screen::cursor_ = 0;
 Point Screen::screenRes_(defaultRes_[0]);
 Point Screen::mousePos = screenRes_ / 2;
 bool Screen::windowedMode_ = DEBUG;
-TTF_Font *Screen::titleFont_ = 0;
-SDL_Color Screen::defaultTextColor_ = BLACK;
 
 
 unsigned Screen::goDefault_(Screen &thisScreen, const void *data){
@@ -119,32 +118,22 @@ void Screen::drawDefault_() const{
          background_->draw(screenBuf, &makeRect(x * MAP_TILE_SIZE,
                                                 y * MAP_TILE_SIZE));
 
-   //title
-   Surface title(titleFont_, title_, defaultTextColor_);
-   pixels_t xCoord = (screenRes_.x - title->w) / 2;
-   //TODO init this y co-ord
-   title.draw(screenBuf, &makeRect(xCoord, 20));
+   element_.draw();
 
    //flip buffer
    screenBuf.flip();
 }
 
 void Screen::init(Surface *background,
-                  Surface *cursor,
-                  int titleSize,
-                  const std::string &titleFontName,
-                  SDL_Color textColor){
+                  Surface *cursor){
    background_ = background;
    cursor_ = cursor;
-   defaultTextColor_ = textColor;
-   titleFont_ = TTF_OpenFont(titleFontName.c_str(), titleSize);
-   assert (titleFont_);
 }
 
-Screen::Screen(std::string title, GoFun go):
-title_(title),
+Screen::Screen(GoFun go):
 go_(go),
-loop_(true){}
+loop_(true),
+element_(ELEM_BUTTON, "test button", ANCHOR_CENTER, 0, 1, 0){}
 
 int Screen::operator()(const void *data){
    //make sure there are no events on the queue

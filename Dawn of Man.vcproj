@@ -276,6 +276,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ScreenElement.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Surface.h"
 				>
 			</File>
@@ -409,6 +413,10 @@
 			</File>
 			<File
 				RelativePath=".\Screen.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ScreenElement.cpp"
 				>
 			</File>
 			<File

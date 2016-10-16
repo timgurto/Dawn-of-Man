@@ -6,7 +6,6 @@
 #include <string>
 #include "SDL.h"
 #include "SDL_ttf.h"
-#include "Screen.h"
 #include "types.h"
 #include "globals.h"
 
@@ -20,6 +19,7 @@ enum SpecialSurface{
 };
 
 //encapsulates graphics functionality
+//ideally, switching to OpenGL or DirectX should only involve changing this class.
 class Surface{
 
    //the actual surface pointer
@@ -40,8 +40,7 @@ public:
    Surface(const std::string fileName, const SDL_Color &background,
            bool alpha = false);
    Surface(SpecialSurface special = SUR_UNINIT,
-           int width = Screen::getScreenRes().x,
-           int height = Screen::getScreenRes().y,
+           int width = -1, int height = -1, //-1 implies current screen res
            SDL_Color background = NO_COLOR);
    Surface(TTF_Font *font, std::string message, SDL_Color color);
    Surface(const Surface &original);

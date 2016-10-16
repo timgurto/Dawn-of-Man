@@ -51,7 +51,6 @@ class EntityType{
       *deathSound_; //sound made upon death
 
 public:
-   //deep-copy, loading and allocating new surfaces
    EntityType(typeNum_t index, EntityTypeID type,
               const std::string &name,
               const SDL_Rect &drawRect,
@@ -61,6 +60,7 @@ public:
               const std::string &soundFile = "",
               const std::string &deathSoundFile = "",
               const std::string &hitSoundFile = "");
+   //deep-copy, loading and allocating new surfaces
    EntityType(const EntityType &original);
 
    ~EntityType();
