@@ -114,7 +114,6 @@ int main(int argc, char **argv){
       }while(loop);
 
 
-
    }
 
    //Quit
@@ -153,4 +152,48 @@ void buildScreens(Screen &mainMenu,
                                      ANCHOR_CENTER,
                                      Point(0, 60),
                                      BUTTON_QUIT));
+
+   //Credits
+   credits.addElement(ScreenElement(ELEM_BUTTON,
+                                    "Back",
+                                    ANCHOR_BOTTOM_RIGHT,
+                                    Point(-30, -30),
+                                    BUTTON_QUIT));
+   int
+      yOffset = -225,
+      inc = 25,
+      gap = 23;
+
+#define ADD_CREDIT(xOffset, text) \
+   do{ \
+   credits.addElement(ScreenElement(ELEM_LABEL, (text), ANCHOR_CENTER, \
+                                    Point((xOffset), yOffset))); \
+   yOffset += inc; \
+   } while(0)
+
+#define ADD_GAP (yOffset += gap)
+
+   ADD_CREDIT(0, "Dawn of Man");
+   ADD_CREDIT(0, "(C) 2009-2010 Tim Gurto");
+   ADD_GAP;
+   ADD_CREDIT(0, "Created by Tim Gurto");
+   ADD_GAP;
+   ADD_CREDIT(0, "Lead Tester: Alex Poms");
+   ADD_CREDIT(0, "Other Testers: Tim Veizer");
+   ADD_CREDIT(0, "Jeremy Gurto");
+   ADD_GAP;
+   ADD_CREDIT(0, "Special Thanks: Evan Pipho");
+   ADD_CREDIT(0, "Drew Banyai");
+   ADD_GAP;
+   ADD_CREDIT(0, "Created using: Microsoft Visual Studio 2008");
+   ADD_CREDIT(0, "Simple DirectMedia Layer");
+   ADD_CREDIT(0, "TortoiseSVN");
+   ADD_CREDIT(0, "Goanna Static Analyzer");
+   ADD_CREDIT(0, "Microsoft Paint");
+   ADD_CREDIT(0, "Audacity");
+   ADD_CREDIT(0, "Finale Notepad 2008");
+
+#undef ADD_CREDIT
+#undef ADD_GAP
+
 }

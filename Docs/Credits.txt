@@ -8,7 +8,8 @@
  Other Testers: Tim Veizer
                 Jeremy Gurto
                
-Special Thanks: Drew Banyai
+Special Thanks: Evan Pipho
+                Drew Banyai
 
  Created using: Microsoft Visual Studio 2008
                 Simple DirectMedia Layer
