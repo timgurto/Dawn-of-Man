@@ -125,9 +125,7 @@ Surface &Surface::operator=(const Surface &rhs){
 Surface::operator bool() const{
    //return surface_;
    //use ternary operator to suppress performance warning, ironically
-   return surface_ ?
-             true :
-             false;
+   return surface_ != 0;
 }
 
 SDL_Surface *Surface::operator->(){

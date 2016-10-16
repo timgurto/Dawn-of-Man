@@ -32,6 +32,7 @@
 #include "CoreData.h"
 #include "Surface.h"
 #include "Screen.h"
+#include "AI.h"
 
 extern Debug debug;
 //extern Debug deltaLog;
@@ -111,6 +112,7 @@ unsigned gameMode(Screen &thisScreen, const void *data){
    //more init
    Particle::init(&particle, &particleShadow);
    Entity::init(&core, &game, &diagGreen);
+   AI::init(&core, &game);
 
    //UI Bars
    UIBars_t bars;
@@ -151,7 +153,7 @@ unsigned gameMode(Screen &thisScreen, const void *data){
    MessageBox resourcesBox(WHITE,
                            2, 2, 1,
                            darkMap,
-                           "Thor.ttf", 18);
+                           FONT_GAME, 18);
    MessageBox fpsDisplay(WHITE,
                          Screen::getScreenRes().x / 2 - 40, 2,
                          1,

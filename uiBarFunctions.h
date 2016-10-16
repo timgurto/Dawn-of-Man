@@ -14,14 +14,6 @@ struct GameData;
 struct CoreData;
 class Surface;
 
-//whether the given item is available for the human player
-bool validBuilding(const CoreData &core, const GameData &game,
-                   typeNum_t i);
-bool validUnit(const CoreData &core, const GameData &game,
-               typeNum_t i);
-bool validTech(const CoreData &core, const GameData &game,
-               typeNum_t i);
-
 //fetches the ith valid item's (see above) index
 typeNum_t getValidBuilding(const CoreData &core, const GameData &game,
                            typeNum_t i);

@@ -212,6 +212,10 @@ outcome(IN_PROGRESS){
    }
    data.close();
 
+   //initialize AI player IDs
+   for (typeNum_t playerID = 0; playerID != players.size(); ++playerID)
+      players[playerID].initID(playerID);
+
    for (entities_t::const_iterator it = entities.begin();
         it != entities.end(); ++it){
 
@@ -388,4 +392,44 @@ void GameData::constructBuilding(typeNum_t index, const Point &loc,
       debug("Insufficient resources to construct building");
    }
 
+}
+
+bool GameData::validBuilding(typeNum_t playerID, typeNum_t i) const{
+   if (i == NO_TYPE)
+      return false;
+   const BuildingType &type = core_->buildingTypes[i];
+   const Player &player = players[playerID];
+   return
+      //prerequisites
+      player.hasTech(type.getPrereqTech()) &&
+      player.hasBuilding(type.getPrereqBuilding());
+}
+
+bool GameData::validUnit(typeNum_t playerID, typeNum_t i) const{
+   if (i == NO_TYPE)
+      return false;
+   const UnitType &type = core_->unitTypes[i];
+   return
+      //unit comes from the selected building
+      buildingSelected &&
+      buildingSelected->getTypeIndex() == type.getOriginBuilding() &&
+      //prerequisites
+      players[playerID].hasTech(type.getPrereqTech());
+}
+
+bool GameData::validTech(typeNum_t playerID, typeNum_t i) const{
+   if (i == NO_TYPE)
+      return false;
+   typeNum_t techIndex = i;
+   const Tech &tech = core_->techs[techIndex];
+   const Player &player = players[playerID];
+   return
+      //tech comes from the selected building
+      buildingSelected &&
+      buildingSelected->getTypeIndex() == tech.getOriginBuilding() &&
+      //prerequisites
+      player.hasTech(tech.getPrereqTech1()) &&
+      player.hasTech(tech.getPrereqTech2()) &&
+      //player hasn't researched it yet
+      !player.hasTech(techIndex);
 }

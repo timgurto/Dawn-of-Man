@@ -34,6 +34,10 @@ public:
    Resources &operator-=(const Resources &rhs);
    Resources operator-(const Resources &rhs) const;
 
+   //multiplication: scalar
+   Resources &operator*=(double rhs);
+   Resources operator*(double rhs) const;
+
    //whether each resource is higher in the lhs
    bool operator>=(const Resources &rhs) const;
    bool operator<(const Resources &rhs) const;

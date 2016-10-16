@@ -52,6 +52,18 @@ Resources Resources::operator-(const Resources &rhs) const{
    return result;
 }
 
+Resources &Resources::operator*=(double rhs){
+   for (size_t i = 0; i != resourceCount_; ++i)
+      vals_[i] = resource_t(vals_[i] * rhs);
+   return *this;
+}
+
+Resources Resources::operator*(double rhs) const{
+   Resources result = *this;
+   result *= rhs;
+   return result;
+}
+
 bool Resources::operator>=(const Resources &rhs) const{
    for (size_t i = 0; i != resourceCount_; ++i)
       //check all resources are >= rhs

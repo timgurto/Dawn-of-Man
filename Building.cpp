@@ -182,3 +182,7 @@ std::string Building::getHelp() const{
       os << " remaining";
    return os.str();
 }
+
+bool Building::isMilitary() const{
+   return core_->buildingTypes[typeIndex_].military_;
+}

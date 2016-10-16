@@ -129,6 +129,11 @@ public:
 
    void constructBuilding(typeNum_t index, const Point &loc,
                           typeNum_t playerID);
+
+   //whether the given item is available for the player
+   bool validBuilding(typeNum_t playerID, typeNum_t i) const;
+   bool validUnit(typeNum_t playerID, typeNum_t i) const;
+   bool validTech(typeNum_t playerID, typeNum_t i) const;
 };
 
 #endif

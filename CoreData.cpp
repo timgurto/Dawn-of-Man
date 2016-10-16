@@ -33,7 +33,8 @@ CoreData::CoreData(std::string filename){
          collides = false, //decorations
          builder = false, //units - default: military
          gatherer = false, //units -   "        "
-         autoAttack = true; //units -  "        "
+         autoAttack = true, //units -  "        "
+         military = false; //buildings - default: civilian
       typeNum_t
          index = NO_TYPE,
          prereqBuilding = NO_TYPE,
@@ -122,6 +123,8 @@ CoreData::CoreData(std::string filename){
             gatherer = val == "true;";
          else if (attr == "autoAttack")
             autoAttack = val == "true;";
+         else if (attr == "military")
+            military = val == "true;";
          else if (attr == "index")
             index = typeNum_t(numVal);
          else if (attr == "prereqBuilding")
@@ -241,7 +244,7 @@ CoreData::CoreData(std::string filename){
          BuildingType temp(index, name, drawRect, baseRect,
                            selectionCenter, cost, maxHealth, armor,
                            progressCost, prereqBuilding, prereqTech,
-                           decorationAtDeath,
+                           decorationAtDeath, military,
                            soundFile, deathSoundFile);
          buildingTypes.push_back(temp);
 

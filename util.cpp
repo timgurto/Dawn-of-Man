@@ -189,3 +189,8 @@ double modulo(double a, int b){
    return aInt % b + a - aInt;
 }
 
+//logical XOR
+bool lXor(bool a, bool b){
+   return
+      (a && b) || !(a || b);
+}

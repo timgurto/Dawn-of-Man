@@ -81,4 +81,7 @@ T max(T a, T b){
    return a < b ? b : a;
 }
 
+//logical XOR
+bool lXor(bool a, bool b);
+
 #endif

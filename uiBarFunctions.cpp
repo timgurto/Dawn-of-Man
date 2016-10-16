@@ -1,6 +1,7 @@
 // (C) 2010 Tim Gurto
 
 #include <cassert>
+#include "misc.h"
 #include "uiBarFunctions.h"
 #include "update.h"
 #include "GameData.h"
@@ -11,59 +12,15 @@
 #include "Unit.h"
 #include "CoreData.h"
 #include "UIBar.h"
-#include "misc.h"
 
 extern Debug debug;
-
-bool validBuilding(const CoreData &core,
-                   const GameData &game, typeNum_t i){
-   if (i == NO_TYPE)
-      return false;
-   const BuildingType &type = core.buildingTypes[i];
-   const Player &human = game.players[HUMAN_PLAYER];
-   return
-      //prerequisites
-      human.hasTech(type.getPrereqTech()) &&
-      human.hasBuilding(type.getPrereqBuilding());
-}
-
-bool validUnit(const CoreData &core,
-               const GameData &game, typeNum_t i){
-   if (i == NO_TYPE)
-      return false;
-   const UnitType &type = core.unitTypes[i];
-   return
-      //unit comes from the selected building
-      game.buildingSelected &&
-      game.buildingSelected->getTypeIndex() == type.getOriginBuilding() &&
-      //prerequisites
-      game.players[HUMAN_PLAYER].hasTech(type.getPrereqTech());
-}
-
-bool validTech(const CoreData &core,
-               const GameData &game, typeNum_t i){
-   if (i == NO_TYPE)
-      return false;
-   typeNum_t techIndex = i;
-   const Tech &tech = core.techs[techIndex];
-   const Player &human = game.players[HUMAN_PLAYER];
-   return
-      //tech comes from the selected building
-      game.buildingSelected &&
-      game.buildingSelected->getTypeIndex() == tech.getOriginBuilding() &&
-      //prerequisites
-      human.hasTech(tech.getPrereqTech1()) &&
-      human.hasTech(tech.getPrereqTech2()) &&
-      //player hasn't researched it yet
-      !human.hasTech(techIndex);
-}
 
 typeNum_t getValidBuilding(const CoreData &core, const GameData &game,
                            typeNum_t i){
    ++i;
    typeNum_t index;
    for (index = 0; i != 0; ++index)
-      if (validBuilding(core, game, index))
+      if (game.validBuilding(HUMAN_PLAYER, index))
          --i;
    return index - 1;
 }
@@ -73,7 +30,7 @@ typeNum_t getValidUnit(const CoreData &core, const GameData &game,
    ++i;
    typeNum_t index;
    for (index = 0; i != 0; ++index)
-      if (validUnit(core, game, index))
+      if (game.validUnit(HUMAN_PLAYER, index))
          --i;
    return index -1 ;
 }
@@ -83,7 +40,7 @@ typeNum_t getValidTech(const CoreData &core, const GameData &game,
    ++i;
    typeNum_t index;
    for (index = 0; i != 0; ++index)
-      if (validTech(core, game, index))
+      if (game.validTech(HUMAN_PLAYER, index))
          --i;
    return index - 1;
 }
@@ -98,7 +55,7 @@ typeNum_t getValidTech(const CoreData &core, const GameData &game,
          return 0;
       typeNum_t count = 0;
       for (typeNum_t index = 0; index != core.buildingTypes.size(); ++index)
-         if (validBuilding(core, game, index))
+         if (game.validBuilding(HUMAN_PLAYER, index))
             ++count;
       return count;
    }
@@ -109,7 +66,7 @@ typeNum_t getValidTech(const CoreData &core, const GameData &game,
          return 0;
       typeNum_t count = 0;
       for (typeNum_t index = 0; index != core.unitTypes.size(); ++index)
-         if (validUnit(core, game, index))
+         if (game.validUnit(HUMAN_PLAYER, index))
             ++count;
       return count;
    }
@@ -120,7 +77,7 @@ typeNum_t getValidTech(const CoreData &core, const GameData &game,
          return 0;
       typeNum_t count = 0;
       for (typeNum_t index = 0; index != core.techs.size(); ++index)
-         if (validTech(core, game, index))
+         if (game.validTech(HUMAN_PLAYER, index))
             ++count;
       return count;
    }

@@ -29,6 +29,9 @@ class BuildingType: public EntityType{
       prereqBuilding_,
       prereqTech_;
 
+   //whether the building trains military units
+   bool military_;
+
 public:
    BuildingType(typeNum_t index,
                 const std::string &name,
@@ -42,6 +45,7 @@ public:
                 typeNum_t prereqBuilding = NO_TYPE,
                 typeNum_t prereqTech = NO_TYPE,
                 typeNum_t decorationAtDeath = NO_TYPE,
+                bool military = false,
                 const std::string &soundFile = "",
                 const std::string &deathSoundFile = "");
 

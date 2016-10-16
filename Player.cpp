@@ -22,8 +22,8 @@ bonuses_(),
 resources_(resources),
 techsResearched_(techsResearched),
 alive(true),
-buildingsBuilt_(core_->buildingTypes.size(), false){
-   resourcesString_ = resources_.str();
+buildingsBuilt_(core_->buildingTypes.size(), false),
+resourcesString_(resources_.str()){
    for (size_t i = 0; i != techsResearched.size(); ++i)
       if (techsResearched_[i])
          bonuses_ += core_->techs[i].getBonuses();
@@ -33,15 +33,24 @@ void Player::init(const CoreData *core, GameData *game,
                   UIBar *buildingsBar){
    core_ = core;
    game_ = game;
-   buildingsBar_ = buildingsBar;
+   buildingsBar_ = buildingsBar;   
+}
 
-
-   
+//initialize player ID
+void Player::initID(typeNum_t playerID){
+   id_ = playerID;
+   ai_.initPlayer(playerID);
 }
 
 void Player::addResources(const Resources &r){
    resources_ += r;
    resourcesString_ = resources_.str();
+
+   //Give to AI bookkeeper
+   ai_.allocateIncome(r);
+   //can we afford anything new?
+   ai_.checkExpansion();
+   ai_.checkMilitary();
 }
 
 void Player::subtractResources(const Resources &r){

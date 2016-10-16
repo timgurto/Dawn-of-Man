@@ -54,6 +54,7 @@ public:
    virtual std::string getHelp() const;
    damage_t getArmor() const;
    damage_t getHealth() const;
+   bool isMilitary() const;
 };
 
 #endif

@@ -19,6 +19,9 @@ typedef std::vector<bool> checklist_t;
 //computer opponent
 class Player{
 
+   //the player's ID number
+   typeNum_t id_;
+
    //the color of this player's entities
    Uint32 color_;
 
@@ -54,6 +57,9 @@ public:
    //initialize static pointers
    static void init(const CoreData *core = 0, GameData *game = 0,
                     UIBar *buildingsBar = 0);
+
+   //initialize player ID
+   void initID(typeNum_t playerID);
 
    //add or remove the player's resources
    void addResources(const Resources &r);
