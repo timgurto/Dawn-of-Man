@@ -46,11 +46,20 @@ class AI{
    buildQueue_t militaryQueue_; //military units
    buildQueue_t expansionQueue_; //other units
 
+   //whether the initial expansion units have been added to the wishlist
+   bool expansionUnitsAdded_;
+
    //the buildings which will train units
    const Building *militaryBuilding_, *expansionBuilding_;
 
+   //the (assumed single) type of the  expansion unit
+   static typeNum_t expansionUnitType_;
+
    //x:1 expansion:military
    static const double allocationRatio_;
+
+   //how many expansion units to queue up at the start of a game
+   static const unsigned expansionUnits_;
 
    static GameData *game_;
    static const CoreData *core_;

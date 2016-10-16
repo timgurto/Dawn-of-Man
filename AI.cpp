@@ -19,12 +19,16 @@ extern Debug debug;
 
 GameData *AI::game_ = 0;
 const CoreData *AI::core_ = 0;
+typeNum_t AI::expansionUnitType_ = NO_TYPE;
+
 const double AI::allocationRatio_ = 3; //x:1 expansion:military
+const unsigned AI::expansionUnits_ = 4;
 
 AI::AI():
 militaryBuilding_(0),
 expansionBuilding_(0),
-player_(NO_TYPE){}
+player_(NO_TYPE),
+expansionUnitsAdded_(false){}
 
 void AI::init(const CoreData *core, GameData *game){
    core_ = core;
@@ -41,6 +45,14 @@ void AI::init(const CoreData *core, GameData *game){
 
    ITERATE(players_t::iterator, game_->players, it)
       it->ai_.militaryCap_ = militaryCap;
+
+   //assumption: one kind of expansion unit
+   ITERATE(unitTypes_t::const_iterator, core_->unitTypes, it)
+      if (it->isBuilder() || it->isGatherer()){
+         expansionUnitType_ = it->getIndex();
+         break;
+      }
+   assert(expansionUnitType_ != NO_TYPE);
 }
 
 void AI::initPlayer(typeNum_t player){
@@ -115,6 +127,11 @@ void AI::checkExpansion(){
    //assumption: one type of expansion unit building, one instance
    //TODO maintain vector, and allow multiple buliding types
 
+   //add initial units to the wishlist, only once
+   if (!expansionUnitsAdded_)
+      for (int i = 0; i != expansionUnits_; ++i)
+         unitWishlist_.push_back(expansionUnitType_);
+
    //find expansion building
    //TODO set to 0 if the building is destroyed
    if (!expansionBuilding_)
@@ -136,6 +153,7 @@ void AI::checkExpansion(){
    Player &player = game_->players[player_];
 
    //check any expansion units
+   std::vector<wishlist_t::iterator> trash; //iterators to erase
    ITERATE(wishlist_t::iterator, unitWishlist_, it){
       typeNum_t index = *it;
       const Resources &cost = core_->unitTypes[index].getCost();
@@ -144,10 +162,13 @@ void AI::checkExpansion(){
       
       expansionSupply_ -= cost;
       expansionQueue_.push(index);
-      unitWishlist_.erase(it);
+
+      trash.push_back(it);
       debug("Player ", player_, "'s AI is training a ",
             core_->unitTypes[index].getName());
    }
+   ITERATE(std::vector<wishlist_t::iterator>::iterator, trash, it)
+      unitWishlist_.erase(*it);
 }
 
 void AI::checkMilitary(){
@@ -209,6 +230,17 @@ void AI::buildPossible(){
                                       player_);
       if (trained)
          militaryQueue_.pop();
+      else
+         break; //no room to place unit
+   }
+
+   //expansion units
+   while (!expansionQueue_.empty()){
+      bool trained = game_->trainUnit(expansionQueue_.front(),
+                                      *expansionBuilding_,
+                                      player_);
+      if (trained)
+         expansionQueue_.pop();
       else
          break; //no room to place unit
    }
